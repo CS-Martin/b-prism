@@ -15,7 +15,13 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
-            "@dto": ["libs/dto/src/index.ts"]
+            "@authentication-service-lib": [
+                "libs/backend/app-services/authentication-service-lib/src/index.ts"
+            ],
+            "@dto": ["libs/dto/src/index.ts"],
+            "@map-service-lib": [
+                "libs/backend/app-services/map-service-lib/src/index.ts"
+            ]
         }
     },
     "exclude": ["node_modules", "tmp"]
