@@ -1,0 +1,9 @@
+{
+    "name": "authentication-service-lib",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/backend/app-services/authentication-service-lib/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project authentication-service-lib --web",
+    "targets": {}
+}

@@ -1,0 +1,9 @@
+{
+    "name": "map-service-lib",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/backend/app-services/map-service-lib/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project map-service-lib --web",
+    "targets": {}
+}
