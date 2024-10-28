@@ -26,8 +26,8 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx",
-    "../../apps/b-prism/.next/types/**/*.ts",
-    "../../dist/apps/b-prism/.next/types/**/*.ts",
+    "../../apps/client/.next/types/**/*.ts",
+    "../../dist/apps/client/.next/types/**/*.ts",
     "next-env.d.ts",
     ".next/types/**/*.ts"
   ],

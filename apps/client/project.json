@@ -1,9 +1,9 @@
 {
-  "name": "b-prism",
+  "name": "client",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/b-prism",
+  "sourceRoot": "apps/client",
   "projectType": "application",
   "tags": [],
-  "// targets": "to see all targets run: nx show project b-prism --web",
+  "// targets": "to see all targets run: nx show project client --web",
   "targets": {}
 }
