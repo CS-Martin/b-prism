@@ -9,6 +9,7 @@
         "@nestjs/core": "^10.0.2",
         "@nestjs/platform-express": "^10.0.2",
         "@nestjs/swagger": "^7.4.2",
+        "@prisma/client": "^5.21.1",
         "@types/mapbox-gl": "^3.4.0",
         "axios": "^1.6.0",
         "mapbox-gl": "^3.7.0",

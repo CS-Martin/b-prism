@@ -21,7 +21,8 @@
             "@dto": ["libs/dto/src/index.ts"],
             "@map-service-lib": [
                 "libs/backend/app-services/map-service-lib/src/index.ts"
-            ]
+            ],
+            "@prisma-db-lib": ["libs/backend/prisma-db-lib/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]
