@@ -1,9 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserRole } from '@prisma/client';
 
-export class UsersDto {
+export class UserDto {
 
     @ApiProperty()
     id!: string;
+
+    @ApiProperty()
+    auth0_id!: string | null;
 
     @ApiProperty()
     name!: string;
@@ -21,6 +25,15 @@ export class UsersDto {
     password!: string;
 
     @ApiProperty()
-    image_url!: string;
+    id_image_url!: string | null;
+
+    @ApiProperty()
+    role!: UserRole;
+
+    @ApiProperty()
+    createdAt!: Date;
+
+    @ApiProperty()
+    updatedAt!: Date;
     
 }
