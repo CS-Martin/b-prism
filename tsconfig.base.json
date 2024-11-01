@@ -15,6 +15,9 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
+            "@authentication-mongodb-lib": [
+                "libs/backend/database-services/authentication-mongodb-lib/src/index.ts"
+            ],
             "@authentication-service-lib": [
                 "libs/backend/app-services/authentication-service-lib/src/index.ts"
             ],

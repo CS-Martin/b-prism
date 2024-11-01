@@ -1,5 +1,6 @@
 import { AuthenticationServiceLibService } from "@authentication-service-lib";
-import { Controller, Get } from "@nestjs/common";
+import { CreateUserDto, UpdateUserDto } from "@dto";
+import { Controller, Post, Body, Put, Param, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 
 @ApiTags('Authentication Endpoints')
@@ -7,9 +8,18 @@ import { ApiTags } from "@nestjs/swagger";
 export class AuthenticationController {
     constructor(private readonly authenticationService: AuthenticationServiceLibService ) {}
 
-    @Get()
-    findAll() {
-        return this.authenticationService.findAll();
+    @Post('create')
+    create(@Body() createUserDto: CreateUserDto) {
+        return this.authenticationService.create(createUserDto);
     }
 
+    @Put('update/:id')
+    update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+        return this.authenticationService.update(id, updateUserDto);
+    }
+
+    @Get('find/:id')
+    find(@Param('id') id: string) {
+        return this.authenticationService.findById(id);
+    }
 }

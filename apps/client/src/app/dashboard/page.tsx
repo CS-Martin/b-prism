@@ -6,11 +6,21 @@ const Dashboard = () => {
     const { user, error, isLoading } = useUser();
     console.log(user);
 
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div>
             <p>hello {user?.name}</p>
-            {user && <a href="/api/auth/logout">Logout</a>}
-            {!user && <a href="/api/auth/login">Login</a>}
+            <p>
+                Go to map <a href="/map">here</a>
+            </p>
+            {user ? (
+                <a href="/api/auth/logout">Logout</a>
+            ) : (
+                <a href="/api/auth/login">Login</a>
+            )}
         </div>
     );
 };

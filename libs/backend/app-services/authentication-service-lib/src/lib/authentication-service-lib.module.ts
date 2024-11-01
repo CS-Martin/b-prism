@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AuthenticationServiceLibService } from './authentication-service-lib.service';
-import { PrismaDbLibModule } from '@prisma-db-lib';
+import { AuthenticationMongodbLibModule } from '@authentication-mongodb-lib';
+import { AuthenticationService } from './authentication-service.abstract.class';
 
 @Module({
     controllers: [],
-    imports: [PrismaDbLibModule],
+    imports: [AuthenticationMongodbLibModule],
     providers: [AuthenticationServiceLibService],
     exports: [AuthenticationServiceLibService],
 })

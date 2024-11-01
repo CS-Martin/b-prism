@@ -14,5 +14,5 @@ export async function middleware(req: NextRequest) {
 
 // Middleware applies to routes defined in the matcher
 export const config = {
-    matcher: ['/api/:path*', '/map/:path*', '/'],
+    matcher: ['/api/:path*', '/'],
 };
