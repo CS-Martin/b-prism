@@ -7,33 +7,30 @@ export class UserDto {
     id!: string;
 
     @ApiProperty()
-    auth0_id!: string | null;
+    given_name!: string;
 
     @ApiProperty()
-    name!: string;
-
-    @ApiProperty()
-    office!: string;
-
-    @ApiProperty()
-    position!: string;
+    family_name!: string;
 
     @ApiProperty()
     email!: string;
 
     @ApiProperty()
-    password!: string;
+    office?: string | null;
 
     @ApiProperty()
-    id_image_url!: string | null;
+    position?: string | null;
 
     @ApiProperty()
     role!: UserRole;
+
+    @ApiProperty()
+    id_image_url?: string | null;
 
     @ApiProperty()
     createdAt!: Date;
 
     @ApiProperty()
     updatedAt!: Date;
-    
+
 }

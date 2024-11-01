@@ -9,24 +9,26 @@ export class AuthenticationMongodbLibService {
 
     constructor(private readonly prisma: PrismaDbLibService) {}
 
-    async create(createUserDto: CreateUserDto): Promise<UserDto> {
-        this.logger.log('Creating user', createUserDto);
+    async create(userData: CreateUserDto): Promise<UserDto> {
+        this.logger.log('Creating user', userData);
 
         const user = await this.prisma.user.create({
-            data: createUserDto
+            data: {
+                ...userData
+            }
         });
 
         return user;
     }
 
-    async update(id: string, updateUserDto: UpdateUserDto): Promise<UserDto> {
-        this.logger.log('Updating user', updateUserDto);
+    async update(id: string, userData: UpdateUserDto): Promise<UserDto> {
+        this.logger.log('Updating user', userData);
 
         const user = await this.prisma.user.update({
             where: {
                 id: id
             },
-            data: updateUserDto
+            data: userData
         });
 
         return user;

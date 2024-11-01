@@ -12,7 +12,7 @@ import { AppModule } from './app/app.module';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
-    // app.useGlobalPipes(new ValidationPipe({ transform: true }));
+    app.enableCors();
 
     const config = new DocumentBuilder()
         .setTitle('Authentication Service')
