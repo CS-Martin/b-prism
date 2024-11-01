@@ -14,8 +14,7 @@ enum UserRole {
 }
 
 model user {
-  sid          String   @id @map("_id")
-  sub          String   @unique
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   given_name   String
   family_name  String
   email        String   @unique

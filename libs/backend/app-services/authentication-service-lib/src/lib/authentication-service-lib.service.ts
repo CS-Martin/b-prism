@@ -9,13 +9,11 @@ export class AuthenticationServiceLibService implements AuthenticationService {
 
     constructor(private readonly authenticationMongodbService: AuthenticationMongodbLibService) {}
 
-    async create(createUserDto: CreateUserDto): Promise<ResponseDto<UserDto>> {
-        this.logger.log('Creating user', createUserDto);
+    async create(userData: CreateUserDto): Promise<ResponseDto<UserDto>> {
+        this.logger.log('Creating user', userData);
 
         try {
-            const user: UserDto = await this.authenticationMongodbService.create({
-                ...createUserDto,
-            });
+            const user: UserDto = await this.authenticationMongodbService.create(userData);
             
             const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
 
@@ -29,13 +27,13 @@ export class AuthenticationServiceLibService implements AuthenticationService {
         }
     }
 
-    async update(id: string, updateUserDto: UpdateUserDto): Promise<ResponseDto<UserDto>> {
-        this.logger.log('Updating user', updateUserDto);
+    async update(id: string, newUserData: UpdateUserDto): Promise<ResponseDto<UserDto>> {
+        this.logger.log('Updating user', newUserData);
 
         await this.findById(id);
 
         try {
-            const user: UserDto = await this.authenticationMongodbService.update(id, updateUserDto);
+            const user: UserDto = await this.authenticationMongodbService.update(id, newUserData);
 
             const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
 

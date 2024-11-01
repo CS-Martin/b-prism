@@ -4,10 +4,7 @@ import { UserRole } from '@prisma/client';
 export class UserDto {
 
     @ApiProperty()
-    sid!: string;
-
-    @ApiProperty()
-    sub!: string;
+    id!: string;
 
     @ApiProperty()
     given_name!: string;
