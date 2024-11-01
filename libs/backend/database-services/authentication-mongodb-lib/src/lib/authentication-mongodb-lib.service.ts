@@ -24,7 +24,7 @@ export class AuthenticationMongodbLibService {
 
         const user = await this.prisma.user.update({
             where: {
-                id: id
+                sid: id
             },
             data: updateUserDto
         });
@@ -37,7 +37,7 @@ export class AuthenticationMongodbLibService {
 
         const user: UserDto | null = await this.prisma.user.findUnique({
             where: {
-                id: id
+                sid: id
             }
         });
 

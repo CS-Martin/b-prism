@@ -13,21 +13,10 @@ export class AuthenticationServiceLibService implements AuthenticationService {
         this.logger.log('Creating user', createUserDto);
 
         try {
-            const user: UserDto = await this.authenticationMongodbService.create(
-                {
-                    auth0_id: createUserDto.auth0_id ?? null,
-                    name: createUserDto.name,
-                    office: createUserDto.office,
-                    position: createUserDto.position,
-                    email: createUserDto.email,
-                    password: createUserDto.password,
-                    id_image_url: createUserDto.id_image_url ?? null,
-                    role: createUserDto.role,
-                    createdAt: createUserDto.createdAt,
-                    updatedAt: createUserDto.updatedAt
-                }
-            );
-
+            const user: UserDto = await this.authenticationMongodbService.create({
+                ...createUserDto,
+            });
+            
             const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
 
             return response;
