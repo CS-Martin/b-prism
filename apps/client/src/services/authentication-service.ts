@@ -10,13 +10,6 @@ class AuthenticationService {
 
     public async create(user: CreateUserDto): Promise<UserDto> {
 
-        // Check if user already exists
-        const existingUser = await this.findById(user.sid);
-
-        if (existingUser) {
-            throw new BadRequestException('User already exists');
-        }
-
         try {
             const response = await fetch(`${this.API_BASE_URL}/authentication/create`, {
                 method: 'POST',

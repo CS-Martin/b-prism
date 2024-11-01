@@ -18,6 +18,7 @@ model user {
   given_name   String
   family_name  String
   email        String   @unique
+  password     String
   office       String?
   position     String?
   role         UserRole @default(unverified)
