@@ -1,11 +1,22 @@
-import { authenticationService } from 'apps/client/src/services/authentication-service';
-import NextAuth from 'next-auth';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { PrismaClient } from '@prisma/client';
+import NextAuth, { SessionStrategy } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-const authOptions = {
+const prisma = new PrismaClient();
+
+export const authOptions = {
+
+    adapter: PrismaAdapter(prisma),
+
     session: {
-        strategy: 'jwt' as 'jwt',
+        strategy: 'jwt' as SessionStrategy,
     },
+
+    secret: process.env.NEXTAUTH_SECRET,
+
+
+
     providers: [
         CredentialsProvider({
             credentials: {
@@ -13,31 +24,14 @@ const authOptions = {
                 password: { label: 'Password', type: 'password' },
             },
             async authorize(credentials) {
-                if (!credentials) {
-                    throw new Error('No credentials provided');
-                }
-
-                try {
-                    const user = await authenticationService.findByEmail(credentials.email);
-
-                    if (!user) {
-                        throw new Error('User not found');
-                    }
-
-                    const isMatch = user.password === credentials.password;
-
-                    if (!isMatch) {
-                        throw new Error('Invalid credentials');
-                    }
-
-                    return user;
-                } catch (error) {
-                    console.error('Authorization error:', error);
-                    throw new Error('Authorization failed');
-                }
+                
             }
         })
     ],
+
+    debug: process.env.NODE_ENV === 'development',
 };
 
-export default NextAuth(authOptions);
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };

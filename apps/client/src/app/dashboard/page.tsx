@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { doCredentialLogin } from '../../hooks/authentication.hook';
 import { useRouter } from 'next/navigation';
 
@@ -26,22 +27,8 @@ const Dashboard = () => {
     return (
         <div>
             <h1>Dashboard</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" name="email" required />
-                </div>
-                <div>
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        required
-                    />
-                </div>
-                <button type="submit">Login</button>
-            </form>
+            <Link href="/auth/register">Register</Link>
+            <Link href="/auth/login">Login</Link>
         </div>
     );
 };
