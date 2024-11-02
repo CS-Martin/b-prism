@@ -1,5 +1,5 @@
 import './global.css';
-import { UserProvider } from '@auth0/nextjs-auth0/client';
+import SessionLayout from './session-layout';
 
 export const metadata = {
     title: 'Welcome to b-prism',
@@ -14,7 +14,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
-                <UserProvider>{children}</UserProvider>
+                <SessionLayout>{children}</SessionLayout>
             </body>
         </html>
     );

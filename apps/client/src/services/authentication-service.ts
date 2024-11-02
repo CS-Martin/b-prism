@@ -44,6 +44,18 @@ class AuthenticationService {
 
         return await response.json();
     }
+
+    public async findByEmail(email: string): Promise<UserDto> {
+        const response = await fetch(`${this.API_BASE_URL}/authentication/find/email/${email}`);
+
+        if (!response.ok) {
+            const error = await response.json();
+
+            throw new BadRequestException(error.message);
+        }
+
+        return await response.json();
+    }
 }
 
 export const authenticationService = new AuthenticationService();

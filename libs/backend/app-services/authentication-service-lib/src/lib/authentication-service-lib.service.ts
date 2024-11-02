@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, Logger, NotFoundException } from '@nes
 import { AuthenticationMongodbLibService } from '@authentication-mongodb-lib';
 import { CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { AuthenticationService } from './authentication-service.abstract.class';
+import { hashPassword } from '@lib-utils';
 
 @Injectable()
 export class AuthenticationServiceLibService implements AuthenticationService {
@@ -13,11 +14,18 @@ export class AuthenticationServiceLibService implements AuthenticationService {
         this.logger.log('Creating user', userData);
 
         try {
+
+            // Hash password
+            const hashedPassword = await hashPassword(userData.password);
+            userData.password = hashedPassword;
+
             const user: UserDto = await this.authenticationMongodbService.create(userData);
+
             
             const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
 
             return response;
+            
         } catch (error) {
 
             this.logger.error('Error creating user', error);
@@ -60,4 +68,18 @@ export class AuthenticationServiceLibService implements AuthenticationService {
 
         return response;
     } 
+
+    async findByEmail(email: string): Promise<ResponseDto<UserDto>> {
+        this.logger.log('Finding user', email);
+
+        const user: UserDto | null = await this.authenticationMongodbService.findByEmail(email);
+
+        if (!user) {
+            throw new NotFoundException(`User with email ${email} not found`);
+        }
+
+        const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
+
+        return response;
+    }
 }
