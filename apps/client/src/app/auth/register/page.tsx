@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { authenticationService } from 'apps/client/src/services/authentication-service';
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -18,22 +19,8 @@ export default function RegisterPage() {
     const registerUser = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const response = await fetch(
-            'http://localhost:3001/authentication/create',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            }
-        );
+        await authenticationService.create(data);
 
-        if (!response.ok) {
-            throw new Error('Failed to register user');
-        }
-
-        console.log('Redirecting to login');
         router.push('/auth/login');
     };
 

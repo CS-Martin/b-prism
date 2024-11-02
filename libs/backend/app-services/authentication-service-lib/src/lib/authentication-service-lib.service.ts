@@ -1,8 +1,8 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationMongodbLibService } from '@authentication-mongodb-lib';
 import { CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { AuthenticationService } from './authentication-service.abstract.class';
-import { hashPassword } from '@lib-utils';
+import { comparePassword, hashPassword } from '@lib-utils';
 
 @Injectable()
 export class AuthenticationServiceLibService implements AuthenticationService {
@@ -21,7 +21,6 @@ export class AuthenticationServiceLibService implements AuthenticationService {
 
             const user: UserDto = await this.authenticationMongodbService.create(userData);
 
-            
             const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
 
             return response;
@@ -32,6 +31,32 @@ export class AuthenticationServiceLibService implements AuthenticationService {
 
             throw new BadRequestException(error);
 
+        }
+    }
+
+    async verify(email: string, password: string): Promise<ResponseDto<UserDto>> {
+        this.logger.log('Verifying user', email);
+
+        try {
+            const user: UserDto | null = await this.authenticationMongodbService.findByEmail(email);
+
+            if (!user) {
+                throw new NotFoundException(`User with email ${email} not found`);
+            }
+
+            const isPasswordValid = await comparePassword(password, user.password);
+
+            if (!isPasswordValid) {
+                throw new UnauthorizedException('Invalid password');
+            }
+
+            const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
+
+            return response;
+        } catch (error) {
+            this.logger.error('Error verifying user', error);
+
+            throw new BadRequestException(error);
         }
     }
 
@@ -79,6 +104,8 @@ export class AuthenticationServiceLibService implements AuthenticationService {
         }
 
         const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
+
+        console.log(response);
 
         return response;
     }

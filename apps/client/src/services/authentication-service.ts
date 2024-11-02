@@ -5,10 +5,11 @@ class AuthenticationService {
     private API_BASE_URL: string;
 
     constructor() {
-        this.API_BASE_URL = process.env.API_BASE_URL ?? '';
+        // Change if production
+        this.API_BASE_URL = process.env.NEXT_PUBLIC_DEV_API_BASE_URL ?? '';
     }
 
-    public async create(user: CreateUserDto): Promise<UserDto> {
+    public async create(user: any): Promise<UserDto> {
 
         try {
             const response = await fetch(`${this.API_BASE_URL}/authentication/create`, {
@@ -30,6 +31,33 @@ class AuthenticationService {
             console.error(error);
 
             throw new BadRequestException('Failed to create user');
+        }
+    }
+
+    public async verify(email: string, password: string): Promise<UserDto> {
+
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/authentication/verify`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error(error);
+
+            throw new BadRequestException(
+                'Your email or password is incorrect. Please try again.'
+            );
         }
     }
 
