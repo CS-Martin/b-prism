@@ -8,5 +8,6 @@ export abstract class AuthenticationService {
 
     abstract findById(id: string): Promise<ResponseDto<UserDto>>;
 
+    abstract findByEmail(email: string): Promise<ResponseDto<UserDto>>;
 }
     

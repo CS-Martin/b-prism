@@ -1,26 +1,47 @@
 'use client';
 
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { doCredentialLogin } from '../../hooks/authentication.hook';
+import { useRouter } from 'next/navigation';
 
 const Dashboard = () => {
-    const { user, error, isLoading } = useUser();
-    console.log(user);
+    const router = useRouter();
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        try {
+            const formData = new FormData(event.target as HTMLFormElement);
+            const response = await doCredentialLogin(formData);
+
+            if (response?.error) {
+                throw new Error(response.error);
+            }
+
+            router.push('/map');
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <div>
-            <p>hello {user?.name}</p>
-            <p>
-                Go to map <a href="/map">here</a>
-            </p>
-            {user ? (
-                <a href="/api/auth/logout">Logout</a>
-            ) : (
-                <a href="/api/auth/login">Login</a>
-            )}
+            <h1>Dashboard</h1>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor="email">Email:</label>
+                    <input type="email" id="email" name="email" required />
+                </div>
+                <div>
+                    <label htmlFor="password">Password:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                    />
+                </div>
+                <button type="submit">Login</button>
+            </form>
         </div>
     );
 };

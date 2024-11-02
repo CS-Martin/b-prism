@@ -14,6 +14,9 @@ export class UserDto {
 
     @ApiProperty()
     email!: string;
+    
+    @ApiProperty()
+    password!: string;
 
     @ApiProperty()
     office?: string | null;

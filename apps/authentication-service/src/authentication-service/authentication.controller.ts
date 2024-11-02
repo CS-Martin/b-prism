@@ -18,8 +18,13 @@ export class AuthenticationController {
         return this.authenticationService.update(id, updateUserDto);
     }
 
-    @Get('find/:id')
-    find(@Param('id') id: string) {
+    @Get('find/id/:id')
+    findById(@Param('id') id: string) {
         return this.authenticationService.findById(id);
+    }
+
+    @Get('find/email/:email')
+    findByEmail(@Param('email') email: string) {
+        return this.authenticationService.findByEmail(email);
     }
 }

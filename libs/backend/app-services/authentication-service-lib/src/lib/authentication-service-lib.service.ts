@@ -60,4 +60,18 @@ export class AuthenticationServiceLibService implements AuthenticationService {
 
         return response;
     } 
+
+    async findByEmail(email: string): Promise<ResponseDto<UserDto>> {
+        this.logger.log('Finding user', email);
+
+        const user: UserDto | null = await this.authenticationMongodbService.findByEmail(email);
+
+        if (!user) {
+            throw new NotFoundException(`User with email ${email} not found`);
+        }
+
+        const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
+
+        return response;
+    }
 }
