@@ -1,6 +1,44 @@
 'use client';
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+
 export default function LoginPage() {
+    const [data, setData] = useState({
+        email: '',
+        password: '',
+    });
+
+    const [error, setError] = useState('');
+    const router = useRouter();
+    const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        try {
+            const result = await signIn('credentials', {
+                email: data.email,
+                password: data.password,
+                callbackUrl: '/dashboard',
+            });
+
+            if (result === null) {
+                setError('Invalid credentials');
+                return;
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                switch (error.message) {
+                    case 'CredentialsSignin':
+                        setError('Invalid credentials');
+                        break;
+                    default:
+                        setError('Something went wrong');
+                }
+            }
+        }
+    };
+
     return (
         <>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -16,7 +54,7 @@ export default function LoginPage() {
                 </div>
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form action="#" method="POST" className="space-y-6">
+                    <form action="#" onSubmit={loginUser} className="space-y-6">
                         <div>
                             <label
                                 htmlFor="email"
@@ -32,6 +70,13 @@ export default function LoginPage() {
                                     required
                                     autoComplete="email"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                    value={data.email}
+                                    onChange={(e) =>
+                                        setData({
+                                            ...data,
+                                            email: e.target.value,
+                                        })
+                                    }
                                 />
                             </div>
                         </div>
@@ -61,6 +106,13 @@ export default function LoginPage() {
                                     required
                                     autoComplete="current-password"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                    value={data.password}
+                                    onChange={(e) =>
+                                        setData({
+                                            ...data,
+                                            password: e.target.value,
+                                        })
+                                    }
                                 />
                             </div>
                         </div>
@@ -74,6 +126,12 @@ export default function LoginPage() {
                             </button>
                         </div>
                     </form>
+
+                    {error && (
+                        <p className="mt-10 text-center text-sm/6 text-red-500">
+                            {error}
+                        </p>
+                    )}
 
                     <p className="mt-10 text-center text-sm/6 text-gray-500">
                         Not a member?{' '}
