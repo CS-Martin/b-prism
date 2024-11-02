@@ -1,36 +1,26 @@
-'use client';
-
 import Link from 'next/link';
-import { doCredentialLogin } from '../../hooks/authentication.hook';
-import { useRouter } from 'next/navigation';
+import { options } from '../api/auth/[...nextauth]/options';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
-const Dashboard = () => {
-    const router = useRouter();
-
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        try {
-            const formData = new FormData(event.target as HTMLFormElement);
-            const response = await doCredentialLogin(formData);
-
-            if (response?.error) {
-                throw new Error(response.error);
-            }
-
-            router.push('/map');
-        } catch (error) {
-            console.error(error);
-        }
-    };
+export default async function Dashboard() {
+    const session = await getServerSession(options);
 
     return (
         <div>
             <h1>Dashboard</h1>
+            {session?.user ? (
+                <div>
+                    <p>Hi {session.user.email}</p>
+                </div>
+            ) : (
+                <p>User not logged in</p>
+            )}
+
             <Link href="/auth/register">Register</Link>
             <Link href="/auth/login">Login</Link>
+            <Link href="/api/auth/signout">Logout</Link>
         </div>
     );
-};
-
-export default Dashboard;
+}

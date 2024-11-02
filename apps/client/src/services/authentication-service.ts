@@ -9,7 +9,7 @@ class AuthenticationService {
         this.API_BASE_URL = process.env.NEXT_PUBLIC_DEV_API_BASE_URL ?? '';
     }
 
-    public async create(user: any): Promise<UserDto> {
+    public async create(user: CreateUserDto): Promise<UserDto> {
 
         try {
             const response = await fetch(`${this.API_BASE_URL}/authentication/create`, {
@@ -26,7 +26,7 @@ class AuthenticationService {
                 throw new BadRequestException(error.message);
             }
 
-            return await response.json();
+            return response.json();
         } catch (error) {
             console.error(error);
 
@@ -38,9 +38,9 @@ class AuthenticationService {
 
         try {
             const response = await fetch(`${this.API_BASE_URL}/authentication/verify`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email, password }),
             });
@@ -51,7 +51,9 @@ class AuthenticationService {
                 throw new BadRequestException(error.message);
             }
 
-            return await response.json();
+            const user = await response.json();
+
+            return user.body;
         } catch (error) {
             console.error(error);
 

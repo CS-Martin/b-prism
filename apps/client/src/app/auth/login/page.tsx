@@ -2,33 +2,39 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { authenticationService } from 'apps/client/src/services/authentication-service';
+import { signIn } from 'next-auth/react';
 
 export default function LoginPage() {
-    const router = useRouter();
-
     const [data, setData] = useState({
         email: '',
         password: '',
     });
 
     const [error, setError] = useState('');
-
+    const router = useRouter();
     const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         try {
-            const response = await authenticationService.verify(
-                data.email,
-                data.password
-            );
+            const result = await signIn('credentials', {
+                email: data.email,
+                password: data.password,
+                callbackUrl: '/dashboard',
+            });
 
-            router.push('/dashboard');
+            if (result === null) {
+                setError('Invalid credentials');
+                return;
+            }
         } catch (error) {
             if (error instanceof Error) {
-                setError(error.message);
-            } else {
-                setError('An unknown error occurred');
+                switch (error.message) {
+                    case 'CredentialsSignin':
+                        setError('Invalid credentials');
+                        break;
+                    default:
+                        setError('Something went wrong');
+                }
             }
         }
     };
