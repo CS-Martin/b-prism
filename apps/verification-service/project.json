@@ -1,0 +1,26 @@
+{
+    "name": "verification-service",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/verification-service/src",
+    "projectType": "application",
+    "tags": [],
+    "targets": {
+        "serve": {
+            "executor": "@nx/js:node",
+            "defaultConfiguration": "development",
+            "dependsOn": ["build"],
+            "options": {
+                "buildTarget": "verification-service:build",
+                "runBuildTargetDependencies": false
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "verification-service:build:development"
+                },
+                "production": {
+                    "buildTarget": "verification-service:build:production"
+                }
+            }
+        }
+    }
+}

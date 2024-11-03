@@ -7,9 +7,6 @@ export abstract class AuthenticationService {
     abstract verify(email: string, password: string): Promise<ResponseDto<UserDto>>;
 
     abstract update(id: string, updateUserDto: UpdateUserDto): Promise<ResponseDto<UserDto>>;
-
-    abstract findById(id: string): Promise<ResponseDto<UserDto>>;
-
-    abstract findByEmail(email: string): Promise<ResponseDto<UserDto>>;
+    
 }
     

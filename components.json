@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": false,
+  "tailwind": {
+    "config": "apps/client/tailwind.config.js",
+    "css": "apps/client/src/app/global.css",
+    "baseColor": "gray",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@b-prism/ui-components/components",
+    "utils": "@b-prism/ui-components/utils"
+  }
+}
