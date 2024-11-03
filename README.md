@@ -4,7 +4,7 @@
 > Map project
 
 ## **Introduction**
-> Goal: Aid students in learning programming and mentors in teaching programming.
+> Goal: Mitigate disaster effects and efficiently handle disaster response
 
 ### **Project Adviser**:
 - Kevin Vega
