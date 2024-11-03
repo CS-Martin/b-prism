@@ -7,11 +7,13 @@
 > Goal: Aid students in learning programming and mentors in teaching programming.
 
 ### **Project Adviser**:
-- 
+- Kevin Vega
 
 ### **Members:**
 - Martin Edgar Atole
 - Albert Perez
+
+## 📂 Project Structure
 
 ```plaintext
 b-prism
@@ -112,15 +114,114 @@ This setup guide should help you get started with the BPrism project. If you enc
 
 Make sure you have [Node.js](https://nodejs.org/) installed on your machine before running the above command.
 
-## 📂 Project Structure
+---
 
-## Usage
+## **Dependencies**
 
-Provide instructions on how to use or run the project. This could include commands to start a development server, build the project, or run tests.
+1. **Node**
 
-```sh
-npm start
-```
+   - Project Dependencies
+
+     | Package                          | Command                        |
+     | :------------------------------: | ------------------------------ |
+     | *@auth0/nextjs-auth0*            | `npm i @auth0/nextjs-auth0`    |
+     | *@nestjs/common*                 | `npm i @nestjs/common`         |
+     | *@nestjs/core*                   | `npm i @nestjs/core`           |
+     | *@nestjs/platform-express*       | `npm i @nestjs/platform-express`|
+     | *@nestjs/swagger*                | `npm i @nestjs/swagger`        |
+     | *@next-auth/prisma-adapter*      | `npm i @next-auth/prisma-adapter`|
+     | *@prisma/client*                 | `npm i @prisma/client`         |
+     | *@radix-ui/react-accordion*      | `npm i @radix-ui/react-accordion`|
+     | *@radix-ui/react-dropdown-menu*  | `npm i @radix-ui/react-dropdown-menu`|
+     | *@radix-ui/react-icons*          | `npm i @radix-ui/react-icons`  |
+     | *@radix-ui/react-slot*           | `npm i @radix-ui/react-slot`   |
+     | *@types/mapbox-gl*               | `npm i @types/mapbox-gl`       |
+     | *axios*                          | `npm i axios`                  |
+     | *bcrypt*                         | `npm i bcrypt`                 |
+     | *class-transformer*              | `npm i class-transformer`      |
+     | *class-validator*                | `npm i class-validator`        |
+     | *class-variance-authority*       | `npm i class-variance-authority`|
+     | *clsx*                           | `npm i clsx`                   |
+     | *lucide-react*                   | `npm i lucide-react`           |
+     | *mapbox-gl*                      | `npm i mapbox-gl`              |
+     | *next*                           | `npm i next`                   |
+     | *next-auth*                      | `npm i next-auth`              |
+     | *react*                          | `npm i react`                  |
+     | *react-dom*                      | `npm i react-dom`              |
+     | *react-map-gl*                   | `npm i react-map-gl`           |
+     | *reflect-metadata*               | `npm i reflect-metadata`       |
+     | *rxjs*                           | `npm i rxjs`                   |
+     | *tailwind-merge*                 | `npm i tailwind-merge`         |
+     | *tailwindcss-animate*            | `npm i tailwindcss-animate`    |
+
+   - Development Dependencies
+
+     | Package                          | Command                        |
+     | :------------------------------: | ------------------------------ |
+     | *@eslint/compat*                 | `npm i --save-dev @eslint/compat`|
+     | *@eslint/js*                     | `npm i --save-dev @eslint/js`  |
+     | *@nestjs/schematics*             | `npm i --save-dev @nestjs/schematics`|
+     | *@nestjs/testing*                | `npm i --save-dev @nestjs/testing`|
+     | *@nx/eslint*                     | `npm i --save-dev @nx/eslint`  |
+     | *@nx/eslint-plugin*              | `npm i --save-dev @nx/eslint-plugin`|
+     | *@nx/jest*                       | `npm i --save-dev @nx/jest`    |
+     | *@nx/js*                         | `npm i --save-dev @nx/js`      |
+     | *@nx/nest*                       | `npm i --save-dev @nx/nest`    |
+     | *@nx/next*                       | `npm i --save-dev @nx/next`    |
+     | *@nx/node*                       | `npm i --save-dev @nx/node`    |
+     | *@nx/react*                      | `npm i --save-dev @nx/react`   |
+     | *@nx/vite*                       | `npm i --save-dev @nx/vite`    |
+     | *@nx/web*                        | `npm i --save-dev @nx/web`     |
+     | *@nx/webpack*                    | `npm i --save-dev @nx/webpack` |
+     | *@nx/workspace*                  | `npm i --save-dev @nx/workspace`|
+     | *@swc-node/register*             | `npm i --save-dev @swc-node/register`|
+     | *@swc/cli*                       | `npm i --save-dev @swc/cli`    |
+     | *@swc/core*                      | `npm i --save-dev @swc/core`   |
+     | *@swc/helpers*                   | `npm i --save-dev @swc/helpers`|
+     | *@testing-library/react*         | `npm i --save-dev @testing-library/react`|
+     | *@types/bcrypt*                  | `npm i --save-dev @types/bcrypt`|
+     | *@types/jest*                    | `npm i --save-dev @types/jest` |
+     | *@types/node*                    | `npm i --save-dev @types/node` |
+     | *@types/react*                   | `npm i --save-dev @types/react`|
+     | *@types/react-dom*               | `npm i --save-dev @types/react-dom`|
+     | *@vitejs/plugin-react-swc*       | `npm i --save-dev @vitejs/plugin-react-swc`|
+     | *@vitest/coverage-v8*            | `npm i --save-dev @vitest/coverage-v8`|
+     | *@vitest/ui*                     | `npm i --save-dev @vitest/ui`  |
+     | *autoprefixer*                   | `npm i --save-dev autoprefixer`|
+     | *babel-jest*                     | `npm i --save-dev babel-jest`  |
+     | *eslint*                         | `npm i --save-dev eslint`      |
+     | *eslint-config-next*             | `npm i --save-dev eslint-config-next`|
+     | *eslint-config-prettier*         | `npm i --save-dev eslint-config-prettier`|
+     | *eslint-plugin-import*           | `npm i --save-dev eslint-plugin-import`|
+     | *eslint-plugin-jsx-a11y*         | `npm i --save-dev eslint-plugin-jsx-a11y`|
+     | *eslint-plugin-react*            | `npm i --save-dev eslint-plugin-react`|
+     | *eslint-plugin-react-hooks*      | `npm i --save-dev eslint-plugin-react-hooks`|
+     | *jest*                           | `npm i --save-dev jest`        |
+     | *jest-environment-jsdom*         | `npm i --save-dev jest-environment-jsdom`|
+     | *jest-environment-node*          | `npm i --save-dev jest-environment-node`|
+     | *jsdom*                          | `npm i --save-dev jsdom`       |
+     | *nx*                             | `npm i --save-dev nx`          |
+     | *postcss*                        | `npm i --save-dev postcss`     |
+     | *prettier*                       | `npm i --save-dev prettier`    |
+     | *tailwindcss*                    | `npm i --save-dev tailwindcss` |
+     | *ts-jest*                        | `npm i --save-dev ts-jest`     |
+     | *ts-node*                        | `npm i --save-dev ts-node`     |
+     | *tslib*                          | `npm i --save-dev tslib`       |
+     | *typescript*                     | `npm i --save-dev typescript`  |
+     | *typescript-eslint*              | `npm i --save-dev typescript-eslint`|
+     | *vite*                           | `npm i --save-dev vite`        |
+     | *vitest*                         | `npm i --save-dev vitest`      |
+     | *webpack-cli*                    | `npm i --save-dev webpack-cli` |
+
+   - Production Dependencies
+
+     | Package | Command |
+     | :---: | --- |
+     | *pm2* | `npm i -g pm2` |
+
+---
+
+This section provides a comprehensive list of the dependencies used in your project, along with the commands to install them. Adjust the list as needed to fit your specific project requirements.
 
 ## Contributing
 
