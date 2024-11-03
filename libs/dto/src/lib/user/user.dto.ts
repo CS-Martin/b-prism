@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
 
@@ -24,7 +24,7 @@ export class UserDto {
     @ApiProperty()
     position?: string | null;
 
-    @ApiProperty()
+    @ApiProperty({ enum: UserRole })
     role!: UserRole;
 
     @ApiProperty()
