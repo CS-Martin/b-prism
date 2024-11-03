@@ -16,6 +16,7 @@ export class VerificationServiceLibService implements VerificationServiceLibAbst
         if (!userId || !role) {
             throw new Error('Invalid user ID or role');
         }
+        console.log("THIS IS THE USER", role);
 
         const user = await this.userService.findById(userId);
 
@@ -25,10 +26,10 @@ export class VerificationServiceLibService implements VerificationServiceLibAbst
                 case 'admin':
                     await this.verificationMongodbLib.makeAdmin(user.body);
                     break;
-                case 'verify':
+                case 'verified':
                     await this.verificationMongodbLib.verifyUser(user.body);
                     break;
-                case 'unverify':
+                case 'unverified':
                     await this.verificationMongodbLib.unverifyUser(user.body);
                     break;
                 default:

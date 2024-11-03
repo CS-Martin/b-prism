@@ -1,7 +1,6 @@
 import { VerificationDto } from "@dto";
 import { Controller, Get, Patch, Body } from "@nestjs/common";
-import { ApiBody, ApiTags } from "@nestjs/swagger";
-import { UserRole } from "@prisma/client";
+import { ApiTags } from "@nestjs/swagger";
 import { VerificationServiceLibService } from "@verification-service-lib";
 
 @ApiTags('Verification Endpoints')

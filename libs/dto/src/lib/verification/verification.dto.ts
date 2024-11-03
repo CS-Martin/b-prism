@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "@b-prism/enums";
 
 export class VerificationDto {
 
