@@ -1,0 +1,9 @@
+{
+    "name": "verification-service-lib",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/backend/app-services/verification-service-lib/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project verification-service-lib --web",
+    "targets": {}
+}

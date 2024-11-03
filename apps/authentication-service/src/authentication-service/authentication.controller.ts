@@ -1,4 +1,5 @@
 import { AuthenticationServiceLibService } from "@authentication-service-lib";
+import { UserServiceLibService } from "@b-prism/user-service-lib";
 import { CreateUserDto, UpdateUserDto, VerifyUserDto } from "@dto";
 import { Controller, Post, Body, Put, Param, Get } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
@@ -6,7 +7,7 @@ import { ApiTags } from "@nestjs/swagger";
 @ApiTags('Authentication Endpoints')
 @Controller('authentication')
 export class AuthenticationController {
-    constructor(private readonly authenticationService: AuthenticationServiceLibService ) {}
+    constructor(private readonly authenticationService: AuthenticationServiceLibService) {}
 
     @Post('create')
     create(@Body() createUserDto: CreateUserDto) {
@@ -21,15 +22,5 @@ export class AuthenticationController {
     @Put('update/:id')
     update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
         return this.authenticationService.update(id, updateUserDto);
-    }
-
-    @Get('find/id/:id')
-    findById(@Param('id') id: string) {
-        return this.authenticationService.findById(id);
-    }
-
-    @Get('find/email/:email')
-    findByEmail(@Param('email') email: string) {
-        return this.authenticationService.findByEmail(email);
     }
 }

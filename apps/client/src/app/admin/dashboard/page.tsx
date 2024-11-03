@@ -3,6 +3,10 @@ import { options } from '../../api/auth/[...nextauth]/options';
 import { UserDto } from '@dto';
 
 import {
+    Button,
+    DropdownMenuPortal,
+    DropdownMenuSubTrigger,
+    DropdownMenuSub,
     Table,
     TableBody,
     TableCaption,
@@ -10,8 +14,22 @@ import {
     TableHead,
     TableHeader,
     TableRow,
+    DropdownMenuSubContent,
 } from '@b-prism/ui-components';
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+    DropdownMenuGroup,
+    DropdownMenuShortcut,
+} from '@b-prism/ui-components';
+
 import { userService } from 'apps/client/src/services/user-service';
+import { Mail, PlusCircle, MessageSquare, Plus, LogOut } from 'lucide-react';
 
 type User = UserDto;
 
@@ -33,7 +51,7 @@ export default async function AdminDashboard() {
     }));
 
     return (
-        <div>
+        <div className="p-10">
             <h1>Admin Dashboard</h1>
 
             <Table>
@@ -63,7 +81,19 @@ export default async function AdminDashboard() {
                             <TableCell>{user.id_image_url}</TableCell>
                             <TableCell>{user.role}</TableCell>
                             <TableCell className="text-right">
-                                $250.00
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="outline">Open</Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-32 rounded-[8px]">
+                                        <DropdownMenuItem className="cursor-pointer">
+                                            <span>Verify</span>
+                                            <DropdownMenuShortcut>
+                                                ⇧⌘Q
+                                            </DropdownMenuShortcut>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </TableCell>
                         </TableRow>
                     ))}

@@ -24,7 +24,7 @@ export class UserDto {
     @ApiProperty()
     position?: string | null;
 
-    @ApiProperty()
+    @ApiProperty({ enum: UserRole })
     role!: UserRole;
 
     @ApiProperty()
