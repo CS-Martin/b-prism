@@ -1,0 +1,9 @@
+{
+    "name": "user-service-lib",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/backend/app-services/user-service-lib/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project user-service-lib --web",
+    "targets": {}
+}

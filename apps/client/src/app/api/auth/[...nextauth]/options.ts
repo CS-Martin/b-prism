@@ -25,11 +25,10 @@ export const options: NextAuthOptions = {
         async session({ session, token }) {
             session.user = token.user as { 
                 id?: string;
-                name?: string; 
-                email?: string; 
-                image?: string;
                 given_name?: string;
                 family_name?: string;
+                email?: string; 
+                image?: string;
                 office?: string;
                 position?: string;
                 role?: string;
@@ -43,8 +42,4 @@ export const options: NextAuthOptions = {
             return token;
         },
     },
-    // pages: {
-    //     signIn: '/dashboard',
-    //     signOut: '/auth/login',
-    // },
 };

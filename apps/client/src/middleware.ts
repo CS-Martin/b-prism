@@ -13,7 +13,7 @@ export default withAuth({
 });
 
 export const config = {
-    matcher: ['/map', '/auth/register', '/auth/login', '/api/:path*',  '/api/auth/:path*'],
+    matcher: ['/', '/map', '/auth/register', '/auth/login', '/api/:path*',  '/api/auth/:path*'],
 };
 
 export async function middleware(req: NextRequest) {
@@ -22,6 +22,10 @@ export async function middleware(req: NextRequest) {
 
     const token = await getToken({ req });
     const isAuthenticated = !!token;
+
+    if (pathname === '/') {
+        return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
 
     // Redirect logged-in users away from login and register pages
     if (isAuthenticated && (pathname === '/auth/login' || pathname === '/auth/register')) {
