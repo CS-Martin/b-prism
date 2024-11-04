@@ -1,6 +1,9 @@
+'use client';
+
 import { getServerSession } from 'next-auth';
 import { options } from '../../api/auth/[...nextauth]/options';
 import { UserDto } from '@dto';
+import { useEffect, useState } from 'react';
 
 import {
     Button,
@@ -28,27 +31,23 @@ import {
     DropdownMenuShortcut,
 } from '@b-prism/ui-components';
 
-import { userService } from 'apps/client/src/services/user-service';
-import { Mail, PlusCircle, MessageSquare, Plus, LogOut } from 'lucide-react';
+import { UserRole } from '@b-prism/enums';
+import { useSession } from 'next-auth/react';
+import { useDisplayUsers } from 'apps/client/src/hooks/admin-dashboard.hook';
+import { verificationService } from 'apps/client/src/services/verification-service';
 
 type User = UserDto;
 
-export default async function AdminDashboard() {
-    const session = await getServerSession(options);
+export default function AdminDashboard() {
+    const session = useSession().data?.user;
 
-    const response = (await userService.findAll()) || [];
+    const { users, isLoading } = useDisplayUsers();
 
-    // @ts-ignore
-    const users = response.body.map((user: UserDto) => ({
-        id: user.id,
-        given_name: user.given_name,
-        family_name: user.family_name,
-        email: user.email,
-        office: user.office,
-        position: user.position,
-        id_image_url: user.id_image_url,
-        role: user.role,
-    }));
+    const handleRoleChange = (userId: string, newRole: UserRole) => {
+        console.log(`Changing role for user ${userId} to ${newRole}`);
+
+        verificationService.roleChange(userId, newRole);
+    };
 
     return (
         <div className="p-10">
@@ -83,15 +82,38 @@ export default async function AdminDashboard() {
                             <TableCell className="text-right">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="outline">Open</Button>
+                                        <Button variant="outline">
+                                            Actions
+                                        </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-32 rounded-[8px]">
-                                        <DropdownMenuItem className="cursor-pointer">
-                                            <span>Verify</span>
-                                            <DropdownMenuShortcut>
-                                                ⇧⌘Q
-                                            </DropdownMenuShortcut>
-                                        </DropdownMenuItem>
+                                        {Object.values(UserRole).map(
+                                            (role) =>
+                                                user.role !== role && (
+                                                    <DropdownMenuItem
+                                                        key={role}
+                                                        onClick={() =>
+                                                            handleRoleChange(
+                                                                user.id,
+                                                                role
+                                                            )
+                                                        }
+                                                    >
+                                                        {(() => {
+                                                            switch (role) {
+                                                                case UserRole.admin:
+                                                                    return 'Make Admin';
+                                                                case UserRole.verified:
+                                                                    return 'Verify User';
+                                                                case UserRole.unverified:
+                                                                    return 'Unverify User';
+                                                                default:
+                                                                    return null;
+                                                            }
+                                                        })()}
+                                                    </DropdownMenuItem>
+                                                )
+                                        )}
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>
@@ -99,14 +121,6 @@ export default async function AdminDashboard() {
                     ))}
                 </TableBody>
             </Table>
-
-            {session?.user ? (
-                <div>
-                    <p>Hi {(session.user as User).given_name}</p>
-                </div>
-            ) : (
-                <p>User not logged in</p>
-            )}
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import { UserDto } from "@dto";
 import { BadRequestException } from "@nestjs/common";
-import { UserRole } from "@prisma/client";
+import { ResponseDto } from "@dto";
 
 class UserService {
     private API_BASE_URL: string;
@@ -10,7 +10,7 @@ class UserService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_USER_SERVICE_API_PORT ?? ''}`;
     }
 
-    public async findAll(): Promise<UserDto[]> {
+    public async fetchAllUsers(): Promise<ResponseDto<UserDto[]>> {
         console.log('API_BASE_URL', this.API_BASE_URL);
 
         try {
