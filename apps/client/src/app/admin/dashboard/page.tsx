@@ -2,7 +2,7 @@
 
 import { getServerSession } from 'next-auth';
 import { options } from '../../api/auth/[...nextauth]/options';
-import { UserDto } from '@dto';
+import { ResponseDto, UserDto } from '@dto';
 import { useEffect, useState } from 'react';
 
 import {
@@ -43,10 +43,16 @@ export default function AdminDashboard() {
 
     const { users, isLoading } = useDisplayUsers();
 
-    const handleRoleChange = (userId: string, newRole: UserRole) => {
+    const handleRoleChange = async (userId: string, newRole: UserRole) => {
         console.log(`Changing role for user ${userId} to ${newRole}`);
 
-        verificationService.roleChange(userId, newRole);
+        await fetch('http://localhost:3002/verification/verify', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId, role: newRole }),
+        });
     };
 
     return (
