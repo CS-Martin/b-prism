@@ -25,7 +25,7 @@ async function bootstrap() {
 
     SwaggerModule.setup('api', app, document, { useGlobalPrefix: true });
 
-    const port = process.env.VERIFICATION_SERVICE_API_PORT;
+    const port = process.env.NEXT_PUBLIC_VERIFICATION_SERVICE_API_PORT;
     await app.listen(port);
 
     Logger.log(`🚀 Application is running on: http://localhost:${port}`);

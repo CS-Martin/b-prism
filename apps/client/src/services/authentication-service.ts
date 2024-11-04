@@ -6,7 +6,7 @@ class AuthenticationService {
 
     constructor() {
         // Change if production
-        this.API_BASE_URL = process.env.NEXT_PUBLIC_DEV_API_BASE_URL ?? '';
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_AUTH_SERVICE_API_PORT ?? ''}`;
     }
 
     public async create(user: CreateUserDto): Promise<UserDto> {
