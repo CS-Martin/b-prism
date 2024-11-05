@@ -1,9 +1,0 @@
-{
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@b-prism/ui-components": ["apps/client/ui-components/src/index.ts"],
-            "@b-prism/ui-components/*": ["apps/client/ui-components/src/*"]
-        }
-    }
-}

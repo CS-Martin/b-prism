@@ -15,7 +15,9 @@
         ],
         "sharedGlobals": []
     },
-    "nxCloudId": "671f4589b326645cb0d8e3d0",
+    "nxCloud": {
+        "accessToken": null
+    },
     "plugins": [
         {
             "plugin": "@nx/next/plugin",
@@ -61,6 +63,12 @@
                 "serveStaticTargetName": "serve-static",
                 "typecheckTargetName": "typecheck"
             }
+        },
+        {
+            "plugin": "@nx/playwright/plugin",
+            "options": {
+                "targetName": "e2e"
+            }
         }
     ],
     "generators": {
@@ -74,6 +82,11 @@
             "library": {
                 "unitTestRunner": "vitest"
             }
+        }
+    },
+    "targetDefaults": {
+        "e2e-ci--**/*": {
+            "dependsOn": ["^build"]
         }
     }
 }

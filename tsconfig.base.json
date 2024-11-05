@@ -15,6 +15,9 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
+            "@b-prism/web-app/admin-dashboard-hooks": [
+                "apps/web-app/src/hooks/admin-dashboard.hook.ts"
+            ],
             "@authentication-mongodb-lib": [
                 "libs/backend/database-services/authentication-mongodb-lib/src/index.ts"
             ],
@@ -22,12 +25,6 @@
                 "libs/backend/app-services/authentication-service-lib/src/index.ts"
             ],
             "@b-prism/enums": ["libs/enums/src/index.ts"],
-            "@b-prism/ui-components": [
-                "apps/client/ui-components/src/index.ts"
-            ],
-            "@b-prism/ui-components/server": [
-                "apps/client/ui-components/src/server.ts"
-            ],
             "@b-prism/user-mongodb-lib": [
                 "libs/backend/database-services/user-mongodb-lib/src/index.ts"
             ],
