@@ -3,8 +3,8 @@
   "style": "default",
   "rsc": false,
   "tailwind": {
-    "config": "apps/client/tailwind.config.js",
-    "css": "apps/client/src/app/global.css",
+    "config": "apps/web-app/tailwind.config.js",
+    "css": "apps/web-app/src/app/global.css",
     "baseColor": "gray",
     "cssVariables": true
   },
