@@ -1,6 +1,6 @@
 import { withAuth } from 'next-auth/middleware';
 import { getToken } from 'next-auth/jwt';
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export default withAuth({
     callbacks: {
