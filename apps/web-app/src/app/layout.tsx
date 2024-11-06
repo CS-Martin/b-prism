@@ -13,9 +13,11 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <SessionComponentProvider>
-                <body>{children}</body>
-            </SessionComponentProvider>
+            <body>
+                <SessionComponentProvider>
+                    <main>{children}</main>
+                </SessionComponentProvider>
+            </body>
         </html>
     );
 }
