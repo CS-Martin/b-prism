@@ -3,8 +3,8 @@
   "style": "default",
   "rsc": false,
   "tailwind": {
-    "config": "libs\\shadcn-lib\\tailwind.config.js",
-    "css": "libs\\shadcn-lib\\global.css",
+    "config": "libs/shadcn-lib/src/tailwind.config.ts",
+    "css": "libs/shadcn-lib/src/global.css",
     "baseColor": "neutral",
     "cssVariables": true
   },
