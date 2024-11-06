@@ -3,13 +3,13 @@
   "style": "default",
   "rsc": false,
   "tailwind": {
-    "config": "apps/web-app/tailwind.config.js",
-    "css": "apps/web-app/src/app/global.css",
-    "baseColor": "gray",
+    "config": "libs\\shadcn-lib\\tailwind.config.js",
+    "css": "libs\\shadcn-lib\\global.css",
+    "baseColor": "neutral",
     "cssVariables": true
   },
   "aliases": {
-    "components": "@b-prism/ui-components/components",
-    "utils": "@b-prism/ui-components/utils"
+    "components": "@b-prism/shadcn-ui",
+    "utils": "@b-prism/shadcn-lib"
   }
 }
