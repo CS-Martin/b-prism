@@ -2,8 +2,6 @@ import { options } from '../api/auth/[...nextauth]/options';
 import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 
-import { Button } from '@b-prism/shadcn-ui/index';
-
 export default async function Dashboard() {
     const session = await getServerSession(options);
 
@@ -19,8 +17,7 @@ export default async function Dashboard() {
                 <p>User not logged in</p>
             )}
 
-            <Button>Button</Button>
-
+            <Link href="/admin/dashboard">Admin Dashboard</Link>
             <Link href="/auth/register">Register</Link>
             <Link href="/auth/login">Login</Link>
             <Link href="/api/auth/signout">Logout</Link>

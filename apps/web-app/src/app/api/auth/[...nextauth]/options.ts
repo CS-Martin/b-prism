@@ -8,14 +8,21 @@ export const options: NextAuthOptions = {
             name: 'Credentials',
             credentials: {
                 email: { label: 'Email', type: 'email' },
-                password: { label: 'Password', type: 'password', placeholder: 'Password' },
+                password: {
+                    label: 'Password',
+                    type: 'password',
+                    placeholder: 'Password',
+                },
             },
             async authorize(credentials) {
                 console.log('Received credentials:', credentials);
 
                 if (!credentials?.email || !credentials?.password) return null;
 
-                const response = await authService.verify(credentials.email, credentials.password);
+                const response = await authService.verify(
+                    credentials.email,
+                    credentials.password
+                );
 
                 return response;
             },
@@ -23,22 +30,27 @@ export const options: NextAuthOptions = {
     ],
     callbacks: {
         async session({ session, token }) {
-            session.user = token.user as { 
-                id?: string;
-                given_name?: string;
-                family_name?: string;
-                email?: string; 
-                image?: string;
-                office?: string;
-                position?: string;
-                role?: string;
-            };
+            if (token) {
+                session.user = token.user as {
+                    id?: string;
+                    given_name?: string;
+                    family_name?: string;
+                    email?: string;
+                    image?: string;
+                    office?: string;
+                    position?: string;
+                    role?: string;
+                };
+            }
+
             return session;
         },
         async jwt({ token, user }) {
             if (user) {
                 token.user = user;
+                token.role = (user as { role?: string }).role;
             }
+
             return token;
         },
     },
