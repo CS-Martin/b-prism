@@ -17,6 +17,7 @@ export default async function Dashboard() {
                 <p>User not logged in</p>
             )}
 
+            <Link href="/admin/dashboard">Admin Dashboard</Link>
             <Link href="/auth/register">Register</Link>
             <Link href="/auth/login">Login</Link>
             <Link href="/api/auth/signout">Logout</Link>

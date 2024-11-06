@@ -1,52 +1,78 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-        "rootDir": ".",
-        "sourceMap": true,
-        "declaration": false,
-        "moduleResolution": "node",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "importHelpers": true,
-        "target": "es2015",
-        "module": "esnext",
-        "lib": ["es2020", "dom"],
-        "skipLibCheck": true,
-        "skipDefaultLibCheck": true,
-        "baseUrl": ".",
-        "paths": {
-            "@b-prism/web-app/admin-dashboard-hooks": [
-                "apps/web-app/src/hooks/admin-dashboard.hook.ts"
-            ],
-            "@authentication-mongodb-lib": [
-                "libs/backend/database-services/authentication-mongodb-lib/src/index.ts"
-            ],
-            "@authentication-service-lib": [
-                "libs/backend/app-services/authentication-service-lib/src/index.ts"
-            ],
-            "@b-prism/enums": ["libs/enums/src/index.ts"],
-            "@b-prism/user-mongodb-lib": [
-                "libs/backend/database-services/user-mongodb-lib/src/index.ts"
-            ],
-            "@b-prism/user-service-lib": [
-                "libs/backend/app-services/user-service-lib/src/index.ts"
-            ],
-            "@b-prism/verification-mongodb-lib": [
-                "libs/backend/database-services/verification-mongodb-lib/src/index.ts"
-            ],
-            "@dto": ["libs/dto/src/index.ts"],
-            "@lib-utils": ["libs/utils/src/index.ts"],
-            "@map-service-lib": [
-                "libs/backend/app-services/map-service-lib/src/index.ts"
-            ],
-            "@prisma-db-lib": ["libs/backend/prisma-db-lib/src/index.ts"],
-            "@user-service-lib": [
-                "libs/backend/app-services/user-service-lib/src/index.ts"
-            ],
-            "@verification-service-lib": [
-                "libs/backend/app-services/verification-service-lib/src/index.ts"
-            ]
-        }
-    },
-    "exclude": ["node_modules", "tmp"]
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@b-prism/web-app/admin-dashboard-hooks": [
+        "apps/web-app/src/hooks/admin-dashboard.hook.ts"
+      ],
+      "@authentication-mongodb-lib": [
+        "libs/backend/database-services/authentication-mongodb-lib/src/index.ts"
+      ],
+      "@authentication-service-lib": [
+        "libs/backend/app-services/authentication-service-lib/src/index.ts"
+      ],
+      "@b-prism/enums": [
+        "libs/enums/src/index.ts"
+      ],
+      "@b-prism/user-mongodb-lib": [
+        "libs/backend/database-services/user-mongodb-lib/src/index.ts"
+      ],
+      "@b-prism/user-service-lib": [
+        "libs/backend/app-services/user-service-lib/src/index.ts"
+      ],
+      "@b-prism/verification-mongodb-lib": [
+        "libs/backend/database-services/verification-mongodb-lib/src/index.ts"
+      ],
+      "@dto": [
+        "libs/dto/src/index.ts"
+      ],
+      "@lib-utils": [
+        "libs/utils/src/index.ts"
+      ],
+      "@map-service-lib": [
+        "libs/backend/app-services/map-service-lib/src/index.ts"
+      ],
+      "@prisma-db-lib": [
+        "libs/backend/prisma-db-lib/src/index.ts"
+      ],
+      "@user-service-lib": [
+        "libs/backend/app-services/user-service-lib/src/index.ts"
+      ],
+      "@verification-service-lib": [
+        "libs/backend/app-services/verification-service-lib/src/index.ts"
+      ],
+      "@b-prism/shadcn-ui": [
+        "libs/shadcn-ui/src/components"
+      ],
+      "@b-prism/shadcn-lib": [
+        "libs/shadcn-lib/src/index.ts"
+      ],
+      "@b-prism/shadcn-ui/*": [
+        "libs/shadcn-ui/src/*"
+      ],
+      "@b-prism/shadcn-lib/*": [
+        "libs/shadcn-lib/src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

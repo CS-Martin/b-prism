@@ -13,11 +13,18 @@ export default withAuth({
 });
 
 export const config = {
-    matcher: ['/', '/map', '/auth/register', '/auth/login', '/api/:path*',  '/api/auth/:path*'],
+    matcher: [
+        '/',
+        '/map',
+        '/auth/register',
+        '/auth/login',
+        '/admin/:path*',
+        '/api/:path*',
+        '/api/auth/:path*',
+    ],
 };
 
 export async function middleware(req: NextRequest) {
-
     const { pathname } = req.nextUrl;
 
     const token = await getToken({ req });
@@ -27,8 +34,16 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/dashboard', req.url));
     }
 
-    // Redirect logged-in users away from login and register pages
-    if (isAuthenticated && (pathname === '/auth/login' || pathname === '/auth/register')) {
+    if (
+        isAuthenticated &&
+        (pathname === '/auth/login' || pathname === '/auth/register')
+    ) {
+        return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+
+    if (pathname === '/admin/dashboard' && token?.role !== 'admin') {
+        console.log('GRANTING ACCESS TO ADMIN', token?.role);
+
         return NextResponse.redirect(new URL('/dashboard', req.url));
     }
 
