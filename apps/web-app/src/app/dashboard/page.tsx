@@ -8,7 +8,7 @@ export default async function Dashboard() {
     const session = await getServerSession(options);
 
     return (
-        <div className="">
+        <div className=''>
             <h1>Dashboard</h1>
 
             {session?.user ? (
@@ -21,10 +21,10 @@ export default async function Dashboard() {
 
             <Button>Button</Button>
 
-            <Link href="/admin/dashboard">Admin Dashboard</Link>
-            <Link href="/auth/register">Register</Link>
-            <Link href="/auth/login">Login</Link>
-            <Link href="/api/auth/signout">Logout</Link>
+            <Link href='/admin/dashboard'>Admin Dashboard</Link>
+            <Link href='/auth/register'>Register</Link>
+            <Link href='/auth/login'>Login</Link>
+            <Link href='/api/auth/signout'>Logout</Link>
         </div>
     );
 }
