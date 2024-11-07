@@ -1,6 +1,7 @@
 import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react';
 
 import {
+    ModeToggle,
     Sidebar,
     SidebarContent,
     SidebarFooter,
@@ -60,6 +61,11 @@ export function AppSidebar() {
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <ModeToggle />
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>

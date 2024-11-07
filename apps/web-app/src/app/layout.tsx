@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@b-prism/shadcn-ui/index';
 import SessionComponentProvider from '../context/session-provider';
 import './global.css';
 
@@ -11,7 +12,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang='en'>
             <body className='overflow-hidden'>
                 <SessionComponentProvider>
-                    <main>{children}</main>
+                    <ThemeProvider
+                        attribute='class'
+                        defaultTheme='system'
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        {children}
+                    </ThemeProvider>
                 </SessionComponentProvider>
             </body>
         </html>
