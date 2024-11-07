@@ -10,8 +10,6 @@ export class AuthenticationMongodbLibService {
     constructor(private readonly prisma: PrismaDbLibService) {}
 
     async create(userData: CreateUserDto): Promise<UserDto> {
-        this.logger.log('Creating user', userData);
-
         const user = await this.prisma.user.create({
             data: {
                 ...userData,
@@ -22,8 +20,6 @@ export class AuthenticationMongodbLibService {
     }
 
     async update(id: string, userData: UpdateUserDto): Promise<UserDto> {
-        this.logger.log('Updating user', userData);
-
         const user = await this.prisma.user.update({
             where: {
                 id: id,

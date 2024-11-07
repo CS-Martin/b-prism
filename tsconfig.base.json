@@ -27,6 +27,8 @@
             "@b-prism/verification-mongodb-lib": [
                 "libs/backend/database-services/verification-mongodb-lib/src/index.ts"
             ],
+            "@b-prism/warehouse-mongodb-lib": ["libs/backend/database-services/warehouse-mongodb-lib/src/index.ts"],
+            "@b-prism/warehouse-service-lib": ["libs/backend/app-services/warehouse-service-lib/src/index.ts"],
             "@b-prism/web-app/admin-dashboard-hooks": ["apps/web-app/src/hooks/admin-dashboard.hook.ts"],
             "@dto": ["libs/dto/src/index.ts"],
             "@lib-utils": ["libs/utils/src/index.ts"],

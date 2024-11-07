@@ -8,7 +8,7 @@ export class WarehouseDto {
     name!: string;
 
     @ApiProperty()
-    description?: string;
+    description!: string;
 
     @ApiProperty()
     longitude!: string;
@@ -17,14 +17,14 @@ export class WarehouseDto {
     latitude!: string;
 
     @ApiProperty()
-    capacity?: string;
+    capacity?: number;
 
     @ApiProperty()
     userId?: string;
 
     @ApiProperty()
-    createdAt!: string;
+    createdAt!: Date;
 
     @ApiProperty()
-    updatedAt!: string;
+    updatedAt!: Date;
 }

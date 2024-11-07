@@ -1,0 +1,9 @@
+{
+    "name": "warehouse-mongodb-lib",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/backend/database-services/warehouse-mongodb-lib/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project warehouse-mongodb-lib --web",
+    "targets": {}
+}
