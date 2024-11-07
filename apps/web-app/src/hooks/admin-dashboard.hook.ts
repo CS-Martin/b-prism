@@ -1,27 +1,26 @@
-import { useEffect, useState } from "react";
-import { ResponseDto, UserDto } from "@dto";
-import { userService } from "../services/user.service";
+import { useEffect, useState } from 'react';
+import { ResponseDto, UserDto } from '@dto';
+import { userService } from '../services/user.service';
 
 export const useDisplayUsers = () => {
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
     const [users, setUsers] = useState<UserDto[]>([]);
 
     useEffect(() => {
         const fetchAllUsers = async () => {
             try {
+                setIsLoading(true);
 
-                setIsLoading(true)
-
-                const response: ResponseDto<UserDto[]> = await userService.fetchAllUsers();
+                const response: ResponseDto<UserDto[]> =
+                    await userService.fetchAllUsers();
 
                 if (response.statusCode !== 201) {
                     throw new Error('Failed to fetch users');
                 }
 
-                setUsers(response.body)
+                setUsers(response.body);
 
-                setIsLoading(false)
-
+                setIsLoading(false);
             } catch (error) {
                 console.error(error);
 
@@ -30,7 +29,7 @@ export const useDisplayUsers = () => {
         };
 
         fetchAllUsers();
-    }, [])
+    }, []);
 
     return { users, isLoading };
-}
+};

@@ -14,8 +14,8 @@ export class AuthenticationMongodbLibService {
 
         const user = await this.prisma.user.create({
             data: {
-                ...userData
-            }
+                ...userData,
+            },
         });
 
         return user;
@@ -26,9 +26,9 @@ export class AuthenticationMongodbLibService {
 
         const user = await this.prisma.user.update({
             where: {
-                id: id
+                id: id,
             },
-            data: userData
+            data: userData,
         });
 
         return user;

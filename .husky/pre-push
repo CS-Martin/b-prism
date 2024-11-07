@@ -1,5 +1,13 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+echo '🏗️👷 Starting to build... Please wait for the process to complete.'
+
 # TODO: remove this after all the setup
-npx nx run-many --target=build --all
+npx nx run-many --target=build --all || (
+    echo '❌ Build check failed.
+          Please fix the issues listed above, add changes, and try committing again.';
+    exit 1;
+)
+
+echo '✅ All checks passed. Proceeding with the push command.'

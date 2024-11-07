@@ -20,7 +20,7 @@ async function bootstrap() {
         .setDescription('Verification Service API')
         .setVersion('1.0')
         .build();
-    
+
     const document = SwaggerModule.createDocument(app, config);
 
     SwaggerModule.setup('api', app, document, { useGlobalPrefix: true });
@@ -29,7 +29,9 @@ async function bootstrap() {
     await app.listen(port);
 
     Logger.log(`🚀 Application is running on: http://localhost:${port}`);
-    Logger.log(`🚀 API Documentation is running on: http://localhost:${port}/api`);
+    Logger.log(
+        `🚀 API Documentation is running on: http://localhost:${port}/api`,
+    );
 }
 
 bootstrap();
