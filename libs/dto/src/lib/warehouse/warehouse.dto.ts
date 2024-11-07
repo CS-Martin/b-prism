@@ -8,7 +8,7 @@ export class WarehouseDto {
     name!: string;
 
     @ApiProperty()
-    description!: string;
+    description!: string | null;
 
     @ApiProperty()
     longitude!: string;

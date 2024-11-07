@@ -13,14 +13,9 @@ export class WarehouseServiceLibService implements WarehouseService {
         this.logger.log('Creating warehouse', data);
 
         try {
-            // @ts-ignore
-            const warehouse: WarehouseDto = await this.warehouseMongodbService.create({
-                ...data,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            });
+            const warehouse = await this.warehouseMongodbService.create(data);
 
-            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(201, warehouse);
+            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(201, warehouse as WarehouseDto);
 
             return response;
         } catch (error) {
