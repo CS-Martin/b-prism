@@ -96,7 +96,7 @@
         "jsdom": "~22.1.0",
         "nx": "20.0.6",
         "postcss": "^8.4.47",
-        "prettier": "^3.3.3",
+        "prettier": "3.3.3",
         "pretty-quick": "^4.0.0",
         "shadcn-ui": "^0.9.3",
         "tailwindcss": "^3.4.14",
