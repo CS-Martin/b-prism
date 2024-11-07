@@ -21,8 +21,8 @@ export class UserMongodbLibService {
 
         const user: UserDto | null = await this.prisma.user.findUnique({
             where: {
-                id: id
-            }
+                id: id,
+            },
         });
 
         return user;
@@ -33,8 +33,8 @@ export class UserMongodbLibService {
 
         const user: UserDto | null = await this.prisma.user.findUnique({
             where: {
-                email: email
-            }
+                email: email,
+            },
         });
 
         return user;

@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaDbLibService extends PrismaClient implements OnModuleInit {
-
     private readonly logger = new Logger(PrismaDbLibService.name);
 
     async onModuleInit() {
@@ -14,5 +13,4 @@ export class PrismaDbLibService extends PrismaClient implements OnModuleInit {
             this.logger.error('Error connecting to database', error);
         }
     }
-
 }

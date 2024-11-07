@@ -28,7 +28,9 @@ async function bootstrap() {
     await app.listen(port);
 
     Logger.log(`🚀 Application is running on: http://localhost:${port}`);
-    Logger.log(`🚀 API Documentation is running on: http://localhost:${port}/api`);
+    Logger.log(
+        `🚀 API Documentation is running on: http://localhost:${port}/api`,
+    );
 }
 
 bootstrap();

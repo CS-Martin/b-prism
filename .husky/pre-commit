@@ -1,4 +1,14 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx nx run-many --target=lint --all
+echo '👷‍♂️ Starting pre-commit checks....'
+
+npx pretty-quick --staged
+
+npx nx run-many --target=lint --all || (
+    echo '❌ Linting check failed.
+          Please fix the issues listed above, add changes, and try committing again.';
+    exit 1;
+)
+
+echo '✅ All checks passed. Proceeding with commit.'

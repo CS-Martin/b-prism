@@ -1,13 +1,14 @@
-import { VerificationDto } from "@dto";
-import { Controller, Get, Patch, Body } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { VerificationServiceLibService } from "@verification-service-lib";
+import { VerificationDto } from '@dto';
+import { Controller, Get, Patch, Body } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { VerificationServiceLibService } from '@verification-service-lib';
 
 @ApiTags('Verification Endpoints')
 @Controller('verification')
 export class VerificationController {
-
-    constructor(private readonly verificationService: VerificationServiceLibService) {}
+    constructor(
+        private readonly verificationService: VerificationServiceLibService,
+    ) {}
 
     @Patch('verify')
     verifyUser(@Body() body: VerificationDto) {

@@ -4,24 +4,23 @@ import { UserServiceLibService } from '@b-prism/user-service-lib';
 import { VerificationMongodbLibService } from '@b-prism/verification-mongodb-lib';
 
 @Injectable()
-export class VerificationServiceLibService implements VerificationServiceLibAbstract {
-
+export class VerificationServiceLibService
+    implements VerificationServiceLibAbstract
+{
     constructor(
         private readonly userService: UserServiceLibService,
-        private readonly verificationMongodbLib: VerificationMongodbLibService
+        private readonly verificationMongodbLib: VerificationMongodbLibService,
     ) {}
 
     async verifyUser(userId: string, role: string): Promise<void> {
-
         if (!userId || !role) {
             throw new Error('Invalid user ID or role');
         }
-        console.log("THIS IS THE USER", role);
+        console.log('THIS IS THE USER', role);
 
         const user = await this.userService.findById(userId);
 
         try {
-
             switch (role) {
                 case 'admin':
                     await this.verificationMongodbLib.makeAdmin(user.body);
@@ -35,12 +34,10 @@ export class VerificationServiceLibService implements VerificationServiceLibAbst
                 default:
                     throw new Error('Invalid role');
             }
-
         } catch (error) {
             console.log(error);
 
             throw new Error('Failed to verify user');
         }
     }
-
 }
