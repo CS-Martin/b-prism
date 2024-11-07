@@ -3,8 +3,14 @@
 
 echo '👷‍♂️ Starting pre-commit checks....'
 
-npx pretty-quick --staged
+echo '🧪 Checking staged file formats...'
+npx pretty-quick --staged || (
+    echo '❌ Prettier check failed.
+          Please fix the issues listed above, add changes, and try committing again.';
+    exit 1;
+)
 
+echo '🧪 Linting staged files...'
 npx nx run-many --target=lint --all || (
     echo '❌ Linting check failed.
           Please fix the issues listed above, add changes, and try committing again.';
