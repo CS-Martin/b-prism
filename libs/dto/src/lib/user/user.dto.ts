@@ -33,5 +33,5 @@ export class UserDto {
     createdAt!: Date;
 
     @ApiProperty()
-    updatedAt!: Date;
+    updatedAt?: Date;
 }

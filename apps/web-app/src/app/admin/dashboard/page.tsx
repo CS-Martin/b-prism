@@ -13,12 +13,7 @@ import {
     TableRow,
 } from '@b-prism/shadcn-ui/index';
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@b-prism/shadcn-ui/index';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@b-prism/shadcn-ui/index';
 
 import { UserRole } from '@b-prism/enums';
 import { useDisplayUsers } from '@b-prism/web-app/admin-dashboard-hooks';
@@ -26,15 +21,13 @@ import { useDisplayUsers } from '@b-prism/web-app/admin-dashboard-hooks';
 type User = UserDto;
 
 export default function AdminDashboard() {
-    const { users, isLoading } = useDisplayUsers();
+    const { users, isLoading, fetchAllUsers } = useDisplayUsers();
 
     if (isLoading) {
         return <div>Loading...</div>;
     }
 
     const handleRoleChange = async (userId: string, newRole: UserRole) => {
-        console.log(`Changing role for user ${userId} to ${newRole}`);
-
         await fetch('http://localhost:3002/verification/verify', {
             method: 'PATCH',
             headers: {
@@ -42,17 +35,19 @@ export default function AdminDashboard() {
             },
             body: JSON.stringify({ userId, role: newRole }),
         });
+
+        fetchAllUsers();
     };
 
     return (
-        <div className="p-10">
+        <div className='p-10'>
             <h1>Admin Dashboard</h1>
 
             <Table>
                 <TableCaption>A list of your recent invoices.</TableCaption>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-[100px]">#</TableHead>
+                        <TableHead className='w-[100px]'>#</TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Surename</TableHead>
                         <TableHead>Email</TableHead>
@@ -60,7 +55,7 @@ export default function AdminDashboard() {
                         <TableHead>Position</TableHead>
                         <TableHead>ID Image</TableHead>
                         <TableHead>Role</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                        <TableHead className='text-right'>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -74,26 +69,19 @@ export default function AdminDashboard() {
                             <TableCell>{user.position}</TableCell>
                             <TableCell>{user.id_image_url}</TableCell>
                             <TableCell>{user.role}</TableCell>
-                            <TableCell className="text-right">
+                            <TableCell className='text-right'>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="outline">
-                                            Actions
-                                        </Button>
+                                        <Button variant='outline'>Actions</Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-32 rounded-[8px]">
+                                    <DropdownMenuContent className='w-32 rounded-[8px]'>
                                         {Object.values(UserRole).map(
                                             (role) =>
                                                 user.role !== role && (
                                                     <DropdownMenuItem
-                                                        className="cursor-pointer"
+                                                        className='cursor-pointer'
                                                         key={role}
-                                                        onClick={() =>
-                                                            handleRoleChange(
-                                                                user.id,
-                                                                role
-                                                            )
-                                                        }
+                                                        onClick={() => handleRoleChange(user.id, role)}
                                                     >
                                                         {(() => {
                                                             switch (role) {
@@ -108,7 +96,7 @@ export default function AdminDashboard() {
                                                             }
                                                         })()}
                                                     </DropdownMenuItem>
-                                                )
+                                                ),
                                         )}
                                     </DropdownMenuContent>
                                 </DropdownMenu>
