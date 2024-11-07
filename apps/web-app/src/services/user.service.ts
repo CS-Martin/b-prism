@@ -13,8 +13,6 @@ class UserService {
     }
 
     public async fetchAllUsers(): Promise<ResponseDto<UserDto[]>> {
-        console.log('API_BASE_URL', this.API_BASE_URL);
-
         try {
             const response = await fetch(`${this.API_BASE_URL}/user/all`);
 

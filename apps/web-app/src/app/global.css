@@ -67,11 +67,6 @@
     }
 }
 
-.map-wrapper {
-    width: calc(100% - 16rem);
-    height: 100%;
-}
-
 @layer base {
     * {
         @apply border-border;

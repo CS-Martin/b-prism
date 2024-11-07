@@ -8,3 +8,11 @@ export * from './lib/user/update.user.dto';
 export * from './lib/user/verify.user.dto';
 
 export * from './lib/verification/verification.dto';
+
+export * from './lib/warehouse/create.warehouse.dto';
+export * from './lib/warehouse/update.warehouse.dto';
+export * from './lib/warehouse/warehouse.dto';
+
+export * from './lib/dispensing-point/create.dispensing-point.dto';
+export * from './lib/dispensing-point/update.dispensing-point.dto';
+export * from './lib/dispensing-point/dispensing-point.dto';

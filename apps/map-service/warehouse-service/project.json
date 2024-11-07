@@ -1,0 +1,26 @@
+{
+    "name": "warehouse-service",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/map-service/warehouse-service/src",
+    "projectType": "application",
+    "tags": [],
+    "targets": {
+        "serve": {
+            "executor": "@nx/js:node",
+            "defaultConfiguration": "development",
+            "dependsOn": ["build"],
+            "options": {
+                "buildTarget": "warehouse-service:build",
+                "runBuildTargetDependencies": false
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "warehouse-service:build:development"
+                },
+                "production": {
+                    "buildTarget": "warehouse-service:build:production"
+                }
+            }
+        }
+    }
+}
