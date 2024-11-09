@@ -78,3 +78,7 @@
             'calt' 1;
     }
 }
+
+.something {
+    border-radius: var(--radius);
+}

@@ -1,6 +1,8 @@
 'use client';
 
+import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import {
+    Button,
     Label,
     ModeToggle,
     Sidebar,
@@ -14,6 +16,8 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     Switch,
+    Toast,
+    ToastAction,
 } from '@b-prism/shadcn-ui/index';
 import { useState } from 'react';
 
@@ -22,12 +26,38 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
+    const { toast } = useToast();
     const [selectedAction, setInternalSelectedAction] = useState<string | null>(null);
 
     const handleToggle = (action: string) => {
         const newAction = selectedAction === action ? null : action;
         setInternalSelectedAction(newAction);
         setSelectedAction(newAction);
+
+        if (newAction) {
+            switch (newAction) {
+                case 'createWarehouse':
+                    toast({
+                        title: 'Create Warehouse',
+                        description: `Please click on the map to create a warehouse`,
+                    });
+                    break;
+                case 'createDispensingPoint':
+                    toast({
+                        title: 'Create Dispensing Point',
+                        description: `Please click on the map to create a dispensing point`,
+                    });
+                    break;
+                case 'deleteItem':
+                    toast({
+                        title: 'Delete an Item',
+                        description: `Please click on the item you want to delete`,
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
     };
 
     return (

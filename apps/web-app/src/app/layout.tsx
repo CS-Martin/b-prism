@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@b-prism/shadcn-ui/index';
+import { ThemeProvider, Toaster } from '@b-prism/shadcn-ui/index';
 import SessionComponentProvider from '../context/session-provider';
 import './global.css';
 
@@ -19,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         disableTransitionOnChange
                     >
                         {children}
+                        <Toaster />
                     </ThemeProvider>
                 </SessionComponentProvider>
             </body>
