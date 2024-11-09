@@ -11,8 +11,6 @@ export const useDisplayWarehouses = () => {
 
         const response: ResponseDto<WarehouseDto[]> = await warehouseService.fetchAllWarehouses();
 
-        console.log('HOOKSDSD', response.body);
-
         if (response.statusCode !== 200) {
             throw new Error('Failed to fetch warehouses');
         }

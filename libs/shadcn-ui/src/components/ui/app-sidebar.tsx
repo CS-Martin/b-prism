@@ -1,6 +1,7 @@
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react';
+'use client';
 
 import {
+    Label,
     ModeToggle,
     Sidebar,
     SidebarContent,
@@ -12,55 +13,61 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    Switch,
 } from '@b-prism/shadcn-ui/index';
+import { useState } from 'react';
 
-const items = [
-    {
-        title: 'Home',
-        url: '#',
-        icon: Home,
-    },
-    {
-        title: 'Inbox',
-        url: '#',
-        icon: Inbox,
-    },
-    {
-        title: 'Calendar',
-        url: '#',
-        icon: Calendar,
-    },
-    {
-        title: 'Search',
-        url: '#',
-        icon: Search,
-    },
-    {
-        title: 'Settings',
-        url: '#',
-        icon: Settings,
-    },
-];
+interface AppSidebarProps {
+    setSelectedAction: (action: string | null) => void;
+}
 
-export function AppSidebar() {
+export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
+    const [selectedAction, setInternalSelectedAction] = useState<string | null>(null);
+
+    const handleToggle = (action: string) => {
+        const newAction = selectedAction === action ? null : action;
+        setInternalSelectedAction(newAction);
+        setSelectedAction(newAction);
+    };
+
     return (
         <Sidebar>
             <SidebarHeader>HEADER</SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
+                    <SidebarGroupLabel className='p-0'>Actions</SidebarGroupLabel>
                     <SidebarGroupContent>
-                        <SidebarMenu>
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <a href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
+                        <SidebarMenu className='gap-5'>
+                            <SidebarMenuItem onClick={() => handleToggle('createWarehouse')}>
+                                <div className='flex justify-between items-center space-x-2'>
+                                    <Label>Create Warehouse</Label>
+                                    <Switch
+                                        id='create-warehouse'
+                                        checked={selectedAction === 'createWarehouse'}
+                                        onChange={() => handleToggle('createWarehouse')}
+                                    />
+                                </div>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem onClick={() => handleToggle('createDispensingPoint')}>
+                                <div className='flex justify-between items-center space-x-2'>
+                                    <Label>Create Dispensing Point</Label>
+                                    <Switch
+                                        id='create-dispensing-point'
+                                        checked={selectedAction === 'createDispensingPoint'}
+                                        onChange={() => handleToggle('createDispensingPoint')}
+                                    />
+                                </div>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem onClick={() => handleToggle('deleteItem')}>
+                                <div className='flex justify-between items-center space-x-2'>
+                                    <Label>Delete Item</Label>
+                                    <Switch
+                                        id='delete-item'
+                                        checked={selectedAction === 'deleteItem'}
+                                        onChange={() => handleToggle('deleteItem')}
+                                    />
+                                </div>
+                            </SidebarMenuItem>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
                                     <ModeToggle />
