@@ -43,7 +43,7 @@ const Mapbox = ({ selectedAction }: { selectedAction: SelectedActionType | null 
                     bearing: -38.4,
                     pitch: 75,
                 }}
-                style={{ position: 'absolute', width: '100%', height: 'calc(100vh - 28px)' }}
+                style={{ position: 'absolute', width: '100%', height: '100%' }}
                 mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                 onClick={handleMapClick}
             >
