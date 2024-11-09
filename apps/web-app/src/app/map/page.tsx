@@ -1,10 +1,9 @@
 'use client';
 
 import { AppSidebar } from '@b-prism/shadcn-ui/index';
-import Mapbox from './_components/mapbox';
 import { SelectedActionType } from '@b-prism/enums';
 
-import Map, { Marker, MapMouseEvent, Popup } from 'react-map-gl';
+import Map, { MapMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useState } from 'react';
 import { useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
