@@ -12,6 +12,7 @@ export class WarehouseMongodbLibService {
             data: {
                 ...data,
                 description: data.description ?? '',
+                capacity: Number(data.capacity),
             },
         });
 
@@ -24,5 +25,21 @@ export class WarehouseMongodbLibService {
                 id,
             },
         });
+    }
+
+    async findAll(): Promise<Warehouse[]> {
+        const warehouses = await this.prisma.warehouse.findMany();
+
+        return warehouses;
+    }
+
+    async findById(id: string): Promise<Warehouse | null> {
+        const warehouse = await this.prisma.warehouse.findUnique({
+            where: {
+                id,
+            },
+        });
+
+        return warehouse;
     }
 }

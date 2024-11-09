@@ -13,3 +13,6 @@ export * from './components/ui/skeleton';
 export * from './components/ui/tooltip';
 export * from './components/ui/app-sidebar';
 export * from './components/ui/theme-toggler';
+export * from './components/ui/dialog';
+export * from './components/ui/label';
+export * from './components/ui/textarea';

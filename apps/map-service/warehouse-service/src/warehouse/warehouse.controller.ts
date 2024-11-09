@@ -1,6 +1,6 @@
 import { WarehouseServiceLibService } from '@b-prism/warehouse-service-lib';
 import { CreateWarehouseDto } from '@dto';
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Warehouse Endpoints')
@@ -16,5 +16,15 @@ export class WarehouseController {
     @Delete('delete/:id')
     delete(@Param('id') id: string) {
         return this.warehouseServiceLibService.delete(id);
+    }
+
+    @Get()
+    findAll() {
+        return this.warehouseServiceLibService.findAll();
+    }
+
+    @Get(':id')
+    findById(@Param('id') id: string) {
+        return this.warehouseServiceLibService.findById(id);
     }
 }

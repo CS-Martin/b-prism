@@ -19,10 +19,7 @@ export const options: NextAuthOptions = {
 
                 if (!credentials?.email || !credentials?.password) return null;
 
-                const response = await authService.verify(
-                    credentials.email,
-                    credentials.password
-                );
+                const response = await authService.verify(credentials.email, credentials.password);
 
                 return response;
             },
@@ -51,7 +48,12 @@ export const options: NextAuthOptions = {
                 token.role = (user as { role?: string }).role;
             }
 
+            token.exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30;
             return token;
         },
+    },
+    session: {
+        strategy: 'jwt',
+        maxAge: 60 * 60 * 24,
     },
 };
