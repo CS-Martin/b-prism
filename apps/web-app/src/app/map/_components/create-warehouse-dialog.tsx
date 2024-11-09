@@ -29,6 +29,7 @@ interface DialogProps {
 
 const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllWarehouses }) => {
     const [warehouseData, setWarehouseData] = useState<CreateWarehouseDto>({
+        type: 'warehouse',
         name: '',
         description: '',
         longitude: marker.longitude,

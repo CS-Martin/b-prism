@@ -5,6 +5,8 @@ export class DispensingPointDto {
     id!: string;
 
     @ApiProperty()
+    type!: string;
+    @ApiProperty()
     name!: string;
 
     @ApiProperty()

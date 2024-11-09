@@ -20,6 +20,17 @@ import {
     ToastAction,
 } from '@b-prism/shadcn-ui/index';
 import { useState } from 'react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@b-prism/shadcn-ui/components/ui/alert-dialog';
 
 interface AppSidebarProps {
     setSelectedAction: (action: string | null) => void;
@@ -68,6 +79,24 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                     <SidebarGroupLabel className='p-0'>Actions</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu className='gap-5'>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button variant='outline'>Show Dialog</Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action cannot be undone. This will permanently delete your account and
+                                            remove your data from our servers.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction>Continue</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
                             <SidebarMenuItem onClick={() => handleToggle('createWarehouse')}>
                                 <div className='flex justify-between items-center space-x-2'>
                                     <Label>Create Warehouse</Label>
