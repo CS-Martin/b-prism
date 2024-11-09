@@ -27,7 +27,7 @@ interface DialogProps {
     fetchAllWarehouses: () => void;
 }
 
-const MapDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllWarehouses }) => {
+const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllWarehouses }) => {
     const [warehouseData, setWarehouseData] = useState<CreateWarehouseDto>({
         name: '',
         description: '',
@@ -116,4 +116,4 @@ const MapDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllW
     );
 };
 
-export default MapDialog;
+export default CreateWarehouseDialog;

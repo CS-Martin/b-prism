@@ -1,34 +1,22 @@
 import Map, { Marker, MapMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useState } from 'react';
-
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-    Input,
-    Label,
-    Textarea,
-} from '@b-prism/shadcn-ui/index';
-import { CreateWarehouseDto } from '@dto';
-import MapDialog from './dialog';
 import { useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
+import CreateWarehouseDialog from './create-warehouse-dialog';
 
 interface MarkerType {
     longitude: string;
     latitude: string;
 }
 
-const Mapbox = () => {
+type SelectedActionType = 'createWarehouse' | 'createDispensingPoint' | 'deleteItem';
+
+const Mapbox = ({ selectedAction }: { selectedAction: SelectedActionType | null }) => {
+    console.log(selectedAction);
     const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
     const [isOpen, setIsOpen] = useState(false);
 
     const { warehouses, isLoading, fetchAllWarehouses } = useDisplayWarehouses();
-
-    console.log(warehouses);
 
     const handleMapClick = (event: MapMouseEvent) => {
         const longitude: string = event.lngLat.lng.toString();
@@ -36,7 +24,11 @@ const Mapbox = () => {
 
         setMarker({ longitude, latitude });
 
-        setIsOpen(true);
+        if (!selectedAction) {
+            setIsOpen(false);
+        } else {
+            setIsOpen(true);
+        }
     };
 
     return (
@@ -55,12 +47,14 @@ const Mapbox = () => {
                 mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                 onClick={handleMapClick}
             >
-                <MapDialog
-                    isOpen={isOpen}
-                    setIsOpen={setIsOpen}
-                    marker={marker}
-                    fetchAllWarehouses={fetchAllWarehouses}
-                />
+                {selectedAction === 'createWarehouse' && (
+                    <CreateWarehouseDialog
+                        isOpen={isOpen}
+                        setIsOpen={setIsOpen}
+                        marker={marker}
+                        fetchAllWarehouses={fetchAllWarehouses}
+                    />
+                )}
                 {warehouses.map((warehouse, index) => (
                     <Marker
                         key={index}

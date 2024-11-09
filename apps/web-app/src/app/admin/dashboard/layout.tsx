@@ -3,11 +3,7 @@ import { AppSidebar, SidebarProvider, SidebarTrigger, SidebarFooter } from '@b-p
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
     return (
         <SidebarProvider>
-            <AppSidebar />
-            <main>
-                <SidebarTrigger />
-                {children}
-            </main>
+            <main>{children}</main>
         </SidebarProvider>
     );
 }
