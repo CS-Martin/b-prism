@@ -9,7 +9,9 @@ interface MarkerType {
     latitude: string;
 }
 
-const Mapbox = ({ selectedAction }: { selectedAction: string | null }) => {
+type SelectedActionType = 'createWarehouse' | 'createDispensingPoint' | 'deleteItem';
+
+const Mapbox = ({ selectedAction }: { selectedAction: SelectedActionType | null }) => {
     console.log(selectedAction);
     const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
     const [isOpen, setIsOpen] = useState(false);
