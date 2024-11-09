@@ -1,4 +1,4 @@
-import Map, { Marker, MapMouseEvent } from 'react-map-gl';
+import Map, { Marker, MapMouseEvent, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useState } from 'react';
 import { useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
@@ -12,9 +12,11 @@ interface MarkerType {
 type SelectedActionType = 'createWarehouse' | 'createDispensingPoint' | 'deleteItem';
 
 const Mapbox = ({ selectedAction }: { selectedAction: SelectedActionType | null }) => {
-    console.log(selectedAction);
     const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
     const [isOpen, setIsOpen] = useState(false);
+    const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
+
+    console.log(selectedMarkerId);
 
     const { warehouses, isLoading, fetchAllWarehouses } = useDisplayWarehouses();
 
@@ -29,6 +31,10 @@ const Mapbox = ({ selectedAction }: { selectedAction: SelectedActionType | null 
         } else {
             setIsOpen(true);
         }
+    };
+
+    const handleMarkerClick = (index: number) => {
+        setSelectedMarkerId(index);
     };
 
     return (
@@ -60,8 +66,27 @@ const Mapbox = ({ selectedAction }: { selectedAction: SelectedActionType | null 
                         key={index}
                         longitude={Number(warehouse.longitude)}
                         latitude={Number(warehouse.latitude)}
+                        onClick={(e) => {
+                            e.originalEvent.preventDefault(); // Prevent default behavior
+                            e.originalEvent.stopPropagation(); // Stop event from bubbling up
+                            handleMarkerClick(index);
+                        }}
+                        className='cursor-pointer'
                     >
-                        <div style={{ backgroundColor: 'red', width: '10px', height: '10px', borderRadius: '50%' }} />
+                        {selectedMarkerId === index && (
+                            <Popup
+                                longitude={Number(warehouse.longitude)}
+                                latitude={Number(warehouse.latitude)}
+                                onClose={() => setSelectedMarkerId(null)}
+                                closeOnClick={true}
+                                anchor='top'
+                                className='text-black text-center'
+                            >
+                                <small>Warehouse:</small>
+                                <h3 className='text-lg font-bold'>{warehouse.name}</h3>
+                                <p className='text-sm'>Capacity: {warehouse.capacity}</p>
+                            </Popup>
+                        )}
                     </Marker>
                 ))}
             </Map>
