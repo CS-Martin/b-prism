@@ -6,7 +6,6 @@ import {
     Avatar,
     AvatarFallback,
     AvatarImage,
-    Button,
     DropdownMenuItem,
     ModeToggle,
     Sidebar,
@@ -37,14 +36,6 @@ interface AppSidebarProps {
     setSelectedAction: (action: string | null) => void;
 }
 
-interface SidebarActionItemProps {
-    id: string;
-    label: string;
-    icon: React.ReactNode;
-    selectedAction: string | null;
-    handleToggle: (action: string) => void;
-}
-
 const actions = [
     {
         id: 'createWarehouse',
@@ -69,7 +60,15 @@ const actions = [
     },
 ];
 
-function SidebarActionItem({ id, label, icon: Icon, selectedAction, handleToggle }) {
+interface SidebarActionItemProps {
+    id: string;
+    label: string;
+    icon: React.ElementType;
+    selectedAction: string | null;
+    handleToggle: (action: string) => void;
+}
+
+function SidebarActionItem({ id, label, icon: Icon, selectedAction, handleToggle }: SidebarActionItemProps) {
     return (
         <SidebarMenuItem onClick={() => handleToggle(id)}>
             <div className='flex justify-between items-center space-x-2'>
