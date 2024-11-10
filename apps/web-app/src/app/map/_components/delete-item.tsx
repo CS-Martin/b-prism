@@ -42,7 +42,12 @@ const DeleteItem = ({ item, onCancel, fetchAllWarehouses }: DeleteItemProps) => 
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+                    <AlertDialogAction
+                        onClick={handleDelete}
+                        className='bg-red-500'
+                    >
+                        Delete
+                    </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

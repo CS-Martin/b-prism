@@ -8,16 +8,14 @@ export function buildConfig(appDir: string): Config {
     return {
         darkMode: ['class'],
         content: [
-            join(
-                appDir,
-                '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}',
-            ),
+            join(appDir, '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'),
             ...createGlobPatternsForDependencies(appDir),
         ],
         theme: {
             extend: {
                 colors: {
                     border: 'hsl(var(--border))',
+                    radius: 'hsl(var(--radius))',
                     input: 'hsl(var(--input))',
                     ring: 'hsl(var(--ring))',
                     background: 'hsl(var(--background))',
@@ -54,11 +52,9 @@ export function buildConfig(appDir: string): Config {
                         DEFAULT: 'hsl(var(--sidebar-background))',
                         foreground: 'hsl(var(--sidebar-foreground))',
                         primary: 'hsl(var(--sidebar-primary))',
-                        'primary-foreground':
-                            'hsl(var(--sidebar-primary-foreground))',
+                        'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
                         accent: 'hsl(var(--sidebar-accent))',
-                        'accent-foreground':
-                            'hsl(var(--sidebar-accent-foreground))',
+                        'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
                         border: 'hsl(var(--sidebar-border))',
                         ring: 'hsl(var(--sidebar-ring))',
                     },

@@ -1,4 +1,5 @@
 import { WarehouseDto } from '@dto';
+import Image from 'next/image';
 import { Marker, Popup } from 'react-map-gl';
 
 interface RenderWarehouseProps {
@@ -17,8 +18,19 @@ const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: Ren
                 e.originalEvent.stopPropagation();
                 handleMarkerClick(warehouse.type, warehouse.id);
             }}
-            className='cursor-pointer'
+            className='cursor-pointer '
         >
+            <Image
+                priority
+                src={`/icons/warehouse.icon.svg`}
+                alt='warehouse'
+                width={50}
+                height={50}
+                style={{
+                    filter: 'drop-shadow(0 0 10px rgba(0, 0, 0, 0.5))',
+                }}
+            />
+            <p className='text-white text-center'>{warehouse.name}</p>
             {selectedMarkerId === warehouse.id && (
                 <Popup
                     longitude={Number(warehouse.longitude)}

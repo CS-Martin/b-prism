@@ -1,37 +1,38 @@
 'use client';
 
 import * as React from 'react';
-import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
-
-import { Button } from '@b-prism/shadcn-ui/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@b-prism/shadcn-ui/components/ui/dropdown-menu';
+import { Switch } from '@b-prism/shadcn-ui/components/ui/switch';
+import { Label } from '@b-prism/shadcn-ui/components/ui/label';
 
 export function ModeToggle() {
-    const { setTheme } = useTheme();
+    const { resolvedTheme, setTheme } = useTheme();
+    const [isMounted, setIsMounted] = React.useState(false);
+
+    // Ensure theme is fully resolved before rendering
+    React.useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    const handleToggle = (checked: boolean) => {
+        setTheme(checked ? 'dark' : 'light');
+    };
+
+    if (!isMounted) return null; // Avoid rendering until theme is resolved
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button
-                    variant='outline'
-                    size='icon'
-                >
-                    <Sun className='h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
-                    <Moon className='absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100' />
-                    <span className='sr-only'>Toggle theme</span>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align='end'>
-                <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <div className='flex items-center space-x-2'>
+            <Switch
+                id='theme-mode'
+                checked={resolvedTheme === 'dark'}
+                onCheckedChange={handleToggle}
+            />
+            <Label
+                htmlFor='theme-mode'
+                className='sr-only'
+            >
+                Toggle theme
+            </Label>
+        </div>
     );
 }
