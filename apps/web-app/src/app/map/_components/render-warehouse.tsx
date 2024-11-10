@@ -1,5 +1,4 @@
 import { WarehouseDto } from '@dto';
-import { Warehouse } from '@prisma/client';
 import { Marker, Popup } from 'react-map-gl';
 
 interface RenderWarehouseProps {

@@ -12,7 +12,7 @@ import {
     Textarea,
 } from '@b-prism/shadcn-ui/index';
 import { CreateWarehouseDto } from '@dto';
-import { warehouseService } from 'apps/web-app/src/services/warehouse.service';
+import { useCreateWarehouse } from 'apps/web-app/src/hooks/map.hook';
 import { useState, useEffect } from 'react';
 
 interface MarkerType {
@@ -48,10 +48,12 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
         setWarehouseData({ ...warehouseData, [name]: value });
     };
 
+    const { createWarehouse } = useCreateWarehouse(warehouseData);
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        await warehouseService.create(warehouseData);
+        await createWarehouse();
 
         fetchAllWarehouses();
 
