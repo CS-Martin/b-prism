@@ -37,6 +37,14 @@ interface AppSidebarProps {
     setSelectedAction: (action: string | null) => void;
 }
 
+interface SidebarActionItemProps {
+    id: string;
+    label: string;
+    icon: React.ReactNode;
+    selectedAction: string | null;
+    handleToggle: (action: string) => void;
+}
+
 const actions = [
     {
         id: 'createWarehouse',
