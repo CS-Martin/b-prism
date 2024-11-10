@@ -10,16 +10,22 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/components/ui/alert-dialog';
-import { DispensingPointDto, WarehouseDto } from '@dto';
+import { useDeleteWarehouse } from 'apps/web-app/src/hooks/map.hook';
 
 interface DeleteItemProps {
     item: { type: string; id: string };
     onCancel: () => void;
+    fetchAllWarehouses: () => void;
 }
 
-const DeleteItem = ({ onCancel }: DeleteItemProps) => {
-    const handleDelete = () => {
-        console.log('Deleting');
+const DeleteItem = ({ item, onCancel, fetchAllWarehouses }: DeleteItemProps) => {
+    const { deleteWarehouse } = useDeleteWarehouse(item.id);
+
+    const handleDelete = async () => {
+        await deleteWarehouse();
+
+        // Trigger re-fetch of warehouses
+        fetchAllWarehouses();
     };
 
     return (

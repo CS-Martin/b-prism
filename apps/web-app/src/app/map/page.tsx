@@ -5,7 +5,7 @@ import { SelectedActionType } from '@b-prism/enums';
 
 import Map, { MapMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
 import CreateWarehouseDialog from './_components/create-warehouse-dialog';
 import RenderWarehouse from './_components/render-warehouse';
@@ -18,7 +18,7 @@ interface MarkerType {
 
 const MapPage = () => {
     // To fetch all warehouses
-    const { warehouses, isLoading, fetchAllWarehouses } = useDisplayWarehouses();
+    const { warehouses, fetchAllWarehouses } = useDisplayWarehouses();
 
     // To detect the action selected by the user (create warehouse, delete warehouse, etc.)
     const [selectedAction, setSelectedAction] = useState<SelectedActionType | null>(null);
@@ -34,10 +34,12 @@ const MapPage = () => {
 
     const [itemToDelete, setItemtoDelete] = useState<{ type: string; id: string }>();
 
-    console.log(isDeleteDialogOpen);
-
     // To store the selected marker id
     const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
+
+    useEffect(() => {
+        fetchAllWarehouses();
+    }, []);
 
     const handleMapClick = (event: MapMouseEvent) => {
         const longitude: string = event.lngLat.lng.toString();
@@ -102,6 +104,7 @@ const MapPage = () => {
                 <DeleteItem
                     item={itemToDelete}
                     onCancel={() => setIsDeleteDialogOpen(false)}
+                    fetchAllWarehouses={fetchAllWarehouses}
                 />
             )}
 

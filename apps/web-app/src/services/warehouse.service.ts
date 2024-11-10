@@ -10,6 +10,7 @@ class WarehouseService {
             process.env.NEXT_PUBLIC_WAREHOUSE_SERVICE_API_PORT ?? ''
         }`;
     }
+
     public async create(warehouse: CreateWarehouseDto): Promise<WarehouseDto> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/warehouse/create`, {
@@ -35,9 +36,24 @@ class WarehouseService {
     }
 
     public async delete(id: string): Promise<void> {
-        const response = await fetch(`${this.API_BASE_URL}/warehouse/delete/${id}`, {
-            method: 'DELETE',
-        });
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/warehouse/delete/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message);
+            }
+        } catch (error) {
+            console.error(error);
+
+            throw new BadRequestException('Failed to delete warehouse');
+        }
     }
 
     public async fetchAllWarehouses(): Promise<ResponseDto<WarehouseDto[]>> {
