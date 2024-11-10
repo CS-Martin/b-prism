@@ -1,0 +1,9 @@
+{
+    "name": "dispensing-point-service-lib",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/backend/app-services/dispensing-point-service-lib/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project dispensing-point-service-lib --web",
+    "targets": {}
+}
