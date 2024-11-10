@@ -1,9 +1,13 @@
 'use client';
 
+import { useSession } from 'next-auth/react';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
     Button,
-    Label,
+    DropdownMenuItem,
     ModeToggle,
     Sidebar,
     SidebarContent,
@@ -16,28 +20,69 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     Switch,
-    Toast,
-    ToastAction,
 } from '@b-prism/shadcn-ui/index';
 import { useState } from 'react';
+import { ChevronUp, LogOut, MapPinned, MapPinXInside, Warehouse } from 'lucide-react';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '@b-prism/shadcn-ui/components/ui/alert-dialog';
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@b-prism/shadcn-ui/index';
+import { UserDto } from '@dto';
+import Link from 'next/link';
 
 interface AppSidebarProps {
     setSelectedAction: (action: string | null) => void;
 }
 
+const actions = [
+    {
+        id: 'createWarehouse',
+        label: 'Create Warehouse',
+        icon: Warehouse,
+        toastTitle: 'Create Warehouse',
+        toastDescription: 'Please click on the map to create a warehouse',
+    },
+    {
+        id: 'createDispensingPoint',
+        label: 'Create Dispensing Point',
+        icon: MapPinned,
+        toastTitle: 'Create Dispensing Point',
+        toastDescription: 'Please click on the map to create a dispensing point',
+    },
+    {
+        id: 'deleteItem',
+        label: 'Delete Item',
+        icon: MapPinXInside,
+        toastTitle: 'Delete an Item',
+        toastDescription: 'Please click on the item you want to delete',
+    },
+];
+
+function SidebarActionItem({ id, label, icon: Icon, selectedAction, handleToggle }) {
+    return (
+        <SidebarMenuItem onClick={() => handleToggle(id)}>
+            <div className='flex justify-between items-center space-x-2'>
+                <span className='flex items-center space-x-2'>
+                    <Icon className='w-5 h-5' />
+                    <span>{label}</span>
+                </span>
+                <Switch
+                    id={id}
+                    checked={selectedAction === id}
+                    onChange={() => handleToggle(id)}
+                />
+            </div>
+        </SidebarMenuItem>
+    );
+}
+
 export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
+    const { data: session } = useSession();
     const { toast } = useToast();
+    const user: UserDto = session?.user as UserDto;
     const [selectedAction, setInternalSelectedAction] = useState<string | null>(null);
 
     const handleToggle = (action: string) => {
@@ -45,98 +90,73 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
         setInternalSelectedAction(newAction);
         setSelectedAction(newAction);
 
-        if (newAction) {
-            switch (newAction) {
-                case 'createWarehouse':
-                    toast({
-                        title: 'Create Warehouse',
-                        description: `Please click on the map to create a warehouse`,
-                    });
-                    break;
-                case 'createDispensingPoint':
-                    toast({
-                        title: 'Create Dispensing Point',
-                        description: `Please click on the map to create a dispensing point`,
-                    });
-                    break;
-                case 'deleteItem':
-                    toast({
-                        title: 'Delete an Item',
-                        description: `Please click on the item you want to delete`,
-                    });
-                    break;
-                default:
-                    break;
-            }
+        const actionData = actions.find((a) => a.id === newAction);
+        if (actionData) {
+            toast({
+                title: actionData.toastTitle,
+                description: actionData.toastDescription,
+            });
         }
     };
 
     return (
         <Sidebar>
             <SidebarHeader>HEADER</SidebarHeader>
+
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel className='p-0'>Actions</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu className='gap-5'>
-                            <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button variant='outline'>Show Dialog</Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            This action cannot be undone. This will permanently delete your account and
-                                            remove your data from our servers.
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction>Continue</AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
-                            <SidebarMenuItem onClick={() => handleToggle('createWarehouse')}>
-                                <div className='flex justify-between items-center space-x-2'>
-                                    <Label>Create Warehouse</Label>
-                                    <Switch
-                                        id='create-warehouse'
-                                        checked={selectedAction === 'createWarehouse'}
-                                        onChange={() => handleToggle('createWarehouse')}
-                                    />
-                                </div>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem onClick={() => handleToggle('createDispensingPoint')}>
-                                <div className='flex justify-between items-center space-x-2'>
-                                    <Label>Create Dispensing Point</Label>
-                                    <Switch
-                                        id='create-dispensing-point'
-                                        checked={selectedAction === 'createDispensingPoint'}
-                                        onChange={() => handleToggle('createDispensingPoint')}
-                                    />
-                                </div>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem onClick={() => handleToggle('deleteItem')}>
-                                <div className='flex justify-between items-center space-x-2'>
-                                    <Label>Delete Item</Label>
-                                    <Switch
-                                        id='delete-item'
-                                        checked={selectedAction === 'deleteItem'}
-                                        onChange={() => handleToggle('deleteItem')}
-                                    />
-                                </div>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild>
-                                    <ModeToggle />
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
+                            {actions.map((action) => (
+                                <SidebarActionItem
+                                    key={action.id}
+                                    id={action.id}
+                                    label={action.label}
+                                    icon={action.icon}
+                                    selectedAction={selectedAction}
+                                    handleToggle={handleToggle}
+                                />
+                            ))}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
-            <SidebarFooter>FOOTER</SidebarFooter>
+            <SidebarFooter>
+                <div className='flex items-center justify-between space-x-2 p-5 border-2 border-gray-400 rounded-xl border-dashed'>
+                    <span>Dark Mode</span>
+                    <ModeToggle />
+                </div>
+                <SidebarMenu className='py-1'>
+                    <SidebarMenuItem>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <SidebarMenuButton className='h-auto'>
+                                    <Avatar style={{ borderRadius: 'var(--radius)' }}>
+                                        <AvatarImage src='https://github.com/shadcn.png' />
+                                        <AvatarFallback>US</AvatarFallback>
+                                    </Avatar>
+                                    {`${user?.given_name || ''} ${user?.family_name || ''}`}
+                                    <ChevronUp className='ml-auto' />
+                                </SidebarMenuButton>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                side='right'
+                                align='start'
+                                className='w-[--radix-popper-anchor-width]'
+                                style={{ borderRadius: 'var(--radius)' }}
+                            >
+                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    <LogOut />
+                                    <Link href='/api/auth/signout'>Log out</Link>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarFooter>
         </Sidebar>
     );
 }
