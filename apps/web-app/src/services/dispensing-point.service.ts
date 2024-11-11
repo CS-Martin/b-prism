@@ -11,7 +11,6 @@ class DispensingPointService {
     }
 
     public async create(dispensingPoint: CreateDispensingPointDto): Promise<DispensingPointDto> {
-        console.log(dispensingPoint);
         try {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-point/create`, {
                 method: 'POST',

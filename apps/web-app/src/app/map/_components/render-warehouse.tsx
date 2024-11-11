@@ -18,7 +18,7 @@ const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: Ren
                 e.originalEvent.stopPropagation();
                 handleMarkerClick(warehouse.type, warehouse.id);
             }}
-            className='cursor-pointer'
+            className='cursor-pointer animate-fade-in'
         >
             <Image
                 priority
