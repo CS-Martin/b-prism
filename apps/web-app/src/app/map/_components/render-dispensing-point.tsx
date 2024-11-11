@@ -22,7 +22,7 @@ const RenderDispensingPoint = ({
                 e.originalEvent.stopPropagation();
                 handleMarkerClick(dispensingPoint.type, dispensingPoint.id);
             }}
-            className='cursor-pointer'
+            className='cursor-pointer animate-fade-in'
         >
             <Image
                 priority

@@ -12,6 +12,7 @@ import RenderWarehouse from './_components/render-warehouse';
 import DeleteItem from './_components/delete-item';
 import CreateDispensingPointDialog from './_components/create-dispensing-point-dialog';
 import RenderDispensingPoint from './_components/render-dispensing-point';
+import ControlPanel from './_components/control-panel';
 
 interface MarkerType {
     longitude: string;
@@ -42,6 +43,11 @@ const MapPage = () => {
     // To store the selected marker id
     const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
 
+    const [visibility, setVisibility] = useState({
+        warehouses: true,
+        dispensingPoints: true,
+    });
+
     useEffect(() => {
         fetchAllWarehouses();
         fetchAllDispensingPoints();
@@ -60,6 +66,10 @@ const MapPage = () => {
         }
     };
 
+    const handleVisibilityChange = (layer: string, isVisible: boolean) => {
+        setVisibility((prev) => ({ ...prev, [layer]: isVisible }));
+    };
+
     const handleMarkerClick = (type: string | null, id: string | null) => {
         if (selectedAction === 'deleteItem' && type && id) {
             setItemtoDelete({ type, id });
@@ -70,6 +80,12 @@ const MapPage = () => {
 
     return (
         <main className=''>
+            {/* Control the visibility items on the map */}
+            <ControlPanel
+                visibility={visibility}
+                onVisibilityChange={handleVisibilityChange}
+            />
+
             <div id='map'>
                 <Map
                     mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
@@ -105,25 +121,26 @@ const MapPage = () => {
                         />
                     )}
 
-                    {/* Render all warehouses */}
-                    {warehouses.map((warehouse, index) => (
-                        <RenderWarehouse
-                            key={index}
-                            warehouse={warehouse}
-                            selectedMarkerId={selectedMarkerId}
-                            handleMarkerClick={handleMarkerClick}
-                        />
-                    ))}
+                    {visibility.warehouses &&
+                        warehouses.map((warehouse, index) => (
+                            <RenderWarehouse
+                                key={index}
+                                warehouse={warehouse}
+                                selectedMarkerId={selectedMarkerId}
+                                handleMarkerClick={handleMarkerClick}
+                            />
+                        ))}
 
-                    {/* Render all dispensing points */}
-                    {dispensingPoints.map((dispensingPoint, index) => (
-                        <RenderDispensingPoint
-                            key={index}
-                            dispensingPoint={dispensingPoint}
-                            selectedMarkerId={selectedMarkerId}
-                            handleMarkerClick={handleMarkerClick}
-                        />
-                    ))}
+                    {/* Conditionally render dispensing points based on visibility */}
+                    {visibility.dispensingPoints &&
+                        dispensingPoints.map((dispensingPoint, index) => (
+                            <RenderDispensingPoint
+                                key={index}
+                                dispensingPoint={dispensingPoint}
+                                selectedMarkerId={selectedMarkerId}
+                                handleMarkerClick={handleMarkerClick}
+                            />
+                        ))}
                 </Map>
             </div>
 

@@ -21,3 +21,4 @@ export * from './components/ui/toast';
 export * from './components/ui/toaster';
 export * from './components/ui/alert-dialog';
 export * from './components/ui/avatar';
+export * from './components/ui/checkbox';
