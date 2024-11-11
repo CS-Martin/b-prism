@@ -1,0 +1,90 @@
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { DispensingPointService } from './dispensing-point.abstract.class';
+import { DispensingPointMongodbLibService } from '@b-prism/dispensing-point-mongodb-lib';
+import { CreateDispensingPointDto, DispensingPointDto, ResponseDto } from '@dto';
+
+@Injectable()
+export class DispensingPointServiceLibService implements DispensingPointService {
+    private readonly logger = new Logger(DispensingPointServiceLibService.name);
+
+    constructor(private readonly dispensingPointMongodbService: DispensingPointMongodbLibService) {}
+
+    async create(data: CreateDispensingPointDto): Promise<ResponseDto<DispensingPointDto>> {
+        this.logger.log('Creating dispensing point', data);
+
+        try {
+            const dispensingPoint = await this.dispensingPointMongodbService.create({
+                name: data.name,
+                type: data.type,
+                description: data.description,
+                longitude: data.longitude,
+                latitude: data.latitude,
+                capacity: data.capacity,
+                userId: data.userId,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            });
+
+            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(201, dispensingPoint);
+
+            return response;
+        } catch (error) {
+            console.log(error);
+
+            throw new BadRequestException(error);
+        }
+    }
+
+    async delete(id: string): Promise<void> {
+        this.logger.log('Deleting dispensing point', id);
+
+        await this.findById(id);
+
+        try {
+            await this.dispensingPointMongodbService.delete(id);
+        } catch (error) {
+            console.log(error);
+
+            throw new BadRequestException(error);
+        }
+    }
+
+    async findAll(): Promise<ResponseDto<DispensingPointDto[]>> {
+        this.logger.log('Finding all dispensing points');
+
+        try {
+            const dispensingPoints = await this.dispensingPointMongodbService.findAll();
+
+            const response: ResponseDto<DispensingPointDto[]> = new ResponseDto<DispensingPointDto[]>(
+                200,
+                dispensingPoints,
+            );
+
+            return response;
+        } catch (error) {
+            console.log(error);
+
+            throw new BadRequestException(error);
+        }
+    }
+
+    async findById(id: string): Promise<ResponseDto<DispensingPointDto>> {
+        this.logger.log('Finding dispensing point by id', id);
+
+        try {
+            const dispensingPoint = await this.dispensingPointMongodbService.findById(id);
+
+            if (!dispensingPoint) {
+                throw new NotFoundException('Dispensing point not found');
+            }
+
+            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(200, dispensingPoint);
+
+            return response;
+        } catch (error) {
+            console.log(error);
+
+            throw new BadRequestException(error);
+        }
+    }
+}

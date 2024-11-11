@@ -6,11 +6,12 @@ export class DispensingPointDto {
 
     @ApiProperty()
     type!: string;
+
     @ApiProperty()
     name!: string;
 
     @ApiProperty()
-    description?: string;
+    description!: string | null;
 
     @ApiProperty()
     longitude!: string;
@@ -19,10 +20,10 @@ export class DispensingPointDto {
     latitude!: string;
 
     @ApiProperty()
-    capacity?: number;
+    capacity!: number | null;
 
     @ApiProperty()
-    userId?: string;
+    userId?: string | null;
 
     @ApiProperty()
     createdAt!: Date;
