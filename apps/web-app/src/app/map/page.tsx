@@ -6,10 +6,12 @@ import { SelectedActionType } from '@b-prism/enums';
 import Map, { MapMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useEffect, useState } from 'react';
-import { useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
+import { useDisplayDispensingPoints, useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
 import CreateWarehouseDialog from './_components/create-warehouse-dialog';
 import RenderWarehouse from './_components/render-warehouse';
 import DeleteItem from './_components/delete-item';
+import CreateDispensingPointDialog from './_components/create-dispensing-point-dialog';
+import RenderDispensingPoint from './_components/render-dispensing-point';
 
 interface MarkerType {
     longitude: string;
@@ -19,6 +21,9 @@ interface MarkerType {
 const MapPage = () => {
     // To fetch all warehouses
     const { warehouses, fetchAllWarehouses } = useDisplayWarehouses();
+
+    // To fetch all dispensing points
+    const { dispensingPoints, fetchAllDispensingPoints } = useDisplayDispensingPoints();
 
     // To detect the action selected by the user (create warehouse, delete warehouse, etc.)
     const [selectedAction, setSelectedAction] = useState<SelectedActionType | null>(null);
@@ -39,6 +44,7 @@ const MapPage = () => {
 
     useEffect(() => {
         fetchAllWarehouses();
+        fetchAllDispensingPoints();
     }, []);
 
     const handleMapClick = (event: MapMouseEvent) => {
@@ -56,7 +62,6 @@ const MapPage = () => {
 
     const handleMarkerClick = (type: string | null, id: string | null) => {
         if (selectedAction === 'deleteItem' && type && id) {
-            console.log(type, id);
             setItemtoDelete({ type, id });
             setIsDeleteDialogOpen(true);
         }
@@ -80,6 +85,7 @@ const MapPage = () => {
                     mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                     onClick={handleMapClick}
                 >
+                    {/* Trigger the dialog to create a warehouse */}
                     {selectedAction === 'createWarehouse' && (
                         <CreateWarehouseDialog
                             isOpen={isOpen}
@@ -88,6 +94,18 @@ const MapPage = () => {
                             fetchAllWarehouses={fetchAllWarehouses}
                         />
                     )}
+
+                    {/* Trigger the dialog to create a dispensing point */}
+                    {selectedAction === 'createDispensingPoint' && (
+                        <CreateDispensingPointDialog
+                            isOpen={isOpen}
+                            setIsOpen={setIsOpen}
+                            marker={marker}
+                            fetchAllDispensingPoints={fetchAllDispensingPoints}
+                        />
+                    )}
+
+                    {/* Render all warehouses */}
                     {warehouses.map((warehouse, index) => (
                         <RenderWarehouse
                             key={index}
@@ -96,7 +114,16 @@ const MapPage = () => {
                             handleMarkerClick={handleMarkerClick}
                         />
                     ))}
-                    {}
+
+                    {/* Render all dispensing points */}
+                    {dispensingPoints.map((dispensingPoint, index) => (
+                        <RenderDispensingPoint
+                            key={index}
+                            dispensingPoint={dispensingPoint}
+                            selectedMarkerId={selectedMarkerId}
+                            handleMarkerClick={handleMarkerClick}
+                        />
+                    ))}
                 </Map>
             </div>
 
@@ -105,6 +132,7 @@ const MapPage = () => {
                     item={itemToDelete}
                     onCancel={() => setIsDeleteDialogOpen(false)}
                     fetchAllWarehouses={fetchAllWarehouses}
+                    fetchAllDispensingPoints={fetchAllDispensingPoints}
                 />
             )}
 

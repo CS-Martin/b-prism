@@ -10,22 +10,34 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/components/ui/alert-dialog';
-import { useDeleteWarehouse } from 'apps/web-app/src/hooks/map.hook';
+import { useDeleteDispensingPoint, useDeleteWarehouse } from 'apps/web-app/src/hooks/map.hook';
 
 interface DeleteItemProps {
     item: { type: string; id: string };
     onCancel: () => void;
     fetchAllWarehouses: () => void;
+    fetchAllDispensingPoints: () => void;
 }
 
-const DeleteItem = ({ item, onCancel, fetchAllWarehouses }: DeleteItemProps) => {
+const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoints }: DeleteItemProps) => {
     const { deleteWarehouse } = useDeleteWarehouse(item.id);
-
+    const { deleteDispensingPoint } = useDeleteDispensingPoint(item.id);
     const handleDelete = async () => {
-        await deleteWarehouse();
+        switch (item.type) {
+            case 'warehouse':
+                await deleteWarehouse();
+                break;
+            case 'dispensing-point':
+                await deleteDispensingPoint();
+                break;
+            // To add: Evacuation point
+            default:
+                break;
+        }
 
         // Trigger re-fetch of warehouses
         fetchAllWarehouses();
+        fetchAllDispensingPoints();
     };
 
     return (

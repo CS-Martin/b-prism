@@ -18,7 +18,7 @@ const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: Ren
                 e.originalEvent.stopPropagation();
                 handleMarkerClick(warehouse.type, warehouse.id);
             }}
-            className='cursor-pointer '
+            className='cursor-pointer'
         >
             <Image
                 priority
@@ -29,6 +29,7 @@ const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: Ren
                 style={{
                     filter: 'drop-shadow(0 0 10px rgba(0, 0, 0, 0.5))',
                 }}
+                className='hover:scale-125 transition-all duration-300'
             />
             <p className='text-white text-center'>{warehouse.name}</p>
             {selectedMarkerId === warehouse.id && (
