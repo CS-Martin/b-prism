@@ -12,6 +12,10 @@ export * from './lib/verification/verification.dto';
 export * from './lib/warehouse/create.warehouse.dto';
 export * from './lib/warehouse/update.warehouse.dto';
 export * from './lib/warehouse/warehouse.dto';
+export * from './lib/warehouse/warehouse.address.dto';
+export * from './lib/warehouse/warehouse.item.dto';
+export * from './lib/warehouse/warehouse.threshold.dto';
+export * from './lib/warehouse/warehouse.capacity.dto';
 
 export * from './lib/dispensing-point/create.dispensing-point.dto';
 export * from './lib/dispensing-point/update.dispensing-point.dto';

@@ -1,17 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { WarehouseAddressDto } from './warehouse.address.dto';
+import { WarehouseItemDto } from './warehouse.item.dto';
+import { WarehouseCapacityDto } from './warehouse.capacity.dto';
+import { Type } from '@prisma/client';
 
 export class WarehouseDto {
     @ApiProperty()
     id!: string;
 
     @ApiProperty()
-    type!: string;
+    type!: Type;
 
     @ApiProperty()
     name!: string;
-
-    @ApiProperty()
-    description!: string | null;
 
     @ApiProperty()
     longitude!: string;
@@ -19,11 +20,17 @@ export class WarehouseDto {
     @ApiProperty()
     latitude!: string;
 
-    @ApiProperty()
-    capacity?: number;
+    @ApiProperty({ type: WarehouseAddressDto })
+    address?: WarehouseAddressDto;
+
+    @ApiProperty({ type: [WarehouseItemDto] })
+    items?: WarehouseItemDto[];
+
+    @ApiProperty({ type: WarehouseCapacityDto })
+    capacity!: WarehouseCapacityDto;
 
     @ApiProperty()
-    userId?: string;
+    userId!: string;
 
     @ApiProperty()
     createdAt!: Date;

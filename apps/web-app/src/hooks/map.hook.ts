@@ -1,13 +1,46 @@
 import { useEffect, useState } from 'react';
-import { CreateDispensingPointDto, CreateWarehouseDto, DispensingPointDto, ResponseDto, WarehouseDto } from '@dto';
+import {
+    CreateDispensingPointDto,
+    CreateWarehouseDto,
+    DispensingPointDto,
+    ResponseDto,
+    WarehouseAddressDto,
+    WarehouseDto,
+} from '@dto';
 import { warehouseService } from '../services/warehouse.service';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { dispensingPointService } from '../services/dispensing-point.service';
-import { getServerSession } from 'next-auth';
+import { mapboxService } from '../services/mapbox.api.service';
 
 /**
  * @description Hooks for warehouses
  */
+
+export const useGetAddress = () => {
+    const [address, setAddress] = useState<WarehouseAddressDto>({} as WarehouseAddressDto);
+
+    const getAddress = async (longitude: string, latitude: string) => {
+        const response = await mapboxService.reverse_geocoding(longitude, latitude);
+        const data = await response?.json();
+
+        if (data.features && data.features.length > 0) {
+            const properties = data.features[0]?.properties.context || {};
+
+            const street = properties.street?.name || '';
+            const post_code = properties.postcode?.name || '';
+            const locality = properties.place?.name || '';
+            const place = properties.place?.name || '';
+            const region = properties.region?.name || '';
+            const country = properties.country?.name || '';
+
+            setAddress({ street, post_code, locality, place, region, country });
+        } else {
+            setAddress({} as WarehouseAddressDto);
+        }
+    };
+
+    return { getAddress, address };
+};
 
 export const useDisplayWarehouses = () => {
     const [warehouses, setWarehouses] = useState<WarehouseDto[]>([]);
@@ -29,11 +62,13 @@ export const useDisplayWarehouses = () => {
     return { warehouses, fetchAllWarehouses };
 };
 
-export const useCreateWarehouse = (data: CreateWarehouseDto) => {
+export const useCreateWarehouse = () => {
     const { toast } = useToast();
 
-    const createWarehouse = async () => {
+    const createWarehouse = async (data: CreateWarehouseDto) => {
         await warehouseService.create(data);
+
+        console.log(data);
 
         toast({
             title: 'Success!',
