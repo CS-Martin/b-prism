@@ -29,11 +29,13 @@ export const useDisplayWarehouses = () => {
     return { warehouses, fetchAllWarehouses };
 };
 
-export const useCreateWarehouse = (data: CreateWarehouseDto) => {
+export const useCreateWarehouse = () => {
     const { toast } = useToast();
 
-    const createWarehouse = async () => {
+    const createWarehouse = async (data: CreateWarehouseDto) => {
         await warehouseService.create(data);
+
+        console.log(data);
 
         toast({
             title: 'Success!',

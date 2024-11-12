@@ -13,6 +13,11 @@ enum UserRole {
   verified
 }
 
+enum Type {
+  warehouse
+  dispensin_point
+}
+
 model User {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   given_name   String
@@ -28,21 +33,22 @@ model User {
 }
 
 model Warehouse {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  type        String   @default("warehouse")
-  name        String
-  description String?
-  longitude   String
-  latitude    String
-  capacity    Int?
-  userId      String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      Type     @default(warehouse)
+  name      String
+  longitude String
+  latitude  String
+  address   Json?
+  capacity  Json?
+  items     Json[]
+  userId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model DispensinPoint {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  type        String   @default("dispensing_point")
+  type        Type     @default(dispensin_point)
   name        String
   description String?
   longitude   String

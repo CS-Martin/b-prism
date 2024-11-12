@@ -11,7 +11,7 @@ interface ControlPanelProps {
 
 function ControlPanel({ visibility, onVisibilityChange }: ControlPanelProps) {
     return (
-        <div className='absolute top-0 right-0 z-50 max-w-[350px] bg-sidebar-accent rounded-[10px] shadow-xl m-[20px] outline-none'>
+        <div className='absolute top-0 right-0 z-50 max-w-[300px] bg-sidebar-accent rounded-[10px] shadow-xl m-[20px] outline-none'>
             <div className='flex flex-col gap-1 mb-4 px-5 pt-3.5'>
                 <Label className='text-lg font-semibold'>Dynamic Layer Control</Label>
                 <p className='text-sm text-white/50'>Dynamically control the visibility of layers on the map</p>

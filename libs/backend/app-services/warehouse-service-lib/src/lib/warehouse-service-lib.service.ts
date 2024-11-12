@@ -1,7 +1,15 @@
-import { CreateWarehouseDto, ResponseDto, WarehouseDto } from '@dto';
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+    CreateWarehouseDto,
+    ResponseDto,
+    WarehouseAddressDto,
+    WarehouseCapacityDto,
+    WarehouseDto,
+    WarehouseItemDto,
+} from '@dto';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { WarehouseService } from './warehouse-service.abstract.class';
 import { WarehouseMongodbLibService } from '@b-prism/warehouse-mongodb-lib';
+import { Warehouse } from '@prisma/client';
 
 @Injectable()
 export class WarehouseServiceLibService implements WarehouseService {
@@ -13,9 +21,11 @@ export class WarehouseServiceLibService implements WarehouseService {
         this.logger.log('Creating warehouse', data);
 
         try {
-            const warehouse = await this.warehouseMongodbService.create(data);
+            const warehouse: Warehouse = await this.warehouseMongodbService.create(data);
 
-            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(201, warehouse as WarehouseDto);
+            const warehouseDto: WarehouseDto = this.convertToDto(warehouse);
+
+            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(201, warehouseDto);
 
             return response;
         } catch (error) {
@@ -45,10 +55,9 @@ export class WarehouseServiceLibService implements WarehouseService {
         try {
             const warehouses = await this.warehouseMongodbService.findAll();
 
-            const response: ResponseDto<WarehouseDto[]> = new ResponseDto<WarehouseDto[]>(
-                200,
-                warehouses as WarehouseDto[],
-            );
+            const warehousesDto: WarehouseDto[] = warehouses.map((warehouse) => this.convertToDto(warehouse));
+
+            const response: ResponseDto<WarehouseDto[]> = new ResponseDto<WarehouseDto[]>(200, warehousesDto);
 
             return response;
         } catch (error) {
@@ -64,7 +73,13 @@ export class WarehouseServiceLibService implements WarehouseService {
         try {
             const warehouse = await this.warehouseMongodbService.findById(id);
 
-            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(200, warehouse as WarehouseDto);
+            if (!warehouse) {
+                throw new NotFoundException('Warehouse not found');
+            }
+
+            const warehouseDto: WarehouseDto = this.convertToDto(warehouse);
+
+            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(200, warehouseDto);
 
             return response;
         } catch (error) {
@@ -72,5 +87,23 @@ export class WarehouseServiceLibService implements WarehouseService {
 
             throw new BadRequestException(error);
         }
+    }
+
+    convertToDto(warehouse: Warehouse): WarehouseDto {
+        const warehouseDto: WarehouseDto = {
+            id: warehouse.id ?? '',
+            type: warehouse.type ?? 'warehouse',
+            name: warehouse.name ?? '',
+            longitude: warehouse.longitude ?? '',
+            latitude: warehouse.latitude ?? '',
+            address: warehouse.address as WarehouseAddressDto,
+            items: warehouse.items as WarehouseItemDto[],
+            capacity: warehouse.capacity as WarehouseCapacityDto,
+            userId: warehouse.userId ?? '',
+            createdAt: warehouse.createdAt ?? new Date(),
+            updatedAt: warehouse.updatedAt ?? new Date(),
+        };
+
+        return warehouseDto;
     }
 }

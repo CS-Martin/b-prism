@@ -1,6 +1,7 @@
 import { CreateDispensingPointDto, DispensingPointDto } from '@dto';
 import { Injectable } from '@nestjs/common';
 import { PrismaDbLibService } from '@prisma-db-lib';
+import { Type } from '@prisma/client';
 
 @Injectable()
 export class DispensingPointMongodbLibService {
@@ -10,6 +11,7 @@ export class DispensingPointMongodbLibService {
         const dispensingPoint = this.prisma.dispensinPoint.create({
             data: {
                 ...data,
+                type: 'dispensin_point' as Type,
             },
         });
 

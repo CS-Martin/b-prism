@@ -1,18 +1,25 @@
-import { CreateWarehouseDto, WarehouseDto } from '@dto';
+import { CreateWarehouseDto, WarehouseAddressDto, WarehouseCapacityDto, WarehouseDto, WarehouseItemDto } from '@dto';
 import { Injectable } from '@nestjs/common';
 import { PrismaDbLibService } from '@prisma-db-lib';
-import { Warehouse } from '@prisma/client';
+import { Prisma, Type, Warehouse } from '@prisma/client';
+import { JsonObject } from '@prisma/client/runtime/library';
+import { compareSync } from 'bcrypt';
 
 @Injectable()
 export class WarehouseMongodbLibService {
     constructor(private readonly prisma: PrismaDbLibService) {}
 
     async create(data: CreateWarehouseDto): Promise<Warehouse> {
-        const warehouse = this.prisma.warehouse.create({
+        console.log('HAHAAHAHAHAHAHAH', data);
+        const warehouse = await this.prisma.warehouse.create({
             data: {
-                ...data,
-                description: data.description ?? '',
-                capacity: Number(data.capacity),
+                name: data.name,
+                type: 'warehouse',
+                longitude: data.longitude,
+                latitude: data.latitude,
+                address: data.address,
+                capacity: data.capacity,
+                items: data.items,
             },
         });
 
