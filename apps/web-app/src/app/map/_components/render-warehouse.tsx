@@ -43,7 +43,6 @@ const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: Ren
                 >
                     <small>Warehouse:</small>
                     <h3 className='text-lg font-bold'>{warehouse.name}</h3>
-                    <p className='text-sm'>Capacity: {warehouse.capacity}</p>
                 </Popup>
             )}
         </Marker>

@@ -10,18 +10,7 @@ export class WarehouseMongodbLibService {
     constructor(private readonly prisma: PrismaDbLibService) {}
 
     async create(data: CreateWarehouseDto): Promise<Warehouse> {
-        console.log('HAHAAHAHAHAHAHAH', data);
-        const warehouse = await this.prisma.warehouse.create({
-            data: {
-                name: data.name,
-                type: 'warehouse',
-                longitude: data.longitude,
-                latitude: data.latitude,
-                address: data.address,
-                capacity: data.capacity,
-                items: data.items,
-            },
-        });
+        const warehouse = await this.prisma.warehouse.create({ data });
 
         return warehouse;
     }

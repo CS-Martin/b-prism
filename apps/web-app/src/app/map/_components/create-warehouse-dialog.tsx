@@ -9,13 +9,12 @@ import {
     DialogTrigger,
     Input,
     Label,
-    Textarea,
 } from '@b-prism/shadcn-ui/index';
 import { CreateWarehouseDto, UserDto, WarehouseCapacityDto, WarehouseItemDto, WarehouseThresholdDto } from '@dto';
 import { useSession } from 'next-auth/react';
 import { useForm, Controller } from 'react-hook-form';
 import { useEffect } from 'react';
-import { useCreateWarehouse } from 'apps/web-app/src/hooks/map.hook';
+import { useCreateWarehouse, useGetAddress } from 'apps/web-app/src/hooks/map.hook';
 
 interface MarkerType {
     longitude: string;
@@ -29,9 +28,25 @@ interface DialogProps {
     fetchAllWarehouses: () => void;
 }
 
+interface InputFieldProps {
+    name: string;
+    control: any;
+    label: string;
+    type?: string;
+    placeholder?: string;
+}
+
 const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllWarehouses }) => {
     const { data: session } = useSession();
     const { createWarehouse } = useCreateWarehouse();
+    const { getAddress, address } = useGetAddress();
+
+    // After opening the dialog, get the address
+    useEffect(() => {
+        if (isOpen && marker.longitude && marker.latitude) {
+            getAddress(marker.longitude, marker.latitude);
+        }
+    }, [isOpen, marker, getAddress]);
 
     // Initialize react-hook-form with default values
     const { handleSubmit, control, reset } = useForm<CreateWarehouseDto>({
@@ -62,9 +77,11 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
 
     // Form submission handler
     const onSubmit = async (data: CreateWarehouseDto) => {
-        // Convert string values to numbers for capacity and warehouseThreshold
         const formattedData = {
             ...data,
+            address: {
+                ...address,
+            },
             capacity: {
                 current_stock: Number(data.capacity.current_stock),
                 max_stock: Number(data.capacity.max_stock),
@@ -101,132 +118,78 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                     onSubmit={handleSubmit(onSubmit)}
                     className='grid gap-4'
                 >
-                    <div>
-                        <Label htmlFor='name'>Name</Label>
-                        <Controller
-                            name='name'
-                            control={control}
-                            render={({ field }) => (
-                                <Input
-                                    {...field}
-                                    placeholder='Warehouse Name'
-                                    className='rounded-sm mt-1'
-                                />
-                            )}
-                        />
-                    </div>
-
+                    <InputField
+                        name='name'
+                        control={control}
+                        label='Name'
+                        placeholder='Warehouse Name'
+                    />
                     <div className='flex flex-row gap-4 justify-between'>
                         <div className='w-1/2'>
-                            <Label htmlFor='capacity.current_stock'>Current Stock</Label>
-                            <Controller
+                            <InputField
                                 name='capacity.current_stock'
                                 control={control}
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        type='number'
-                                        placeholder='Ex. 1000'
-                                        className='rounded-sm mt-1'
-                                    />
-                                )}
+                                label='Current Stock'
+                                type='number'
+                                placeholder='Ex. 1000'
                             />
                         </div>
                         <div className='w-1/2'>
-                            <Label htmlFor='capacity.max_stock'>Max Stock</Label>
-                            <Controller
+                            <InputField
                                 name='capacity.max_stock'
                                 control={control}
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        type='number'
-                                        placeholder='Ex. 1000'
-                                        className='rounded-sm mt-1'
-                                    />
-                                )}
+                                label='Max Stock'
+                                type='number'
+                                placeholder='Ex. 1000'
                             />
                         </div>
                     </div>
-
                     <div className='flex flex-col'>
                         <Label htmlFor='items'>Items</Label>
-                        <div>
-                            <Label>Name</Label>
-                            <Controller
-                                name={`items.${0}.name`}
-                                control={control}
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        placeholder='Item Name'
-                                        className='rounded-sm mt-1'
-                                    />
-                                )}
-                            />
-                        </div>
+                        <InputField
+                            name={`items.${0}.name`}
+                            control={control}
+                            label='Item Name'
+                            placeholder='Item Name'
+                        />
                         <div className='flex flex-row gap-4'>
                             <div className='w-1/2'>
-                                <Label>Quantity</Label>
-                                <Controller
+                                <InputField
                                     name={`items.${0}.quantity`}
                                     control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            type='number'
-                                            placeholder='Ex. 1000'
-                                            className='rounded-sm mt-1'
-                                        />
-                                    )}
+                                    label='Quantity'
+                                    type='number'
+                                    placeholder='Ex. 1000'
                                 />
                             </div>
                             <div className='w-1/2'>
-                                <Label>Unit Price</Label>
-                                <Controller
+                                <InputField
                                     name={`items.${0}.unit_price`}
                                     control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            type='number'
-                                            placeholder='Ex. 1000'
-                                            className='rounded-sm mt-1'
-                                        />
-                                    )}
+                                    label='Unit Price'
+                                    type='number'
+                                    placeholder='Ex. 1000'
                                 />
                             </div>
                         </div>
                         <div className='flex flex-row gap-4'>
                             <p>Warehouse Threshold</p>
                             <div className='w-1/2'>
-                                <Label>Minimum Quantity</Label>
-                                <Controller
+                                <InputField
                                     name={`items.${0}.warehouseThreshold.min`}
                                     control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            type='number'
-                                            placeholder='Ex. 1000'
-                                            className='rounded-sm mt-1'
-                                        />
-                                    )}
+                                    label='Minimum Quantity'
+                                    type='number'
+                                    placeholder='Ex. 1000'
                                 />
                             </div>
                             <div className='w-1/2'>
-                                <Label>Maximum Quantity</Label>
-                                <Controller
+                                <InputField
                                     name={`items.${0}.warehouseThreshold.max`}
                                     control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            type='number'
-                                            placeholder='Ex. 1000'
-                                            className='rounded-sm mt-1'
-                                        />
-                                    )}
+                                    label='Maximum Quantity'
+                                    type='number'
+                                    placeholder='Ex. 1000'
                                 />
                             </div>
                         </div>
@@ -237,5 +200,23 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
         </Dialog>
     );
 };
+
+const InputField: React.FC<InputFieldProps> = ({ name, control, label, type = 'text', placeholder }) => (
+    <div>
+        <Label htmlFor={name}>{label}</Label>
+        <Controller
+            name={name}
+            control={control}
+            render={({ field }) => (
+                <Input
+                    {...field}
+                    type={type}
+                    placeholder={placeholder}
+                    className='rounded-sm mt-1'
+                />
+            )}
+        />
+    </div>
+);
 
 export default CreateWarehouseDialog;
