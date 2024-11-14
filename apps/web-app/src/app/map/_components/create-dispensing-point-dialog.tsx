@@ -11,10 +11,9 @@ import {
     Label,
     Textarea,
 } from '@b-prism/shadcn-ui/index';
-import { CreateDispensingPointDto, CreateWarehouseDto, UserDto } from '@dto';
-import { useCreateDispensingPoint, useCreateWarehouse } from 'apps/web-app/src/hooks/map.hook';
-import { Session } from 'next-auth';
-import { getSession, useSession } from 'next-auth/react';
+import { CreateDispensingPointDto, UserDto } from '@dto';
+import { useCreateDispensingPoint } from 'apps/web-app/src/hooks/map.hook';
+import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 
 interface MarkerType {
@@ -49,7 +48,11 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({
     });
 
     useEffect(() => {
-        setDispensingPointData({ ...dispensingPointData, longitude: marker.longitude, latitude: marker.latitude });
+        setDispensingPointData((prevData) => ({
+            ...prevData,
+            longitude: marker.longitude,
+            latitude: marker.latitude,
+        }));
     }, [marker]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {

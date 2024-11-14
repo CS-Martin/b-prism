@@ -1,4 +1,4 @@
-import { DispensingPointDto, WarehouseDto } from '@dto';
+import { DispensingPointDto } from '@dto';
 import Image from 'next/image';
 import { Marker, Popup } from 'react-map-gl';
 

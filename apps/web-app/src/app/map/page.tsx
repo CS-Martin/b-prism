@@ -1,6 +1,6 @@
 'use client';
 
-import { AppSidebar, SidebarTrigger } from '@b-prism/shadcn-ui/index';
+import { AppSidebar } from '@b-prism/shadcn-ui/index';
 import { SelectedActionType } from '@b-prism/enums';
 
 import Map, { MapMouseEvent } from 'react-map-gl';
@@ -51,7 +51,7 @@ const MapPage = () => {
     useEffect(() => {
         fetchAllWarehouses();
         fetchAllDispensingPoints();
-    }, []);
+    }, [fetchAllWarehouses, fetchAllDispensingPoints]);
 
     const handleMapClick = (event: MapMouseEvent) => {
         const longitude: string = event.lngLat.lng.toString();
