@@ -1,6 +1,6 @@
 'use client';
 
-import { AppSidebar } from '@b-prism/shadcn-ui/index';
+import { AppSidebar, SidebarTrigger } from '@b-prism/shadcn-ui/index';
 import { SelectedActionType } from '@b-prism/enums';
 
 import Map, { MapMouseEvent } from 'react-map-gl';
@@ -97,7 +97,7 @@ const MapPage = () => {
                         bearing: -38.4,
                         pitch: 75,
                     }}
-                    style={{ position: 'absolute', width: '100%', height: '100%' }}
+                    style={{ position: 'absolute', width: 'calc(100% - 32px)', height: '100%' }}
                     mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                     onClick={handleMapClick}
                 >
