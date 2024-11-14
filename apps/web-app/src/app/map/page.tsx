@@ -51,7 +51,7 @@ const MapPage = () => {
     useEffect(() => {
         fetchAllWarehouses();
         fetchAllDispensingPoints();
-    }, []);
+    }, [fetchAllWarehouses, fetchAllDispensingPoints]);
 
     const handleMapClick = (event: MapMouseEvent) => {
         const longitude: string = event.lngLat.lng.toString();
@@ -97,7 +97,7 @@ const MapPage = () => {
                         bearing: -38.4,
                         pitch: 75,
                     }}
-                    style={{ position: 'absolute', width: '100%', height: '100%' }}
+                    style={{ position: 'absolute', width: 'calc(100% - 32px)', height: '100%' }}
                     mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                     onClick={handleMapClick}
                 >

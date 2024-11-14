@@ -21,7 +21,20 @@ import {
     Switch,
 } from '@b-prism/shadcn-ui/index';
 import { useState } from 'react';
-import { ChevronUp, LogOut, MapPinned, MapPinXInside, Warehouse } from 'lucide-react';
+import {
+    ChevronUp,
+    Home,
+    LayoutDashboard,
+    LogIn,
+    LogOut,
+    Map,
+    MapPinned,
+    MapPinPlus,
+    MapPinXInside,
+    MonitorCog,
+    User,
+    Warehouse,
+} from 'lucide-react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -36,11 +49,32 @@ interface AppSidebarProps {
     setSelectedAction: (action: string | null) => void;
 }
 
+const Links = [
+    {
+        id: 'dashboard',
+        label: 'Dashboard',
+        icon: Home,
+        href: '/dashboard',
+    },
+    {
+        id: 'map',
+        label: 'Map',
+        icon: Map,
+        href: '/map',
+    },
+    {
+        id: 'admin-dashboard',
+        label: 'Admin Dashboard',
+        icon: MonitorCog,
+        href: '/admin/dashboard',
+    },
+];
+
 const actions = [
     {
         id: 'createWarehouse',
         label: 'Create Warehouse',
-        icon: Warehouse,
+        icon: MapPinPlus,
         toastTitle: 'Create Warehouse',
         toastDescription: 'Please click on the map to create a warehouse',
     },
@@ -66,6 +100,28 @@ interface SidebarActionItemProps {
     icon: React.ElementType;
     selectedAction: string | null;
     handleToggle: (action: string) => void;
+}
+
+interface SidebarLinkItemProps {
+    label: string;
+    icon: React.ElementType;
+    href: string;
+}
+
+function SidebarLinkItem({ label, icon: Icon, href }: SidebarLinkItemProps) {
+    return (
+        <SidebarMenuItem>
+            <SidebarMenuButton className='p-0'>
+                <a
+                    href={href}
+                    className='flex items-center space-x-3 w-full'
+                >
+                    <Icon className='w-5 h-5' />
+                    <span>{label}</span>
+                </a>
+            </SidebarMenuButton>
+        </SidebarMenuItem>
+    );
 }
 
 function SidebarActionItem({ id, label, icon: Icon, selectedAction, handleToggle }: SidebarActionItemProps) {
@@ -112,6 +168,19 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
 
             <SidebarContent>
                 <SidebarGroup>
+                    <SidebarGroupLabel className='p-0'>Links</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu className='gap-2'>
+                            {Links.map((link) => (
+                                <SidebarLinkItem
+                                    key={link.id}
+                                    {...link}
+                                />
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+                <SidebarGroup>
                     <SidebarGroupLabel className='p-0'>Actions</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu className='gap-5'>
@@ -156,8 +225,27 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem>
-                                    <LogOut />
-                                    <Link href='/api/auth/signout'>Log out</Link>
+                                    {session ? (
+                                        <>
+                                            <Link
+                                                href='/api/auth/signout'
+                                                className='w-full flex items-center space-x-2'
+                                            >
+                                                <LogOut />
+                                                <span>Log out</span>
+                                            </Link>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Link
+                                                href='/auth/login'
+                                                className='w-full flex items-center space-x-2'
+                                            >
+                                                <LogIn />
+                                                <span>Sign in</span>
+                                            </Link>
+                                        </>
+                                    )}
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

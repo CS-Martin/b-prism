@@ -1,6 +1,7 @@
 'use client';
 
 import {
+    Button,
     Dialog,
     DialogContent,
     DialogDescription,
@@ -9,6 +10,7 @@ import {
     DialogTrigger,
     Input,
     Label,
+    Separator,
 } from '@b-prism/shadcn-ui/index';
 import { CreateWarehouseDto, UserDto, WarehouseCapacityDto, WarehouseItemDto, WarehouseThresholdDto } from '@dto';
 import { useSession } from 'next-auth/react';
@@ -34,6 +36,7 @@ interface InputFieldProps {
     label: string;
     type?: string;
     placeholder?: string;
+    rules?: any;
 }
 
 const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllWarehouses }) => {
@@ -123,7 +126,10 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                         control={control}
                         label='Name'
                         placeholder='Warehouse Name'
+                        rules={{ required: 'Warehouse name is required' }}
                     />
+                    <Separator />
+                    <Label>Warehouse Capacity</Label>
                     <div className='flex flex-row gap-4 justify-between'>
                         <div className='w-1/2'>
                             <InputField
@@ -144,8 +150,9 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                             />
                         </div>
                     </div>
+                    <Separator />
+                    <Label htmlFor='items'>Warehouse Items</Label>
                     <div className='flex flex-col'>
-                        <Label htmlFor='items'>Items</Label>
                         <InputField
                             name={`items.${0}.name`}
                             control={control}
@@ -172,48 +179,63 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                 />
                             </div>
                         </div>
-                        <div className='flex flex-row gap-4'>
-                            <p>Warehouse Threshold</p>
-                            <div className='w-1/2'>
-                                <InputField
-                                    name={`items.${0}.warehouseThreshold.min`}
-                                    control={control}
-                                    label='Minimum Quantity'
-                                    type='number'
-                                    placeholder='Ex. 1000'
-                                />
-                            </div>
-                            <div className='w-1/2'>
-                                <InputField
-                                    name={`items.${0}.warehouseThreshold.max`}
-                                    control={control}
-                                    label='Maximum Quantity'
-                                    type='number'
-                                    placeholder='Ex. 1000'
-                                />
-                            </div>
+                    </div>
+                    <Separator />
+                    <Label>Warehouse Threshold</Label>
+                    <div className='flex flex-row gap-4'>
+                        <div className='w-1/2'>
+                            <InputField
+                                name={`items.${0}.warehouseThreshold.min`}
+                                control={control}
+                                label='Minimum Quantity'
+                                type='number'
+                                placeholder='Ex. 1000'
+                            />
+                        </div>
+                        <div className='w-1/2'>
+                            <InputField
+                                name={`items.${0}.warehouseThreshold.max`}
+                                control={control}
+                                label='Maximum Quantity'
+                                type='number'
+                                placeholder='Ex. 1000'
+                            />
                         </div>
                     </div>
-                    <button type='submit'>Submit</button>
+                    <Button
+                        className='rounded-[7px]'
+                        type='submit'
+                    >
+                        Create Warehouse
+                    </Button>
                 </form>
             </DialogContent>
         </Dialog>
     );
 };
 
-const InputField: React.FC<InputFieldProps> = ({ name, control, label, type = 'text', placeholder }) => (
+const InputField: React.FC<InputFieldProps> = ({ name, control, label, type = 'text', placeholder, rules }) => (
     <div>
-        <Label htmlFor={name}>{label}</Label>
+        <Label
+            className=' font-normal'
+            htmlFor={name}
+        >
+            {label}
+        </Label>
         <Controller
             name={name}
             control={control}
-            render={({ field }) => (
-                <Input
-                    {...field}
-                    type={type}
-                    placeholder={placeholder}
-                    className='rounded-sm mt-1'
-                />
+            rules={rules}
+            render={({ field, fieldState }) => (
+                <div>
+                    <Input
+                        {...field}
+                        type={type}
+                        placeholder={placeholder}
+                        className='rounded-sm mt-1'
+                    />
+                    {fieldState.error && <small className='text-red-400'>{fieldState.error.message}</small>}
+                </div>
             )}
         />
     </div>
