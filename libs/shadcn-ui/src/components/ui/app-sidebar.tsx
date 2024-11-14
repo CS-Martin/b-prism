@@ -103,13 +103,12 @@ interface SidebarActionItemProps {
 }
 
 interface SidebarLinkItemProps {
-    id: string;
     label: string;
     icon: React.ElementType;
     href: string;
 }
 
-function SidebarLinkItem({ id, label, icon: Icon, href }: SidebarLinkItemProps) {
+function SidebarLinkItem({ label, icon: Icon, href }: SidebarLinkItemProps) {
     return (
         <SidebarMenuItem>
             <SidebarMenuButton className='p-0'>
@@ -174,7 +173,6 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                         <SidebarMenu className='gap-2'>
                             {Links.map((link) => (
                                 <SidebarLinkItem
-                                    id={link.id}
                                     key={link.id}
                                     {...link}
                                 />
