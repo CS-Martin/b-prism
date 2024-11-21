@@ -10,7 +10,7 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang='en'>
-            <body className='overflow-hidden'>
+            <body className=''>
                 <SessionComponentProvider>
                     <ThemeProvider
                         attribute='class'

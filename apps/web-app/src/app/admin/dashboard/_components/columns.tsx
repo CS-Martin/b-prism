@@ -50,41 +50,46 @@ export const createColumns = (
     },
     {
         accessorKey: 'actions',
-        header: 'Actions',
+        header: '',
         cell: ({ row }) => {
             const user = row.original;
 
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant='outline'>Actions</Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className='w-32 rounded-[8px]'>
-                        {Object.values(UserRole).map(
-                            (role) =>
-                                user.role !== role && (
-                                    <DropdownMenuItem
-                                        className='cursor-pointer'
-                                        key={role}
-                                        onClick={() => handleRoleChange(user.id ?? '', role)}
-                                    >
-                                        {(() => {
-                                            switch (role) {
-                                                case UserRole.admin:
-                                                    return 'Make Admin';
-                                                case UserRole.verified:
-                                                    return 'Verify User';
-                                                case UserRole.unverified:
-                                                    return 'Unverify User';
-                                                default:
-                                                    return null;
-                                            }
-                                        })()}
-                                    </DropdownMenuItem>
-                                ),
-                        )}
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <div className='flex justify-end'>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant='outline'>Actions</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                            className='w-32 rounded-[8px]'
+                            align='end'
+                        >
+                            {Object.values(UserRole).map(
+                                (role) =>
+                                    user.role !== role && (
+                                        <DropdownMenuItem
+                                            className='cursor-pointer'
+                                            key={role}
+                                            onClick={() => handleRoleChange(user.id ?? '', role)}
+                                        >
+                                            {(() => {
+                                                switch (role) {
+                                                    case UserRole.admin:
+                                                        return 'Make Admin';
+                                                    case UserRole.verified:
+                                                        return 'Verify User';
+                                                    case UserRole.unverified:
+                                                        return 'Unverify User';
+                                                    default:
+                                                        return null;
+                                                }
+                                            })()}
+                                        </DropdownMenuItem>
+                                    ),
+                            )}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             );
         },
     },
