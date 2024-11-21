@@ -11,42 +11,117 @@ import {
 } from '@b-prism/shadcn-ui/index';
 import { UserRole } from '@b-prism/enums';
 import { UserDto } from '@dto';
+import { ArrowUpDown } from 'lucide-react';
 
 export const createColumns = (
     handleRoleChange: (userId: string, newRole: UserRole) => void,
 ): ColumnDef<Partial<UserDto>>[] => [
     {
         accessorKey: 'id',
-        header: '#',
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant='ghost'
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                    className='rounded-sm'
+                >
+                    #
+                    <ArrowUpDown className='ml-2 h-4 w-4' />
+                </Button>
+            );
+        },
         cell: ({ row }) => row.index + 1,
+        sortingFn: (rowA, rowB) => rowA.index - rowB.index,
     },
     {
         accessorKey: 'given_name',
-        header: 'Name',
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant='ghost'
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                    className='rounded-sm'
+                >
+                    Name
+                    <ArrowUpDown className='ml-2 h-4 w-4' />
+                </Button>
+            );
+        },
     },
     {
         accessorKey: 'family_name',
-        header: 'Surname',
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant='ghost'
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                    className='rounded-sm'
+                >
+                    Surname
+                    <ArrowUpDown className='ml-2 h-4 w-4' />
+                </Button>
+            );
+        },
     },
     {
         accessorKey: 'email',
-        header: 'Email',
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant='ghost'
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                    className='rounded-sm'
+                >
+                    Email
+                    <ArrowUpDown className='ml-2 h-4 w-4' />
+                </Button>
+            );
+        },
     },
     {
         accessorKey: 'office',
-        header: 'Office',
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant='ghost'
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                    className='rounded-sm'
+                >
+                    Office
+                    <ArrowUpDown className='ml-2 h-4 w-4' />
+                </Button>
+            );
+        },
     },
     {
         accessorKey: 'position',
-        header: 'Position',
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant='ghost'
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                    className='rounded-sm'
+                >
+                    Position
+                    <ArrowUpDown className='ml-2 h-4 w-4' />
+                </Button>
+            );
+        },
     },
     {
         accessorKey: 'id_image_url',
-        header: 'ID Image',
-    },
-    {
-        accessorKey: 'role',
-        header: 'Role',
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant='ghost'
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                    className='rounded-sm'
+                >
+                    ID Image
+                    <ArrowUpDown className='ml-2 h-4 w-4' />
+                </Button>
+            );
+        },
     },
     {
         accessorKey: 'actions',
@@ -57,11 +132,14 @@ export const createColumns = (
             return (
                 <div className='flex justify-end'>
                     <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
+                        <DropdownMenuTrigger
+                            asChild
+                            className='rounded-sm'
+                        >
                             <Button variant='outline'>Actions</Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
-                            className='w-32 rounded-[8px]'
+                            className='w-32 rounded-sm'
                             align='end'
                         >
                             {Object.values(UserRole).map(

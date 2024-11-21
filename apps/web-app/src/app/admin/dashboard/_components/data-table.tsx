@@ -1,10 +1,17 @@
 'use client';
 
-import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
+import {
+    ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    SortingState,
+    useReactTable,
+} from '@tanstack/react-table';
 
 import {
     Button,
-    Table,
     TableBody,
     TableCell,
     TableHead,
@@ -18,10 +25,11 @@ import {
     PaginationNext,
     PaginationPrevious,
     Label,
+    Table,
 } from '@b-prism/shadcn-ui/index';
 import { UserRole } from '@b-prism/enums';
 import { useState, useMemo } from 'react';
-import { Separator } from '@radix-ui/react-dropdown-menu';
+import { createColumns } from './columns';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -29,45 +37,42 @@ interface DataTableProps<TData, TValue> {
     handleRoleChange: (userId: string, newRole: UserRole) => void;
 }
 
-function PaginationComponent({
-    pageIndex,
-    setPageIndex,
+function PaginationComponent<TData>({
     pageSize,
     dataLength,
+    table,
 }: {
-    pageIndex: number;
-    setPageIndex: React.Dispatch<React.SetStateAction<number>>;
     pageSize: number;
     dataLength: number;
+    table: ReturnType<typeof useReactTable<TData>>;
 }) {
     return (
         <div className='flex items-center justify-between border-t py-5'>
             <div className='flex items-center justify-between w-1/2'>
                 <Label className=' font-normal'>
-                    Showing {pageIndex * pageSize + 1} to {Math.min((pageIndex + 1) * pageSize, dataLength)} out of{' '}
-                    {dataLength} results
+                    Showing {table.getState().pagination.pageIndex * pageSize + 1} to{' '}
+                    {Math.min((table.getState().pagination.pageIndex + 1) * pageSize, dataLength)} out of {dataLength}{' '}
+                    results
                 </Label>
             </div>
             <Pagination className='justify-end w-1/2'>
                 <PaginationContent>
                     <PaginationItem>
                         <PaginationPrevious
-                            href='#'
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setPageIndex((prev) => Math.max(prev - 1, 0));
-                            }}
+                            onClick={() => table.previousPage()}
+                            className={`rounded-sm cursor-pointer ${!table.getCanPreviousPage() ? 'opacity-50 pointer-events-none' : ''}`}
                         />
                     </PaginationItem>
                     {Array.from({ length: Math.ceil(dataLength / pageSize) }, (_, index) => (
                         <PaginationItem key={index}>
                             <PaginationLink
                                 href='#'
-                                isActive={index === pageIndex}
+                                isActive={index === table.getState().pagination.pageIndex}
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    setPageIndex(index);
+                                    table.setPageIndex(index);
                                 }}
+                                className='rounded-sm'
                             >
                                 {index + 1}
                             </PaginationLink>
@@ -75,11 +80,9 @@ function PaginationComponent({
                     ))}
                     <PaginationItem>
                         <PaginationNext
-                            href='#'
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setPageIndex((prev) => Math.min(prev + 1, Math.ceil(dataLength / pageSize) - 1));
-                            }}
+                            isActive={false}
+                            onClick={() => table.nextPage()}
+                            className={`rounded-sm cursor-pointer ${!table.getCanNextPage() ? 'opacity-50 pointer-events-none' : ''}`}
                         />
                     </PaginationItem>
                 </PaginationContent>
@@ -88,28 +91,28 @@ function PaginationComponent({
     );
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-    const [pageIndex, setPageIndex] = useState(0);
+export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: DataTableProps<TData, TValue>) {
+    const [sorting, setSorting] = useState<SortingState>([]);
     const pageSize = 10;
 
-    const paginatedData = useMemo(() => {
-        return data.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
-    }, [data, pageIndex, pageSize]);
-
     const table = useReactTable({
-        data: paginatedData,
+        data,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        onSortingChange: setSorting,
+        getSortedRowModel: getSortedRowModel(),
+        state: {
+            sorting,
+        },
     });
 
     return (
         <>
-            <PaginationComponent
-                pageIndex={pageIndex}
-                setPageIndex={setPageIndex}
+            <PaginationComponent<TData>
                 pageSize={pageSize}
                 dataLength={data.length}
+                table={table}
             />
             <div className=''>
                 <Table className='w-full'>
@@ -118,7 +121,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id}>
+                                        <TableHead
+                                            key={header.id}
+                                            className='px-0'
+                                        >
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(header.column.columnDef.header, header.getContext())}
@@ -155,11 +161,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                     </TableBody>
                 </Table>
             </div>
-            <PaginationComponent
-                pageIndex={pageIndex}
-                setPageIndex={setPageIndex}
+            <PaginationComponent<TData>
                 pageSize={pageSize}
                 dataLength={data.length}
+                table={table}
             />
         </>
     );
