@@ -7,7 +7,7 @@
     "// targets": "to see all targets run: nx show project web-app --web",
     "targets": {
         "build": {
-            "executor": "@nrwl/next:build",
+            "executor": "@nx/next:build",
             "options": {
                 "outputPath": "dist/apps/web-app",
                 "root": "apps/web-app",
