@@ -125,6 +125,13 @@ function SidebarLinkItem({ label, icon: Icon, href }: SidebarLinkItemProps) {
 }
 
 function SidebarActionItem({ id, label, icon: Icon, selectedAction, handleToggle }: SidebarActionItemProps) {
+    const { data: session } = useSession();
+    const user: UserDto = session?.user as UserDto;
+
+    if (user?.role !== 'admin' && user?.role !== 'verified') {
+        return null;
+    }
+
     return (
         <SidebarMenuItem onClick={() => handleToggle(id)}>
             <div className='flex justify-between items-center space-x-2'>
@@ -181,7 +188,12 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                     </SidebarGroupContent>
                 </SidebarGroup>
                 <SidebarGroup>
-                    <SidebarGroupLabel className='p-0'>Actions</SidebarGroupLabel>
+                    <SidebarGroupLabel
+                        className='p-0'
+                        style={{ display: user?.role !== 'admin' && user?.role !== 'verified' ? 'none' : 'block' }}
+                    >
+                        Actions
+                    </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu className='gap-5'>
                             {actions.map((action) => (

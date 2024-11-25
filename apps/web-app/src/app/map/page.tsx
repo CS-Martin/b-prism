@@ -48,11 +48,6 @@ const MapPage = () => {
         dispensingPoints: true,
     });
 
-    useEffect(() => {
-        fetchAllWarehouses();
-        fetchAllDispensingPoints();
-    }, [fetchAllWarehouses, fetchAllDispensingPoints]);
-
     const handleMapClick = (event: MapMouseEvent) => {
         const longitude: string = event.lngLat.lng.toString();
         const latitude: string = event.lngLat.lat.toString();
