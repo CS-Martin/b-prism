@@ -4,7 +4,7 @@ export default function MapLayout({ children }: { children: React.ReactNode }) {
     return (
         <SidebarProvider>
             <main className=''>{children}</main>
-            <SidebarTrigger className='z-50' />
+            <SidebarTrigger className='z-50 mt-2 text-white' />
         </SidebarProvider>
     );
 }
