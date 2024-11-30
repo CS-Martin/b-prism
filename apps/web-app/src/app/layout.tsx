@@ -3,8 +3,8 @@ import SessionComponentProvider from '../context/session-provider';
 import './global.css';
 
 export const metadata = {
-    title: 'B-Prism',
-    description: 'B-Prism',
+    title: 'Project Haribon',
+    description: 'Project Haribon',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
