@@ -5,7 +5,7 @@ import { SelectedActionType } from '@b-prism/enums';
 
 import Map, { MapMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDisplayDispensingPoints, useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
 import CreateWarehouseDialog from './_components/create-warehouse-dialog';
 import RenderWarehouse from './_components/render-warehouse';

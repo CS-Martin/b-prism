@@ -7,10 +7,18 @@ export const metadata = {
     description: 'Project Haribon',
 };
 
+// Add montserrat font
+import { Montserrat } from 'next/font/google';
+
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    variable: '--font-montserrat',
+});
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang='en'>
-            <body className=''>
+            <body className={`${montserrat.variable} font-sans`}>
                 <SessionComponentProvider>
                     <ThemeProvider
                         attribute='class'
