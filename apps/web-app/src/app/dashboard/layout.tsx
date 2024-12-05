@@ -4,6 +4,7 @@ import { Montserrat } from 'next/font/google';
 const montserrat = Montserrat({
     subsets: ['latin'],
     variable: '--font-montserrat',
+    weight: ['400', '500', '600', '700'],
 });
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

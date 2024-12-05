@@ -84,3 +84,21 @@
         font-size: 14px;
     }
 }
+
+.spline-hero {
+    background-color: #180825;
+    overflow: hidden;
+    z-index: -1;
+    box-shadow: inset 0px 0px 100px 30px rgba(0, 0, 0, 0.315);
+}
+
+/* .spline-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle, transparent, rgba(0, 0, 0, 0.815));
+    pointer-events: none;
+} */

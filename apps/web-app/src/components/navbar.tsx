@@ -1,4 +1,4 @@
-import { Button } from '@b-prism/shadcn-ui/index';
+import { Button, Separator } from '@b-prism/shadcn-ui/index';
 
 import {
     NavigationMenuContent,
@@ -11,6 +11,7 @@ import {
 import Link from 'next/link';
 import React from 'react';
 import { cn } from '@b-prism/shadcn-lib/cn';
+import { Ghost } from 'lucide-react';
 
 const components: { title: string; href: string; description: string }[] = [
     {
@@ -49,14 +50,25 @@ const components: { title: string; href: string; description: string }[] = [
 
 const Navbar = () => {
     return (
-        <nav className='px-[200px] py-5 flex justify-between items-center'>
+        <nav className='px-[350px] z-50 py-5 flex justify-between items-center fixed top-0 w-full'>
             <div className='flex items-center gap-10'>
                 <p className='font-semibold'>Logo</p>
                 <NavbarItems />
             </div>
 
-            <div>
-                <Button>Test</Button>
+            <div className='flex items-center gap-4'>
+                <Button
+                    className='rounded-full'
+                    variant='ghost'
+                >
+                    Contact Us
+                </Button>
+                <Separator
+                    orientation='vertical'
+                    role='separator'
+                    className='bg-white h-3 w-[1px]'
+                />
+                <Button className='rounded-full px-7 bg-blue-500 text-white'>Sign up</Button>
             </div>
         </nav>
     );
@@ -67,7 +79,7 @@ const NavbarItems = () => {
         <NavigationMenu>
             <NavigationMenuList className='gap-3'>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
+                    <NavigationMenuTrigger className='bg-transparent'>Getting started</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className='grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'>
                             <li className='row-span-3'>
@@ -106,7 +118,7 @@ const NavbarItems = () => {
                     </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger>Solutions</NavigationMenuTrigger>
+                    <NavigationMenuTrigger className='bg-transparent'>Solutions</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] '>
                             {components.map((component) => (
