@@ -3,14 +3,22 @@ import SessionComponentProvider from '../context/session-provider';
 import './global.css';
 
 export const metadata = {
-    title: 'B-Prism',
-    description: 'B-Prism',
+    title: 'Project Haribon',
+    description: 'Project Haribon',
 };
+
+// Add montserrat font
+import { Montserrat } from 'next/font/google';
+
+const montserrat = Montserrat({
+    subsets: ['latin'],
+    variable: '--font-montserrat',
+});
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang='en'>
-            <body className=''>
+            <body className={`${montserrat.variable} font-sans`}>
                 <SessionComponentProvider>
                     <ThemeProvider
                         attribute='class'

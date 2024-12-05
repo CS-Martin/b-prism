@@ -27,6 +27,7 @@ import {
     LayoutDashboard,
     LogIn,
     LogOut,
+    LucideIcon,
     Map,
     MapPinned,
     MapPinPlus,
@@ -97,26 +98,26 @@ const actions = [
 interface SidebarActionItemProps {
     id: string;
     label: string;
-    icon: React.ElementType;
+    icon: LucideIcon;
     selectedAction: string | null;
     handleToggle: (action: string) => void;
 }
 
 interface SidebarLinkItemProps {
     label: string;
-    icon: React.ElementType;
+    icon: LucideIcon;
     href: string;
 }
 
 function SidebarLinkItem({ label, icon: Icon, href }: SidebarLinkItemProps) {
     return (
         <SidebarMenuItem>
-            <SidebarMenuButton className='p-0'>
+            <SidebarMenuButton asChild>
                 <a
                     href={href}
-                    className='flex items-center space-x-3 w-full'
+                    className='flex items-center'
                 >
-                    <Icon className='w-5 h-5' />
+                    <Icon style={{ height: '18px', width: '18px' }} />
                     <span>{label}</span>
                 </a>
             </SidebarMenuButton>
@@ -134,17 +135,16 @@ function SidebarActionItem({ id, label, icon: Icon, selectedAction, handleToggle
 
     return (
         <SidebarMenuItem onClick={() => handleToggle(id)}>
-            <div className='flex justify-between items-center space-x-2'>
-                <span className='flex items-center space-x-2'>
-                    <Icon className='w-5 h-5' />
-                    <span>{label}</span>
-                </span>
+            <SidebarMenuButton className='flex justify-between hover:bg-transparent'>
+                <Icon style={{ height: '18px', width: '18px' }} />
+                <span className='flex-1'>{label}</span>
+
                 <Switch
                     id={id}
                     checked={selectedAction === id}
                     onChange={() => handleToggle(id)}
                 />
-            </div>
+            </SidebarMenuButton>
         </SidebarMenuItem>
     );
 }
@@ -170,12 +170,15 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
     };
 
     return (
-        <Sidebar>
-            <SidebarHeader>HEADER</SidebarHeader>
+        <Sidebar
+            variant='floating'
+            collapsible='icon'
+        >
+            <SidebarHeader>LOGO</SidebarHeader>
 
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel className='p-0'>Links</SidebarGroupLabel>
+                    <SidebarGroupLabel>Links</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu className='gap-2'>
                             {Links.map((link) => (
@@ -189,13 +192,12 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                 </SidebarGroup>
                 <SidebarGroup>
                     <SidebarGroupLabel
-                        className='p-0'
                         style={{ display: user?.role !== 'admin' && user?.role !== 'verified' ? 'none' : 'block' }}
                     >
                         Actions
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
-                        <SidebarMenu className='gap-5'>
+                        <SidebarMenu className='gap-2'>
                             {actions.map((action) => (
                                 <SidebarActionItem
                                     key={action.id}
@@ -211,21 +213,23 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
-                <div className='flex items-center justify-between space-x-2 p-5 border-2 border-gray-400 rounded-xl border-dashed'>
-                    <span>Dark Mode</span>
+                <div className='flex items-center justify-between p-5 border-2 border-gray-400 rounded-xl border-dashed group-data-[state=collapsed]:hidden'>
+                    <span className='group-data-[state=expanded]:inline hidden'>Dark Mode</span>
                     <ModeToggle />
                 </div>
                 <SidebarMenu className='py-1'>
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton className='h-auto'>
-                                    <Avatar style={{ borderRadius: 'var(--radius)' }}>
+                                <SidebarMenuButton className='flex items-center h-auto group-data-[state=collapsed]:!p-0'>
+                                    <Avatar style={{ borderRadius: '3px' }}>
                                         <AvatarImage src='https://github.com/shadcn.png' />
                                         <AvatarFallback>US</AvatarFallback>
                                     </Avatar>
-                                    {`${user?.given_name || ''} ${user?.family_name || ''}`}
-                                    <ChevronUp className='ml-auto' />
+                                    <span className='group-data-[state=collapsed]:hidden ml-2'>
+                                        {`${user?.given_name || ''} ${user?.family_name || ''}`}
+                                    </span>
+                                    <ChevronUp className='ml-auto group-data-[state=collapsed]:hidden' />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent

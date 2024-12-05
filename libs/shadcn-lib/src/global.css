@@ -27,7 +27,8 @@
         --border: 240 5.9% 90%;
         --input: 240 5.9% 90%;
         --ring: 240 5.9% 10%;
-        --radius: 0.5rem;
+        --radius: 0.5rem !important;
+
         --sidebar-background: 0 0% 98%;
         --sidebar-foreground: 240 5.3% 26.1%;
         --sidebar-primary: 240 5.9% 10%;
@@ -58,6 +59,8 @@
         --border: 240 3.7% 15.9%;
         --input: 240 3.7% 15.9%;
         --ring: 240 4.9% 83.9%;
+        --radius: 0.5rem !important;
+
         --sidebar-background: 240 5.9% 10%;
         --sidebar-foreground: 240 4.8% 95.9%;
         --sidebar-primary: 224.3 76.3% 48%;
@@ -78,5 +81,24 @@
         font-feature-settings:
             'rlig' 1,
             'calt' 1;
+        font-size: 14px;
     }
 }
+
+.spline-hero {
+    background-color: #180825;
+    overflow: hidden;
+    z-index: -1;
+    box-shadow: inset 0px 0px 100px 30px rgba(0, 0, 0, 0.315);
+}
+
+/* .spline-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle, transparent, rgba(0, 0, 0, 0.815));
+    pointer-events: none;
+} */

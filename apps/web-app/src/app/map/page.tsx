@@ -5,7 +5,7 @@ import { SelectedActionType } from '@b-prism/enums';
 
 import Map, { MapMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDisplayDispensingPoints, useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
 import CreateWarehouseDialog from './_components/create-warehouse-dialog';
 import RenderWarehouse from './_components/render-warehouse';
@@ -92,7 +92,7 @@ const MapPage = () => {
                         bearing: -38.4,
                         pitch: 75,
                     }}
-                    style={{ position: 'absolute', width: 'calc(100% - 32px)', height: '100%' }}
+                    style={{ position: 'absolute', width: '100%', height: '100%' }}
                     mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                     onClick={handleMapClick}
                 >
