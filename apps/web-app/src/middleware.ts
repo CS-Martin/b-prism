@@ -13,15 +13,7 @@ export default withAuth({
 });
 
 export const config = {
-    matcher: [
-        '/',
-        '/map',
-        '/auth/register',
-        '/auth/login',
-        '/admin/:path*',
-        '/api/:path*',
-        '/api/auth/:path*',
-    ],
+    matcher: ['/', '/map', '/auth/register', '/auth/login', '/admin/:path*', '/api/:path*', '/api/auth/:path*'],
 };
 
 export async function middleware(req: NextRequest) {
@@ -31,20 +23,17 @@ export async function middleware(req: NextRequest) {
     const isAuthenticated = !!token;
 
     if (pathname === '/') {
-        return NextResponse.redirect(new URL('/dashboard', req.url));
+        return NextResponse.redirect(new URL('/home', req.url));
     }
 
-    if (
-        isAuthenticated &&
-        (pathname === '/auth/login' || pathname === '/auth/register')
-    ) {
-        return NextResponse.redirect(new URL('/dashboard', req.url));
+    if (isAuthenticated && (pathname === '/auth/login' || pathname === '/auth/register')) {
+        return NextResponse.redirect(new URL('/home', req.url));
     }
 
     if (pathname === '/admin/dashboard' && token?.role !== 'admin') {
         console.log('GRANTING ACCESS TO ADMIN', token?.role);
 
-        return NextResponse.redirect(new URL('/dashboard', req.url));
+        return NextResponse.redirect(new URL('/home', req.url));
     }
 
     return NextResponse.next();

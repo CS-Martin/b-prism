@@ -1,0 +1,26 @@
+{
+    "name": "rescue-post-service",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/rescue-post-service/src",
+    "projectType": "application",
+    "tags": [],
+    "targets": {
+        "serve": {
+            "executor": "@nx/js:node",
+            "defaultConfiguration": "development",
+            "dependsOn": ["build"],
+            "options": {
+                "buildTarget": "rescue-post-service:build",
+                "runBuildTargetDependencies": false
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "rescue-post-service:build:development"
+                },
+                "production": {
+                    "buildTarget": "rescue-post-service:build:production"
+                }
+            }
+        }
+    }
+}

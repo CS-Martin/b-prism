@@ -11,7 +11,6 @@ import {
 } from '@tanstack/react-table';
 
 import {
-    Button,
     TableBody,
     TableCell,
     TableHead,
@@ -19,7 +18,6 @@ import {
     TableRow,
     Pagination,
     PaginationContent,
-    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
     PaginationNext,
@@ -28,8 +26,7 @@ import {
     Table,
 } from '@b-prism/shadcn-ui/index';
 import { UserRole } from '@b-prism/enums';
-import { useState, useMemo } from 'react';
-import { createColumns } from './columns';
+import { useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -142,7 +139,10 @@ export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: Da
                                     data-state={row.getIsSelected() && 'selected'}
                                 >
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
+                                        <TableCell
+                                            key={cell.id}
+                                            className='py-3'
+                                        >
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </TableCell>
                                     ))}

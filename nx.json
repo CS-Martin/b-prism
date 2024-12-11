@@ -38,7 +38,8 @@
                 "apps/verification-service-e2e/**/*",
                 "apps/user-service-e2e/**/*",
                 "apps/map-service/warehouse-service-e2e/**/*",
-                "apps/map-service/dispensing-point-service-e2e/**/*"
+                "apps/map-service/dispensing-point-service-e2e/**/*",
+                "apps/rescue-post-service-e2e/**/*"
             ]
         },
         {
