@@ -2,19 +2,6 @@
 
 import { UserDto } from '@dto';
 
-import {
-    Button,
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@b-prism/shadcn-ui/index';
-
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@b-prism/shadcn-ui/index';
-
 import { useDisplayUsers } from '@b-prism/web-app/admin-dashboard-hooks';
 import { DataTable } from './_components/data-table';
 import { createColumns } from './_components/columns';

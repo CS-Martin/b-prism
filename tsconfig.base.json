@@ -24,6 +24,8 @@
                 "libs/backend/app-services/dispensing-point-service-lib/src/index.ts"
             ],
             "@b-prism/enums": ["libs/enums/src/index.ts"],
+            "@b-prism/rescue-post-mongodb-lib": ["libs/backend/database-services/rescue-post-mongodb-lib/src/index.ts"],
+            "@b-prism/rescue-post-service-lib": ["libs/backend/app-services/rescue-post-service-lib/src/index.ts"],
             "@b-prism/shadcn-lib": ["libs/shadcn-lib/src/index.ts"],
             "@b-prism/shadcn-lib/*": ["libs/shadcn-lib/src/*"],
             "@b-prism/shadcn-ui": ["libs/shadcn-ui/src/components"],

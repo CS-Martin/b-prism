@@ -11,7 +11,6 @@ import {
 import Link from 'next/link';
 import React from 'react';
 import { cn } from '@b-prism/shadcn-lib/cn';
-import { Ghost } from 'lucide-react';
 
 const components: { title: string; href: string; description: string }[] = [
     {
@@ -68,7 +67,9 @@ const Navbar = () => {
                     role='separator'
                     className='bg-white h-3 w-[1px]'
                 />
-                <Button className='rounded-full px-7 bg-blue-500 text-white'>Sign up</Button>
+                <Button className='rounded-full px-7 bg-blue-500 text-white'>
+                    <Link href='/auth/login'>Sign up</Link>
+                </Button>
             </div>
         </nav>
     );

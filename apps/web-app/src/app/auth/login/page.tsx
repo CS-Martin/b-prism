@@ -2,8 +2,14 @@
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
+import { Input } from '@b-prism/shadcn-ui/index';
+import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { useRouter } from 'next/navigation';
+import { userService } from 'apps/web-app/src/services/user.service';
 
 export default function LoginPage() {
+    const { toast } = useToast();
+    const router = useRouter();
     const [data, setData] = useState({
         email: '',
         password: '',
@@ -13,26 +19,32 @@ export default function LoginPage() {
     const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        try {
-            const result = await signIn('credentials', {
-                email: data.email,
-                password: data.password,
-                callbackUrl: '/dashboard',
-            });
+        const result = await signIn('credentials', {
+            email: data.email,
+            password: data.password,
+            redirect: false,
+        });
 
-            if (result === null) {
-                setError('Invalid credentials');
-                return;
-            }
-        } catch (error) {
-            if (error instanceof Error) {
-                switch (error.message) {
-                    case 'CredentialsSignin':
-                        setError('Invalid credentials');
-                        break;
-                    default:
-                        setError('Something went wrong');
-                }
+        if (result?.error) {
+            toast({
+                title: 'Error',
+                description: result.error,
+                variant: 'destructive',
+            });
+            return;
+        } else {
+            // TODO: check if user has incomplete profile
+            // if incomplete, redirect to /auth/new-user
+            // if complete, redirect to /home
+
+            const response = await userService.fetchUserByEmail(data.email);
+
+            const isIncompleteProfile = response.body.id_image_url === null;
+
+            if (isIncompleteProfile) {
+                router.push('/auth/new-user');
+            } else {
+                router.push('/home');
             }
         }
     };
@@ -46,7 +58,7 @@ export default function LoginPage() {
                         src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
                         className="mx-auto h-10 w-auto"
                     /> */}
-                    <h2 className='mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900'>
+                    <h2 className='mt-20 text-center text-2xl/9 font-semibold tracking-tight'>
                         Sign in to your account
                     </h2>
                 </div>
@@ -60,18 +72,18 @@ export default function LoginPage() {
                         <div>
                             <label
                                 htmlFor='email'
-                                className='block text-sm/6 font-medium text-gray-900'
+                                className='block text-sm/6 font-medium'
                             >
                                 Email address
                             </label>
                             <div className='mt-2'>
-                                <input
+                                <Input
                                     id='email'
                                     name='email'
                                     type='email'
                                     required
                                     autoComplete='email'
-                                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6'
+                                    className=''
                                     value={data.email}
                                     onChange={(e) =>
                                         setData({
@@ -87,7 +99,7 @@ export default function LoginPage() {
                             <div className='flex items-center justify-between'>
                                 <label
                                     htmlFor='password'
-                                    className='block text-sm/6 font-medium text-gray-900'
+                                    className='block text-sm/6 font-medium'
                                 >
                                     Password
                                 </label>
@@ -101,13 +113,12 @@ export default function LoginPage() {
                                 </div>
                             </div>
                             <div className='mt-2'>
-                                <input
+                                <Input
                                     id='password'
                                     name='password'
                                     type='password'
                                     required
                                     autoComplete='current-password'
-                                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6'
                                     value={data.password}
                                     onChange={(e) =>
                                         setData({
@@ -132,12 +143,12 @@ export default function LoginPage() {
                     {error && <p className='mt-10 text-center text-sm/6 text-red-500'>{error}</p>}
 
                     <p className='mt-10 text-center text-sm/6 text-gray-500'>
-                        Not a member?{' '}
+                        Don&apos;t have an account yet?{' '}
                         <a
-                            href='#'
+                            href='/auth/register'
                             className='font-semibold text-indigo-600 hover:text-indigo-500'
                         >
-                            Start a 14 day free trial
+                            Sign up
                         </a>
                     </p>
                 </div>

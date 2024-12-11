@@ -1,6 +1,6 @@
 'use client';
 
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, Row } from '@tanstack/react-table';
 
 import {
     Button,
@@ -12,6 +12,13 @@ import {
 import { UserRole } from '@b-prism/enums';
 import { UserDto } from '@dto';
 import { ArrowUpDown } from 'lucide-react';
+
+const customRole = (rowA: Row<Partial<UserDto>>, rowB: Row<Partial<UserDto>>) => {
+    const order = [UserRole.admin, UserRole.verified, UserRole.unverified];
+    const aIndex = order.indexOf(rowA.original.role as UserRole);
+    const bIndex = order.indexOf(rowB.original.role as UserRole);
+    return aIndex - bIndex;
+};
 
 export const createColumns = (
     handleRoleChange: (userId: string, newRole: UserRole) => void,
@@ -124,6 +131,22 @@ export const createColumns = (
         },
     },
     {
+        accessorKey: 'role',
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant='ghost'
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                    className='rounded-sm'
+                >
+                    Role
+                    <ArrowUpDown className='ml-2 h-4 w-4' />
+                </Button>
+            );
+        },
+        sortingFn: customRole,
+    },
+    {
         accessorKey: 'actions',
         header: '',
         cell: ({ row }) => {
@@ -132,10 +155,7 @@ export const createColumns = (
             return (
                 <div className='flex justify-end'>
                     <DropdownMenu>
-                        <DropdownMenuTrigger
-                            asChild
-                            className='rounded-sm'
-                        >
+                        <DropdownMenuTrigger asChild>
                             <Button variant='outline'>Actions</Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent

@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { Button } from '@b-prism/shadcn-ui/index';
 
-export default async function Dashboard() {
+export default async function Home() {
     const session = await getServerSession(options);
 
     return (
@@ -22,7 +22,7 @@ export default async function Dashboard() {
                     <p className='text-white text-[22px] text-center leading-[30px]'>
                         Hazard Assessment and Rescue Integration for <br /> Bicol Operations Network
                     </p>
-                    <Button className='mt-8 p-6'>Start Contributing Now!</Button>
+                    <Button className='mt-8 p-6 bg-blue-500 text-white'>Start Contributing Now!</Button>
                 </div>
             </section>
 

@@ -59,3 +59,16 @@ model DispensinPoint {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model RescuePost {
+  id                        String   @id @default(auto()) @map("_id") @db.ObjectId
+  longitude                 String?
+  latitude                  String?
+  contact_persons           Json[]
+  total_adults              Int
+  total_children            Int
+  total_elderly             Int
+  number_of_people_affected Int
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+}

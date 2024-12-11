@@ -20,3 +20,7 @@ export * from './lib/warehouse/warehouse.capacity.dto';
 export * from './lib/dispensing-point/create.dispensing-point.dto';
 export * from './lib/dispensing-point/update.dispensing-point.dto';
 export * from './lib/dispensing-point/dispensing-point.dto';
+
+export * from './lib/rescue-post/rescue-post.dto';
+export * from './lib/rescue-post/create.rescue-post.dto';
+export * from './lib/rescue-post/contact_persons.dto';
