@@ -25,3 +25,5 @@ export * from './components/ui/checkbox';
 export * from './components/ui/breadcrumb';
 export * from './components/ui/pagination';
 export * from './components/ui/navigation-menu';
+export * from './components/ui/scroll-area';
+export * from './components/ui/collapsible';

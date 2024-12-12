@@ -13,6 +13,7 @@ import DeleteItem from './_components/delete-item';
 import CreateDispensingPointDialog from './_components/create-dispensing-point-dialog';
 import RenderDispensingPoint from './_components/render-dispensing-point';
 import ControlPanel from './_components/control-panel';
+import RescuePostPanel from './_components/rescue-post-panel';
 
 interface MarkerType {
     longitude: string;
@@ -75,12 +76,6 @@ const MapPage = () => {
 
     return (
         <main className=''>
-            {/* Control the visibility items on the map */}
-            <ControlPanel
-                visibility={visibility}
-                onVisibilityChange={handleVisibilityChange}
-            />
-
             <div id='map'>
                 <Map
                     mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
@@ -94,8 +89,7 @@ const MapPage = () => {
                     }}
                     style={{ position: 'absolute', width: '100%', height: '100%' }}
                     mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
-                    onClick={handleMapClick}
-                >
+                    onClick={handleMapClick}>
                     {/* Trigger the dialog to create a warehouse */}
                     {selectedAction === 'createWarehouse' && (
                         <CreateWarehouseDialog
@@ -136,6 +130,14 @@ const MapPage = () => {
                                 handleMarkerClick={handleMarkerClick}
                             />
                         ))}
+
+                    {/* Control the visibility items on the map */}
+                    <ControlPanel
+                        visibility={visibility}
+                        onVisibilityChange={handleVisibilityChange}
+                    />
+
+                    <RescuePostPanel />
                 </Map>
             </div>
 

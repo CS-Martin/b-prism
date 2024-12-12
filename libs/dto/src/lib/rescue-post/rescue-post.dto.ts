@@ -11,7 +11,7 @@ export class RescuePostDto {
     @ApiProperty()
     latitude?: string | null;
 
-    @ApiProperty()
+    @ApiProperty({ type: [ContactPersonsDto] })
     contact_persons!: ContactPersonsDto[];
 
     @ApiProperty()
@@ -25,6 +25,12 @@ export class RescuePostDto {
 
     @ApiProperty()
     number_of_people_affected!: number;
+
+    @ApiProperty()
+    address!: string | null;
+
+    @ApiProperty()
+    landmark!: string | null;
 
     @ApiProperty()
     createdAt!: Date;
