@@ -69,6 +69,8 @@ model RescuePost {
   total_children            Int
   total_elderly             Int
   number_of_people_affected Int
+  address                   String?
+  landmark                  String?
   createdAt                 DateTime @default(now())
   updatedAt                 DateTime @updatedAt
 }

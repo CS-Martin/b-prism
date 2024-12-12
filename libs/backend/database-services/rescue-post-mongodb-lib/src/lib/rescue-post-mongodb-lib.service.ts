@@ -19,4 +19,17 @@ export class RescuePostMongodbLibService {
             contact_persons: result.contact_persons as unknown as ContactPersonsDto[],
         };
     }
+
+    async findAll(): Promise<RescuePostDto[]> {
+        const rescuePosts = await this.prisma.rescuePost.findMany({
+            orderBy: {
+                createdAt: 'asc',
+            },
+        });
+
+        return rescuePosts.map((post) => ({
+            ...post,
+            contact_persons: post.contact_persons as unknown as ContactPersonsDto[],
+        }));
+    }
 }

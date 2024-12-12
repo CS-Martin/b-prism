@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import {
     CreateDispensingPointDto,
+    CreateRescuePostDto,
     CreateWarehouseDto,
     DispensingPointDto,
+    RescuePostDto,
     ResponseDto,
     WarehouseAddressDto,
     WarehouseDto,
@@ -11,6 +13,7 @@ import { warehouseService } from '../services/warehouse.service';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { dispensingPointService } from '../services/dispensing-point.service';
 import { mapboxService } from '../services/mapbox.api.service';
+import { rescuePostService } from '../services/rescue-post.service';
 
 /**
  * @description Hooks for warehouses
@@ -116,7 +119,7 @@ export const useDisplayDispensingPoints = () => {
         fetchAllDispensingPoints();
     }, []);
 
-    return { dispensingPoints, fetchAllDispensingPoints };
+    return { dispensingPoints };
 };
 
 export const useCreateDispensingPoint = (data: CreateDispensingPointDto) => {
@@ -151,4 +154,24 @@ export const useDeleteDispensingPoint = (dispensingPointId: string) => {
     };
 
     return { deleteDispensingPoint };
+};
+
+export const useDisplayRescuePosts = () => {
+    const [rescuePosts, setRescuePosts] = useState<RescuePostDto[]>([]);
+
+    const fetchAllRescuePosts = async () => {
+        const response: ResponseDto<RescuePostDto[]> = await rescuePostService.findAll();
+
+        if (response.statusCode !== 200) {
+            throw new Error('Failed to fetch rescue posts');
+        }
+
+        setRescuePosts(response.body);
+    };
+
+    useEffect(() => {
+        fetchAllRescuePosts();
+    }, []);
+
+    return { rescuePosts };
 };

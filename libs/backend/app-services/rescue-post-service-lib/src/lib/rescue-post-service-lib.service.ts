@@ -24,4 +24,20 @@ export class RescuePostServiceLibService {
             throw new BadRequestException(error);
         }
     }
+
+    async findAll(): Promise<ResponseDto<RescuePostDto[]>> {
+        this.logger.log('Fetching all rescue posts');
+
+        try {
+            const rescuePosts: RescuePostDto[] = await this.rescuePostMongodbLibService.findAll();
+
+            const response: ResponseDto<RescuePostDto[]> = new ResponseDto<RescuePostDto[]>(200, rescuePosts);
+
+            return response;
+        } catch (error) {
+            this.logger.error('Error fetching all rescue posts', error);
+
+            throw new BadRequestException('Failed to fetch rescue posts');
+        }
+    }
 }

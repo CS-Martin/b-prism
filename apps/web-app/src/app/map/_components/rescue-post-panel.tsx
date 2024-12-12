@@ -1,0 +1,160 @@
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+    Label,
+    ScrollArea,
+    Separator,
+} from '@b-prism/shadcn-ui/index';
+import { ChevronRight, Locate, MessageSquareMore, PanelRight, ShieldAlert } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import Draggable from 'react-draggable';
+import { useDisplayRescuePosts } from '../../../hooks/map.hook';
+import { formatDistanceToNow } from 'date-fns';
+
+const RescuePostPanel = () => {
+    const [isExpanded, setIsExpanded] = useState(true);
+    const scrollAreaRef = useRef<HTMLDivElement>(null);
+    const { rescuePosts } = useDisplayRescuePosts();
+
+    useEffect(() => {
+        scrollAreaRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [rescuePosts]);
+
+    const renderCollapsibleSection = (title: string, content: JSX.Element) => (
+        <Collapsible className='group/collapsible'>
+            <CollapsibleTrigger className='w-full'>
+                <div className='flex items-center justify-between w-full hover:underline group/label'>
+                    <Label className='font-semibold text-[#F4AA55]'>{title}</Label>
+                    <ChevronRight
+                        size={18}
+                        className='ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90'
+                    />
+                </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className='flex flex-col gap-2 mt-1 px-5 relative'>
+                <Separator
+                    orientation='vertical'
+                    className='absolute top-0 left-2 h-full w-[1px] bg-white bg-opacity-20'
+                />
+                {content}
+            </CollapsibleContent>
+        </Collapsible>
+    );
+
+    return (
+        <Draggable
+            handle='.drag-handle'
+            bounds='parent'>
+            <div
+                className={`absolute top-[50px] drag-handle right-0 z-50 max-w-[350px] rounded-[10px] shadow-xl m-[20px] bg-black bg-opacity-45 ${
+                    isExpanded ? 'md:h-[720px]' : ''
+                }`}>
+                <div
+                    className={`cursor-move flex items-center justify-between transition-all duration-300 ${
+                        isExpanded ? 'px-5 pt-3.5 mb-3' : 'p-3'
+                    }`}>
+                    <Label className={`text-[16px] font-semibold ${isExpanded ? '' : 'hidden'}`}>Rescue Posts</Label>
+                    <div
+                        className='cursor-pointer'
+                        onClick={() => setIsExpanded(!isExpanded)}>
+                        {isExpanded ? <PanelRight size={18} /> : <MessageSquareMore size={18} />}
+                    </div>
+                </div>
+
+                {isExpanded && (
+                    <div className='h-full'>
+                        <div className='px-5 pb-3.5'>
+                            <p className='text-sm text-gray-500'>
+                                View and manage rescue posts on the map, sourced from a Facebook Messenger bot.
+                            </p>
+                        </div>
+                        <Separator className='my-3 bg-gray-500 w-full' />
+                        <ScrollArea className='h-[calc(100%-130px)]'>
+                            <div className='flex flex-col gap-3 p-3'>
+                                {rescuePosts.map((post) => (
+                                    <div
+                                        key={post.id}
+                                        className='bg-[#1C1B1B] p-3 rounded-[5px]'
+                                        ref={scrollAreaRef}>
+                                        <div className='flex justify-between items-center gap-2'>
+                                            <span className='flex items-center gap-2'>
+                                                <ShieldAlert
+                                                    size={22}
+                                                    className='bg-red-500 rounded-full p-[3px]'
+                                                />
+                                                <p className='font-semibold'>
+                                                    {new Date(post.createdAt).toLocaleDateString()}{' '}
+                                                    <span className='text-xs text-gray-400'>
+                                                        | {formatDistanceToNow(new Date(post.createdAt))} ago
+                                                    </span>
+                                                </p>
+                                            </span>
+                                            <button>
+                                                <Locate size={18} />
+                                            </button>
+                                        </div>
+                                        <Separator className='my-4 bg-white bg-opacity-20 w-full' />
+
+                                        <div className='flex flex-col gap-2'>
+                                            {renderCollapsibleSection(
+                                                'Contact Person/s',
+                                                <>
+                                                    {post.contact_persons.map((contact, index) => (
+                                                        <div
+                                                            key={index}
+                                                            className='flex flex-col gap-1'>
+                                                            <Label>
+                                                                <span className='font-semibold text-[#F4AA55]'>
+                                                                    Name:{' '}
+                                                                </span>
+                                                                {contact.name}
+                                                            </Label>
+                                                            <Label>
+                                                                <span className='font-semibold text-[#F4AA55]'>
+                                                                    Contact:{' '}
+                                                                </span>
+                                                                {contact.contact}
+                                                            </Label>
+                                                        </div>
+                                                    ))}
+                                                </>,
+                                            )}
+                                            {renderCollapsibleSection(
+                                                'Demographics',
+                                                <>
+                                                    <Label>
+                                                        <span className='font-semibold text-[#F4AA55]'>Adult: </span>
+                                                        {post.total_adults}
+                                                    </Label>
+                                                    <Label>
+                                                        <span className='font-semibold text-[#F4AA55]'>Child: </span>
+                                                        {post.total_children}
+                                                    </Label>
+                                                    <Label>
+                                                        <span className='font-semibold text-[#F4AA55]'>Elderly: </span>
+                                                        {post.total_elderly}
+                                                    </Label>
+                                                </>,
+                                            )}
+                                            <Label>
+                                                <span className='font-semibold text-[#F4AA55]'>Address: </span>
+                                                {post.address}
+                                            </Label>
+                                            <Label>
+                                                <span className='font-semibold text-[#F4AA55]'>Landmark: </span>
+                                                {post.landmark}
+                                            </Label>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </ScrollArea>
+                    </div>
+                )}
+            </div>
+        </Draggable>
+    );
+};
+
+export default RescuePostPanel;

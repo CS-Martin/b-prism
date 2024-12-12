@@ -1,0 +1,54 @@
+import { CreateRescuePostDto, RescuePostDto, ResponseDto } from '@dto';
+import { BadRequestException } from '@nestjs/common';
+
+class RescuePostService {
+    private API_BASE_URL: string;
+
+    constructor() {
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_RESCUE_POST_SERVICE_API_PORT ?? ''}`;
+    }
+
+    public async create(rescuePost: CreateRescuePostDto): Promise<RescuePostDto> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/rescue-post/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(rescuePost),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message);
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error(error);
+
+            throw new BadRequestException('Failed to create rescue post');
+        }
+    }
+
+    public async findAll(): Promise<ResponseDto<RescuePostDto[]>> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/rescue-post`);
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message);
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error(error);
+
+            throw new BadRequestException('Failed to fetch rescue posts');
+        }
+    }
+}
+
+export const rescuePostService = new RescuePostService();
