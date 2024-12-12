@@ -119,7 +119,7 @@ export const useDisplayDispensingPoints = () => {
         fetchAllDispensingPoints();
     }, []);
 
-    return { dispensingPoints };
+    return { dispensingPoints, fetchAllDispensingPoints };
 };
 
 export const useCreateDispensingPoint = (data: CreateDispensingPointDto) => {
