@@ -3,9 +3,13 @@
 import { AppSidebar } from '@b-prism/shadcn-ui/index';
 import { SelectedActionType } from '@b-prism/enums';
 
-import Map, { MapMouseEvent } from 'react-map-gl';
+import Map, { GeolocateControl, MapMouseEvent, MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { useDisplayDispensingPoints, useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
 import CreateWarehouseDialog from './_components/create-warehouse-dialog';
 import RenderWarehouse from './_components/render-warehouse';
@@ -21,33 +25,66 @@ interface MarkerType {
 }
 
 const MapPage = () => {
-    // To fetch all warehouses
+    const mapRef = useRef<MapRef | null>(null); // Reference for the map instance
+
     const { warehouses, fetchAllWarehouses } = useDisplayWarehouses();
-
-    // To fetch all dispensing points
     const { dispensingPoints, fetchAllDispensingPoints } = useDisplayDispensingPoints();
-
-    // To detect the action selected by the user (create warehouse, delete warehouse, etc.)
     const [selectedAction, setSelectedAction] = useState<SelectedActionType | null>(null);
-
-    // To store the marker coordinates
     const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
-
-    // To open the dialog
     const [isOpen, setIsOpen] = useState(false);
-
-    // To open delete item dialog
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-
     const [itemToDelete, setItemtoDelete] = useState<{ type: string; id: string }>();
-
-    // To store the selected marker id
     const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
-
     const [visibility, setVisibility] = useState({
         warehouses: true,
         dispensingPoints: true,
     });
+
+    // Geocoder function to interpret coordinates
+    const coordinatesGeocoder = (query: string) => {
+        const matches = query.match(/^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i);
+        if (!matches) return null;
+
+        const coordinateFeature = (lng: number, lat: number) => ({
+            center: [lng, lat],
+            geometry: { type: 'Point', coordinates: [lng, lat] },
+            place_name: `Lat: ${lat}, Lng: ${lng}`,
+            place_type: ['coordinate'],
+            properties: {},
+            type: 'Feature',
+        });
+
+        const coord1 = Number(matches[1]);
+        const coord2 = Number(matches[2]);
+        const geocodes = [];
+
+        if (coord1 < -90 || coord1 > 90) geocodes.push(coordinateFeature(coord1, coord2));
+        if (coord2 < -90 || coord2 > 90) geocodes.push(coordinateFeature(coord2, coord1));
+        if (geocodes.length === 0) {
+            geocodes.push(coordinateFeature(coord1, coord2));
+            geocodes.push(coordinateFeature(coord2, coord1));
+        }
+
+        return geocodes;
+    };
+
+    useEffect(() => {
+        if (mapRef.current) {
+            const mapboxMap = mapRef.current.getMap();
+
+            // Add Geocoder control
+            const geocoder = new MapboxGeocoder({
+                accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN!,
+                // localGeocoder: coordinatesGeocoder,
+                zoom: 10,
+                placeholder: 'Enter coordinates (e.g., -40, 170)',
+                // mapboxgl: mapboxMap,
+                reverseGeocode: true,
+            });
+
+            mapboxMap.addControl(geocoder);
+        }
+    }, []);
 
     const handleMapClick = (event: MapMouseEvent) => {
         const longitude: string = event.lngLat.lng.toString();
@@ -78,6 +115,7 @@ const MapPage = () => {
         <main className=''>
             <div id='map'>
                 <Map
+                    ref={mapRef}
                     mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
                     projection={{ name: 'globe' }}
                     initialViewState={{
@@ -137,7 +175,7 @@ const MapPage = () => {
                         onVisibilityChange={handleVisibilityChange}
                     />
 
-                    <RescuePostPanel />
+                    <RescuePostPanel mapRef={mapRef} />
                 </Map>
             </div>
 
