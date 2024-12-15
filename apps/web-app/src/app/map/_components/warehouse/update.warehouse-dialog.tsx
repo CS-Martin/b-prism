@@ -30,11 +30,6 @@ import {
 } from 'apps/web-app/src/hooks/map.hook';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 
-interface MarkerType {
-    longitude: string;
-    latitude: string;
-}
-
 interface DialogProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;

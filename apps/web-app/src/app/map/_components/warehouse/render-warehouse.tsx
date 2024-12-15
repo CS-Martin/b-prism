@@ -2,6 +2,7 @@ import { WarehouseDto } from '@dto';
 import Image from 'next/image';
 import { Marker, Popup } from 'react-map-gl';
 import UpdateWarehouseDialog from './update.warehouse-dialog';
+import { useState } from 'react';
 
 interface RenderWarehouseProps {
     warehouse: WarehouseDto;
@@ -10,15 +11,21 @@ interface RenderWarehouseProps {
 }
 
 const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: RenderWarehouseProps) => {
+    // Local state to manage the dialog's open state
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleMarkerClickAndOpenDialog = (e: any) => {
+        e.originalEvent.preventDefault();
+        e.originalEvent.stopPropagation();
+        handleMarkerClick(warehouse.type, warehouse.id);
+        setIsDialogOpen(true);
+    };
+
     return (
         <Marker
             longitude={Number(warehouse.longitude)}
             latitude={Number(warehouse.latitude)}
-            onClick={(e) => {
-                e.originalEvent.preventDefault();
-                e.originalEvent.stopPropagation();
-                handleMarkerClick(warehouse.type, warehouse.id);
-            }}
+            onClick={handleMarkerClickAndOpenDialog}
             className='cursor-pointer animate-fade-in'>
             <Image
                 priority
@@ -35,7 +42,7 @@ const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: Ren
             {selectedMarkerId === warehouse.id && (
                 <UpdateWarehouseDialog
                     isOpen={isDialogOpen}
-                    setIsOpen={setIsDialogOpen} // Pass state handler for the dialog
+                    setIsOpen={setIsDialogOpen}
                     warehouseId={warehouse.id}
                 />
             )}
