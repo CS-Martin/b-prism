@@ -1,6 +1,7 @@
 import { WarehouseDto } from '@dto';
 import Image from 'next/image';
 import { Marker, Popup } from 'react-map-gl';
+import UpdateWarehouseDialog from './update.warehouse-dialog';
 
 interface RenderWarehouseProps {
     warehouse: WarehouseDto;
@@ -32,16 +33,11 @@ const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: Ren
             />
             <p className='text-white text-center'>{warehouse.name}</p>
             {selectedMarkerId === warehouse.id && (
-                <Popup
-                    longitude={Number(warehouse.longitude)}
-                    latitude={Number(warehouse.latitude)}
-                    onClose={() => handleMarkerClick('', null)}
-                    closeOnClick={true}
-                    anchor='top'
-                    className='text-black text-center'>
-                    <small>Warehouse:</small>
-                    <h3 className='text-lg font-bold'>{warehouse.name}</h3>
-                </Popup>
+                <UpdateWarehouseDialog
+                    isOpen={isDialogOpen}
+                    setIsOpen={setIsDialogOpen} // Pass state handler for the dialog
+                    warehouseId={warehouse.id}
+                />
             )}
         </Marker>
     );

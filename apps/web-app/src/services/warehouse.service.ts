@@ -1,4 +1,4 @@
-import { CreateWarehouseDto, ResponseDto, WarehouseDto } from '@dto';
+import { CreateWarehouseDto, ResponseDto, UpdateWarehouseDto, WarehouseDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 
 class WarehouseService {
@@ -32,6 +32,30 @@ class WarehouseService {
             console.error(error);
 
             throw new BadRequestException('Failed to create warehouse');
+        }
+    }
+
+    public async update(id: string, warehouse: UpdateWarehouseDto): Promise<WarehouseDto> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/warehouse/update/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(warehouse),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message);
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error(error);
+
+            throw new BadRequestException('Failed to update warehouse');
         }
     }
 
@@ -71,6 +95,24 @@ class WarehouseService {
             console.error(error);
 
             throw new BadRequestException('Failed to fetch warehouses');
+        }
+    }
+
+    public async findOne(id: string): Promise<ResponseDto<WarehouseDto>> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/warehouse/${id}`);
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message);
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error(error);
+
+            throw new BadRequestException('Failed to find warehouse');
         }
     }
 }

@@ -8,6 +8,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
+    Input,
     Label,
     ScrollArea,
     Separator,
@@ -17,11 +18,16 @@ import {
     TabsTrigger,
     Textarea,
 } from '@b-prism/shadcn-ui/index';
-import { CreateWarehouseDto, UserDto } from '@dto';
+import { CreateWarehouseDto, UpdateWarehouseDto, UserDto } from '@dto';
 import { useSession } from 'next-auth/react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useEffect } from 'react';
-import { useCreateWarehouse, useGetAddress } from 'apps/web-app/src/hooks/map.hook';
+import {
+    useCreateWarehouse,
+    useFindOneWarehouse,
+    useGetAddress,
+    useUpdateWarehouse,
+} from 'apps/web-app/src/hooks/map.hook';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 
 interface MarkerType {
@@ -32,48 +38,40 @@ interface MarkerType {
 interface DialogProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
-    marker: MarkerType;
-    fetchAllWarehouses: () => void;
+    warehouseId: string;
 }
 
-const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllWarehouses }) => {
+const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, warehouseId }) => {
     const { data: session } = useSession();
-    const { createWarehouse } = useCreateWarehouse();
-    const { getAddress, address } = useGetAddress();
-
-    // After opening the dialog, get the address
-    useEffect(() => {
-        if (isOpen && marker.longitude && marker.latitude) {
-            getAddress(marker.longitude, marker.latitude);
-        }
-    }, [isOpen, marker, getAddress]);
+    const { updateWarehouse } = useUpdateWarehouse();
+    const { warehouse } = useFindOneWarehouse(warehouseId);
 
     // Initialize react-hook-form with default values
-    const { handleSubmit, control, reset } = useForm<CreateWarehouseDto>({
+    const { handleSubmit, control, reset } = useForm<UpdateWarehouseDto>({
         defaultValues: {
             type: 'warehouse',
-            name: '',
-            description: '',
-            longitude: marker.longitude,
-            latitude: marker.latitude,
-            capacity: 0,
-            cost_of_stockpile: 0,
-            family_food_packs: 0,
-            standby_funds: 0,
+            name: warehouse.name,
+            description: warehouse.description,
+            longitude: warehouse.longitude,
+            latitude: warehouse.latitude,
+            capacity: warehouse.capacity,
+            cost_of_stockpile: warehouse.cost_of_stockpile,
+            family_food_packs: warehouse.family_food_packs,
+            standby_funds: warehouse.standby_funds,
             non_food_items: {
-                family_kits: 0,
-                sleeping_kits: 0,
-                hygiene_kits: 0,
-                kitchen_kits: 0,
-                other_nfis: 0,
+                family_kits: warehouse?.non_food_items?.family_kits,
+                sleeping_kits: warehouse?.non_food_items?.sleeping_kits,
+                hygiene_kits: warehouse?.non_food_items?.hygiene_kits,
+                kitchen_kits: warehouse?.non_food_items?.kitchen_kits,
+                other_nfis: warehouse?.non_food_items?.other_nfis,
             },
             address: {
-                street: '',
-                post_code: '',
-                locality: '',
-                place: '',
-                region: '',
-                country: '',
+                street: warehouse?.address?.street,
+                post_code: warehouse?.address?.post_code,
+                locality: warehouse?.address?.locality,
+                place: warehouse?.address?.place,
+                region: warehouse?.address?.region,
+                country: warehouse?.address?.country,
             },
             user_id: (session?.user as UserDto)?.id ?? '',
             created_at: new Date(),
@@ -82,40 +80,22 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
     });
 
     useEffect(() => {
-        if (address) {
-            reset((prev) => ({
-                ...prev,
-                address: {
-                    ...prev.address,
-                    ...address,
-                },
-            }));
+        if (warehouse) {
+            const { id, ...warehouseWithoutId } = warehouse;
+            reset(warehouseWithoutId);
         }
-    }, [address, reset]);
-
-    // Reset form values when the marker updates
-    useEffect(() => {
-        reset((prevValues) => ({
-            ...prevValues,
-            longitude: marker.longitude,
-            latitude: marker.latitude,
-        }));
-    }, [marker, reset]);
+    }, [warehouse, reset]);
 
     // Form submission handler
-    const onSubmit = async (data: CreateWarehouseDto) => {
+    const onSubmit = async (data: UpdateWarehouseDto) => {
         const formattedData = {
             ...data,
             capacity: Number(data.capacity),
-            address: {
-                ...address,
-            },
         };
 
         console.log(formattedData);
 
-        await createWarehouse(formattedData);
-        fetchAllWarehouses();
+        await updateWarehouse(warehouseId, formattedData);
         setIsOpen(false);
     };
 

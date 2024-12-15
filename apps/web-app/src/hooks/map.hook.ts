@@ -6,6 +6,7 @@ import {
     RescuePostDto,
     ResponseDto,
     UpdateDispensingPointDto,
+    UpdateWarehouseDto,
     WarehouseAddressDto,
     WarehouseDto,
 } from '@dto';
@@ -18,32 +19,6 @@ import { rescuePostService } from '../services/rescue-post.service';
 /**
  * @description Hooks for warehouses
  */
-
-export const useGetAddress = () => {
-    const [address, setAddress] = useState<WarehouseAddressDto>({} as WarehouseAddressDto);
-
-    const getAddress = async (longitude: string, latitude: string) => {
-        const response = await mapboxService.reverse_geocoding(longitude, latitude);
-        const data = await response?.json();
-
-        if (data.features && data.features.length > 0) {
-            const properties = data.features[0]?.properties.context || {};
-
-            const street = properties.street?.name || '';
-            const post_code = properties.postcode?.name || '';
-            const locality = properties.locality?.name || '';
-            const place = properties.place?.name || '';
-            const region = properties.region?.name || '';
-            const country = properties.country?.name || '';
-
-            setAddress({ street, post_code, locality, place, region, country });
-        } else {
-            setAddress({} as WarehouseAddressDto);
-        }
-    };
-
-    return { getAddress, address };
-};
 
 export const useDisplayWarehouses = () => {
     const [warehouses, setWarehouses] = useState<WarehouseDto[]>([]);
@@ -65,6 +40,26 @@ export const useDisplayWarehouses = () => {
     return { warehouses, fetchAllWarehouses };
 };
 
+export const useFindOneWarehouse = (id: string) => {
+    const [warehouse, setWarehouse] = useState<WarehouseDto>({} as WarehouseDto);
+
+    const fetchOneWarehouse = async () => {
+        const response: ResponseDto<WarehouseDto> = await warehouseService.findOne(id);
+
+        if (response.statusCode !== 200) {
+            throw new Error('Failed to fetch warehouse');
+        }
+
+        setWarehouse(response.body);
+    };
+
+    useEffect(() => {
+        fetchOneWarehouse();
+    }, [id]);
+
+    return { warehouse, fetchOneWarehouse };
+};
+
 export const useCreateWarehouse = () => {
     const { toast } = useToast();
 
@@ -81,6 +76,22 @@ export const useCreateWarehouse = () => {
     };
 
     return { createWarehouse };
+};
+
+export const useUpdateWarehouse = () => {
+    const { toast } = useToast();
+
+    const updateWarehouse = async (id: string, data: UpdateWarehouseDto) => {
+        await warehouseService.update(id, data);
+
+        toast({
+            title: 'Success!',
+            description: `The warehouse ${data.name} has been updated successfully`,
+            variant: 'success',
+        });
+    };
+
+    return { updateWarehouse };
 };
 
 export const useDeleteWarehouse = (warehouseId: string) => {
@@ -210,4 +221,34 @@ export const useDisplayRescuePosts = () => {
     }, []);
 
     return { rescuePosts };
+};
+
+/**
+ * @description Hooks for address
+ */
+
+export const useGetAddress = () => {
+    const [address, setAddress] = useState<WarehouseAddressDto>({} as WarehouseAddressDto);
+
+    const getAddress = async (longitude: string, latitude: string) => {
+        const response = await mapboxService.reverse_geocoding(longitude, latitude);
+        const data = await response?.json();
+
+        if (data.features && data.features.length > 0) {
+            const properties = data.features[0]?.properties.context || {};
+
+            const street = properties.street?.name || '';
+            const post_code = properties.postcode?.name || '';
+            const locality = properties.locality?.name || '';
+            const place = properties.place?.name || '';
+            const region = properties.region?.name || '';
+            const country = properties.country?.name || '';
+
+            setAddress({ street, post_code, locality, place, region, country });
+        } else {
+            setAddress({} as WarehouseAddressDto);
+        }
+    };
+
+    return { getAddress, address };
 };
