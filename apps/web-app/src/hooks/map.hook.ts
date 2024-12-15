@@ -31,7 +31,7 @@ export const useGetAddress = () => {
 
             const street = properties.street?.name || '';
             const post_code = properties.postcode?.name || '';
-            const locality = properties.place?.name || '';
+            const locality = properties.locality?.name || '';
             const place = properties.place?.name || '';
             const region = properties.region?.name || '';
             const country = properties.country?.name || '';

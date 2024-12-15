@@ -65,7 +65,6 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
     const { data: session } = useSession();
     const { dispensingPoint } = useFindOneDispensingPoint(dispensingPointId);
     const { updateDispensingPoint } = useUpdateDispensingPoint();
-    console.log(dispensingPoint);
 
     const { handleSubmit, control, reset, register } = useForm<UpdateDispensingPointDto>({
         defaultValues: {
@@ -99,7 +98,6 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
             user_id: (session?.user as UserDto)?.id,
         };
 
-        console.log('formattedData', formattedData);
         await updateDispensingPoint(dispensingPointId, formattedData);
         setIsOpen(false);
     };
