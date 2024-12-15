@@ -123,13 +123,12 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
             setIsOpen(false);
             reset();
         } catch (error) {
-            if (error instanceof Error) {
-                toast({
-                    title: 'Error',
-                    description: error.message,
-                    variant: 'destructive',
-                });
-            }
+            console.error('Error creating warehouse:', error);
+            toast({
+                title: 'Error',
+                description: (error as Error).message,
+                variant: 'destructive',
+            });
         }
     };
 
