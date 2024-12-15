@@ -27,3 +27,4 @@ export * from './components/ui/pagination';
 export * from './components/ui/navigation-menu';
 export * from './components/ui/scroll-area';
 export * from './components/ui/collapsible';
+export * from './components/ui/tabs';

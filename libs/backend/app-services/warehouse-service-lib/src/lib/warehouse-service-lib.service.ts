@@ -1,10 +1,10 @@
 import {
     CreateWarehouseDto,
     ResponseDto,
+    UpdateWarehouseDto,
     WarehouseAddressDto,
-    WarehouseCapacityDto,
     WarehouseDto,
-    WarehouseItemDto,
+    WarehouseNonFoodItemsDto,
 } from '@dto';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { WarehouseService } from './warehouse-service.abstract.class';
@@ -30,6 +30,24 @@ export class WarehouseServiceLibService implements WarehouseService {
             return response;
         } catch (error) {
             this.logger.log('Error creating warehouse', error);
+
+            throw new BadRequestException(error);
+        }
+    }
+
+    async update(id: string, data: UpdateWarehouseDto): Promise<ResponseDto<WarehouseDto>> {
+        this.logger.log('Updating warehouse', id);
+
+        try {
+            const warehouse = await this.warehouseMongodbService.update(id, data);
+
+            const warehouseDto: WarehouseDto = this.convertToDto(warehouse);
+
+            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(200, warehouseDto);
+
+            return response;
+        } catch (error) {
+            this.logger.log('Error updating warehouse', error);
 
             throw new BadRequestException(error);
         }
@@ -97,11 +115,11 @@ export class WarehouseServiceLibService implements WarehouseService {
             longitude: warehouse.longitude ?? '',
             latitude: warehouse.latitude ?? '',
             address: warehouse.address as WarehouseAddressDto,
-            items: warehouse.items as WarehouseItemDto[],
-            capacity: warehouse.capacity as WarehouseCapacityDto,
-            userId: warehouse.userId ?? '',
-            createdAt: warehouse.createdAt ?? new Date(),
-            updatedAt: warehouse.updatedAt ?? new Date(),
+            non_food_items: warehouse.non_food_items as WarehouseNonFoodItemsDto,
+            capacity: warehouse.capacity ?? undefined,
+            user_id: warehouse.user_id ?? '',
+            created_at: warehouse.created_at ?? new Date(),
+            updated_at: warehouse.updated_at ?? new Date(),
         };
 
         return warehouseDto;

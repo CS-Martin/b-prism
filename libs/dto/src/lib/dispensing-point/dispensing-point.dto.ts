@@ -1,17 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { DispensingPointAddressDto } from './dispensing_point.address.dto';
+import { Type } from '@prisma/client';
 
 export class DispensingPointDto {
     @ApiProperty()
     id!: string;
 
-    @ApiProperty()
-    type!: string;
+    @ApiProperty({ enum: Type, default: Type.dispensing_point })
+    type: Type = Type.dispensing_point;
 
     @ApiProperty()
     name!: string;
 
     @ApiProperty()
-    description!: string | null;
+    description?: string | null;
 
     @ApiProperty()
     longitude!: string;
@@ -20,14 +22,17 @@ export class DispensingPointDto {
     latitude!: string;
 
     @ApiProperty()
-    capacity!: number | null;
+    capacity?: number | null;
+
+    @ApiProperty({ type: DispensingPointAddressDto })
+    address?: DispensingPointAddressDto;
 
     @ApiProperty()
-    userId?: string | null;
+    user_id?: string | null;
 
     @ApiProperty()
-    createdAt!: Date;
+    created_at?: Date;
 
     @ApiProperty()
-    updatedAt?: Date;
+    updated_at?: Date;
 }

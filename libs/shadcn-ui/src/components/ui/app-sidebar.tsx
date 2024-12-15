@@ -52,9 +52,15 @@ interface AppSidebarProps {
 
 const Links = [
     {
+        id: 'home',
+        label: 'Home',
+        icon: Home,
+        href: '/home',
+    },
+    {
         id: 'dashboard',
         label: 'Dashboard',
-        icon: Home,
+        icon: LayoutDashboard,
         href: '/dashboard',
     },
     {
@@ -115,8 +121,7 @@ function SidebarLinkItem({ label, icon: Icon, href }: SidebarLinkItemProps) {
             <SidebarMenuButton asChild>
                 <a
                     href={href}
-                    className='flex items-center'
-                >
+                    className='flex items-center'>
                     <Icon style={{ height: '18px', width: '18px' }} />
                     <span>{label}</span>
                 </a>
@@ -172,8 +177,7 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
     return (
         <Sidebar
             variant='floating'
-            collapsible='icon'
-        >
+            collapsible='icon'>
             <SidebarHeader>LOGO</SidebarHeader>
 
             <SidebarContent>
@@ -192,8 +196,7 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                 </SidebarGroup>
                 <SidebarGroup>
                     <SidebarGroupLabel
-                        style={{ display: user?.role !== 'admin' && user?.role !== 'verified' ? 'none' : 'block' }}
-                    >
+                        style={{ display: user?.role !== 'admin' && user?.role !== 'verified' ? 'none' : 'block' }}>
                         Actions
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
@@ -236,8 +239,7 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                                 side='right'
                                 align='start'
                                 className='w-[--radix-popper-anchor-width]'
-                                style={{ borderRadius: 'var(--radius)' }}
-                            >
+                                style={{ borderRadius: 'var(--radius)' }}>
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem>
@@ -245,8 +247,7 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                                         <>
                                             <Link
                                                 href='/api/auth/signout'
-                                                className='w-full flex items-center space-x-2'
-                                            >
+                                                className='w-full flex items-center space-x-2'>
                                                 <LogOut />
                                                 <span>Log out</span>
                                             </Link>
@@ -255,8 +256,7 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                                         <>
                                             <Link
                                                 href='/auth/login'
-                                                className='w-full flex items-center space-x-2'
-                                            >
+                                                className='w-full flex items-center space-x-2'>
                                                 <LogIn />
                                                 <span>Sign in</span>
                                             </Link>

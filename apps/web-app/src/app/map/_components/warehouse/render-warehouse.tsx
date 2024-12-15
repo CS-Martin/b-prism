@@ -1,6 +1,8 @@
 import { WarehouseDto } from '@dto';
 import Image from 'next/image';
 import { Marker, Popup } from 'react-map-gl';
+import UpdateWarehouseDialog from './update.warehouse-dialog';
+import { useState } from 'react';
 
 interface RenderWarehouseProps {
     warehouse: WarehouseDto;
@@ -9,17 +11,22 @@ interface RenderWarehouseProps {
 }
 
 const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: RenderWarehouseProps) => {
+    // Local state to manage the dialog's open state
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleMarkerClickAndOpenDialog = (e: any) => {
+        e.originalEvent.preventDefault();
+        e.originalEvent.stopPropagation();
+        handleMarkerClick(warehouse.type, warehouse.id);
+        setIsDialogOpen(true);
+    };
+
     return (
         <Marker
             longitude={Number(warehouse.longitude)}
             latitude={Number(warehouse.latitude)}
-            onClick={(e) => {
-                e.originalEvent.preventDefault();
-                e.originalEvent.stopPropagation();
-                handleMarkerClick(warehouse.type, warehouse.id);
-            }}
-            className='cursor-pointer animate-fade-in'
-        >
+            onClick={handleMarkerClickAndOpenDialog}
+            className='cursor-pointer animate-fade-in'>
             <Image
                 priority
                 src={`/icons/warehouse.icon.svg`}
@@ -33,17 +40,11 @@ const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: Ren
             />
             <p className='text-white text-center'>{warehouse.name}</p>
             {selectedMarkerId === warehouse.id && (
-                <Popup
-                    longitude={Number(warehouse.longitude)}
-                    latitude={Number(warehouse.latitude)}
-                    onClose={() => handleMarkerClick('', null)}
-                    closeOnClick={true}
-                    anchor='top'
-                    className='text-black text-center'
-                >
-                    <small>Warehouse:</small>
-                    <h3 className='text-lg font-bold'>{warehouse.name}</h3>
-                </Popup>
+                <UpdateWarehouseDialog
+                    isOpen={isDialogOpen}
+                    setIsOpen={setIsDialogOpen}
+                    warehouseId={warehouse.id}
+                />
             )}
         </Marker>
     );

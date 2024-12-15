@@ -13,9 +13,11 @@ import { useDisplayRescuePosts } from '../../../hooks/map.hook';
 import { formatDistanceToNow } from 'date-fns';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import { MapRef, Marker } from 'react-map-gl';
+import { MapRef } from 'react-map-gl';
+import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
+    const { toast } = useToast();
     const [currentMarker, setCurrentMarker] = useState<any>(null);
     const [isExpanded, setIsExpanded] = useState(true);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -29,30 +31,41 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
         if (!mapRef?.current) return;
 
         const mapboxMap = mapRef.current.getMap();
-        const geocoder = new MapboxGeocoder({
-            accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN!,
-            zoom: 14, // Adjust zoom level as needed
-            placeholder: 'Search...',
-        });
+        // const geocoder = new MapboxGeocoder({
+        //     accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN!,
+        //     zoom: 14, // Adjust zoom level as needed
+        //     placeholder: 'Search...',
+        // });
 
         // Programmatically trigger a search for the post's address
         // geocoder.query(`${post.latitude}, ${post.longitude}`);
 
         // Optionally fly to the location using coordinates if available
-        if (post.latitude && post.longitude) {
-            mapboxMap.flyTo({
-                center: [post.longitude, post.latitude],
-                zoom: 14,
-                essential: true,
+        if (!post.latitude || !post.longitude) {
+            toast({
+                title: `Error`,
+                description: `No coordinates found for ${post.contact_persons[0].name + ` post` || 'post'}`,
             });
-
-            if (currentMarker) {
-                currentMarker.remove();
-            }
-
-            const newMarker = new mapboxgl.Marker().setLngLat([post.longitude, post.latitude]).addTo(mapboxMap);
-            setCurrentMarker(newMarker);
+            return;
         }
+
+        toast({
+            title: `Locating ${post.contact_persons[0].name + `...` || 'post'}`,
+            description: `Please wait while we locate the post on the map.`,
+        });
+
+        mapboxMap.flyTo({
+            center: [post.longitude, post.latitude],
+            zoom: 14,
+            essential: true,
+        });
+
+        if (currentMarker) {
+            currentMarker.remove();
+        }
+
+        const newMarker = new mapboxgl.Marker().setLngLat([post.longitude, post.latitude]).addTo(mapboxMap);
+        setCurrentMarker(newMarker);
     };
 
     const renderCollapsibleSection = (title: string, content: JSX.Element) => (

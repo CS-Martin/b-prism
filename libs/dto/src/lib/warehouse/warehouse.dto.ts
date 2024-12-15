@@ -1,18 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { WarehouseAddressDto } from './warehouse.address.dto';
-import { WarehouseItemDto } from './warehouse.item.dto';
-import { WarehouseCapacityDto } from './warehouse.capacity.dto';
 import { Type } from '@prisma/client';
+import { WarehouseNonFoodItemsDto } from './warehouse.nfis.dto';
 
 export class WarehouseDto {
     @ApiProperty()
     id!: string;
 
-    @ApiProperty()
-    type!: Type;
+    @ApiProperty({ enum: Type, default: Type.warehouse })
+    type: Type = Type.warehouse;
 
     @ApiProperty()
     name!: string;
+
+    @ApiProperty()
+    description?: string;
 
     @ApiProperty()
     longitude!: string;
@@ -20,21 +22,30 @@ export class WarehouseDto {
     @ApiProperty()
     latitude!: string;
 
+    @ApiProperty()
+    capacity?: number;
+
+    @ApiProperty()
+    cost_of_stockpile?: number;
+
+    @ApiProperty()
+    family_food_packs?: number;
+
+    @ApiProperty()
+    standby_funds?: number;
+
+    @ApiProperty()
+    non_food_items?: WarehouseNonFoodItemsDto;
+
     @ApiProperty({ type: WarehouseAddressDto })
     address?: WarehouseAddressDto;
 
-    @ApiProperty({ type: [WarehouseItemDto] })
-    items?: WarehouseItemDto[];
-
-    @ApiProperty({ type: WarehouseCapacityDto })
-    capacity!: WarehouseCapacityDto;
+    @ApiProperty()
+    user_id?: string;
 
     @ApiProperty()
-    userId!: string;
+    created_at?: Date;
 
     @ApiProperty()
-    createdAt!: Date;
-
-    @ApiProperty()
-    updatedAt!: Date;
+    updated_at?: Date;
 }

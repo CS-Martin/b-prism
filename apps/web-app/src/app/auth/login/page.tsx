@@ -67,13 +67,11 @@ export default function LoginPage() {
                     <form
                         action='#'
                         onSubmit={loginUser}
-                        className='space-y-6'
-                    >
+                        className='space-y-6'>
                         <div>
                             <label
                                 htmlFor='email'
-                                className='block text-sm/6 font-medium'
-                            >
+                                className='block text-sm/6 font-medium'>
                                 Email address
                             </label>
                             <div className='mt-2'>
@@ -99,15 +97,13 @@ export default function LoginPage() {
                             <div className='flex items-center justify-between'>
                                 <label
                                     htmlFor='password'
-                                    className='block text-sm/6 font-medium'
-                                >
+                                    className='block text-sm/6 font-medium'>
                                     Password
                                 </label>
                                 <div className='text-sm'>
                                     <a
                                         href='#'
-                                        className='font-semibold text-indigo-600 hover:text-indigo-500'
-                                    >
+                                        className='font-semibold text-indigo-600 hover:text-indigo-500'>
                                         Forgot password?
                                     </a>
                                 </div>
@@ -133,8 +129,7 @@ export default function LoginPage() {
                         <div>
                             <button
                                 type='submit'
-                                className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                            >
+                                className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
                                 Sign in
                             </button>
                         </div>
@@ -146,8 +141,7 @@ export default function LoginPage() {
                         Don&apos;t have an account yet?{' '}
                         <a
                             href='/auth/register'
-                            className='font-semibold text-indigo-600 hover:text-indigo-500'
-                        >
+                            className='font-semibold text-indigo-600 hover:text-indigo-500'>
                             Sign up
                         </a>
                     </p>
