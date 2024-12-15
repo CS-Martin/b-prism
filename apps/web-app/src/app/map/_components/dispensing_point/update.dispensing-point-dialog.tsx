@@ -247,8 +247,8 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                             {/* Submit Button */}
                             <Button
                                 type='submit'
-                                className='bg-blue-500 absolute bottom-4 w-full max-w-[484px] hover:bg-blue-600 text-white px-4'>
-                                Submit
+                                className='bg-blue-500 absolute bottom-4 w-full max-w-[583px] hover:bg-blue-600 text-white px-4'>
+                                Update Dispensing Point
                             </Button>
                         </div>
                     </Tabs>
