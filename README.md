@@ -21,24 +21,30 @@
 
 ```plaintext
 b-prism
-├── apps/                         # Contains various microservices application.
-│   ├── authentication-service/   # Authentication service application.
-│   ├── client/                   # Client-side application.
-│   ├── user-service/             # User service application.
-│   └── verification-service/     # Verification service application.
-├── libs/                         # Contains shared libraries used across applications.
-│   ├── backend/                  # Backend-specific libraries.
-│   ├── dto/                      # Data Transfer Object library.
-│   └── utils/                    # Utility functions and helpers.
-│   └── enums/                    # Enums for entire project
-├── dataset/                      # Dataset for map
-├── notebooks/                    # Contains jupyter notebook for solution modeling
-├── prisma/                       # Config file for Prisma / DB model, DB Connection, etc.
-├── .git/                         # Git version control directory
-├── .gitignore                    # Git ignore configuration file.
-├── nx.json                       # Nx workspace configuration file.
-├── package.json                  # Node.js project metadata and dependencies.
-└── tsconfig.base.json            # Base TypeScript configuration for the workspace.
+├── apps/                               # Contains various microservices application.
+│   ├── authentication-service/         # Authentication service application.
+│   ├── client/                         # Client-side application.
+│   ├── user-service/                   # User service application.
+│   └── verification-service/           # Verification service application.
+├── libs/                               # Contains shared libraries used across applications.
+│   ├── backend/                        # Backend-specific libraries.
+│       ├── app-service/                # Contains services related to the application logic.
+│       ├── database-services/          # Contains services related to database interactions.
+│       ├── prisma-db-lib/              # Contains the Prisma database client library.
+│   ├── dto/                            # Data Transfer Object library.
+│   └── enums/                          # Enums library.
+│   └── shadcn-lib/                     # Initialization and utilization helper for shadcn.
+│   └── shadcn-ui/                      # Shadcn component library.
+│   └── utils/                          # Utility functions and helpers.
+│   └── enums/                          # Enums for entire project
+├── dataset/                            # Dataset for map
+├── notebooks/                          # Contains jupyter notebook for solution modeling
+├── prisma/                             # Config file for Prisma / DB model, DB Connection, etc.
+├── .git/                               # Git version control directory
+├── .gitignore                          # Git ignore configuration file.
+├── nx.json                             # Nx workspace configuration file.
+├── package.json                        # Node.js project metadata and dependencies.
+└── tsconfig.base.json                  # Base TypeScript configuration for the workspace.
 ```
 
 ## Installation
