@@ -23,6 +23,7 @@ import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import { useCreateWarehouse, useGetAddress } from 'apps/web-app/src/hooks/map.hook';
 import InputField from 'apps/web-app/src/components/forms/input-field';
+import TextAreaField from 'apps/web-app/src/components/forms/textarea-field';
 
 interface MarkerType {
     longitude: string;
@@ -40,13 +41,6 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
     const { data: session } = useSession();
     const { createWarehouse } = useCreateWarehouse();
     const { getAddress, address } = useGetAddress();
-
-    // After opening the dialog, get the address
-    useEffect(() => {
-        if (isOpen && marker.longitude && marker.latitude) {
-            getAddress(marker.longitude, marker.latitude);
-        }
-    }, [isOpen, marker, getAddress]);
 
     // Initialize react-hook-form with default values
     const { handleSubmit, control, reset } = useForm<CreateWarehouseDto>({
@@ -81,42 +75,52 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
         },
     });
 
+    // After opening the dialog, get the address
+    useEffect(() => {
+        if (isOpen && marker.longitude && marker.latitude) {
+            getAddress(marker.longitude, marker.latitude);
+        }
+    }, [isOpen, marker]);
+
     useEffect(() => {
         if (address) {
             reset((prev) => ({
                 ...prev,
-                address: {
-                    ...prev.address,
-                    ...address,
-                },
+                address,
             }));
         }
     }, [address, reset]);
 
     // Reset form values when the marker updates
     useEffect(() => {
-        reset((prevValues) => ({
-            ...prevValues,
-            longitude: marker.longitude,
-            latitude: marker.latitude,
-        }));
+        reset({ longitude: marker.longitude, latitude: marker.latitude });
     }, [marker, reset]);
 
     // Form submission handler
     const onSubmit = async (data: CreateWarehouseDto) => {
         const formattedData = {
             ...data,
-            capacity: Number(data.capacity),
-            address: {
-                ...address,
+            capacity: Number(data.capacity) || 0,
+            cost_of_stockpile: Number(data.cost_of_stockpile) || 0,
+            family_food_packs: Number(data.family_food_packs) || 0,
+            standby_funds: Number(data.standby_funds) || 0,
+            non_food_items: {
+                ...data.non_food_items,
+                family_kits: Number(data.non_food_items?.family_kits) || 0,
+                sleeping_kits: Number(data.non_food_items?.sleeping_kits) || 0,
+                hygiene_kits: Number(data.non_food_items?.hygiene_kits) || 0,
+                kitchen_kits: Number(data.non_food_items?.kitchen_kits) || 0,
+                other_nfis: Number(data.non_food_items?.other_nfis) || 0,
             },
+            address,
         };
 
-        console.log(formattedData);
+        console.log('formattedData', formattedData);
 
         await createWarehouse(formattedData);
         fetchAllWarehouses();
         setIsOpen(false);
+        reset();
     };
 
     return (
@@ -174,9 +178,10 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
 
                                     <div>
                                         <Label htmlFor='description'>Description</Label>
-                                        <Textarea
-                                            id='description'
-                                            className='rounded-sm mt-1'
+                                        <TextAreaField
+                                            name='description'
+                                            control={control}
+                                            label='Description'
                                             placeholder='Description'
                                         />
                                     </div>
@@ -188,7 +193,6 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                             label='Capacity'
                                             type='number'
                                             placeholder='Ex. 1000'
-                                            rules={{ required: 'Warehouse capacity is required' }}
                                         />
                                     </div>
                                 </div>

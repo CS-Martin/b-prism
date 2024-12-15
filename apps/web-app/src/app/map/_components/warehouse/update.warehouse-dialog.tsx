@@ -8,7 +8,6 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    Input,
     Label,
     ScrollArea,
     Separator,
@@ -16,19 +15,14 @@ import {
     TabsContent,
     TabsList,
     TabsTrigger,
-    Textarea,
 } from '@b-prism/shadcn-ui/index';
-import { CreateWarehouseDto, UpdateWarehouseDto, UserDto } from '@dto';
+import { UpdateWarehouseDto, UserDto } from '@dto';
 import { useSession } from 'next-auth/react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
-import {
-    useCreateWarehouse,
-    useFindOneWarehouse,
-    useGetAddress,
-    useUpdateWarehouse,
-} from 'apps/web-app/src/hooks/map.hook';
+import { useFindOneWarehouse, useUpdateWarehouse } from 'apps/web-app/src/hooks/map.hook';
 import InputField from 'apps/web-app/src/components/forms/input-field';
+import TextAreaField from 'apps/web-app/src/components/forms/textarea-field';
 
 interface DialogProps {
     isOpen: boolean;
@@ -40,6 +34,8 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
     const { data: session } = useSession();
     const { updateWarehouse } = useUpdateWarehouse();
     const { warehouse } = useFindOneWarehouse(warehouseId);
+
+    console.log('warehouse', warehouse);
 
     // Initialize react-hook-form with default values
     const { handleSubmit, control, reset } = useForm<UpdateWarehouseDto>({
@@ -85,7 +81,6 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
     const onSubmit = async (data: UpdateWarehouseDto) => {
         const formattedData = {
             ...data,
-            capacity: Number(data.capacity),
         };
 
         console.log(formattedData);
@@ -148,11 +143,12 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                     </div>
 
                                     <div>
-                                        <Label htmlFor='description'>Description</Label>
-                                        <Textarea
-                                            id='description'
-                                            className='rounded-sm mt-1'
+                                        <TextAreaField
+                                            name='description'
+                                            control={control}
+                                            label='Description'
                                             placeholder='Description'
+                                            rules={{ required: 'Warehouse description is required' }}
                                         />
                                     </div>
 
@@ -367,7 +363,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                             <Button
                                 type='submit'
                                 className='bg-blue-500 absolute bottom-4 w-full max-w-[580px] hover:bg-blue-600 text-white px-4'>
-                                Submit
+                                Update Warehouse
                             </Button>
                         </div>
                     </Tabs>

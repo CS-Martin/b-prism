@@ -30,17 +30,20 @@ const InputField: React.FC<InputFieldProps> = ({
             name={name}
             control={control}
             rules={rules}
-            render={({ field, fieldState }) => (
-                <>
-                    <Input
-                        {...field}
-                        type={type}
-                        placeholder={placeholder}
-                        className={`rounded-sm mt-1`}
-                    />
-                    {fieldState.error && <small className='text-red-400'>{fieldState.error.message}</small>}
-                </>
-            )}
+            render={({ field, fieldState }) => {
+                console.log('fieldState', fieldState);
+                return (
+                    <>
+                        <Input
+                            {...field}
+                            type={type}
+                            placeholder={placeholder}
+                            className={`rounded-sm mt-1`}
+                        />
+                        {fieldState.error && <small className='text-red-400'>{fieldState.error.message}</small>}
+                    </>
+                );
+            }}
         />
     </div>
 );
