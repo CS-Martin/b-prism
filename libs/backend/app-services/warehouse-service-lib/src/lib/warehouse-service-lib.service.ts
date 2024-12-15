@@ -21,7 +21,33 @@ export class WarehouseServiceLibService implements WarehouseService {
         this.logger.log('Creating warehouse', data);
 
         try {
-            const warehouse: Warehouse = await this.warehouseMongodbService.create(data);
+            const warehouse: Warehouse = await this.warehouseMongodbService.create({
+                type: 'warehouse',
+                name: data.name,
+                description: data.description ?? '',
+                longitude: data.longitude,
+                latitude: data.latitude,
+                capacity: data.capacity ?? 0,
+                cost_of_stockpile: data.cost_of_stockpile ?? 0,
+                family_food_packs: data.family_food_packs ?? 0,
+                standby_funds: data.standby_funds ?? 0,
+                non_food_items: {
+                    family_kits: data.non_food_items?.family_kits ?? 0,
+                    sleeping_kits: data.non_food_items?.sleeping_kits ?? 0,
+                    hygiene_kits: data.non_food_items?.hygiene_kits ?? 0,
+                    kitchen_kits: data.non_food_items?.kitchen_kits ?? 0,
+                    other_nfis: data.non_food_items?.other_nfis ?? 0,
+                },
+                address: {
+                    locality: data.address?.locality ?? '',
+                    place: data.address?.place ?? '',
+                    region: data.address?.region ?? '',
+                    country: data.address?.country ?? '',
+                    street: data.address?.street ?? '',
+                    post_code: data.address?.post_code ?? '',
+                },
+                user_id: data.user_id,
+            });
 
             const warehouseDto: WarehouseDto = this.convertToDto(warehouse);
 
@@ -112,11 +138,15 @@ export class WarehouseServiceLibService implements WarehouseService {
             id: warehouse.id ?? '',
             type: warehouse.type ?? 'warehouse',
             name: warehouse.name ?? '',
+            description: warehouse.description ?? '',
             longitude: warehouse.longitude ?? '',
             latitude: warehouse.latitude ?? '',
-            address: warehouse.address as WarehouseAddressDto,
+            capacity: warehouse.capacity ?? 0,
+            cost_of_stockpile: warehouse.cost_of_stockpile ?? 0,
+            family_food_packs: warehouse.family_food_packs ?? 0,
+            standby_funds: warehouse.standby_funds ?? 0,
             non_food_items: warehouse.non_food_items as WarehouseNonFoodItemsDto,
-            capacity: warehouse.capacity ?? undefined,
+            address: warehouse.address as WarehouseAddressDto,
             user_id: warehouse.user_id ?? '',
             created_at: warehouse.created_at ?? new Date(),
             updated_at: warehouse.updated_at ?? new Date(),

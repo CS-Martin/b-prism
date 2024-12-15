@@ -20,6 +20,7 @@ import {
 } from '@b-prism/shadcn-ui/index';
 import { UpdateDispensingPointDto, UserDto } from '@dto';
 import { Type } from '@prisma/client';
+import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useUpdateDispensingPoint, useFindOneDispensingPoint } from 'apps/web-app/src/hooks/map.hook';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
@@ -141,12 +142,13 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                     <Separator orientation='horizontal' />
 
                                     <div>
-                                        <Label htmlFor='name'>Name</Label>
-                                        <Input
-                                            id='name'
-                                            {...register('name', { required: true })}
-                                            className='rounded-sm mt-1'
+                                        <InputField
+                                            name='name'
+                                            register={register}
+                                            label='Name'
+                                            type='text'
                                             placeholder='Dispensing Point Name'
+                                            className='w-full'
                                         />
                                     </div>
 
@@ -161,13 +163,13 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                     </div>
 
                                     <div>
-                                        <Label htmlFor='capacity'>Capacity</Label>
-                                        <Input
-                                            id='capacity'
+                                        <InputField
+                                            name='capacity'
+                                            register={register}
+                                            label='Capacity'
                                             type='number'
-                                            {...register('capacity', { required: true, valueAsNumber: true })}
-                                            className='rounded-sm mt-1'
                                             placeholder='Ex. 1000'
+                                            className='w-full'
                                         />
                                     </div>
                                 </div>
@@ -184,53 +186,59 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                     <Separator orientation='horizontal' />
 
                                     <div className='flex flex-row gap-4'>
-                                        <AddressField
-                                            id='street'
+                                        <InputField
+                                            name='address.street'
+                                            register={register}
                                             label='Street'
+                                            type='text'
                                             placeholder='Street'
-                                            control={control}
-                                            fieldName='address.street'
+                                            className='w-full'
                                         />
-                                        <AddressField
-                                            id='post_code'
+                                        <InputField
+                                            name='address.post_code'
+                                            register={register}
                                             label='Post Code'
+                                            type='text'
                                             placeholder='Post Code'
-                                            control={control}
-                                            fieldName='address.post_code'
+                                            className='w-full'
                                         />
                                     </div>
 
                                     <div className='flex flex-row gap-4'>
-                                        <AddressField
-                                            id='locality'
+                                        <InputField
+                                            name='address.locality'
+                                            register={register}
                                             label='Locality'
+                                            type='text'
                                             placeholder='Locality'
-                                            control={control}
-                                            fieldName='address.locality'
+                                            className='w-full'
                                         />
-                                        <AddressField
-                                            id='place'
+                                        <InputField
+                                            name='address.place'
+                                            register={register}
                                             label='Place'
+                                            type='text'
                                             placeholder='Place'
-                                            control={control}
-                                            fieldName='address.place'
+                                            className='w-full'
                                         />
                                     </div>
 
                                     <div className='flex flex-row gap-4'>
-                                        <AddressField
-                                            id='region'
+                                        <InputField
+                                            name='address.region'
+                                            register={register}
                                             label='Region'
+                                            type='text'
                                             placeholder='Region'
-                                            control={control}
-                                            fieldName='address.region'
+                                            className='w-full'
                                         />
-                                        <AddressField
-                                            id='country'
+                                        <InputField
+                                            name='address.country'
+                                            register={register}
                                             label='Country'
+                                            type='text'
                                             placeholder='Country'
-                                            control={control}
-                                            fieldName='address.country'
+                                            className='w-full'
                                         />
                                     </div>
                                 </div>
@@ -239,8 +247,8 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                             {/* Submit Button */}
                             <Button
                                 type='submit'
-                                className='bg-blue-500 absolute bottom-4 w-full max-w-[484px] hover:bg-blue-600 text-white px-4'>
-                                Submit
+                                className='bg-blue-500 absolute bottom-4 w-full max-w-[583px] hover:bg-blue-600 text-white px-4'>
+                                Update Dispensing Point
                             </Button>
                         </div>
                     </Tabs>

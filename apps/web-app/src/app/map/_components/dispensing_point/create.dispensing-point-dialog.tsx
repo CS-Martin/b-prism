@@ -1,6 +1,7 @@
 // Refactored CreateDispensingPointDialog component
 'use client';
 
+import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import {
     Button,
     Dialog,
@@ -21,6 +22,7 @@ import {
 } from '@b-prism/shadcn-ui/index';
 import { CreateDispensingPointDto, UserDto } from '@dto';
 import { Type } from '@prisma/client';
+import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useCreateDispensingPoint, useGetAddress } from 'apps/web-app/src/hooks/map.hook';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
@@ -74,11 +76,18 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({
     marker,
     fetchAllDispensingPoints,
 }) => {
+    const { toast } = useToast();
     const { data: session } = useSession();
     const { getAddress, address } = useGetAddress();
     const { createDispensingPoint } = useCreateDispensingPoint();
 
-    const { handleSubmit, control, reset, register } = useForm<CreateDispensingPointDto>({
+    const {
+        handleSubmit,
+        control,
+        reset,
+        register,
+        formState: { errors },
+    } = useForm<CreateDispensingPointDto>({
         defaultValues: {
             type: 'dispensing_point' as Type,
             name: '',
@@ -102,7 +111,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({
         if (isOpen && marker.longitude && marker.latitude) {
             getAddress(marker.longitude, marker.latitude);
         }
-    }, [isOpen, marker, getAddress]);
+    }, [isOpen, marker]);
 
     // Update form fields when address or marker changes
     useEffect(() => {
@@ -116,15 +125,28 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({
     }, [marker, reset]);
 
     const onSubmit = async (data: CreateDispensingPointDto) => {
-        const formattedData = {
-            ...data,
-            address,
-            user_id: (session?.user as UserDto)?.id,
-        };
+        try {
+            const formattedData = {
+                ...data,
+                address,
+                user_id: (session?.user as UserDto)?.id,
+            };
 
-        await createDispensingPoint(formattedData);
-        fetchAllDispensingPoints();
-        setIsOpen(false);
+            if (formattedData.name === '') {
+                throw new Error('Dispensing Point Name is required');
+            }
+
+            await createDispensingPoint(formattedData);
+            fetchAllDispensingPoints();
+            setIsOpen(false);
+        } catch (error) {
+            console.error('Error creating dispensing point:', error);
+            toast({
+                title: 'Error',
+                description: (error as Error).message,
+                variant: 'destructive',
+            });
+        }
     };
 
     return (
@@ -166,12 +188,14 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({
                                     <Separator orientation='horizontal' />
 
                                     <div>
-                                        <Label htmlFor='name'>Name</Label>
-                                        <Input
-                                            id='name'
-                                            {...register('name', { required: true })}
-                                            className='rounded-sm mt-1'
+                                        <InputField
+                                            name='name'
+                                            register={register}
+                                            label='Name'
+                                            type='text'
                                             placeholder='Dispensing Point Name'
+                                            rules={{ required: 'Dispensing Point Name is required' }}
+                                            errors={errors.name}
                                         />
                                     </div>
 
@@ -186,12 +210,11 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({
                                     </div>
 
                                     <div>
-                                        <Label htmlFor='capacity'>Capacity</Label>
-                                        <Input
-                                            id='capacity'
+                                        <InputField
+                                            name='capacity'
+                                            register={register}
+                                            label='Capacity'
                                             type='number'
-                                            {...register('capacity', { required: true, valueAsNumber: true })}
-                                            className='rounded-sm mt-1'
                                             placeholder='Ex. 1000'
                                         />
                                     </div>
@@ -211,53 +234,59 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({
                                     <Separator orientation='horizontal' />
 
                                     <div className='flex flex-row gap-4'>
-                                        <AddressField
-                                            id='street'
+                                        <InputField
+                                            name='address.street'
+                                            register={register}
                                             label='Street'
+                                            type='text'
                                             placeholder='Street'
-                                            control={control}
-                                            fieldName='address.street'
+                                            className='w-full'
                                         />
-                                        <AddressField
-                                            id='post_code'
+                                        <InputField
+                                            name='address.post_code'
+                                            register={register}
                                             label='Post Code'
+                                            type='text'
                                             placeholder='Post Code'
-                                            control={control}
-                                            fieldName='address.post_code'
+                                            className='w-full'
                                         />
                                     </div>
 
                                     <div className='flex flex-row gap-4'>
-                                        <AddressField
-                                            id='locality'
+                                        <InputField
+                                            name='address.locality'
+                                            register={register}
                                             label='Locality'
+                                            type='text'
                                             placeholder='Locality'
-                                            control={control}
-                                            fieldName='address.locality'
+                                            className='w-full'
                                         />
-                                        <AddressField
-                                            id='place'
+                                        <InputField
+                                            name='address.place'
+                                            register={register}
                                             label='Place'
+                                            type='text'
                                             placeholder='Place'
-                                            control={control}
-                                            fieldName='address.place'
+                                            className='w-full'
                                         />
                                     </div>
 
                                     <div className='flex flex-row gap-4'>
-                                        <AddressField
-                                            id='region'
+                                        <InputField
+                                            name='address.region'
+                                            register={register}
                                             label='Region'
+                                            type='text'
                                             placeholder='Region'
-                                            control={control}
-                                            fieldName='address.region'
+                                            className='w-full'
                                         />
-                                        <AddressField
-                                            id='country'
+                                        <InputField
+                                            name='address.country'
+                                            register={register}
                                             label='Country'
+                                            type='text'
                                             placeholder='Country'
-                                            control={control}
-                                            fieldName='address.country'
+                                            className='w-full'
                                         />
                                     </div>
                                 </div>
@@ -266,8 +295,8 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({
                             {/* Submit Button */}
                             <Button
                                 type='submit'
-                                className='bg-blue-500 absolute bottom-4 w-full max-w-[484px] hover:bg-blue-600 text-white px-4'>
-                                Submit
+                                className='bg-blue-500 absolute bottom-4 w-full max-w-[583px] hover:bg-blue-600 text-white px-4'>
+                                Create Dispensing Point
                             </Button>
                         </div>
                     </Tabs>
