@@ -58,8 +58,7 @@ const Navbar = () => {
             <div className='flex items-center gap-4'>
                 <Button
                     className='rounded-full'
-                    variant='ghost'
-                >
+                    variant='ghost'>
                     Contact Us
                 </Button>
                 <Separator
@@ -87,8 +86,7 @@ const NavbarItems = () => {
                                 <NavigationMenuLink asChild>
                                     <Link
                                         className='flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md'
-                                        href='/'
-                                    >
+                                        href='/'>
                                         <div className='mb-2 mt-4 text-lg font-medium'>shadcn/ui</div>
                                         <p className='text-sm leading-tight text-muted-foreground'>
                                             Beautifully designed components that you can copy and paste into your apps.
@@ -99,20 +97,17 @@ const NavbarItems = () => {
                             </li>
                             <ListItem
                                 href='/docs'
-                                title='Introduction'
-                            >
+                                title='Introduction'>
                                 Re-usable components built using Radix UI and Tailwind CSS.
                             </ListItem>
                             <ListItem
                                 href='/docs/installation'
-                                title='Installation'
-                            >
+                                title='Installation'>
                                 How to install dependencies and structure your app.
                             </ListItem>
                             <ListItem
                                 href='/docs/primitives/typography'
-                                title='Typography'
-                            >
+                                title='Typography'>
                                 Styles for headings, paragraphs, lists...etc
                             </ListItem>
                         </ul>
@@ -126,8 +121,7 @@ const NavbarItems = () => {
                                 <ListItem
                                     key={component.title}
                                     title={component.title}
-                                    href={component.href}
-                                >
+                                    href={component.href}>
                                     {component.description}
                                 </ListItem>
                             ))}
@@ -138,9 +132,16 @@ const NavbarItems = () => {
                     <Link
                         href='/docs'
                         legacyBehavior
-                        passHref
-                    >
+                        passHref>
                         Documentation
+                    </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem className='font-semibold text-sm'>
+                    <Link
+                        href='/map'
+                        legacyBehavior
+                        passHref>
+                        Map
                     </Link>
                 </NavigationMenuItem>
             </NavigationMenuList>
@@ -159,8 +160,7 @@ const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWit
                             'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
                             className,
                         )}
-                        {...props}
-                    >
+                        {...props}>
                         <div className='text-sm font-medium leading-none'>{title}</div>
                         <p className='line-clamp-2 text-sm leading-snug text-muted-foreground'>{children}</p>
                     </a>

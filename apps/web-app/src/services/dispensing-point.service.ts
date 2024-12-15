@@ -1,4 +1,4 @@
-import { CreateDispensingPointDto, DispensingPointDto, ResponseDto } from '@dto';
+import { CreateDispensingPointDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 
 class DispensingPointService {
@@ -34,8 +34,31 @@ class DispensingPointService {
         }
     }
 
+    public async update(id: string, dispensingPoint: UpdateDispensingPointDto): Promise<DispensingPointDto> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/dispensing-point/update/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dispensingPoint),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message);
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error(error);
+
+            throw new BadRequestException('Failed to update dispensing point');
+        }
+    }
+
     public async delete(id: string): Promise<void> {
-        console.log('id', id);
         try {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-point/delete/${id}`, {
                 method: 'DELETE',
@@ -71,6 +94,24 @@ class DispensingPointService {
             console.error(error);
 
             throw new BadRequestException('Failed to fetch all dispensing points');
+        }
+    }
+
+    public async findOne(id: string): Promise<ResponseDto<DispensingPointDto>> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/dispensing-point/${id}`);
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message);
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error(error);
+
+            throw new BadRequestException('Failed to find dispensing point');
         }
     }
 }

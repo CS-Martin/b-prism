@@ -15,7 +15,8 @@ enum UserRole {
 
 enum Type {
   warehouse
-  dispensin_point
+  dispensing_point
+  evacuation_center
 }
 
 model User {
@@ -33,31 +34,35 @@ model User {
 }
 
 model Warehouse {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  type      Type     @default(warehouse)
-  name      String
-  longitude String
-  latitude  String
-  address   Json?
-  capacity  Json?
-  items     Json[]
-  userId    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  type              Type     @default(warehouse)
+  name              String
+  description       String?
+  longitude         String
+  latitude          String
+  capacity          Int?
+  cost_of_stockpile Int?
+  family_food_packs Int?
+  standby_funds     Int?
+  non_food_items    Json?
+  address           Json?
+  user_id           String?
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
 }
 
-model DispensinPoint {
+model DispensingPoint {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  type        Type     @default(dispensin_point)
+  type        Type     @default(dispensing_point)
   name        String
   description String?
   longitude   String
   latitude    String
   capacity    Int?
-  userId      String?
-  details     Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  user_id     String?
+  address     Json?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 }
 
 model RescuePost {

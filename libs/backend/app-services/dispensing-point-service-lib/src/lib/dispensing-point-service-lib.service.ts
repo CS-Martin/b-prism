@@ -1,7 +1,14 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DispensingPointService } from './dispensing-point.abstract.class';
 import { DispensingPointMongodbLibService } from '@b-prism/dispensing-point-mongodb-lib';
-import { CreateDispensingPointDto, DispensingPointDto, ResponseDto } from '@dto';
+import {
+    CreateDispensingPointDto,
+    DispensingPointAddressDto,
+    DispensingPointDto,
+    ResponseDto,
+    UpdateDispensingPointDto,
+} from '@dto';
+import { DispensingPoint } from '@prisma/client';
 
 @Injectable()
 export class DispensingPointServiceLibService implements DispensingPointService {
@@ -20,12 +27,35 @@ export class DispensingPointServiceLibService implements DispensingPointService 
                 longitude: data.longitude,
                 latitude: data.latitude,
                 capacity: data.capacity,
-                userId: data.userId,
-                createdAt: new Date(),
-                updatedAt: new Date(),
+                user_id: data.user_id,
+                address: data.address,
+                created_at: new Date(),
+                updated_at: new Date(),
             });
 
-            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(201, dispensingPoint);
+            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(
+                201,
+                this.convertToDto(dispensingPoint),
+            );
+
+            return response;
+        } catch (error) {
+            console.log(error);
+
+            throw new BadRequestException(error);
+        }
+    }
+
+    async update(id: string, data: UpdateDispensingPointDto): Promise<ResponseDto<DispensingPointDto>> {
+        this.logger.log('Updating dispensing point', id);
+
+        try {
+            const dispensingPoint = await this.dispensingPointMongodbService.update(id, data);
+
+            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(
+                200,
+                this.convertToDto(dispensingPoint),
+            );
 
             return response;
         } catch (error) {
@@ -57,7 +87,7 @@ export class DispensingPointServiceLibService implements DispensingPointService 
 
             const response: ResponseDto<DispensingPointDto[]> = new ResponseDto<DispensingPointDto[]>(
                 200,
-                dispensingPoints,
+                dispensingPoints.map((dispensingPoint) => this.convertToDto(dispensingPoint)),
             );
 
             return response;
@@ -78,7 +108,10 @@ export class DispensingPointServiceLibService implements DispensingPointService 
                 throw new NotFoundException('Dispensing point not found');
             }
 
-            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(200, dispensingPoint);
+            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(
+                200,
+                this.convertToDto(dispensingPoint),
+            );
 
             return response;
         } catch (error) {
@@ -86,5 +119,23 @@ export class DispensingPointServiceLibService implements DispensingPointService 
 
             throw new BadRequestException(error);
         }
+    }
+
+    convertToDto(dispensingPoint: DispensingPoint): DispensingPointDto {
+        const dispensingPointDto: DispensingPointDto = {
+            id: dispensingPoint.id ?? '',
+            type: dispensingPoint.type ?? 'dispensing_point',
+            name: dispensingPoint.name ?? '',
+            longitude: dispensingPoint.longitude ?? '',
+            latitude: dispensingPoint.latitude ?? '',
+            description: dispensingPoint.description ?? '',
+            address: dispensingPoint.address as DispensingPointAddressDto,
+            capacity: dispensingPoint.capacity ?? undefined,
+            user_id: dispensingPoint.user_id ?? '',
+            created_at: dispensingPoint.created_at,
+            updated_at: dispensingPoint.updated_at,
+        };
+
+        return dispensingPointDto;
     }
 }

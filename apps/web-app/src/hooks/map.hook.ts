@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import {
     CreateDispensingPointDto,
-    CreateRescuePostDto,
     CreateWarehouseDto,
     DispensingPointDto,
     RescuePostDto,
     ResponseDto,
+    UpdateDispensingPointDto,
     WarehouseAddressDto,
     WarehouseDto,
 } from '@dto';
@@ -122,10 +122,30 @@ export const useDisplayDispensingPoints = () => {
     return { dispensingPoints, fetchAllDispensingPoints };
 };
 
-export const useCreateDispensingPoint = (data: CreateDispensingPointDto) => {
+export const useFindOneDispensingPoint = (id: string) => {
+    const [dispensingPoint, setDispensingPoint] = useState<DispensingPointDto>({} as DispensingPointDto);
+
+    const fetchOneDispensingPoint = async () => {
+        const response: ResponseDto<DispensingPointDto> = await dispensingPointService.findOne(id);
+
+        if (response.statusCode !== 200) {
+            throw new Error('Failed to fetch dispensing point');
+        }
+
+        setDispensingPoint(response.body);
+    };
+
+    useEffect(() => {
+        fetchOneDispensingPoint();
+    }, [id]);
+
+    return { dispensingPoint, fetchOneDispensingPoint };
+};
+
+export const useCreateDispensingPoint = () => {
     const { toast } = useToast();
 
-    const createDispensingPoint = async () => {
+    const createDispensingPoint = async (data: CreateDispensingPointDto) => {
         await dispensingPointService.create({
             ...data,
             capacity: Number(data.capacity),
@@ -139,6 +159,22 @@ export const useCreateDispensingPoint = (data: CreateDispensingPointDto) => {
     };
 
     return { createDispensingPoint };
+};
+
+export const useUpdateDispensingPoint = () => {
+    const { toast } = useToast();
+
+    const updateDispensingPoint = async (id: string, data: UpdateDispensingPointDto) => {
+        await dispensingPointService.update(id, data);
+
+        toast({
+            title: 'Success!',
+            description: `The dispensing point ${data.name} has been updated successfully`,
+            variant: 'success',
+        });
+    };
+
+    return { updateDispensingPoint };
 };
 
 export const useDeleteDispensingPoint = (dispensingPointId: string) => {

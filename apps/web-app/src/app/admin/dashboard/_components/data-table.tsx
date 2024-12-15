@@ -44,7 +44,7 @@ function PaginationComponent<TData>({
     table: ReturnType<typeof useReactTable<TData>>;
 }) {
     return (
-        <div className='flex items-center justify-between border-t py-5'>
+        <div className='absolute bottom-0 flex items-center justify-between border-t py-5 w-full'>
             <div className='flex items-center justify-between w-1/2'>
                 <Label className=' font-normal'>
                     Showing {table.getState().pagination.pageIndex * pageSize + 1} to{' '}
@@ -69,8 +69,7 @@ function PaginationComponent<TData>({
                                     e.preventDefault();
                                     table.setPageIndex(index);
                                 }}
-                                className='rounded-sm'
-                            >
+                                className={`cursor-pointer ${index === table.getState().pagination.pageIndex ? 'bg-blue-500 text-white' : ''}`}>
                                 {index + 1}
                             </PaginationLink>
                         </PaginationItem>
@@ -105,13 +104,8 @@ export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: Da
     });
 
     return (
-        <>
-            <PaginationComponent<TData>
-                pageSize={pageSize}
-                dataLength={data.length}
-                table={table}
-            />
-            <div className=''>
+        <div className='relative'>
+            <div className='h-[calc(100vh-100px)]'>
                 <Table className='w-full'>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -120,8 +114,7 @@ export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: Da
                                     return (
                                         <TableHead
                                             key={header.id}
-                                            className='px-0'
-                                        >
+                                            className='px-0'>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(header.column.columnDef.header, header.getContext())}
@@ -136,13 +129,11 @@ export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: Da
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={row.getIsSelected() && 'selected'}
-                                >
+                                    data-state={row.getIsSelected() && 'selected'}>
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell
                                             key={cell.id}
-                                            className='py-3'
-                                        >
+                                            className='py-3'>
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </TableCell>
                                     ))}
@@ -152,8 +143,7 @@ export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: Da
                             <TableRow>
                                 <TableCell
                                     colSpan={columns.length}
-                                    className='h-24 text-center'
-                                >
+                                    className='h-28 text-center'>
                                     No results.
                                 </TableCell>
                             </TableRow>
@@ -161,11 +151,12 @@ export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: Da
                     </TableBody>
                 </Table>
             </div>
+
             <PaginationComponent<TData>
                 pageSize={pageSize}
                 dataLength={data.length}
                 table={table}
             />
-        </>
+        </div>
     );
 }

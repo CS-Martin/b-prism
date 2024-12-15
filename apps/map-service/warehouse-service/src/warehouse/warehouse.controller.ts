@@ -1,6 +1,6 @@
 import { WarehouseServiceLibService } from '@b-prism/warehouse-service-lib';
-import { CreateWarehouseDto } from '@dto';
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { CreateWarehouseDto, UpdateWarehouseDto } from '@dto';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Warehouse Endpoints')
@@ -11,6 +11,11 @@ export class WarehouseController {
     @Post('create')
     create(@Body() createWarehouseDto: CreateWarehouseDto) {
         return this.warehouseServiceLibService.create(createWarehouseDto);
+    }
+
+    @Put('update/:id')
+    update(@Param('id') id: string, @Body() updateWarehouseDto: UpdateWarehouseDto) {
+        return this.warehouseServiceLibService.update(id, updateWarehouseDto);
     }
 
     @Delete('delete/:id')

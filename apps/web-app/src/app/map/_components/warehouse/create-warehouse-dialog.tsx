@@ -109,8 +109,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
     return (
         <Dialog
             open={isOpen}
-            onOpenChange={setIsOpen}
-        >
+            onOpenChange={setIsOpen}>
             <DialogTrigger>Open</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -119,8 +118,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                 </DialogHeader>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className='grid gap-4'
-                >
+                    className='grid gap-4'>
                     <InputField
                         name='name'
                         control={control}
@@ -204,8 +202,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                     </div>
                     <Button
                         className='rounded-[7px]'
-                        type='submit'
-                    >
+                        type='submit'>
                         Create Warehouse
                     </Button>
                 </form>
@@ -218,8 +215,7 @@ const InputField: React.FC<InputFieldProps> = ({ name, control, label, type = 't
     <div>
         <Label
             className=' font-normal'
-            htmlFor={name}
-        >
+            htmlFor={name}>
             {label}
         </Label>
         <Controller

@@ -3,19 +3,18 @@
 import { AppSidebar } from '@b-prism/shadcn-ui/index';
 import { SelectedActionType } from '@b-prism/enums';
 
-import Map, { GeolocateControl, MapMouseEvent, MapRef } from 'react-map-gl';
+import Map, { MapMouseEvent, MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { useDisplayDispensingPoints, useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
-import CreateWarehouseDialog from './_components/create-warehouse-dialog';
-import RenderWarehouse from './_components/render-warehouse';
+import CreateWarehouseDialog from './_components/warehouse/create-warehouse-dialog';
+import RenderWarehouse from './_components/warehouse/render-warehouse';
 import DeleteItem from './_components/delete-item';
-import CreateDispensingPointDialog from './_components/create-dispensing-point-dialog';
-import RenderDispensingPoint from './_components/render-dispensing-point';
+import CreateDispensingPointDialog from './_components/dispensing_point/create.dispensing-point-dialog';
+import RenderDispensingPoint from './_components/dispensing_point/render.dispensing-point';
 import ControlPanel from './_components/control-panel';
 import RescuePostPanel from './_components/rescue-post-panel';
 
@@ -41,32 +40,32 @@ const MapPage = () => {
     });
 
     // Geocoder function to interpret coordinates
-    const coordinatesGeocoder = (query: string) => {
-        const matches = query.match(/^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i);
-        if (!matches) return null;
+    // const coordinatesGeocoder = (query: string) => {
+    //     const matches = query.match(/^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i);
+    //     if (!matches) return null;
 
-        const coordinateFeature = (lng: number, lat: number) => ({
-            center: [lng, lat],
-            geometry: { type: 'Point', coordinates: [lng, lat] },
-            place_name: `Lat: ${lat}, Lng: ${lng}`,
-            place_type: ['coordinate'],
-            properties: {},
-            type: 'Feature',
-        });
+    //     const coordinateFeature = (lng: number, lat: number) => ({
+    //         center: [lng, lat],
+    //         geometry: { type: 'Point', coordinates: [lng, lat] },
+    //         place_name: `Lat: ${lat}, Lng: ${lng}`,
+    //         place_type: ['coordinate'],
+    //         properties: {},
+    //         type: 'Feature',
+    //     });
 
-        const coord1 = Number(matches[1]);
-        const coord2 = Number(matches[2]);
-        const geocodes = [];
+    //     const coord1 = Number(matches[1]);
+    //     const coord2 = Number(matches[2]);
+    //     const geocodes = [];
 
-        if (coord1 < -90 || coord1 > 90) geocodes.push(coordinateFeature(coord1, coord2));
-        if (coord2 < -90 || coord2 > 90) geocodes.push(coordinateFeature(coord2, coord1));
-        if (geocodes.length === 0) {
-            geocodes.push(coordinateFeature(coord1, coord2));
-            geocodes.push(coordinateFeature(coord2, coord1));
-        }
+    //     if (coord1 < -90 || coord1 > 90) geocodes.push(coordinateFeature(coord1, coord2));
+    //     if (coord2 < -90 || coord2 > 90) geocodes.push(coordinateFeature(coord2, coord1));
+    //     if (geocodes.length === 0) {
+    //         geocodes.push(coordinateFeature(coord1, coord2));
+    //         geocodes.push(coordinateFeature(coord2, coord1));
+    //     }
 
-        return geocodes;
-    };
+    //     return geocodes;
+    // };
 
     useEffect(() => {
         if (mapRef.current) {
@@ -75,10 +74,8 @@ const MapPage = () => {
             // Add Geocoder control
             const geocoder = new MapboxGeocoder({
                 accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN!,
-                // localGeocoder: coordinatesGeocoder,
                 zoom: 10,
                 placeholder: 'Enter coordinates (e.g., -40, 170)',
-                // mapboxgl: mapboxMap,
                 reverseGeocode: true,
             });
 

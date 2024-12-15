@@ -7,8 +7,6 @@ import { DataTable } from './_components/data-table';
 import { createColumns } from './_components/columns';
 import { UserRole } from '@b-prism/enums';
 
-type User = UserDto;
-
 export default function AdminDashboard() {
     const { users, isLoading, fetchAllUsers } = useDisplayUsers();
 
@@ -31,7 +29,7 @@ export default function AdminDashboard() {
     const columns = createColumns(handleRoleChange);
 
     return (
-        <div className='p-7'>
+        <div className='p-4'>
             <DataTable
                 columns={columns}
                 data={users}

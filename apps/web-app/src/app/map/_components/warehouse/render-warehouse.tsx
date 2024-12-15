@@ -18,8 +18,7 @@ const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: Ren
                 e.originalEvent.stopPropagation();
                 handleMarkerClick(warehouse.type, warehouse.id);
             }}
-            className='cursor-pointer animate-fade-in'
-        >
+            className='cursor-pointer animate-fade-in'>
             <Image
                 priority
                 src={`/icons/warehouse.icon.svg`}
@@ -39,8 +38,7 @@ const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: Ren
                     onClose={() => handleMarkerClick('', null)}
                     closeOnClick={true}
                     anchor='top'
-                    className='text-black text-center'
-                >
+                    className='text-black text-center'>
                     <small>Warehouse:</small>
                     <h3 className='text-lg font-bold'>{warehouse.name}</h3>
                 </Popup>
