@@ -96,12 +96,18 @@ To set up the project, follow these steps:
 
 ## Usage
 
-### Sample Client Run
+### Sample Run
 
-To run the client application in development mode, use:
+To run all application in development mode, use:
 
 ```sh
-npx nx run client:dev
+npm run serve:all-dev
+```
+
+To run all application in production mode, use:
+
+```sh
+npx run serve:all-prod
 ```
 
 ### Sample Microservice Run
