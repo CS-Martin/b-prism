@@ -4,6 +4,8 @@
     "license": "MIT",
     "scripts": {
         "prepare": "husky install",
+        "serve:all-development": "concurrently \"npx nx run web-app:dev\" \"npx nx run authentication-service:serve --configuration=development\" \"npx nx run warehouse-service:serve --configuration=development\" \"npx nx run dispensing-point-service:serve --configuration=development\" \"npx nx run rescue-post-service:serve --configuration=development\" \"npx nx run user-service:serve --configuration=development\" \"npx nx run verification-service:serve --configuration=development\"",
+        "serve:all-production": "concurrently \"npx nx run web-app:serve\" \"npx nx run authentication-service:serve --configuration=production\" \"npx nx run warehouse-service:serve --configuration=production\" \"npx nx run dispensing-point-service:serve --configuration=production\" \"npx nx run rescue-post-service:serve --configuration=production\" \"npx nx run user-service:serve --configuration=production\" \"npx nx run verification-service:serve --configuration=production\"",
         "vercel-build": "npx prisma db push && npx prisma generate && npx nx build web-app --prod"
     },
     "private": true,
@@ -101,6 +103,7 @@
         "@vitest/ui": "^1.3.1",
         "autoprefixer": "^10.4.20",
         "babel-jest": "^29.7.0",
+        "concurrently": "^9.1.0",
         "eslint": "^9.14.0",
         "eslint-config-next": "^15.0.2",
         "eslint-config-prettier": "^9.0.0",
