@@ -1,23 +1,25 @@
 import { Input, Label } from '@b-prism/shadcn-ui/index';
-import { Controller } from 'react-hook-form';
+import { Controller, UseFormRegister } from 'react-hook-form';
 
 interface InputFieldProps {
     className?: string;
     name: string;
-    control: any;
+    register: UseFormRegister<any>;
     label: string;
-    type?: string;
+    type: React.HTMLInputTypeAttribute;
     placeholder?: string;
+    errors?: any;
     rules?: any;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
     className,
     name,
-    control,
+    register,
     label,
-    type = 'text',
+    type,
     placeholder,
+    errors,
     rules,
 }) => (
     <div className={`${className}`}>
@@ -26,25 +28,13 @@ const InputField: React.FC<InputFieldProps> = ({
             htmlFor={name}>
             {label}
         </Label>
-        <Controller
-            name={name}
-            control={control}
-            rules={rules}
-            render={({ field, fieldState }) => {
-                console.log('fieldState', fieldState);
-                return (
-                    <>
-                        <Input
-                            {...field}
-                            type={type}
-                            placeholder={placeholder}
-                            className={`rounded-sm mt-1`}
-                        />
-                        {fieldState.error && <small className='text-red-400'>{fieldState.error.message}</small>}
-                    </>
-                );
-            }}
+        <Input
+            {...register(name, { valueAsNumber: type === 'number', ...rules })}
+            type={type}
+            placeholder={placeholder}
+            className={`rounded-sm mt-1`}
         />
+        {errors && <small className='text-red-400'>{errors.message}</small>}
     </div>
 );
 

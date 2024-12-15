@@ -15,6 +15,7 @@ import {
     TabsContent,
     TabsList,
     TabsTrigger,
+    Textarea,
 } from '@b-prism/shadcn-ui/index';
 import { UpdateWarehouseDto, UserDto } from '@dto';
 import { useSession } from 'next-auth/react';
@@ -22,7 +23,7 @@ import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import { useFindOneWarehouse, useUpdateWarehouse } from 'apps/web-app/src/hooks/map.hook';
 import InputField from 'apps/web-app/src/components/forms/input-field';
-import TextAreaField from 'apps/web-app/src/components/forms/textarea-field';
+import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 interface DialogProps {
     isOpen: boolean;
@@ -31,6 +32,7 @@ interface DialogProps {
 }
 
 const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, warehouseId }) => {
+    const { toast } = useToast();
     const { data: session } = useSession();
     const { updateWarehouse } = useUpdateWarehouse();
     const { warehouse } = useFindOneWarehouse(warehouseId);
@@ -38,7 +40,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
     console.log('warehouse', warehouse);
 
     // Initialize react-hook-form with default values
-    const { handleSubmit, control, reset } = useForm<UpdateWarehouseDto>({
+    const { handleSubmit, reset, register } = useForm<UpdateWarehouseDto>({
         defaultValues: {
             type: 'warehouse',
             name: warehouse.name,
@@ -79,14 +81,26 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
 
     // Form submission handler
     const onSubmit = async (data: UpdateWarehouseDto) => {
-        const formattedData = {
-            ...data,
-        };
+        try {
+            const formattedData = {
+                ...data,
+            };
 
-        console.log(formattedData);
+            if (!formattedData.longitude || !formattedData.latitude || !formattedData.name) {
+                throw new Error('Warehouse name is required');
+            }
 
-        await updateWarehouse(warehouseId, formattedData);
-        setIsOpen(false);
+            await updateWarehouse(warehouseId, formattedData);
+            setIsOpen(false);
+        } catch (error) {
+            if (error instanceof Error) {
+                toast({
+                    title: 'Error',
+                    description: error.message,
+                    variant: 'destructive',
+                });
+            }
+        }
     };
 
     return (
@@ -135,31 +149,30 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                     <div>
                                         <InputField
                                             name='name'
-                                            control={control}
-                                            label='Name'
+                                            register={register}
+                                            label='Warehouse Name'
+                                            type='text'
                                             placeholder='Warehouse Name'
-                                            rules={{ required: 'Warehouse name is required' }}
+                                            className='w-full'
                                         />
                                     </div>
 
                                     <div>
-                                        <TextAreaField
-                                            name='description'
-                                            control={control}
-                                            label='Description'
+                                        <Label htmlFor='description'>Description</Label>
+                                        <Textarea
+                                            {...register('description')}
                                             placeholder='Description'
-                                            rules={{ required: 'Warehouse description is required' }}
+                                            className='w-full'
                                         />
                                     </div>
 
                                     <div>
                                         <InputField
                                             name='capacity'
-                                            control={control}
+                                            register={register}
                                             label='Capacity'
                                             type='number'
                                             placeholder='Ex. 1000'
-                                            rules={{ required: 'Warehouse capacity is required' }}
                                         />
                                     </div>
                                 </div>
@@ -186,21 +199,19 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                         <div className='flex flex-row gap-4 '>
                                             <InputField
                                                 name='cost_of_stockpile'
-                                                control={control}
+                                                register={register}
                                                 label='Cost of Stockpile'
                                                 type='number'
                                                 placeholder='Ex. 1000'
-                                                rules={{ required: 'Warehouse cost of stockpile is required' }}
                                                 className='w-1/2'
                                             />
 
                                             <InputField
                                                 name='family_food_packs'
-                                                control={control}
+                                                register={register}
                                                 label='Family Food Packs'
                                                 type='number'
                                                 placeholder='Ex. 1000'
-                                                rules={{ required: 'Warehouse family food packs is required' }}
                                                 className='w-1/2 '
                                             />
                                         </div>
@@ -208,11 +219,11 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                         <div className='mt-3'>
                                             <InputField
                                                 name='standby_funds'
-                                                control={control}
+                                                register={register}
                                                 label='Standby Funds'
                                                 type='number'
                                                 placeholder='Ex. 1000'
-                                                rules={{ required: 'Warehouse standby funds is required' }}
+                                                className='w-1/2 '
                                             />
                                         </div>
 
@@ -231,7 +242,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                             <div className='flex mt-3 flex-row gap-4'>
                                                 <InputField
                                                     name='non_food_items.family_kits'
-                                                    control={control}
+                                                    register={register}
                                                     label='Family Kits'
                                                     type='number'
                                                     placeholder='Ex. 1000'
@@ -240,7 +251,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
 
                                                 <InputField
                                                     name='non_food_items.sleeping_kits'
-                                                    control={control}
+                                                    register={register}
                                                     label='Sleeping Kits'
                                                     type='number'
                                                     placeholder='Ex. 1000'
@@ -251,7 +262,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                             <div className='flex mt-3 flex-row gap-4'>
                                                 <InputField
                                                     name='non_food_items.hygiene_kits'
-                                                    control={control}
+                                                    register={register}
                                                     label='Hygiene Kits'
                                                     type='number'
                                                     placeholder='Ex. 1000'
@@ -260,7 +271,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
 
                                                 <InputField
                                                     name='non_food_items.kitchen_kits'
-                                                    control={control}
+                                                    register={register}
                                                     label='Kitchen Kits'
                                                     type='number'
                                                     placeholder='Ex. 1000'
@@ -270,8 +281,8 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
 
                                             <InputField
                                                 name='non_food_items.other_nfis'
-                                                control={control}
-                                                label='Other Non-Food Items'
+                                                register={register}
+                                                label='Other NFI'
                                                 type='number'
                                                 placeholder='Ex. 1000'
                                                 className='mt-2 mb-10'
@@ -299,10 +310,10 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                 <div className='flex flex-row gap-4'>
                                     <InputField
                                         name='address.street'
-                                        control={control}
+                                        register={register}
                                         label='Street'
+                                        type='text'
                                         placeholder='Street'
-                                        rules={{ required: 'Warehouse street is required' }}
                                         className='w-full'
                                     />
                                 </div>
@@ -310,19 +321,19 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                 <div className='flex flex-row gap-4'>
                                     <InputField
                                         name='address.post_code'
-                                        control={control}
+                                        register={register}
                                         label='Post Code'
+                                        type='text'
                                         placeholder='Post Code'
-                                        rules={{ required: 'Warehouse post code is required' }}
                                         className='w-1/2'
                                     />
 
                                     <InputField
                                         name='address.locality'
-                                        control={control}
+                                        register={register}
                                         label='Locality'
+                                        type='text'
                                         placeholder='Locality'
-                                        rules={{ required: 'Warehouse locality is required' }}
                                         className='w-1/2'
                                     />
                                 </div>
@@ -330,10 +341,10 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                 <div className='flex flex-row gap-4'>
                                     <InputField
                                         name='address.place'
-                                        control={control}
+                                        register={register}
                                         label='Place'
+                                        type='text'
                                         placeholder='Place'
-                                        rules={{ required: 'Warehouse place is required' }}
                                         className='w-full'
                                     />
                                 </div>
@@ -341,19 +352,19 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                 <div className='flex flex-row gap-4'>
                                     <InputField
                                         name='address.region'
-                                        control={control}
+                                        register={register}
                                         label='Region'
+                                        type='text'
                                         placeholder='Region'
-                                        rules={{ required: 'Warehouse region is required' }}
                                         className='w-1/2'
                                     />
 
                                     <InputField
                                         name='address.country'
-                                        control={control}
+                                        register={register}
                                         label='Country'
+                                        type='text'
                                         placeholder='Country'
-                                        rules={{ required: 'Warehouse country is required' }}
                                         className='w-1/2'
                                     />
                                 </div>
@@ -363,7 +374,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                             <Button
                                 type='submit'
                                 className='bg-blue-500 absolute bottom-4 w-full max-w-[580px] hover:bg-blue-600 text-white px-4'>
-                                Update Warehouse
+                                Submit
                             </Button>
                         </div>
                     </Tabs>
