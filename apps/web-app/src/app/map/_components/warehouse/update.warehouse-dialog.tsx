@@ -108,7 +108,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
             open={isOpen}
             onOpenChange={setIsOpen}>
             <DialogTrigger>Open</DialogTrigger>
-            <DialogContent className='h-full max-h-[630px]'>
+            <DialogContent className='h-full max-h-[490px]'>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Tabs
                         defaultValue='general'
@@ -195,7 +195,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                         className='my-3'
                                     />
 
-                                    <ScrollArea className='flex flex-col h-[435px]'>
+                                    <ScrollArea className='flex flex-col h-[270px]'>
                                         <div className='flex flex-row gap-4 '>
                                             <InputField
                                                 name='cost_of_stockpile'
