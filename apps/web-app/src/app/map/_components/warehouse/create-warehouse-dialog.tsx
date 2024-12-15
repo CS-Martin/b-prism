@@ -406,7 +406,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                             <Button
                                 type='submit'
                                 className='bg-blue-500 absolute bottom-4 w-full max-w-[580px] hover:bg-blue-600 text-white px-4'>
-                                Submit
+                                Create Warehouse
                             </Button>
                         </div>
                     </Tabs>
