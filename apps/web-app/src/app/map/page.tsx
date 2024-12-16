@@ -38,9 +38,6 @@ const MapPage = () => {
         dispensingPoints: true,
     });
 
-    console.log(selectedAction);
-    console.log(isOpen);
-
     // Geocoder function to interpret coordinates
     // const coordinatesGeocoder = (query: string) => {
     //     const matches = query.match(/^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i);

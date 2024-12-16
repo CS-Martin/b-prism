@@ -58,7 +58,7 @@ const RenderDispensingPoint = ({
             {selectedMarkerId === dispensingPoint.id && (
                 <UpdateDispensingPointDialog
                     isOpen={isDialogOpen}
-                    setIsOpen={setIsDialogOpen} // Pass state handler for the dialog
+                    setIsOpen={setIsDialogOpen}
                     dispensingPointId={dispensingPoint.id}
                 />
             )}
