@@ -8,7 +8,7 @@ import {
 } from '@b-prism/shadcn-ui/index';
 import React from 'react';
 
-interface BreadcrumProps {
+interface BreadcrumbsProps {
     items: {
         label: string;
         href: string;
