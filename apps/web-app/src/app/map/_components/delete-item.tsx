@@ -22,12 +22,15 @@ interface DeleteItemProps {
 const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoints }: DeleteItemProps) => {
     const { deleteWarehouse } = useDeleteWarehouse(item.id);
     const { deleteDispensingPoint } = useDeleteDispensingPoint(item.id);
+
+    console.log(item);
+
     const handleDelete = async () => {
         switch (item.type) {
             case 'warehouse':
                 await deleteWarehouse();
                 break;
-            case 'dispensing-point':
+            case 'dispensing_point':
                 await deleteDispensingPoint();
                 break;
             // To add: Evacuation point
@@ -43,8 +46,7 @@ const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoin
     return (
         <AlertDialog
             open={true}
-            onOpenChange={onCancel}
-        >
+            onOpenChange={onCancel}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -56,8 +58,7 @@ const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoin
                     <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                         onClick={handleDelete}
-                        className='bg-red-500'
-                    >
+                        className='bg-red-500'>
                         Delete
                     </AlertDialogAction>
                 </AlertDialogFooter>

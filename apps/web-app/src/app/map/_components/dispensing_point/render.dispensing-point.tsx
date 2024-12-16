@@ -8,12 +8,14 @@ interface RenderDispensingPointProps {
     dispensingPoint: DispensingPointDto;
     selectedMarkerId: string | null;
     handleMarkerClick: (type: string | null, id: string | null) => void;
+    selectedAction: string | null;
 }
 
 const RenderDispensingPoint = ({
     dispensingPoint,
     selectedMarkerId,
     handleMarkerClick,
+    selectedAction,
 }: RenderDispensingPointProps) => {
     // Local state to manage the dialog's open state
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -21,8 +23,14 @@ const RenderDispensingPoint = ({
     const handleMarkerClickAndOpenDialog = (e: any) => {
         e.originalEvent.preventDefault();
         e.originalEvent.stopPropagation();
+
         handleMarkerClick(dispensingPoint.type, dispensingPoint.id);
-        setIsDialogOpen(true); // Open the dialog
+
+        if (selectedAction === 'deleteItem') {
+            setIsDialogOpen(false);
+        } else {
+            setIsDialogOpen(true);
+        }
     };
 
     return (
@@ -50,7 +58,7 @@ const RenderDispensingPoint = ({
             {selectedMarkerId === dispensingPoint.id && (
                 <UpdateDispensingPointDialog
                     isOpen={isDialogOpen}
-                    setIsOpen={setIsDialogOpen} // Pass state handler for the dialog
+                    setIsOpen={setIsDialogOpen}
                     dispensingPointId={dispensingPoint.id}
                 />
             )}

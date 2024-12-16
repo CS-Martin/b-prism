@@ -33,8 +33,6 @@ import {
     MapPinPlus,
     MapPinXInside,
     MonitorCog,
-    User,
-    Warehouse,
 } from 'lucide-react';
 import {
     DropdownMenu,

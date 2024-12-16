@@ -6,8 +6,9 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from '@b-prism/shadcn-ui/index';
+import React from 'react';
 
-interface BreadcrumProps {
+interface BreadcrumbsProps {
     items: {
         label: string;
         href: string;
@@ -15,13 +16,13 @@ interface BreadcrumProps {
     className?: string;
 }
 
-export const Breadcrumbs = ({ items, className }: BreadcrumProps) => {
+export const Breadcrumbs = ({ items, className }: BreadcrumbsProps) => {
     return (
         <Breadcrumb className={className}>
             <BreadcrumbList>
                 {items?.map((item, index) => (
-                    <>
-                        <BreadcrumbItem key={index}>
+                    <React.Fragment key={item.href || item.label}>
+                        <BreadcrumbItem>
                             {index === items.length - 1 ? (
                                 <BreadcrumbPage>{item.label}</BreadcrumbPage>
                             ) : (
@@ -29,7 +30,7 @@ export const Breadcrumbs = ({ items, className }: BreadcrumProps) => {
                             )}
                         </BreadcrumbItem>
                         {index !== items.length - 1 && <BreadcrumbSeparator />}
-                    </>
+                    </React.Fragment>
                 ))}
             </BreadcrumbList>
         </Breadcrumb>
