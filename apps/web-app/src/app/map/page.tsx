@@ -107,6 +107,7 @@ const MapPage = () => {
             setItemtoDelete({ type, id });
             setIsOpen(true);
         }
+
         setSelectedMarkerId(id);
     };
 

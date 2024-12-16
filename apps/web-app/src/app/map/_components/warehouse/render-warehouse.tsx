@@ -18,8 +18,14 @@ const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick, selec
     const handleMarkerClickAndOpenDialog = (e: any) => {
         e.originalEvent.preventDefault();
         e.originalEvent.stopPropagation();
+
         handleMarkerClick(warehouse.type, warehouse.id);
-        setIsDialogOpen(true);
+
+        if (selectedAction === 'deleteItem') {
+            setIsDialogOpen(false);
+        } else {
+            setIsDialogOpen(true);
+        }
     };
 
     return (

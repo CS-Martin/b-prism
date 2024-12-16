@@ -23,8 +23,14 @@ const RenderDispensingPoint = ({
     const handleMarkerClickAndOpenDialog = (e: any) => {
         e.originalEvent.preventDefault();
         e.originalEvent.stopPropagation();
+
         handleMarkerClick(dispensingPoint.type, dispensingPoint.id);
-        setIsDialogOpen(true); // Open the dialog
+
+        if (selectedAction === 'deleteItem') {
+            setIsDialogOpen(false);
+        } else {
+            setIsDialogOpen(true);
+        }
     };
 
     return (
@@ -49,7 +55,7 @@ const RenderDispensingPoint = ({
             </Marker>
 
             {/* Update Dispensing Point Dialog */}
-            {selectedMarkerId === dispensingPoint.id && !selectedAction && (
+            {selectedMarkerId === dispensingPoint.id && (
                 <UpdateDispensingPointDialog
                     isOpen={isDialogOpen}
                     setIsOpen={setIsDialogOpen} // Pass state handler for the dialog
