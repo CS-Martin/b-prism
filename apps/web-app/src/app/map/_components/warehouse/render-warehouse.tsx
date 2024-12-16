@@ -8,9 +8,10 @@ interface RenderWarehouseProps {
     warehouse: WarehouseDto;
     selectedMarkerId: string | null;
     handleMarkerClick: (type: string | null, id: string | null) => void;
+    selectedAction: string | null;
 }
 
-const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: RenderWarehouseProps) => {
+const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick, selectedAction }: RenderWarehouseProps) => {
     // Local state to manage the dialog's open state
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -39,7 +40,7 @@ const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick }: Ren
                 className='hover:scale-125 transition-all duration-300'
             />
             <p className='text-white text-center'>{warehouse.name}</p>
-            {selectedMarkerId === warehouse.id && (
+            {selectedMarkerId === warehouse.id && !selectedAction && (
                 <UpdateWarehouseDialog
                     isOpen={isDialogOpen}
                     setIsOpen={setIsDialogOpen}

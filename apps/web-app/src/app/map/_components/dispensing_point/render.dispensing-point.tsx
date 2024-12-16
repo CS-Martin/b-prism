@@ -8,12 +8,14 @@ interface RenderDispensingPointProps {
     dispensingPoint: DispensingPointDto;
     selectedMarkerId: string | null;
     handleMarkerClick: (type: string | null, id: string | null) => void;
+    selectedAction: string | null;
 }
 
 const RenderDispensingPoint = ({
     dispensingPoint,
     selectedMarkerId,
     handleMarkerClick,
+    selectedAction,
 }: RenderDispensingPointProps) => {
     // Local state to manage the dialog's open state
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -47,7 +49,7 @@ const RenderDispensingPoint = ({
             </Marker>
 
             {/* Update Dispensing Point Dialog */}
-            {selectedMarkerId === dispensingPoint.id && (
+            {selectedMarkerId === dispensingPoint.id && !selectedAction && (
                 <UpdateDispensingPointDialog
                     isOpen={isDialogOpen}
                     setIsOpen={setIsDialogOpen} // Pass state handler for the dialog

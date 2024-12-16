@@ -37,8 +37,6 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
     const { updateWarehouse } = useUpdateWarehouse();
     const { warehouse } = useFindOneWarehouse(warehouseId);
 
-    console.log('warehouse', warehouse);
-
     // Initialize react-hook-form with default values
     const { handleSubmit, reset, register } = useForm<UpdateWarehouseDto>({
         defaultValues: {

@@ -43,8 +43,7 @@ const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoin
     return (
         <AlertDialog
             open={true}
-            onOpenChange={onCancel}
-        >
+            onOpenChange={onCancel}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -56,8 +55,7 @@ const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoin
                     <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                         onClick={handleDelete}
-                        className='bg-red-500'
-                    >
+                        className='bg-red-500'>
                         Delete
                     </AlertDialogAction>
                 </AlertDialogFooter>

@@ -31,13 +31,15 @@ const MapPage = () => {
     const [selectedAction, setSelectedAction] = useState<SelectedActionType | null>(null);
     const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
     const [isOpen, setIsOpen] = useState(false);
-    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [itemToDelete, setItemtoDelete] = useState<{ type: string; id: string }>();
     const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
     const [visibility, setVisibility] = useState({
         warehouses: true,
         dispensingPoints: true,
     });
+
+    console.log(selectedAction);
+    console.log(isOpen);
 
     // Geocoder function to interpret coordinates
     // const coordinatesGeocoder = (query: string) => {
@@ -103,7 +105,7 @@ const MapPage = () => {
     const handleMarkerClick = (type: string | null, id: string | null) => {
         if (selectedAction === 'deleteItem' && type && id) {
             setItemtoDelete({ type, id });
-            setIsDeleteDialogOpen(true);
+            setIsOpen(true);
         }
         setSelectedMarkerId(id);
     };
@@ -152,6 +154,7 @@ const MapPage = () => {
                                 warehouse={warehouse}
                                 selectedMarkerId={selectedMarkerId}
                                 handleMarkerClick={handleMarkerClick}
+                                selectedAction={selectedAction}
                             />
                         ))}
 
@@ -163,6 +166,7 @@ const MapPage = () => {
                                 dispensingPoint={dispensingPoint}
                                 selectedMarkerId={selectedMarkerId}
                                 handleMarkerClick={handleMarkerClick}
+                                selectedAction={selectedAction}
                             />
                         ))}
 
@@ -176,10 +180,10 @@ const MapPage = () => {
                 </Map>
             </div>
 
-            {isDeleteDialogOpen && itemToDelete && (
+            {isOpen && itemToDelete && (
                 <DeleteItem
                     item={itemToDelete}
-                    onCancel={() => setIsDeleteDialogOpen(false)}
+                    onCancel={() => setIsOpen(false)}
                     fetchAllWarehouses={fetchAllWarehouses}
                     fetchAllDispensingPoints={fetchAllDispensingPoints}
                 />
