@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { DispensingPointService } from './dispensing-point.abstract.class';
+import { DispensingPointServiceAbstractClass } from './dispensing-point.abstract.class';
 import { DispensingPointMongodbLibService } from '@b-prism/dispensing-point-mongodb-lib';
 import { CreateDispensingPointDto, DispensingPointAddressDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
 import { DispensingPoint } from '@prisma/client';
 
 @Injectable()
-export class DispensingPointServiceLibService implements DispensingPointService {
+export class DispensingPointServiceLibService implements DispensingPointServiceAbstractClass {
     private readonly logger = new Logger(DispensingPointServiceLibService.name);
 
     constructor(private readonly dispensingPointMongodbService: DispensingPointMongodbLibService) {}

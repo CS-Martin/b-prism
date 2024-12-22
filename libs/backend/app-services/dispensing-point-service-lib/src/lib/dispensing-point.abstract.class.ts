@@ -1,7 +1,7 @@
 import { CreateDispensingPointDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
 import { DispensingPoint } from '@prisma/client';
 
-export abstract class DispensingPointService {
+export abstract class DispensingPointServiceAbstractClass {
     abstract create(data: CreateDispensingPointDto): Promise<ResponseDto<DispensingPointDto>>;
 
     abstract update(id: string, data: UpdateDispensingPointDto): Promise<ResponseDto<DispensingPointDto>>;
