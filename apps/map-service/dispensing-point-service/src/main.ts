@@ -14,11 +14,7 @@ async function bootstrap() {
 
     app.enableCors();
 
-    const config = new DocumentBuilder()
-        .setTitle('Dispensing Point Service')
-        .setDescription('Dispensing Point Service API')
-        .setVersion('1.0')
-        .build();
+    const config = new DocumentBuilder().setTitle('Dispensing Point Service').setDescription('Dispensing Point Service API').setVersion('1.0').build();
 
     const document = SwaggerModule.createDocument(app, config);
 

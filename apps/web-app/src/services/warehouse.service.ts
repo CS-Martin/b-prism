@@ -6,9 +6,7 @@ class WarehouseService {
 
     constructor() {
         // Change if production
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${
-            process.env.NEXT_PUBLIC_WAREHOUSE_SERVICE_API_PORT ?? ''
-        }`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_WAREHOUSE_SERVICE_API_PORT ?? ''}`;
     }
 
     public async create(warehouse: CreateWarehouseDto): Promise<WarehouseDto> {

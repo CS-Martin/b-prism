@@ -21,26 +21,8 @@ import {
     Switch,
 } from '@b-prism/shadcn-ui/index';
 import { useState } from 'react';
-import {
-    ChevronUp,
-    Home,
-    LayoutDashboard,
-    LogIn,
-    LogOut,
-    LucideIcon,
-    Map,
-    MapPinned,
-    MapPinPlus,
-    MapPinXInside,
-    MonitorCog,
-} from 'lucide-react';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@b-prism/shadcn-ui/index';
+import { ChevronUp, Home, LayoutDashboard, LogIn, LogOut, LucideIcon, Map, MapPinned, MapPinPlus, MapPinXInside, MonitorCog } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@b-prism/shadcn-ui/index';
 import { UserDto } from '@dto';
 import Link from 'next/link';
 
@@ -193,10 +175,7 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                     </SidebarGroupContent>
                 </SidebarGroup>
                 <SidebarGroup>
-                    <SidebarGroupLabel
-                        style={{ display: user?.role !== 'admin' && user?.role !== 'verified' ? 'none' : 'block' }}>
-                        Actions
-                    </SidebarGroupLabel>
+                    <SidebarGroupLabel style={{ display: user?.role !== 'admin' && user?.role !== 'verified' ? 'none' : 'block' }}>Actions</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu className='gap-2'>
                             {actions.map((action) => (
@@ -227,9 +206,7 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                                         <AvatarImage src='https://github.com/shadcn.png' />
                                         <AvatarFallback>US</AvatarFallback>
                                     </Avatar>
-                                    <span className='group-data-[state=collapsed]:hidden ml-2'>
-                                        {`${user?.given_name || ''} ${user?.family_name || ''}`}
-                                    </span>
+                                    <span className='group-data-[state=collapsed]:hidden ml-2'>{`${user?.given_name || ''} ${user?.family_name || ''}`}</span>
                                     <ChevronUp className='ml-auto group-data-[state=collapsed]:hidden' />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>

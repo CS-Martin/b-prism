@@ -29,8 +29,7 @@ export function ModeToggle() {
             />
             <Label
                 htmlFor='theme-mode'
-                className='sr-only'
-            >
+                className='sr-only'>
                 Toggle theme
             </Label>
         </div>

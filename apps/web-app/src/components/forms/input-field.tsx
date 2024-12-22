@@ -12,16 +12,7 @@ interface InputFieldProps {
     rules?: any;
 }
 
-const InputField: React.FC<InputFieldProps> = ({
-    className,
-    name,
-    register,
-    label,
-    type,
-    placeholder,
-    errors,
-    rules,
-}) => (
+const InputField: React.FC<InputFieldProps> = ({ className, name, register, label, type, placeholder, errors, rules }) => (
     <div className={`${className}`}>
         <Label
             className=' font-normal'

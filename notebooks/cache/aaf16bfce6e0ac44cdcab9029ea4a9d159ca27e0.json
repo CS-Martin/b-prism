@@ -13,12 +13,7 @@
         "addresstype": "state",
         "name": "Catanduanes",
         "display_name": "Catanduanes, Bicol Region, Philippines",
-        "boundingbox": [
-            "13.3817662",
-            "14.2439629",
-            "123.8982630",
-            "124.5629816"
-        ],
+        "boundingbox": ["13.3817662", "14.2439629", "123.8982630", "124.5629816"],
         "geojson": {
             "type": "Polygon",
             "coordinates": [

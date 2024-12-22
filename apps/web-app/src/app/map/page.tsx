@@ -187,9 +187,7 @@ const MapPage = () => {
                 />
             )}
 
-            <AppSidebar
-                setSelectedAction={(action: string | null) => setSelectedAction(action as SelectedActionType | null)}
-            />
+            <AppSidebar setSelectedAction={(action: string | null) => setSelectedAction(action as SelectedActionType | null)} />
         </main>
     );
 };

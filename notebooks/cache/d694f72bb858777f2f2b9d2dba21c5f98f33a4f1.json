@@ -13,12 +13,7 @@
         "addresstype": "state",
         "name": "Albay",
         "display_name": "Albay, Bicol Region, Philippines",
-        "boundingbox": [
-            "12.8832336",
-            "13.5919874",
-            "123.1667033",
-            "124.3575160"
-        ],
+        "boundingbox": ["12.8832336", "13.5919874", "123.1667033", "124.3575160"],
         "geojson": {
             "type": "Polygon",
             "coordinates": [

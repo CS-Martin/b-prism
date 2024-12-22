@@ -15,11 +15,7 @@ async function bootstrap() {
 
     app.enableCors();
 
-    const config = new DocumentBuilder()
-        .setTitle('Rescue Post Service')
-        .setDescription('Rescue Post Service API')
-        .setVersion('1.0')
-        .build();
+    const config = new DocumentBuilder().setTitle('Rescue Post Service').setDescription('Rescue Post Service API').setVersion('1.0').build();
 
     const document = SwaggerModule.createDocument(app, config);
 

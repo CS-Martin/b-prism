@@ -46,14 +46,12 @@ export default function RegisterPage() {
                         action='#'
                         method='POST'
                         className='space-y-6'
-                        onSubmit={registerUser}
-                    >
+                        onSubmit={registerUser}>
                         <div className='flex gap-4'>
                             <div>
                                 <label
                                     htmlFor='given_name'
-                                    className='block text-sm/6 font-medium'
-                                >
+                                    className='block text-sm/6 font-medium'>
                                     Given Name
                                 </label>
                                 <div className='mt-2'>
@@ -76,8 +74,7 @@ export default function RegisterPage() {
                             <div>
                                 <label
                                     htmlFor='family_name'
-                                    className='block text-sm/6 font-medium'
-                                >
+                                    className='block text-sm/6 font-medium'>
                                     Family Name
                                 </label>
                                 <div className='mt-2'>
@@ -102,8 +99,7 @@ export default function RegisterPage() {
                             <div>
                                 <label
                                     htmlFor='office'
-                                    className='block text-sm/6 font-medium'
-                                >
+                                    className='block text-sm/6 font-medium'>
                                     Office
                                 </label>
                                 <div className='mt-2'>
@@ -126,8 +122,7 @@ export default function RegisterPage() {
                             <div>
                                 <label
                                     htmlFor='position'
-                                    className='block text-sm/6 font-medium'
-                                >
+                                    className='block text-sm/6 font-medium'>
                                     Position
                                 </label>
                                 <div className='mt-2'>
@@ -151,8 +146,7 @@ export default function RegisterPage() {
                         <div>
                             <label
                                 htmlFor='email'
-                                className='block text-sm/6 font-medium'
-                            >
+                                className='block text-sm/6 font-medium'>
                                 Email address
                             </label>
                             <div className='mt-2'>
@@ -177,15 +171,13 @@ export default function RegisterPage() {
                             <div className='flex items-center justify-between'>
                                 <label
                                     htmlFor='password'
-                                    className='block text-sm/6 font-medium'
-                                >
+                                    className='block text-sm/6 font-medium'>
                                     Password
                                 </label>
                                 <div className='text-sm'>
                                     <a
                                         href='#'
-                                        className='font-semibold text-indigo-600 hover:text-indigo-500'
-                                    >
+                                        className='font-semibold text-indigo-600 hover:text-indigo-500'>
                                         Forgot password?
                                     </a>
                                 </div>
@@ -211,8 +203,7 @@ export default function RegisterPage() {
                         <div>
                             <Button
                                 type='submit'
-                                className='w-full'
-                            >
+                                className='w-full'>
                                 Register
                             </Button>
                         </div>
@@ -222,8 +213,7 @@ export default function RegisterPage() {
                         Already have an account?{' '}
                         <a
                             href='/auth/login'
-                            className='font-semibold text-indigo-600 hover:text-indigo-500'
-                        >
+                            className='font-semibold text-indigo-600 hover:text-indigo-500'>
                             Sign in
                         </a>
                     </p>

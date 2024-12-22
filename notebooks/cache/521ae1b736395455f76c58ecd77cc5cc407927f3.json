@@ -13,12 +13,7 @@
         "addresstype": "region",
         "name": "Bicol Region",
         "display_name": "Bicol Region, Philippines",
-        "boundingbox": [
-            "11.5153837",
-            "14.6719042",
-            "122.2828084",
-            "124.5629816"
-        ],
+        "boundingbox": ["11.5153837", "14.6719042", "122.2828084", "124.5629816"],
         "geojson": {
             "type": "Polygon",
             "coordinates": [

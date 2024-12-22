@@ -5,9 +5,7 @@ class DispensingPointService {
     private API_BASE_URL: string;
 
     constructor() {
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${
-            process.env.NEXT_PUBLIC_DISPENSING_POINT_SERVICE_API_PORT ?? ''
-        }`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_DISPENSING_POINT_SERVICE_API_PORT ?? ''}`;
     }
 
     public async create(dispensingPoint: CreateDispensingPointDto): Promise<DispensingPointDto> {

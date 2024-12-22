@@ -13,12 +13,7 @@
         "addresstype": "state",
         "name": "Masbate",
         "display_name": "Masbate, Bicol Region, Philippines",
-        "boundingbox": [
-            "11.5153837",
-            "13.3583417",
-            "122.6977922",
-            "124.1942152"
-        ],
+        "boundingbox": ["11.5153837", "13.3583417", "122.6977922", "124.1942152"],
         "geojson": {
             "type": "Polygon",
             "coordinates": [
@@ -252,12 +247,7 @@
         "addresstype": "city",
         "name": "Masbate City",
         "display_name": "Masbate City, Masbate, Bicol Region, 5400, Philippines",
-        "boundingbox": [
-            "12.2110899",
-            "12.5310899",
-            "123.4639223",
-            "123.7839223"
-        ],
+        "boundingbox": ["12.2110899", "12.5310899", "123.4639223", "123.7839223"],
         "geojson": { "type": "Point", "coordinates": [123.6239223, 12.3710899] }
     },
     {
@@ -274,12 +264,7 @@
         "addresstype": "island",
         "name": "Masbate",
         "display_name": "Masbate, Bicol Region, Philippines",
-        "boundingbox": [
-            "11.7204843",
-            "12.6012117",
-            "123.1426245",
-            "124.0745503"
-        ],
+        "boundingbox": ["11.7204843", "12.6012117", "123.1426245", "124.0745503"],
         "geojson": {
             "type": "Polygon",
             "coordinates": [

@@ -1,13 +1,7 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DispensingPointService } from './dispensing-point.abstract.class';
 import { DispensingPointMongodbLibService } from '@b-prism/dispensing-point-mongodb-lib';
-import {
-    CreateDispensingPointDto,
-    DispensingPointAddressDto,
-    DispensingPointDto,
-    ResponseDto,
-    UpdateDispensingPointDto,
-} from '@dto';
+import { CreateDispensingPointDto, DispensingPointAddressDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
 import { DispensingPoint } from '@prisma/client';
 
 @Injectable()
@@ -33,10 +27,7 @@ export class DispensingPointServiceLibService implements DispensingPointService 
                 updated_at: new Date(),
             });
 
-            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(
-                201,
-                this.convertToDto(dispensingPoint),
-            );
+            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(201, this.convertToDto(dispensingPoint));
 
             return response;
         } catch (error) {
@@ -52,10 +43,7 @@ export class DispensingPointServiceLibService implements DispensingPointService 
         try {
             const dispensingPoint = await this.dispensingPointMongodbService.update(id, data);
 
-            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(
-                200,
-                this.convertToDto(dispensingPoint),
-            );
+            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(200, this.convertToDto(dispensingPoint));
 
             return response;
         } catch (error) {
@@ -108,10 +96,7 @@ export class DispensingPointServiceLibService implements DispensingPointService 
                 throw new NotFoundException('Dispensing point not found');
             }
 
-            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(
-                200,
-                this.convertToDto(dispensingPoint),
-            );
+            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(200, this.convertToDto(dispensingPoint));
 
             return response;
         } catch (error) {

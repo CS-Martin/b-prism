@@ -2,13 +2,7 @@
 
 import { ColumnDef, Row } from '@tanstack/react-table';
 
-import {
-    Button,
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@b-prism/shadcn-ui/index';
+import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@b-prism/shadcn-ui/index';
 import { UserRole } from '@b-prism/enums';
 import { UserDto } from '@dto';
 import { ArrowUpDown } from 'lucide-react';
@@ -20,9 +14,7 @@ const customRole = (rowA: Row<Partial<UserDto>>, rowB: Row<Partial<UserDto>>) =>
     return aIndex - bIndex;
 };
 
-export const createColumns = (
-    handleRoleChange: (userId: string, newRole: UserRole) => void,
-): ColumnDef<Partial<UserDto>>[] => [
+export const createColumns = (handleRoleChange: (userId: string, newRole: UserRole) => void): ColumnDef<Partial<UserDto>>[] => [
     {
         accessorKey: 'id',
         header: ({ column }) => {
@@ -30,8 +22,7 @@ export const createColumns = (
                 <Button
                     variant='ghost'
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    className='rounded-sm'
-                >
+                    className='rounded-sm'>
                     #
                     <ArrowUpDown className='ml-2 h-4 w-4' />
                 </Button>
@@ -47,8 +38,7 @@ export const createColumns = (
                 <Button
                     variant='ghost'
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    className='rounded-sm'
-                >
+                    className='rounded-sm'>
                     Name
                     <ArrowUpDown className='ml-2 h-4 w-4' />
                 </Button>
@@ -62,8 +52,7 @@ export const createColumns = (
                 <Button
                     variant='ghost'
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    className='rounded-sm'
-                >
+                    className='rounded-sm'>
                     Surname
                     <ArrowUpDown className='ml-2 h-4 w-4' />
                 </Button>
@@ -77,8 +66,7 @@ export const createColumns = (
                 <Button
                     variant='ghost'
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    className='rounded-sm'
-                >
+                    className='rounded-sm'>
                     Email
                     <ArrowUpDown className='ml-2 h-4 w-4' />
                 </Button>
@@ -92,8 +80,7 @@ export const createColumns = (
                 <Button
                     variant='ghost'
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    className='rounded-sm'
-                >
+                    className='rounded-sm'>
                     Office
                     <ArrowUpDown className='ml-2 h-4 w-4' />
                 </Button>
@@ -107,8 +94,7 @@ export const createColumns = (
                 <Button
                     variant='ghost'
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    className='rounded-sm'
-                >
+                    className='rounded-sm'>
                     Position
                     <ArrowUpDown className='ml-2 h-4 w-4' />
                 </Button>
@@ -122,8 +108,7 @@ export const createColumns = (
                 <Button
                     variant='ghost'
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    className='rounded-sm'
-                >
+                    className='rounded-sm'>
                     ID Image
                     <ArrowUpDown className='ml-2 h-4 w-4' />
                 </Button>
@@ -137,8 +122,7 @@ export const createColumns = (
                 <Button
                     variant='ghost'
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    className='rounded-sm'
-                >
+                    className='rounded-sm'>
                     Role
                     <ArrowUpDown className='ml-2 h-4 w-4' />
                 </Button>
@@ -160,16 +144,14 @@ export const createColumns = (
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
                             className='w-32 rounded-sm'
-                            align='end'
-                        >
+                            align='end'>
                             {Object.values(UserRole).map(
                                 (role) =>
                                     user.role !== role && (
                                         <DropdownMenuItem
                                             className='cursor-pointer'
                                             key={role}
-                                            onClick={() => handleRoleChange(user.id ?? '', role)}
-                                        >
+                                            onClick={() => handleRoleChange(user.id ?? '', role)}>
                                             {(() => {
                                                 switch (role) {
                                                     case UserRole.admin:

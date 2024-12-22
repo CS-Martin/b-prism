@@ -1,14 +1,6 @@
 'use client';
 
-import {
-    ColumnDef,
-    flexRender,
-    getCoreRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
-    SortingState,
-    useReactTable,
-} from '@tanstack/react-table';
+import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
 
 import {
     TableBody,
@@ -34,22 +26,13 @@ interface DataTableProps<TData, TValue> {
     handleRoleChange: (userId: string, newRole: UserRole) => void;
 }
 
-function PaginationComponent<TData>({
-    pageSize,
-    dataLength,
-    table,
-}: {
-    pageSize: number;
-    dataLength: number;
-    table: ReturnType<typeof useReactTable<TData>>;
-}) {
+function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize: number; dataLength: number; table: ReturnType<typeof useReactTable<TData>> }) {
     return (
         <div className='absolute bottom-0 flex items-center justify-between border-t py-5 w-full'>
             <div className='flex items-center justify-between w-1/2'>
                 <Label className=' font-normal'>
-                    Showing {table.getState().pagination.pageIndex * pageSize + 1} to{' '}
-                    {Math.min((table.getState().pagination.pageIndex + 1) * pageSize, dataLength)} out of {dataLength}{' '}
-                    results
+                    Showing {table.getState().pagination.pageIndex * pageSize + 1} to {Math.min((table.getState().pagination.pageIndex + 1) * pageSize, dataLength)} out of{' '}
+                    {dataLength} results
                 </Label>
             </div>
             <Pagination className='justify-end w-1/2'>
@@ -115,9 +98,7 @@ export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: Da
                                         <TableHead
                                             key={header.id}
                                             className='px-0'>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                            {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                                         </TableHead>
                                     );
                                 })}

@@ -13,12 +13,7 @@
         "addresstype": "city",
         "name": "Tabaco",
         "display_name": "Tabaco, Albay, Bicol Region, 4511, Philippines",
-        "boundingbox": [
-            "13.2555075",
-            "13.5286023",
-            "123.6048405",
-            "123.9569403"
-        ],
+        "boundingbox": ["13.2555075", "13.5286023", "123.6048405", "123.9569403"],
         "geojson": {
             "type": "Polygon",
             "coordinates": [

@@ -1,11 +1,4 @@
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-    Label,
-    ScrollArea,
-    Separator,
-} from '@b-prism/shadcn-ui/index';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger, Label, ScrollArea, Separator } from '@b-prism/shadcn-ui/index';
 import { ChevronRight, Locate, MessageSquareMore, PanelRight, ShieldAlert } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import Draggable from 'react-draggable';
@@ -98,13 +91,8 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                     className={`absolute top-[50px] drag-handle right-0 z-50 max-w-[350px] rounded-[10px] shadow-xl m-[20px] bg-black bg-opacity-45 ${
                         isExpanded ? 'md:h-[720px]' : ''
                     }`}>
-                    <div
-                        className={`cursor-move flex items-center justify-between transition-all duration-300 ${
-                            isExpanded ? 'px-5 pt-3.5 mb-3' : 'p-3'
-                        }`}>
-                        <Label className={`text-[16px] font-semibold ${isExpanded ? '' : 'hidden'}`}>
-                            Rescue Posts
-                        </Label>
+                    <div className={`cursor-move flex items-center justify-between transition-all duration-300 ${isExpanded ? 'px-5 pt-3.5 mb-3' : 'p-3'}`}>
+                        <Label className={`text-[16px] font-semibold ${isExpanded ? '' : 'hidden'}`}>Rescue Posts</Label>
                         <div
                             className='cursor-pointer'
                             onClick={() => setIsExpanded(!isExpanded)}>
@@ -115,9 +103,7 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                     {isExpanded && (
                         <div className='h-full'>
                             <div className='px-5 pb-3.5'>
-                                <p className='text-sm text-gray-500'>
-                                    View and manage rescue posts on the map, sourced from a Facebook Messenger bot.
-                                </p>
+                                <p className='text-sm text-gray-500'>View and manage rescue posts on the map, sourced from a Facebook Messenger bot.</p>
                             </div>
                             <Separator className='my-3 bg-gray-500 w-full' />
                             <ScrollArea className='h-[calc(100%-130px)]'>
@@ -135,9 +121,7 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                                                     />
                                                     <p className='font-semibold'>
                                                         {new Date(post.createdAt).toLocaleDateString()}{' '}
-                                                        <span className='text-xs text-gray-400'>
-                                                            | {formatDistanceToNow(new Date(post.createdAt))} ago
-                                                        </span>
+                                                        <span className='text-xs text-gray-400'>| {formatDistanceToNow(new Date(post.createdAt))} ago</span>
                                                     </p>
                                                 </span>
                                                 <button onClick={() => handleLocateClick(post)}>
@@ -155,15 +139,11 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                                                                 key={index}
                                                                 className='flex flex-col gap-1'>
                                                                 <Label>
-                                                                    <span className='font-semibold text-[#F4AA55]'>
-                                                                        Name:{' '}
-                                                                    </span>
+                                                                    <span className='font-semibold text-[#F4AA55]'>Name: </span>
                                                                     {contact.name}
                                                                 </Label>
                                                                 <Label>
-                                                                    <span className='font-semibold text-[#F4AA55]'>
-                                                                        Contact:{' '}
-                                                                    </span>
+                                                                    <span className='font-semibold text-[#F4AA55]'>Contact: </span>
                                                                     {contact.contact}
                                                                 </Label>
                                                             </div>
@@ -174,21 +154,15 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                                                     'Demographics',
                                                     <>
                                                         <Label>
-                                                            <span className='font-semibold text-[#F4AA55]'>
-                                                                Adult:{' '}
-                                                            </span>
+                                                            <span className='font-semibold text-[#F4AA55]'>Adult: </span>
                                                             {post.total_adults}
                                                         </Label>
                                                         <Label>
-                                                            <span className='font-semibold text-[#F4AA55]'>
-                                                                Child:{' '}
-                                                            </span>
+                                                            <span className='font-semibold text-[#F4AA55]'>Child: </span>
                                                             {post.total_children}
                                                         </Label>
                                                         <Label>
-                                                            <span className='font-semibold text-[#F4AA55]'>
-                                                                Elderly:{' '}
-                                                            </span>
+                                                            <span className='font-semibold text-[#F4AA55]'>Elderly: </span>
                                                             {post.total_elderly}
                                                         </Label>
                                                     </>,

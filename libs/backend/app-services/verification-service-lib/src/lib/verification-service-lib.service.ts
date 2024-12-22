@@ -4,9 +4,7 @@ import { UserServiceLibService } from '@b-prism/user-service-lib';
 import { VerificationMongodbLibService } from '@b-prism/verification-mongodb-lib';
 
 @Injectable()
-export class VerificationServiceLibService
-    implements VerificationServiceLibAbstract
-{
+export class VerificationServiceLibService implements VerificationServiceLibAbstract {
     constructor(
         private readonly userService: UserServiceLibService,
         private readonly verificationMongodbLib: VerificationMongodbLibService,
