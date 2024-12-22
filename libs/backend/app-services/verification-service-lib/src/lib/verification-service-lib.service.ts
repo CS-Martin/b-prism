@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { VerificationServiceLibAbstract } from './verification-service-lib.abstract.class';
+import { VerificationServiceAbstractClass } from './verification-service-lib.abstract.class';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
 import { VerificationMongodbLibService } from '@b-prism/verification-mongodb-lib';
 
 @Injectable()
-export class VerificationServiceLibService implements VerificationServiceLibAbstract {
+export class VerificationServiceLibService implements VerificationServiceAbstractClass {
     constructor(
         private readonly userService: UserServiceLibService,
         private readonly verificationMongodbLib: VerificationMongodbLibService,
@@ -14,7 +14,6 @@ export class VerificationServiceLibService implements VerificationServiceLibAbst
         if (!userId || !role) {
             throw new Error('Invalid user ID or role');
         }
-        console.log('THIS IS THE USER', role);
 
         const user = await this.userService.findById(userId);
 
