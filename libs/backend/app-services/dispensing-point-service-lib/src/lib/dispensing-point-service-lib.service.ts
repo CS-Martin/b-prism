@@ -41,7 +41,10 @@ export class DispensingPointServiceLibService implements DispensingPointService 
         this.logger.log('Updating dispensing point', id);
 
         try {
-            const dispensingPoint = await this.dispensingPointMongodbService.update(id, data);
+            const dispensingPoint = await this.dispensingPointMongodbService.update(id, {
+                ...data,
+                updated_at: new Date(),
+            });
 
             const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(200, this.convertToDto(dispensingPoint));
 
@@ -107,19 +110,19 @@ export class DispensingPointServiceLibService implements DispensingPointService 
     }
 
     convertToDto(dispensingPoint: DispensingPoint): DispensingPointDto {
-        const dispensingPointDto: DispensingPointDto = {
-            id: dispensingPoint.id ?? '',
-            type: dispensingPoint.type ?? 'dispensing_point',
-            name: dispensingPoint.name ?? '',
-            longitude: dispensingPoint.longitude ?? '',
-            latitude: dispensingPoint.latitude ?? '',
-            description: dispensingPoint.description ?? '',
-            address: dispensingPoint.address as DispensingPointAddressDto,
-            capacity: dispensingPoint.capacity ?? undefined,
-            user_id: dispensingPoint.user_id ?? '',
-            created_at: dispensingPoint.created_at,
-            updated_at: dispensingPoint.updated_at,
-        };
+        const dispensingPointDto: DispensingPointDto = new DispensingPointDto();
+
+        dispensingPointDto.id = dispensingPoint.id ?? '';
+        dispensingPointDto.type = dispensingPoint.type ?? 'dispensing_point';
+        dispensingPointDto.name = dispensingPoint.name ?? '';
+        dispensingPointDto.longitude = dispensingPoint.longitude ?? '';
+        dispensingPointDto.latitude = dispensingPoint.latitude ?? '';
+        dispensingPointDto.description = dispensingPoint.description ?? '';
+        dispensingPointDto.address = dispensingPoint.address as DispensingPointAddressDto;
+        dispensingPointDto.capacity = dispensingPoint.capacity ?? undefined;
+        dispensingPointDto.user_id = dispensingPoint.user_id ?? '';
+        dispensingPointDto.created_at = dispensingPoint.created_at;
+        dispensingPointDto.updated_at = dispensingPoint.updated_at;
 
         return dispensingPointDto;
     }

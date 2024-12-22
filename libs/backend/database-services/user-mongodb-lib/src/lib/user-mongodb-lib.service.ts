@@ -1,19 +1,20 @@
 import { UserDto } from '@dto';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaDbLibService } from '@prisma-db-lib';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserMongodbLibService {
     constructor(private readonly prisma: PrismaDbLibService) {}
 
-    async findAll(): Promise<UserDto[]> {
-        const users: UserDto[] = await this.prisma.user.findMany();
+    async findAll(): Promise<User[]> {
+        const users: User[] = await this.prisma.user.findMany();
 
         return users;
     }
 
-    async findById(id: string): Promise<UserDto | null> {
-        const user: UserDto | null = await this.prisma.user.findUnique({
+    async findById(id: string): Promise<User | null> {
+        const user: User | null = await this.prisma.user.findUnique({
             where: {
                 id: id,
             },
@@ -22,8 +23,8 @@ export class UserMongodbLibService {
         return user;
     }
 
-    async findByEmail(email: string): Promise<UserDto | null> {
-        const user: UserDto | null = await this.prisma.user.findUnique({
+    async findByEmail(email: string): Promise<User | null> {
+        const user: User | null = await this.prisma.user.findUnique({
             where: {
                 email: email,
             },

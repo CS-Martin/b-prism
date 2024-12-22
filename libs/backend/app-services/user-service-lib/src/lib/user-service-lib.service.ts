@@ -3,6 +3,7 @@ import { UserDto } from '@dto';
 import { ResponseDto } from '@dto';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { UserServiceAbstractClass } from './user-service.abstract.class';
+import { User, UserRole } from '@prisma/client';
 
 @Injectable()
 export class UserServiceLibService implements UserServiceAbstractClass {
@@ -13,9 +14,9 @@ export class UserServiceLibService implements UserServiceAbstractClass {
     async findAll(): Promise<ResponseDto<UserDto[]>> {
         this.logger.log('Finding all users');
 
-        const users: UserDto[] = await this.userMongodbLibService.findAll();
+        const users: User[] = await this.userMongodbLibService.findAll();
 
-        const response: ResponseDto<UserDto[]> = new ResponseDto<UserDto[]>(201, users);
+        const response: ResponseDto<UserDto[]> = new ResponseDto<UserDto[]>(201, users.map(this.convertToDto));
 
         return response;
     }
@@ -23,13 +24,13 @@ export class UserServiceLibService implements UserServiceAbstractClass {
     async findById(id: string): Promise<ResponseDto<UserDto>> {
         this.logger.log('Finding user', id);
 
-        const user: UserDto | null = await this.userMongodbLibService.findById(id);
+        const user: User | null = await this.userMongodbLibService.findById(id);
 
         if (!user) {
             throw new NotFoundException(`User with id ${id} not found`);
         }
 
-        const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
+        const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
 
         return response;
     }
@@ -37,14 +38,32 @@ export class UserServiceLibService implements UserServiceAbstractClass {
     async findByEmail(email: string): Promise<ResponseDto<UserDto>> {
         this.logger.log('Finding user', email);
 
-        const user: UserDto | null = await this.userMongodbLibService.findByEmail(email);
+        const user: User | null = await this.userMongodbLibService.findByEmail(email);
 
         if (!user) {
             throw new NotFoundException(`User with email ${email} not found`);
         }
 
-        const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
+        const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
 
         return response;
+    }
+
+    convertToDto(user: User): UserDto {
+        const userDto: UserDto = new UserDto();
+
+        userDto.id = user.id || '';
+        userDto.given_name = user.given_name || '';
+        userDto.family_name = user.family_name || '';
+        userDto.email = user.email || '';
+        userDto.password = user.password || '';
+        userDto.office = user.office || '';
+        userDto.position = user.position || '';
+        userDto.role = user.role || UserRole.unverified;
+        userDto.id_image_url = user.id_image_url || '';
+        userDto.createdAt = user.createdAt;
+        userDto.updatedAt = user.updatedAt;
+
+        return userDto;
     }
 }

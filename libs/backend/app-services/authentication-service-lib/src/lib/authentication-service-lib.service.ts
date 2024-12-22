@@ -4,6 +4,7 @@ import { CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { AuthenticationService } from './authentication-service.abstract.class';
 import { comparePassword, hashPassword } from '@lib-utils';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
+import { User, UserRole } from '@prisma/client';
 
 @Injectable()
 export class AuthenticationServiceLibService implements AuthenticationService {
@@ -22,9 +23,9 @@ export class AuthenticationServiceLibService implements AuthenticationService {
             const hashedPassword = await hashPassword(userData.password);
             userData.password = hashedPassword;
 
-            const user: UserDto = await this.authenticationMongodbService.create(userData);
+            const user: User = await this.authenticationMongodbService.create(userData);
 
-            const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
+            const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
 
             return response;
         } catch (error) {
@@ -66,9 +67,9 @@ export class AuthenticationServiceLibService implements AuthenticationService {
         await this.userServiceLibService.findById(id);
 
         try {
-            const user: UserDto = await this.authenticationMongodbService.update(id, newUserData);
+            const user: User = await this.authenticationMongodbService.update(id, newUserData);
 
-            const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user);
+            const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
 
             return response;
         } catch (error) {
@@ -76,5 +77,23 @@ export class AuthenticationServiceLibService implements AuthenticationService {
 
             throw new BadRequestException(error);
         }
+    }
+
+    convertToDto(user: User): UserDto {
+        const userDto: UserDto = new UserDto();
+
+        userDto.id = user.id || '';
+        userDto.given_name = user.given_name || '';
+        userDto.family_name = user.family_name || '';
+        userDto.email = user.email || '';
+        userDto.password = user.password || '';
+        userDto.office = user.office || '';
+        userDto.position = user.position || '';
+        userDto.role = user.role || UserRole.unverified;
+        userDto.id_image_url = user.id_image_url || '';
+        userDto.createdAt = user.createdAt;
+        userDto.updatedAt = user.updatedAt;
+
+        return userDto;
     }
 }
