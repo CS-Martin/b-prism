@@ -17,12 +17,8 @@
         "paths": {
             "@authentication-mongodb-lib": ["libs/backend/database-services/authentication-mongodb-lib/src/index.ts"],
             "@authentication-service-lib": ["libs/backend/app-services/authentication-service-lib/src/index.ts"],
-            "@b-prism/dispensing-point-mongodb-lib": [
-                "libs/backend/database-services/dispensing-point-mongodb-lib/src/index.ts"
-            ],
-            "@b-prism/dispensing-point-service-lib": [
-                "libs/backend/app-services/dispensing-point-service-lib/src/index.ts"
-            ],
+            "@b-prism/dispensing-point-mongodb-lib": ["libs/backend/database-services/dispensing-point-mongodb-lib/src/index.ts"],
+            "@b-prism/dispensing-point-service-lib": ["libs/backend/app-services/dispensing-point-service-lib/src/index.ts"],
             "@b-prism/enums": ["libs/enums/src/index.ts"],
             "@b-prism/rescue-post-mongodb-lib": ["libs/backend/database-services/rescue-post-mongodb-lib/src/index.ts"],
             "@b-prism/rescue-post-service-lib": ["libs/backend/app-services/rescue-post-service-lib/src/index.ts"],
@@ -33,9 +29,7 @@
             "@b-prism/types": ["libs/types/src/index.ts"],
             "@b-prism/user-mongodb-lib": ["libs/backend/database-services/user-mongodb-lib/src/index.ts"],
             "@b-prism/user-service-lib": ["libs/backend/app-services/user-service-lib/src/index.ts"],
-            "@b-prism/verification-mongodb-lib": [
-                "libs/backend/database-services/verification-mongodb-lib/src/index.ts"
-            ],
+            "@b-prism/verification-mongodb-lib": ["libs/backend/database-services/verification-mongodb-lib/src/index.ts"],
             "@b-prism/warehouse-mongodb-lib": ["libs/backend/database-services/warehouse-mongodb-lib/src/index.ts"],
             "@b-prism/warehouse-service-lib": ["libs/backend/app-services/warehouse-service-lib/src/index.ts"],
             "@b-prism/web-app/admin-dashboard-hooks": ["apps/web-app/src/hooks/admin-dashboard.hook.ts"],

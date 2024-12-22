@@ -13,12 +13,7 @@
         "addresstype": "city",
         "name": "Naga",
         "display_name": "Naga, Bicol Region, 4400, Philippines",
-        "boundingbox": [
-            "13.6025140",
-            "13.6812896",
-            "123.1758587",
-            "123.3625044"
-        ],
+        "boundingbox": ["13.6025140", "13.6812896", "123.1758587", "123.3625044"],
         "geojson": {
             "type": "Polygon",
             "coordinates": [

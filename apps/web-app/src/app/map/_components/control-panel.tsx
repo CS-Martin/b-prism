@@ -20,11 +20,8 @@ function ControlPanel({ visibility, onVisibilityChange }: ControlPanelProps) {
             handle='.drag-handle'
             bounds='parent'>
             <div className='absolute top-0 right-0 z-50 max-w-[300px] rounded-[10px] shadow-xl m-[20px] outline-none bg-black bg-opacity-45'>
-                <div
-                    className={`drag-handle flex items-center justify-between transition-all duration-300 ${isExpanded ? 'px-5 pt-3.5 mb-3' : 'p-3'}`}>
-                    <Label className={`text-[16px] font-semibold cursor-move ${isExpanded ? '' : 'hidden'}`}>
-                        Dynamic Layer Control
-                    </Label>
+                <div className={`drag-handle flex items-center justify-between transition-all duration-300 ${isExpanded ? 'px-5 pt-3.5 mb-3' : 'p-3'}`}>
+                    <Label className={`text-[16px] font-semibold cursor-move ${isExpanded ? '' : 'hidden'}`}>Dynamic Layer Control</Label>
                     <div
                         className='cursor-pointer'
                         onClick={() => setIsExpanded(!isExpanded)}>
@@ -35,9 +32,7 @@ function ControlPanel({ visibility, onVisibilityChange }: ControlPanelProps) {
                 {isExpanded && (
                     <>
                         <div className='px-5'>
-                            <p className='text-sm text-gray-500'>
-                                Dynamically control the visibility of layers on the map
-                            </p>
+                            <p className='text-sm text-gray-500'>Dynamically control the visibility of layers on the map</p>
                         </div>
 
                         <Separator className='my-4 bg-gray-500 w-full' />

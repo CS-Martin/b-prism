@@ -14,11 +14,7 @@ async function bootstrap() {
 
     app.enableCors();
 
-    const config = new DocumentBuilder()
-        .setTitle('Authentication Service')
-        .setDescription('Authentication Service API')
-        .setVersion('1.0')
-        .build();
+    const config = new DocumentBuilder().setTitle('Authentication Service').setDescription('Authentication Service API').setVersion('1.0').build();
 
     const document = SwaggerModule.createDocument(app, config);
 

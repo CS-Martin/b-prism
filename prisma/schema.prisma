@@ -76,6 +76,6 @@ model RescuePost {
   number_of_people_affected Int
   address                   String?
   landmark                  String?
-  createdAt                 DateTime @default(now())
-  updatedAt                 DateTime @updatedAt
+  created_at                DateTime @default(now())
+  updated_at                DateTime @updatedAt
 }

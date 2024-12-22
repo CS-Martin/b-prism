@@ -40,19 +40,7 @@ interface DialogProps {
     fetchAllDispensingPoints: () => void;
 }
 
-const AddressField = ({
-    id,
-    label,
-    placeholder,
-    control,
-    fieldName,
-}: {
-    id: string;
-    label: string;
-    placeholder: string;
-    control: any;
-    fieldName: string;
-}) => (
+const AddressField = ({ id, label, placeholder, control, fieldName }: { id: string; label: string; placeholder: string; control: any; fieldName: string }) => (
     <div className='w-1/2'>
         <Label htmlFor={id}>{label}</Label>
         <Controller
@@ -70,12 +58,7 @@ const AddressField = ({
     </div>
 );
 
-const CreateDispensingPointDialog: React.FC<DialogProps> = ({
-    isOpen,
-    setIsOpen,
-    marker,
-    fetchAllDispensingPoints,
-}) => {
+const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllDispensingPoints }) => {
     const { toast } = useToast();
     const { data: session } = useSession();
     const { getAddress, address } = useGetAddress();
@@ -180,9 +163,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({
                                 <div className='flex flex-col gap-4'>
                                     <DialogHeader>
                                         <DialogTitle>Dispensing Point Information</DialogTitle>
-                                        <DialogDescription>
-                                            Please enter the details of the dispensing point.
-                                        </DialogDescription>
+                                        <DialogDescription>Please enter the details of the dispensing point.</DialogDescription>
                                     </DialogHeader>
 
                                     <Separator orientation='horizontal' />
@@ -226,9 +207,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({
                                 <div className='flex flex-col gap-4'>
                                     <DialogHeader>
                                         <DialogTitle>Dispensing Point Address</DialogTitle>
-                                        <DialogDescription>
-                                            Auto-filled based on marker position. Edit if needed.
-                                        </DialogDescription>
+                                        <DialogDescription>Auto-filled based on marker position. Edit if needed.</DialogDescription>
                                     </DialogHeader>
 
                                     <Separator orientation='horizontal' />

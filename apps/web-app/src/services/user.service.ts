@@ -7,9 +7,7 @@ class UserService {
 
     constructor() {
         // Change if production
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${
-            process.env.NEXT_PUBLIC_USER_SERVICE_API_PORT ?? ''
-        }`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_USER_SERVICE_API_PORT ?? ''}`;
     }
 
     public async fetchAllUsers(): Promise<ResponseDto<UserDto[]>> {

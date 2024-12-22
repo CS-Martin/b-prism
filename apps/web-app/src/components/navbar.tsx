@@ -1,13 +1,6 @@
 import { Button, Separator } from '@b-prism/shadcn-ui/index';
 
-import {
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenu,
-    NavigationMenuLink,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-} from '@b-prism/shadcn-ui/index';
+import { NavigationMenuContent, NavigationMenuItem, NavigationMenu, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from '@b-prism/shadcn-ui/index';
 import Link from 'next/link';
 import React from 'react';
 import { cn } from '@b-prism/shadcn-lib/cn';
@@ -26,8 +19,7 @@ const components: { title: string; href: string; description: string }[] = [
     {
         title: 'Progress',
         href: '/docs/primitives/progress',
-        description:
-            'Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.',
+        description: 'Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.',
     },
     {
         title: 'Scroll-area',
@@ -42,8 +34,7 @@ const components: { title: string; href: string; description: string }[] = [
     {
         title: 'Tooltip',
         href: '/docs/primitives/tooltip',
-        description:
-            'A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.',
+        description: 'A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.',
     },
 ];
 
@@ -89,8 +80,7 @@ const NavbarItems = () => {
                                         href='/'>
                                         <div className='mb-2 mt-4 text-lg font-medium'>shadcn/ui</div>
                                         <p className='text-sm leading-tight text-muted-foreground'>
-                                            Beautifully designed components that you can copy and paste into your apps.
-                                            Accessible. Customizable. Open Source.
+                                            Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.
                                         </p>
                                     </Link>
                                 </NavigationMenuLink>
@@ -149,26 +139,24 @@ const NavbarItems = () => {
     );
 };
 
-const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
-    ({ className, title, children, ...props }, ref) => {
-        return (
-            <li>
-                <NavigationMenuLink asChild>
-                    <a
-                        ref={ref}
-                        className={cn(
-                            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-                            className,
-                        )}
-                        {...props}>
-                        <div className='text-sm font-medium leading-none'>{title}</div>
-                        <p className='line-clamp-2 text-sm leading-snug text-muted-foreground'>{children}</p>
-                    </a>
-                </NavigationMenuLink>
-            </li>
-        );
-    },
-);
+const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(({ className, title, children, ...props }, ref) => {
+    return (
+        <li>
+            <NavigationMenuLink asChild>
+                <a
+                    ref={ref}
+                    className={cn(
+                        'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+                        className,
+                    )}
+                    {...props}>
+                    <div className='text-sm font-medium leading-none'>{title}</div>
+                    <p className='line-clamp-2 text-sm leading-snug text-muted-foreground'>{children}</p>
+                </a>
+            </NavigationMenuLink>
+        </li>
+    );
+});
 ListItem.displayName = 'ListItem';
 
 export default Navbar;

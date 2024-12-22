@@ -1,17 +1,11 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { DispensingPointService } from './dispensing-point.abstract.class';
+import { DispensingPointServiceAbstractClass } from './dispensing-point.abstract.class';
 import { DispensingPointMongodbLibService } from '@b-prism/dispensing-point-mongodb-lib';
-import {
-    CreateDispensingPointDto,
-    DispensingPointAddressDto,
-    DispensingPointDto,
-    ResponseDto,
-    UpdateDispensingPointDto,
-} from '@dto';
+import { CreateDispensingPointDto, DispensingPointAddressDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
 import { DispensingPoint } from '@prisma/client';
 
 @Injectable()
-export class DispensingPointServiceLibService implements DispensingPointService {
+export class DispensingPointServiceLibService implements DispensingPointServiceAbstractClass {
     private readonly logger = new Logger(DispensingPointServiceLibService.name);
 
     constructor(private readonly dispensingPointMongodbService: DispensingPointMongodbLibService) {}
@@ -33,10 +27,7 @@ export class DispensingPointServiceLibService implements DispensingPointService 
                 updated_at: new Date(),
             });
 
-            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(
-                201,
-                this.convertToDto(dispensingPoint),
-            );
+            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(201, this.convertToDto(dispensingPoint));
 
             return response;
         } catch (error) {
@@ -50,12 +41,12 @@ export class DispensingPointServiceLibService implements DispensingPointService 
         this.logger.log('Updating dispensing point', id);
 
         try {
-            const dispensingPoint = await this.dispensingPointMongodbService.update(id, data);
+            const dispensingPoint = await this.dispensingPointMongodbService.update(id, {
+                ...data,
+                updated_at: new Date(),
+            });
 
-            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(
-                200,
-                this.convertToDto(dispensingPoint),
-            );
+            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(200, this.convertToDto(dispensingPoint));
 
             return response;
         } catch (error) {
@@ -108,10 +99,7 @@ export class DispensingPointServiceLibService implements DispensingPointService 
                 throw new NotFoundException('Dispensing point not found');
             }
 
-            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(
-                200,
-                this.convertToDto(dispensingPoint),
-            );
+            const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(200, this.convertToDto(dispensingPoint));
 
             return response;
         } catch (error) {
@@ -122,19 +110,19 @@ export class DispensingPointServiceLibService implements DispensingPointService 
     }
 
     convertToDto(dispensingPoint: DispensingPoint): DispensingPointDto {
-        const dispensingPointDto: DispensingPointDto = {
-            id: dispensingPoint.id ?? '',
-            type: dispensingPoint.type ?? 'dispensing_point',
-            name: dispensingPoint.name ?? '',
-            longitude: dispensingPoint.longitude ?? '',
-            latitude: dispensingPoint.latitude ?? '',
-            description: dispensingPoint.description ?? '',
-            address: dispensingPoint.address as DispensingPointAddressDto,
-            capacity: dispensingPoint.capacity ?? undefined,
-            user_id: dispensingPoint.user_id ?? '',
-            created_at: dispensingPoint.created_at,
-            updated_at: dispensingPoint.updated_at,
-        };
+        const dispensingPointDto: DispensingPointDto = new DispensingPointDto();
+
+        dispensingPointDto.id = dispensingPoint.id ?? '';
+        dispensingPointDto.type = dispensingPoint.type ?? 'dispensing_point';
+        dispensingPointDto.name = dispensingPoint.name ?? '';
+        dispensingPointDto.longitude = dispensingPoint.longitude ?? '';
+        dispensingPointDto.latitude = dispensingPoint.latitude ?? '';
+        dispensingPointDto.description = dispensingPoint.description ?? '';
+        dispensingPointDto.address = dispensingPoint.address as DispensingPointAddressDto;
+        dispensingPointDto.capacity = dispensingPoint.capacity ?? undefined;
+        dispensingPointDto.user_id = dispensingPoint.user_id ?? '';
+        dispensingPointDto.created_at = dispensingPoint.created_at;
+        dispensingPointDto.updated_at = dispensingPoint.updated_at;
 
         return dispensingPointDto;
     }

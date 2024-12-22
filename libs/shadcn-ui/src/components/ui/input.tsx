@@ -2,10 +2,7 @@ import * as React from 'react';
 
 import { cn } from '@b-prism/shadcn-lib';
 
-const Input = React.forwardRef<
-    HTMLInputElement,
-    React.InputHTMLAttributes<HTMLInputElement>
->(({ className, type, ...props }, ref) => {
+const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(({ className, type, ...props }, ref) => {
     return (
         <input
             type={type}

@@ -13,12 +13,7 @@
         "addresstype": "state",
         "name": "Sorsogon",
         "display_name": "Sorsogon, Bicol Region, Philippines",
-        "boundingbox": [
-            "12.4588589",
-            "13.1762113",
-            "123.4083016",
-            "124.4018094"
-        ],
+        "boundingbox": ["12.4588589", "13.1762113", "123.4083016", "124.4018094"],
         "geojson": {
             "type": "Polygon",
             "coordinates": [
@@ -308,12 +303,7 @@
         "addresstype": "city",
         "name": "Sorsogon City",
         "display_name": "Sorsogon City, Sorsogon, Bicol Region, 4700, Philippines",
-        "boundingbox": [
-            "12.8107848",
-            "13.1307848",
-            "123.8452543",
-            "124.1652543"
-        ],
+        "boundingbox": ["12.8107848", "13.1307848", "123.8452543", "124.1652543"],
         "geojson": { "type": "Point", "coordinates": [124.0052543, 12.9707848] }
     }
 ]

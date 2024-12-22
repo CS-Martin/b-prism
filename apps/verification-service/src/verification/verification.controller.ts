@@ -6,9 +6,7 @@ import { VerificationServiceLibService } from '@verification-service-lib';
 @ApiTags('Verification Endpoints')
 @Controller('verification')
 export class VerificationController {
-    constructor(
-        private readonly verificationService: VerificationServiceLibService,
-    ) {}
+    constructor(private readonly verificationService: VerificationServiceLibService) {}
 
     @Patch('verify')
     verifyUser(@Body() body: VerificationDto) {

@@ -13,12 +13,7 @@
         "addresstype": "state",
         "name": "Camarines Sur",
         "display_name": "Camarines Sur, Bicol Region, Philippines",
-        "boundingbox": [
-            "13.1874830",
-            "14.2666856",
-            "122.5286235",
-            "124.0586451"
-        ],
+        "boundingbox": ["13.1874830", "14.2666856", "122.5286235", "124.0586451"],
         "geojson": {
             "type": "Polygon",
             "coordinates": [

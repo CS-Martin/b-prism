@@ -139,9 +139,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                 <div className='flex flex-col gap-4'>
                                     <DialogHeader>
                                         <DialogTitle>Warehouse Information</DialogTitle>
-                                        <DialogDescription>
-                                            Please enter the details of the warehouse.
-                                        </DialogDescription>
+                                        <DialogDescription>Please enter the details of the warehouse.</DialogDescription>
                                     </DialogHeader>
 
                                     <Separator orientation='horizontal' />
@@ -185,9 +183,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                 <div className='flex flex-col gap-4'>
                                     <DialogHeader>
                                         <DialogTitle>Warehouse Inventory</DialogTitle>
-                                        <DialogDescription>
-                                            Please enter the details of the warehouse inventory.
-                                        </DialogDescription>
+                                        <DialogDescription>Please enter the details of the warehouse inventory.</DialogDescription>
                                     </DialogHeader>
 
                                     <Separator
@@ -235,9 +231,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                         <div>
                                             <Label>Non-Food Items</Label>
                                             {/* description */}
-                                            <p className='text-sm text-gray-500'>
-                                                Please enter the details of the warehouse non-food items.
-                                            </p>
+                                            <p className='text-sm text-gray-500'>Please enter the details of the warehouse non-food items.</p>
 
                                             <div className='flex mt-3 flex-row gap-4'>
                                                 <InputField
@@ -299,9 +293,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                 <div>
                                     <DialogHeader>
                                         <DialogTitle>Warehouse Address</DialogTitle>
-                                        <DialogDescription>
-                                            Auto-filled based on marker position. Edit if needed.
-                                        </DialogDescription>
+                                        <DialogDescription>Auto-filled based on marker position. Edit if needed.</DialogDescription>
                                     </DialogHeader>
                                 </div>
 

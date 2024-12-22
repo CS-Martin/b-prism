@@ -1,13 +1,6 @@
 'use client';
 
-import {
-    Toast,
-    ToastClose,
-    ToastDescription,
-    ToastProvider,
-    ToastTitle,
-    ToastViewport,
-} from '@b-prism/shadcn-ui/components/ui/toast';
+import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from '@b-prism/shadcn-ui/components/ui/toast';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 export function Toaster() {
@@ -20,8 +13,7 @@ export function Toaster() {
                     <Toast
                         key={id}
                         {...props}
-                        className='rounded-xl'
-                    >
+                        className='rounded-xl'>
                         <div className='grid gap-1'>
                             {title && <ToastTitle>{title}</ToastTitle>}
                             {description && <ToastDescription>{description}</ToastDescription>}

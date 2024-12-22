@@ -7,10 +7,7 @@ import type { Config } from 'tailwindcss';
 export function buildConfig(appDir: string): Config {
     return {
         darkMode: ['class'],
-        content: [
-            join(appDir, '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'),
-            ...createGlobPatternsForDependencies(appDir),
-        ],
+        content: [join(appDir, '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'), ...createGlobPatternsForDependencies(appDir)],
         theme: {
             extend: {
                 colors: {

@@ -32,19 +32,7 @@ interface DialogProps {
     setIsOpen: (isOpen: boolean) => void;
 }
 
-const AddressField = ({
-    id,
-    label,
-    placeholder,
-    control,
-    fieldName,
-}: {
-    id: string;
-    label: string;
-    placeholder: string;
-    control: any;
-    fieldName: string;
-}) => (
+const AddressField = ({ id, label, placeholder, control, fieldName }: { id: string; label: string; placeholder: string; control: any; fieldName: string }) => (
     <div className='w-1/2'>
         <Label htmlFor={id}>{label}</Label>
         <Controller
@@ -134,9 +122,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                 <div className='flex flex-col gap-4'>
                                     <DialogHeader>
                                         <DialogTitle>Update Dispensing Point</DialogTitle>
-                                        <DialogDescription>
-                                            Update the details of the dispensing point.
-                                        </DialogDescription>
+                                        <DialogDescription>Update the details of the dispensing point.</DialogDescription>
                                     </DialogHeader>
 
                                     <Separator orientation='horizontal' />
