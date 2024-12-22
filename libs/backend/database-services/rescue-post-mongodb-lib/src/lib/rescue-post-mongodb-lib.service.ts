@@ -1,12 +1,13 @@
-import { ContactPersonsDto, CreateRescuePostDto, RescuePostDto } from '@dto';
+import { CreateRescuePostDto } from '@dto';
 import { Injectable } from '@nestjs/common';
 import { PrismaDbLibService } from '@prisma-db-lib';
+import { RescuePost } from '@prisma/client';
 
 @Injectable()
 export class RescuePostMongodbLibService {
     constructor(private readonly prisma: PrismaDbLibService) {}
 
-    async create(createRescuePostDto: CreateRescuePostDto): Promise<RescuePostDto> {
+    async create(createRescuePostDto: CreateRescuePostDto): Promise<RescuePost> {
         const result = await this.prisma.rescuePost.create({
             data: {
                 ...createRescuePostDto,
@@ -14,22 +15,16 @@ export class RescuePostMongodbLibService {
             },
         });
 
-        return {
-            ...result,
-            contact_persons: result.contact_persons as unknown as ContactPersonsDto[],
-        };
+        return result;
     }
 
-    async findAll(): Promise<RescuePostDto[]> {
+    async findAll(): Promise<RescuePost[]> {
         const rescuePosts = await this.prisma.rescuePost.findMany({
             orderBy: {
-                createdAt: 'asc',
+                created_at: 'asc',
             },
         });
 
-        return rescuePosts.map((post) => ({
-            ...post,
-            contact_persons: post.contact_persons as unknown as ContactPersonsDto[],
-        }));
+        return rescuePosts;
     }
 }
