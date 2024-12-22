@@ -120,8 +120,8 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                                                         className='bg-red-500 rounded-full p-[3px]'
                                                     />
                                                     <p className='font-semibold'>
-                                                        {new Date(post.createdAt).toLocaleDateString()}{' '}
-                                                        <span className='text-xs text-gray-400'>| {formatDistanceToNow(new Date(post.createdAt))} ago</span>
+                                                        {new Date(post.created_at).toLocaleDateString()}{' '}
+                                                        <span className='text-xs text-gray-400'>| {formatDistanceToNow(new Date(post.created_at))} ago</span>
                                                     </p>
                                                 </span>
                                                 <button onClick={() => handleLocateClick(post)}>
