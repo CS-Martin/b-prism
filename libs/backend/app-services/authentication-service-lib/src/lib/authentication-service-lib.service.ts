@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationMongodbLibService } from '@authentication-mongodb-lib';
 import { CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
-import { AuthenticationService } from './authentication-service.abstract.class';
+import { AuthenticationServiceAbstractClass } from './authentication-service.abstract.class';
 import { comparePassword, hashPassword } from '@lib-utils';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
 import { User, UserRole } from '@prisma/client';
 
 @Injectable()
-export class AuthenticationServiceLibService implements AuthenticationService {
+export class AuthenticationServiceLibService implements AuthenticationServiceAbstractClass {
     private readonly logger = new Logger(AuthenticationServiceLibService.name);
 
     constructor(
