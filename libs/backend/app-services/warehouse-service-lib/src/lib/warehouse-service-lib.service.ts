@@ -1,11 +1,11 @@
 import { CreateWarehouseDto, ResponseDto, UpdateWarehouseDto, WarehouseAddressDto, WarehouseDto, WarehouseNonFoodItemsDto } from '@dto';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { WarehouseService } from './warehouse-service.abstract.class';
+import { WarehouseServiceAbstractClass } from './warehouse-service.abstract.class';
 import { WarehouseMongodbLibService } from '@b-prism/warehouse-mongodb-lib';
 import { Warehouse } from '@prisma/client';
 
 @Injectable()
-export class WarehouseServiceLibService implements WarehouseService {
+export class WarehouseServiceLibService implements WarehouseServiceAbstractClass {
     private readonly logger = new Logger(WarehouseServiceLibService.name);
 
     constructor(private readonly warehouseMongodbService: WarehouseMongodbLibService) {}
@@ -42,9 +42,7 @@ export class WarehouseServiceLibService implements WarehouseService {
                 user_id: data.user_id,
             });
 
-            const warehouseDto: WarehouseDto = this.convertToDto(warehouse);
-
-            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(201, warehouseDto);
+            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(201, this.convertToDto(warehouse));
 
             return response;
         } catch (error) {
@@ -60,9 +58,7 @@ export class WarehouseServiceLibService implements WarehouseService {
         try {
             const warehouse = await this.warehouseMongodbService.update(id, data);
 
-            const warehouseDto: WarehouseDto = this.convertToDto(warehouse);
-
-            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(200, warehouseDto);
+            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(200, this.convertToDto(warehouse));
 
             return response;
         } catch (error) {
@@ -92,9 +88,10 @@ export class WarehouseServiceLibService implements WarehouseService {
         try {
             const warehouses = await this.warehouseMongodbService.findAll();
 
-            const warehousesDto: WarehouseDto[] = warehouses.map((warehouse) => this.convertToDto(warehouse));
-
-            const response: ResponseDto<WarehouseDto[]> = new ResponseDto<WarehouseDto[]>(200, warehousesDto);
+            const response: ResponseDto<WarehouseDto[]> = new ResponseDto<WarehouseDto[]>(
+                200,
+                warehouses.map((warehouse) => this.convertToDto(warehouse)),
+            );
 
             return response;
         } catch (error) {
@@ -114,9 +111,7 @@ export class WarehouseServiceLibService implements WarehouseService {
                 throw new NotFoundException('Warehouse not found');
             }
 
-            const warehouseDto: WarehouseDto = this.convertToDto(warehouse);
-
-            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(200, warehouseDto);
+            const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(200, this.convertToDto(warehouse));
 
             return response;
         } catch (error) {
@@ -127,23 +122,23 @@ export class WarehouseServiceLibService implements WarehouseService {
     }
 
     convertToDto(warehouse: Warehouse): WarehouseDto {
-        const warehouseDto: WarehouseDto = {
-            id: warehouse.id ?? '',
-            type: warehouse.type ?? 'warehouse',
-            name: warehouse.name ?? '',
-            description: warehouse.description ?? '',
-            longitude: warehouse.longitude ?? '',
-            latitude: warehouse.latitude ?? '',
-            capacity: warehouse.capacity ?? 0,
-            cost_of_stockpile: warehouse.cost_of_stockpile ?? 0,
-            family_food_packs: warehouse.family_food_packs ?? 0,
-            standby_funds: warehouse.standby_funds ?? 0,
-            non_food_items: warehouse.non_food_items as WarehouseNonFoodItemsDto,
-            address: warehouse.address as WarehouseAddressDto,
-            user_id: warehouse.user_id ?? '',
-            created_at: warehouse.created_at ?? new Date(),
-            updated_at: warehouse.updated_at ?? new Date(),
-        };
+        const warehouseDto: WarehouseDto = new WarehouseDto();
+
+        warehouseDto.id = warehouse.id ?? '';
+        warehouseDto.type = warehouse.type ?? 'warehouse';
+        warehouseDto.name = warehouse.name ?? '';
+        warehouseDto.description = warehouse.description ?? '';
+        warehouseDto.longitude = warehouse.longitude ?? '';
+        warehouseDto.latitude = warehouse.latitude ?? '';
+        warehouseDto.capacity = warehouse.capacity ?? 0;
+        warehouseDto.cost_of_stockpile = warehouse.cost_of_stockpile ?? 0;
+        warehouseDto.family_food_packs = warehouse.family_food_packs ?? 0;
+        warehouseDto.standby_funds = warehouse.standby_funds ?? 0;
+        warehouseDto.non_food_items = warehouse.non_food_items as WarehouseNonFoodItemsDto;
+        warehouseDto.address = warehouse.address as WarehouseAddressDto;
+        warehouseDto.user_id = warehouse.user_id ?? '';
+        warehouseDto.created_at = warehouse.created_at ?? new Date();
+        warehouseDto.updated_at = warehouse.updated_at ?? new Date();
 
         return warehouseDto;
     }
