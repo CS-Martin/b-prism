@@ -18,7 +18,11 @@ export * from './lib/warehouse/warehouse.nfis.dto';
 export * from './lib/dispensing-point/create.dispensing-point.dto';
 export * from './lib/dispensing-point/update.dispensing-point.dto';
 export * from './lib/dispensing-point/dispensing-point.dto';
-export * from './lib/dispensing-point/dispensing_point.address.dto';
+export * from './lib/dispensing-point/dispensing-point.address.dto';
+
 export * from './lib/rescue-post/rescue-post.dto';
 export * from './lib/rescue-post/create.rescue-post.dto';
-export * from './lib/rescue-post/contact_persons.dto';
+export * from './lib/rescue-post/contact-person.dto';
+
+export * from './lib/activity-log/activity-log.dto';
+export * from './lib/activity-log/create.activity-log.dto';

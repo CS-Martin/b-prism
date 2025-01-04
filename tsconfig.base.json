@@ -17,6 +17,7 @@
         "paths": {
             "@authentication-mongodb-lib": ["libs/backend/database-services/authentication-mongodb-lib/src/index.ts"],
             "@authentication-service-lib": ["libs/backend/app-services/authentication-service-lib/src/index.ts"],
+            "@b-prism/activity-log-mongodb-lib": ["libs/backend/database-services/activity-log-mongodb-lib/src/index.ts"],
             "@b-prism/dispensing-point-mongodb-lib": ["libs/backend/database-services/dispensing-point-mongodb-lib/src/index.ts"],
             "@b-prism/dispensing-point-service-lib": ["libs/backend/app-services/dispensing-point-service-lib/src/index.ts"],
             "@b-prism/enums": ["libs/enums/src/index.ts"],
@@ -33,6 +34,7 @@
             "@b-prism/warehouse-mongodb-lib": ["libs/backend/database-services/warehouse-mongodb-lib/src/index.ts"],
             "@b-prism/warehouse-service-lib": ["libs/backend/app-services/warehouse-service-lib/src/index.ts"],
             "@b-prism/web-app/admin-dashboard-hooks": ["apps/web-app/src/hooks/admin-dashboard.hook.ts"],
+            "@b-prisma/activity-log-service-lib": ["libs/backend/app-services/activity-log-service-lib/src/index.ts"],
             "@dto": ["libs/dto/src/index.ts"],
             "@lib-utils": ["libs/utils/src/index.ts"],
             "@map-service-lib": ["libs/backend/app-services/map-service-lib/src/index.ts"],

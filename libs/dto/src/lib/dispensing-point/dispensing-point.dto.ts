@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DispensingPointAddressDto } from './dispensing_point.address.dto';
+import { DispensingPointAddressDto } from './dispensing-point.address.dto';
 import { Type } from '@prisma/client';
 
 export class DispensingPointDto {

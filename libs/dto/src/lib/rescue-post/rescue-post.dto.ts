@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ContactPersonsDto } from './contact_persons.dto';
+import { ContactPersonDto } from './contact-person.dto';
 
 export class RescuePostDto {
     @ApiProperty()
@@ -11,8 +11,8 @@ export class RescuePostDto {
     @ApiProperty()
     latitude?: string | null;
 
-    @ApiProperty({ type: [ContactPersonsDto] })
-    contact_persons!: ContactPersonsDto[];
+    @ApiProperty({ type: [ContactPersonDto] })
+    contact_persons!: ContactPersonDto[];
 
     @ApiProperty()
     total_adults!: number;
