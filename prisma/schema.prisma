@@ -19,6 +19,12 @@ enum Type {
   evacuation_center
 }
 
+enum ActivityLogAction {
+  create
+  update
+  delete
+}
+
 model User {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   given_name   String
@@ -78,4 +84,12 @@ model RescuePost {
   landmark                  String?
   created_at                DateTime @default(now())
   updated_at                DateTime @updatedAt
+}
+
+model ActivityLog {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  action      String
+  description String
+  user_id     String
+  created_at  DateTime @default(now())
 }
