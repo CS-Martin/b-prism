@@ -1,5 +1,5 @@
 import { RescuePostMongodbLibService } from '@b-prism/rescue-post-mongodb-lib';
-import { ContactPersonsDto, RescuePostDto, ResponseDto } from '@dto';
+import { ContactPersonDto, RescuePostDto, ResponseDto } from '@dto';
 import { CreateRescuePostDto } from '@dto';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { RescuePost } from '@prisma/client';
@@ -51,7 +51,7 @@ export class RescuePostServiceLibService implements RescuePostServiceAbstractCla
         rescue_post_dto.id = rescuePost.id ?? '';
         rescue_post_dto.longitude = rescuePost.longitude ?? '';
         rescue_post_dto.latitude = rescuePost.latitude ?? '';
-        rescue_post_dto.contact_persons = rescuePost.contact_persons as unknown as ContactPersonsDto[];
+        rescue_post_dto.contact_persons = rescuePost.contact_persons as unknown as ContactPersonDto[];
         rescue_post_dto.total_adults = rescuePost.total_adults ?? 0;
         rescue_post_dto.total_children = rescuePost.total_children ?? 0;
         rescue_post_dto.total_elderly = rescuePost.total_elderly ?? 0;
