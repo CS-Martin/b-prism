@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateActivityLogDto } from '@dto';
 import { ActivityLog } from '@prisma/client';
 import { PrismaDbLibService } from '@prisma-db-lib';
 
@@ -7,7 +6,9 @@ import { PrismaDbLibService } from '@prisma-db-lib';
 export class ActivityLogMongodbLibService {
     constructor(private readonly prisma: PrismaDbLibService) {}
 
-    async create(data: CreateActivityLogDto): Promise<ActivityLog> {
+    async create(action: string, description: string, user_id: string): Promise<ActivityLog> {
+        const data = { action, description, user_id };
+
         const activityLog = await this.prisma.activityLog.create({ data });
 
         return activityLog;

@@ -12,11 +12,13 @@ export class ActivityLogServiceLibService implements ActivityLogServiceAbstractC
 
     constructor(private readonly activityLogMongodbService: ActivityLogMongodbLibService) {}
 
-    async create(data: CreateActivityLogDto): Promise<ResponseDto<ActivityLog>> {
-        this.logger.log('Creating activity log', data);
+    async create(action: string, description: string, user_id: string): Promise<ResponseDto<ActivityLog>> {
+        this.logger.log('Creating activity log', action);
+        this.logger.log('Creating activity log', description);
+        this.logger.log('Creating activity log', user_id);
 
         try {
-            const activityLog = await this.activityLogMongodbService.create(data);
+            const activityLog = await this.activityLogMongodbService.create(action, description, user_id);
 
             const response: ResponseDto<ActivityLogDto> = new ResponseDto<ActivityLogDto>(201, this.convertToDto(activityLog));
 

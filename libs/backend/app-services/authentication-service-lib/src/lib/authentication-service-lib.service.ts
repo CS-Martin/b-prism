@@ -5,6 +5,7 @@ import { AuthenticationServiceAbstractClass } from './authentication-service.abs
 import { comparePassword, hashPassword } from '@lib-utils';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
 import { User, UserRole } from '@prisma/client';
+import { ActivityLogServiceLibService } from '@b-prisma/activity-log-service-lib';
 
 @Injectable()
 export class AuthenticationServiceLibService implements AuthenticationServiceAbstractClass {
@@ -13,6 +14,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
     constructor(
         private readonly authenticationMongodbService: AuthenticationMongodbLibService,
         private readonly userServiceLibService: UserServiceLibService,
+        private readonly activityLogLibService: ActivityLogServiceLibService,
     ) {}
 
     async create(userData: CreateUserDto): Promise<ResponseDto<UserDto>> {
@@ -24,6 +26,8 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             userData.password = hashedPassword;
 
             const user: User = await this.authenticationMongodbService.create(userData);
+
+            await this.activityLogLibService.create('CREATE', `A new user account was successfully created for ${user.given_name} ${user.family_name}`, user.id);
 
             const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
 
@@ -68,6 +72,8 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
         try {
             const user: User = await this.authenticationMongodbService.update(id, newUserData);
+
+            await this.activityLogLibService.create('UPDATE', `Account details of user ${user.given_name} ${user.family_name} were sucessfully updated.`, id);
 
             const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
 

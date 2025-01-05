@@ -3,12 +3,16 @@ import { DispensingPointServiceAbstractClass } from './dispensing-point.abstract
 import { DispensingPointMongodbLibService } from '@b-prism/dispensing-point-mongodb-lib';
 import { CreateDispensingPointDto, DispensingPointAddressDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
 import { DispensingPoint } from '@prisma/client';
+import { ActivityLogServiceLibService } from '@b-prisma/activity-log-service-lib';
 
 @Injectable()
 export class DispensingPointServiceLibService implements DispensingPointServiceAbstractClass {
     private readonly logger = new Logger(DispensingPointServiceLibService.name);
 
-    constructor(private readonly dispensingPointMongodbService: DispensingPointMongodbLibService) {}
+    constructor(
+        private readonly dispensingPointMongodbService: DispensingPointMongodbLibService,
+        private readonly activityLogLibService: ActivityLogServiceLibService,
+    ) {}
 
     async create(data: CreateDispensingPointDto): Promise<ResponseDto<DispensingPointDto>> {
         this.logger.log('Creating dispensing point', data);
