@@ -11,8 +11,14 @@ export class ActivityLogDto {
     description!: string;
 
     @ApiProperty()
-    user_id!: string;
+    resource!: string;
 
     @ApiProperty()
-    created_at!: Date;
+    resource_id!: string;
+
+    @ApiProperty()
+    author!: string;
+
+    @ApiProperty()
+    timestamp!: Date;
 }

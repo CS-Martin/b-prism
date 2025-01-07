@@ -28,7 +28,7 @@ export class DispensingPointDto {
     address?: DispensingPointAddressDto;
 
     @ApiProperty()
-    user_id?: string | null;
+    user_id?: string;
 
     @ApiProperty()
     created_at?: Date;
