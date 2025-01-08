@@ -44,6 +44,8 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
     const { createWarehouse } = useCreateWarehouse();
     const { getAddress, address } = useGetAddress();
 
+    const user: UserDto = session?.user as UserDto;
+
     // Initialize react-hook-form with default values
     const {
         handleSubmit,
@@ -76,7 +78,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                 region: '',
                 country: '',
             },
-            user_id: (session?.user as UserDto)?.id ?? '',
+            user_id: user.id,
             created_at: new Date(),
             updated_at: new Date(),
         },
@@ -118,7 +120,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                 throw new Error('Warehouse name is required');
             }
 
-            await createWarehouse(formattedData);
+            await createWarehouse(formattedData, `${user.given_name} ${user.family_name}`);
             fetchAllWarehouses();
             setIsOpen(false);
             reset();

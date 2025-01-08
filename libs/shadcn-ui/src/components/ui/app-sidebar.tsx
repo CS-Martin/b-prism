@@ -21,7 +21,7 @@ import {
     Switch,
 } from '@b-prism/shadcn-ui/index';
 import { useState } from 'react';
-import { ChevronUp, Home, LayoutDashboard, LogIn, LogOut, LucideIcon, Map, MapPinned, MapPinPlus, MapPinXInside, MonitorCog } from 'lucide-react';
+import { ChevronUp, History, Home, LayoutDashboard, LogIn, LogOut, LucideIcon, Map, MapPinned, MapPinPlus, MapPinXInside, MonitorCog } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@b-prism/shadcn-ui/index';
 import { UserDto } from '@dto';
 import Link from 'next/link';
@@ -54,6 +54,12 @@ const Links = [
         label: 'Admin Dashboard',
         icon: MonitorCog,
         href: '/admin/dashboard',
+    },
+    {
+        id: 'activity-logs',
+        label: 'Activity Logs',
+        icon: History,
+        href: '/admin/activity-logs',
     },
 ];
 

@@ -88,8 +88,10 @@ model RescuePost {
 
 model ActivityLog {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  action      String
-  description String
-  user_id     String
-  created_at  DateTime @default(now())
+  action      String // CREATE, UPDATE, DELETE, etc.
+  description String // Description of the activity
+  resource    String // Name of the resource (e.g., "User", "Warehouse")
+  resource_id String? // ID of the resource affected (nullable for non-resource actions like login/logout)
+  author      String // ID of the user who performed the action
+  timestamp   DateTime @default(now()) // Timestamp of when the activity occurred
 }

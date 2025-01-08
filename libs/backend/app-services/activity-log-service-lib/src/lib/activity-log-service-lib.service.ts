@@ -1,10 +1,9 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ActivityLogServiceAbstractClass } from './activity-log-service-lib.abstract.class';
-import { CreateActivityLogDto, ResponseDto } from '@dto';
+import { ActivityLogDto, CreateActivityLogDto, ResponseDto } from '@dto';
 import { ActivityLog } from '@prisma/client';
 
 import { ActivityLogMongodbLibService } from '@b-prism/activity-log-mongodb-lib';
-import { ActivityLogDto } from '@dto';
 
 @Injectable()
 export class ActivityLogServiceLibService implements ActivityLogServiceAbstractClass {
@@ -53,8 +52,10 @@ export class ActivityLogServiceLibService implements ActivityLogServiceAbstractC
         activityLogDto.id = activityLog.id ?? '';
         activityLogDto.action = activityLog.action ?? '';
         activityLogDto.description = activityLog.description ?? '';
-        activityLogDto.user_id = activityLog.user_id ?? '';
-        activityLogDto.created_at = activityLog.created_at ?? new Date();
+        activityLogDto.resource = activityLog.resource ?? '';
+        activityLogDto.resource_id = activityLog.resource ?? '';
+        activityLogDto.author = activityLog.author ?? '';
+        activityLogDto.timestamp = activityLog.timestamp ?? new Date();
 
         return activityLogDto;
     }

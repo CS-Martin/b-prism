@@ -1,16 +1,20 @@
-import { CreateWarehouseDto, ResponseDto, UpdateWarehouseDto, WarehouseAddressDto, WarehouseDto, WarehouseNonFoodItemsDto } from '@dto';
+import { CreateActivityLogDto, CreateWarehouseDto, ResponseDto, UpdateWarehouseDto, WarehouseAddressDto, WarehouseDto, WarehouseNonFoodItemsDto } from '@dto';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { WarehouseServiceAbstractClass } from './warehouse-service.abstract.class';
 import { WarehouseMongodbLibService } from '@b-prism/warehouse-mongodb-lib';
 import { Warehouse } from '@prisma/client';
+import { ActivityLogServiceLibService } from '@b-prisma/activity-log-service-lib';
 
 @Injectable()
 export class WarehouseServiceLibService implements WarehouseServiceAbstractClass {
     private readonly logger = new Logger(WarehouseServiceLibService.name);
 
-    constructor(private readonly warehouseMongodbService: WarehouseMongodbLibService) {}
+    constructor(
+        private readonly warehouseMongodbService: WarehouseMongodbLibService,
+        private readonly activityLogService: ActivityLogServiceLibService,
+    ) {}
 
-    async create(data: CreateWarehouseDto): Promise<ResponseDto<WarehouseDto>> {
+    async create(data: CreateWarehouseDto, author: string): Promise<ResponseDto<WarehouseDto>> {
         this.logger.log('Creating warehouse', data);
 
         try {
@@ -44,6 +48,17 @@ export class WarehouseServiceLibService implements WarehouseServiceAbstractClass
 
             const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(201, this.convertToDto(warehouse));
 
+            const logData: CreateActivityLogDto = new CreateActivityLogDto();
+
+            logData.action = 'CREATE';
+            logData.description = `Created warehouse ${warehouse.name}.`;
+            logData.resource = 'Warehouse';
+            logData.resource_id = warehouse.id;
+            logData.author = author;
+            logData.timestamp = new Date();
+
+            await this.activityLogService.create(logData);
+
             return response;
         } catch (error) {
             this.logger.log('Error creating warehouse', error);
@@ -52,13 +67,24 @@ export class WarehouseServiceLibService implements WarehouseServiceAbstractClass
         }
     }
 
-    async update(id: string, data: UpdateWarehouseDto): Promise<ResponseDto<WarehouseDto>> {
+    async update(id: string, data: UpdateWarehouseDto, author: string): Promise<ResponseDto<WarehouseDto>> {
         this.logger.log('Updating warehouse', id);
 
         try {
             const warehouse = await this.warehouseMongodbService.update(id, data);
 
             const response: ResponseDto<WarehouseDto> = new ResponseDto<WarehouseDto>(200, this.convertToDto(warehouse));
+
+            const logData: CreateActivityLogDto = new CreateActivityLogDto();
+
+            logData.action = 'UPDATE';
+            logData.description = `Updated warehouse ${warehouse.name}.`;
+            logData.resource = 'Warehouse';
+            logData.resource_id = warehouse.id;
+            logData.author = author;
+            logData.timestamp = new Date();
+
+            await this.activityLogService.create(logData);
 
             return response;
         } catch (error) {
@@ -68,13 +94,26 @@ export class WarehouseServiceLibService implements WarehouseServiceAbstractClass
         }
     }
 
-    async delete(id: string): Promise<void> {
+    async delete(id: string, author: string): Promise<void> {
         this.logger.log('Deleting warehouse', id);
 
-        await this.warehouseMongodbService.findById(id);
+        const res: ResponseDto<WarehouseDto> = await this.findById(id);
+
+        const warehouse: WarehouseDto = res.body;
 
         try {
             await this.warehouseMongodbService.delete(id);
+
+            const logData: CreateActivityLogDto = new CreateActivityLogDto();
+
+            logData.action = 'DELETE';
+            logData.description = `Deleted dispensing point ${warehouse.name}.`;
+            logData.resource = 'Warehouse';
+            logData.resource_id = warehouse.id;
+            logData.author = author;
+            logData.timestamp = new Date();
+
+            await this.activityLogService.create(logData);
         } catch (error) {
             this.logger.log('Error deleting warehouse', error);
 

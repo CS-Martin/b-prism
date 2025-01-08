@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateActivityLogDto } from '@dto';
 import { ActivityLog } from '@prisma/client';
 import { PrismaDbLibService } from '@prisma-db-lib';
+import { CreateActivityLogDto } from '@dto';
 
 @Injectable()
 export class ActivityLogMongodbLibService {

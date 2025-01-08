@@ -2,11 +2,11 @@ import { CreateWarehouseDto, ResponseDto, UpdateWarehouseDto, WarehouseDto } fro
 import { Warehouse } from '@prisma/client';
 
 export abstract class WarehouseServiceAbstractClass {
-    abstract create(data: CreateWarehouseDto): Promise<ResponseDto<WarehouseDto>>;
+    abstract create(data: CreateWarehouseDto, author: string): Promise<ResponseDto<WarehouseDto>>;
 
-    abstract update(id: string, data: UpdateWarehouseDto): Promise<ResponseDto<WarehouseDto>>;
+    abstract update(id: string, data: UpdateWarehouseDto, author: string): Promise<ResponseDto<WarehouseDto>>;
 
-    abstract delete(id: string): Promise<void>;
+    abstract delete(id: string, author: string): Promise<void>;
 
     abstract findAll(): Promise<ResponseDto<WarehouseDto[]>>;
 

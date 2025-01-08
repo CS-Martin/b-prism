@@ -64,6 +64,8 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
     const { getAddress, address } = useGetAddress();
     const { createDispensingPoint } = useCreateDispensingPoint();
 
+    const user: UserDto = session?.user as UserDto;
+
     const {
         handleSubmit,
         control,
@@ -119,7 +121,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                 throw new Error('Dispensing Point Name is required');
             }
 
-            await createDispensingPoint(formattedData);
+            await createDispensingPoint(formattedData, `${user.given_name} ${user.family_name}`);
             fetchAllDispensingPoints();
             setIsOpen(false);
         } catch (error) {

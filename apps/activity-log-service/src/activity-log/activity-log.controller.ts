@@ -9,8 +9,8 @@ export class ActivityLogController {
     constructor(private readonly activityLogServiceLibService: ActivityLogServiceLibService) {}
 
     @Post('create')
-    create(@Body() createActivityLogDto: CreateActivityLogDto) {
-        return this.activityLogServiceLibService.create(createActivityLogDto);
+    create(@Body() data: CreateActivityLogDto) {
+        return this.activityLogServiceLibService.create(data);
     }
 
     @Get()

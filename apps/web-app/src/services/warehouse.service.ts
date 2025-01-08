@@ -9,14 +9,19 @@ class WarehouseService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_WAREHOUSE_SERVICE_API_PORT ?? ''}`;
     }
 
-    public async create(warehouse: CreateWarehouseDto): Promise<WarehouseDto> {
+    public async create(data: CreateWarehouseDto, author: string): Promise<WarehouseDto> {
+        const payload = {
+            data,
+            author,
+        };
+
         try {
             const response = await fetch(`${this.API_BASE_URL}/warehouse/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(warehouse),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
@@ -33,14 +38,15 @@ class WarehouseService {
         }
     }
 
-    public async update(id: string, warehouse: UpdateWarehouseDto): Promise<WarehouseDto> {
+    public async update(id: string, data: UpdateWarehouseDto, author: string): Promise<WarehouseDto> {
+        const payload = { id, data, author };
         try {
             const response = await fetch(`${this.API_BASE_URL}/warehouse/update/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(warehouse),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
@@ -57,12 +63,13 @@ class WarehouseService {
         }
     }
 
-    public async delete(id: string): Promise<void> {
+    public async delete(id: string, author: string): Promise<void> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/warehouse/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-Author': author,
                 },
             });
 

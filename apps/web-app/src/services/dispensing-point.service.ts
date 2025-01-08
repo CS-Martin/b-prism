@@ -1,5 +1,6 @@
-import { CreateDispensingPointDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
+import { ActivityLogDto, CreateActivityLogDto, CreateDispensingPointDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
+import { activityLogService } from './activity-log.service';
 
 class DispensingPointService {
     private API_BASE_URL: string;
@@ -8,14 +9,19 @@ class DispensingPointService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_DISPENSING_POINT_SERVICE_API_PORT ?? ''}`;
     }
 
-    public async create(dispensingPoint: CreateDispensingPointDto): Promise<DispensingPointDto> {
+    public async create(data: CreateDispensingPointDto, author: string): Promise<DispensingPointDto> {
+        const payload = {
+            data,
+            author,
+        };
+
         try {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-point/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(dispensingPoint),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
@@ -32,14 +38,18 @@ class DispensingPointService {
         }
     }
 
-    public async update(id: string, dispensingPoint: UpdateDispensingPointDto): Promise<DispensingPointDto> {
+    public async update(id: string, data: UpdateDispensingPointDto, author: string): Promise<DispensingPointDto> {
+        const payload = { id, data, author };
+
+        console.log('HELOLO', payload);
+
         try {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-point/update/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(dispensingPoint),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
@@ -56,12 +66,13 @@ class DispensingPointService {
         }
     }
 
-    public async delete(id: string): Promise<void> {
+    public async delete(id: string, author: string): Promise<void> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-point/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-Author': author,
                 },
             });
 

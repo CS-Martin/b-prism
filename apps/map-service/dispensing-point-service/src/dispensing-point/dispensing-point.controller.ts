@@ -1,6 +1,6 @@
 import { DispensingPointServiceLibService } from '@b-prism/dispensing-point-service-lib';
 import { CreateDispensingPointDto, UpdateDispensingPointDto } from '@dto';
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Param, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Dispensing Point Endpoints')
@@ -9,18 +9,22 @@ export class DispensingPointController {
     constructor(private readonly dispensingPointServiceLibService: DispensingPointServiceLibService) {}
 
     @Post('create')
-    create(@Body() createDispensingPointDto: CreateDispensingPointDto) {
-        return this.dispensingPointServiceLibService.create(createDispensingPointDto);
+    create(@Body() payload: { data: CreateDispensingPointDto; author: string }) {
+        const { data, author } = payload;
+
+        return this.dispensingPointServiceLibService.create(data, author);
     }
 
     @Put('update/:id')
-    update(@Param('id') id: string, @Body() updateDispensingPointDto: UpdateDispensingPointDto) {
-        return this.dispensingPointServiceLibService.update(id, updateDispensingPointDto);
+    update(@Param('id') id: string, @Body() payload: { data: UpdateDispensingPointDto; author: string }) {
+        const { data, author } = payload;
+
+        return this.dispensingPointServiceLibService.update(id, data, author);
     }
 
     @Delete('delete/:id')
-    delete(@Param('id') id: string) {
-        return this.dispensingPointServiceLibService.delete(id);
+    delete(@Param('id') id: string, @Headers('X-Author') author: string) {
+        return this.dispensingPointServiceLibService.delete(id, author);
     }
 
     @Get(':id')

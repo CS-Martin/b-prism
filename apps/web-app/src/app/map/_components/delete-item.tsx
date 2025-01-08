@@ -10,7 +10,9 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/components/ui/alert-dialog';
+import { UserDto } from '@dto';
 import { useDeleteDispensingPoint, useDeleteWarehouse } from 'apps/web-app/src/hooks/map.hook';
+import { useSession } from 'next-auth/react';
 
 interface DeleteItemProps {
     item: { type: string; id: string };
@@ -20,18 +22,20 @@ interface DeleteItemProps {
 }
 
 const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoints }: DeleteItemProps) => {
-    const { deleteWarehouse } = useDeleteWarehouse(item.id);
-    const { deleteDispensingPoint } = useDeleteDispensingPoint(item.id);
+    const { data: session } = useSession();
+    const { deleteWarehouse } = useDeleteWarehouse();
+    const { deleteDispensingPoint } = useDeleteDispensingPoint();
 
-    console.log(item);
+    const user: UserDto = session?.user as UserDto;
+    const userFullname = `${user.given_name} ${user.family_name}`;
 
     const handleDelete = async () => {
         switch (item.type) {
             case 'warehouse':
-                await deleteWarehouse();
+                await deleteWarehouse(item.id, userFullname);
                 break;
             case 'dispensing_point':
-                await deleteDispensingPoint();
+                await deleteDispensingPoint(item.id, userFullname);
                 break;
             // To add: Evacuation point
             default:

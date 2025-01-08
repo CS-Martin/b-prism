@@ -1,17 +1,30 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DispensingPointServiceAbstractClass } from './dispensing-point.abstract.class';
 import { DispensingPointMongodbLibService } from '@b-prism/dispensing-point-mongodb-lib';
-import { CreateDispensingPointDto, DispensingPointAddressDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
+import {
+    ActivityLogDto,
+    CreateActivityLogDto,
+    CreateDispensingPointDto,
+    DispensingPointAddressDto,
+    DispensingPointDto,
+    ResponseDto,
+    UpdateDispensingPointDto,
+    UserDto,
+} from '@dto';
 import { DispensingPoint } from '@prisma/client';
+import { ActivityLogServiceLibService } from '@b-prisma/activity-log-service-lib';
 
 @Injectable()
 export class DispensingPointServiceLibService implements DispensingPointServiceAbstractClass {
     private readonly logger = new Logger(DispensingPointServiceLibService.name);
 
-    constructor(private readonly dispensingPointMongodbService: DispensingPointMongodbLibService) {}
+    constructor(
+        private readonly dispensingPointMongodbService: DispensingPointMongodbLibService,
+        private readonly activityLogService: ActivityLogServiceLibService,
+    ) {}
 
-    async create(data: CreateDispensingPointDto): Promise<ResponseDto<DispensingPointDto>> {
-        this.logger.log('Creating dispensing point', data);
+    async create(data: CreateDispensingPointDto, author: string): Promise<ResponseDto<DispensingPointDto>> {
+        this.logger.log('Creatinasdasdg dispensing point', data);
 
         try {
             const dispensingPoint = await this.dispensingPointMongodbService.create({
@@ -29,6 +42,17 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(201, this.convertToDto(dispensingPoint));
 
+            const logData: CreateActivityLogDto = new CreateActivityLogDto();
+
+            logData.action = 'CREATE';
+            logData.description = `Created dispensing point ${dispensingPoint.name}.`;
+            logData.resource = 'Dispensing Point';
+            logData.resource_id = dispensingPoint.id;
+            logData.author = author;
+            logData.timestamp = new Date();
+
+            await this.activityLogService.create(logData);
+
             return response;
         } catch (error) {
             console.log(error);
@@ -37,8 +61,8 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
         }
     }
 
-    async update(id: string, data: UpdateDispensingPointDto): Promise<ResponseDto<DispensingPointDto>> {
-        this.logger.log('Updating dispensing point', id);
+    async update(id: string, data: UpdateDispensingPointDto, author: string): Promise<ResponseDto<DispensingPointDto>> {
+        this.logger.log('Updating dispensing point', id, data, author);
 
         try {
             const dispensingPoint = await this.dispensingPointMongodbService.update(id, {
@@ -48,6 +72,17 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(200, this.convertToDto(dispensingPoint));
 
+            const logData: CreateActivityLogDto = new CreateActivityLogDto();
+
+            logData.action = 'UPDATE';
+            logData.description = `Updated dispensing point ${dispensingPoint.name}.`;
+            logData.resource = 'Dispensing Point';
+            logData.resource_id = dispensingPoint.id;
+            logData.author = author;
+            logData.timestamp = new Date();
+
+            await this.activityLogService.create(logData);
+
             return response;
         } catch (error) {
             console.log(error);
@@ -56,13 +91,26 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
         }
     }
 
-    async delete(id: string): Promise<void> {
+    async delete(id: string, author: string): Promise<void> {
         this.logger.log('Deleting dispensing point', id);
 
-        await this.findById(id);
+        const res: ResponseDto<DispensingPointDto> = await this.findById(id);
+
+        const dispensingPoint: DispensingPointDto = res.body;
 
         try {
             await this.dispensingPointMongodbService.delete(id);
+
+            const logData: CreateActivityLogDto = new CreateActivityLogDto();
+
+            logData.action = 'CREATE';
+            logData.description = `Deleted dispensing point ${dispensingPoint.name}.`;
+            logData.resource = 'Dispensing Point';
+            logData.resource_id = dispensingPoint.id;
+            logData.author = author;
+            logData.timestamp = new Date();
+
+            await this.activityLogService.create(logData);
         } catch (error) {
             console.log(error);
 
@@ -119,7 +167,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
         dispensingPointDto.latitude = dispensingPoint.latitude ?? '';
         dispensingPointDto.description = dispensingPoint.description ?? '';
         dispensingPointDto.address = dispensingPoint.address as DispensingPointAddressDto;
-        dispensingPointDto.capacity = dispensingPoint.capacity ?? undefined;
+        dispensingPointDto.capacity = dispensingPoint.capacity ?? null;
         dispensingPointDto.user_id = dispensingPoint.user_id ?? '';
         dispensingPointDto.created_at = dispensingPoint.created_at;
         dispensingPointDto.updated_at = dispensingPoint.updated_at;
