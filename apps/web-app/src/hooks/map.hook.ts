@@ -63,8 +63,8 @@ export const useFindOneWarehouse = (id: string) => {
 export const useCreateWarehouse = () => {
     const { toast } = useToast();
 
-    const createWarehouse = async (data: CreateWarehouseDto) => {
-        await warehouseService.create(data);
+    const createWarehouse = async (data: CreateWarehouseDto, author: string) => {
+        await warehouseService.create(data, author);
 
         console.log(data);
 
@@ -81,8 +81,8 @@ export const useCreateWarehouse = () => {
 export const useUpdateWarehouse = () => {
     const { toast } = useToast();
 
-    const updateWarehouse = async (id: string, data: UpdateWarehouseDto) => {
-        await warehouseService.update(id, data);
+    const updateWarehouse = async (id: string, data: UpdateWarehouseDto, author: string) => {
+        await warehouseService.update(id, data, author);
 
         toast({
             title: 'Success!',
@@ -94,11 +94,11 @@ export const useUpdateWarehouse = () => {
     return { updateWarehouse };
 };
 
-export const useDeleteWarehouse = (warehouseId: string) => {
+export const useDeleteWarehouse = () => {
     const { toast } = useToast();
 
-    const deleteWarehouse = async () => {
-        await warehouseService.delete(warehouseId);
+    const deleteWarehouse = async (id: string, author: string) => {
+        await warehouseService.delete(id, author);
 
         toast({
             title: 'Warehouse deleted successfully!',

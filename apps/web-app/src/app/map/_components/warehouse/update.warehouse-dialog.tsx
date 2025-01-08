@@ -37,7 +37,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
     const { updateWarehouse } = useUpdateWarehouse();
     const { warehouse } = useFindOneWarehouse(warehouseId);
 
-    console.log('UPDATE DIALOG TRIGGERED');
+    const user: UserDto = session?.user as UserDto;
 
     // Initialize react-hook-form with default values
     const { handleSubmit, reset, register } = useForm<UpdateWarehouseDto>({
@@ -66,7 +66,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                 region: warehouse?.address?.region,
                 country: warehouse?.address?.country,
             },
-            user_id: (session?.user as UserDto)?.id ?? '',
+            user_id: user.id,
             created_at: new Date(),
             updated_at: new Date(),
         },
@@ -90,7 +90,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                 throw new Error('Warehouse name is required');
             }
 
-            await updateWarehouse(warehouseId, formattedData);
+            await updateWarehouse(warehouseId, formattedData, `${user.given_name} ${user.family_name}`);
             setIsOpen(false);
         } catch (error) {
             if (error instanceof Error) {

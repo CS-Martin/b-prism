@@ -23,18 +23,19 @@ interface DeleteItemProps {
 
 const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoints }: DeleteItemProps) => {
     const { data: session } = useSession();
-    const { deleteWarehouse } = useDeleteWarehouse(item.id);
+    const { deleteWarehouse } = useDeleteWarehouse();
     const { deleteDispensingPoint } = useDeleteDispensingPoint();
 
     const user: UserDto = session?.user as UserDto;
+    const userFullname = `${user.given_name} ${user.family_name}`;
 
     const handleDelete = async () => {
         switch (item.type) {
             case 'warehouse':
-                await deleteWarehouse();
+                await deleteWarehouse(item.id, userFullname);
                 break;
             case 'dispensing_point':
-                await deleteDispensingPoint(item.id, `${user.given_name} ${user.family_name}`);
+                await deleteDispensingPoint(item.id, userFullname);
                 break;
             // To add: Evacuation point
             default:
