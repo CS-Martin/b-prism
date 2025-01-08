@@ -62,7 +62,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
     }
 
     async update(id: string, data: UpdateDispensingPointDto, author: string): Promise<ResponseDto<DispensingPointDto>> {
-        this.logger.log('Updating dispensing point', id);
+        this.logger.log('Updating dispensing point', id, data, author);
 
         try {
             const dispensingPoint = await this.dispensingPointMongodbService.update(id, {
@@ -96,7 +96,6 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
         const res: ResponseDto<DispensingPointDto> = await this.findById(id);
 
-        console.log('TEST', res);
         const dispensingPoint: DispensingPointDto = res.body;
 
         try {

@@ -16,8 +16,8 @@ export class DispensingPointController {
     }
 
     @Put('update/:id')
-    update(@Param('id') @Body() payload: { id: string; data: UpdateDispensingPointDto; author: string }) {
-        const { id, data, author } = payload;
+    update(@Param('id') id: string, @Body() payload: { data: UpdateDispensingPointDto; author: string }) {
+        const { data, author } = payload;
 
         return this.dispensingPointServiceLibService.update(id, data, author);
     }
