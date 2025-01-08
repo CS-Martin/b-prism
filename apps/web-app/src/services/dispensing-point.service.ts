@@ -1,5 +1,6 @@
-import { CreateDispensingPointDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
+import { ActivityLogDto, CreateActivityLogDto, CreateDispensingPointDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
+import { activityLogService } from './activity-log.service';
 
 class DispensingPointService {
     private API_BASE_URL: string;
@@ -8,14 +9,19 @@ class DispensingPointService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_DISPENSING_POINT_SERVICE_API_PORT ?? ''}`;
     }
 
-    public async create(dispensingPoint: CreateDispensingPointDto): Promise<DispensingPointDto> {
+    public async create(dispensingPoint: CreateDispensingPointDto, author: string): Promise<DispensingPointDto> {
+        const payload = {
+            dispensingPoint,
+            author,
+        };
+
         try {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-point/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(dispensingPoint),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {

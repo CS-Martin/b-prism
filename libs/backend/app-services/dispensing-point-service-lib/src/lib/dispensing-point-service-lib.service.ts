@@ -10,7 +10,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
     constructor(private readonly dispensingPointMongodbService: DispensingPointMongodbLibService) {}
 
-    async create(data: CreateDispensingPointDto): Promise<ResponseDto<DispensingPointDto>> {
+    async create(data: CreateDispensingPointDto, author: string): Promise<ResponseDto<DispensingPointDto>> {
         this.logger.log('Creating dispensing point', data);
 
         try {
@@ -37,7 +37,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
         }
     }
 
-    async update(id: string, data: UpdateDispensingPointDto): Promise<ResponseDto<DispensingPointDto>> {
+    async update(id: string, data: UpdateDispensingPointDto, author: string): Promise<ResponseDto<DispensingPointDto>> {
         this.logger.log('Updating dispensing point', id);
 
         try {
@@ -56,7 +56,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
         }
     }
 
-    async delete(id: string): Promise<void> {
+    async delete(id: string, author: string): Promise<void> {
         this.logger.log('Deleting dispensing point', id);
 
         await this.findById(id);

@@ -33,7 +33,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             logging_var.description = `A new user account was successfully created for ${user.given_name} ${user.family_name}`;
             logging_var.resource = 'Authentication';
             logging_var.resource_id = user.id;
-            logging_var.author = `${user.given_name} + ${user.family_name}`;
+            logging_var.author = `${user.given_name} ${user.family_name}`;
 
             await this.activityLogLibService.create(logging_var);
 

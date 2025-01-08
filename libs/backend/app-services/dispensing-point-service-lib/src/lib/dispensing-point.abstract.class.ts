@@ -2,11 +2,11 @@ import { CreateDispensingPointDto, DispensingPointDto, ResponseDto, UpdateDispen
 import { DispensingPoint } from '@prisma/client';
 
 export abstract class DispensingPointServiceAbstractClass {
-    abstract create(data: CreateDispensingPointDto): Promise<ResponseDto<DispensingPointDto>>;
+    abstract create(data: CreateDispensingPointDto, author: string): Promise<ResponseDto<DispensingPointDto>>;
 
-    abstract update(id: string, data: UpdateDispensingPointDto): Promise<ResponseDto<DispensingPointDto>>;
+    abstract update(id: string, data: UpdateDispensingPointDto, author: string): Promise<ResponseDto<DispensingPointDto>>;
 
-    abstract delete(id: string): Promise<void>;
+    abstract delete(id: string, author: string): Promise<void>;
 
     abstract findAll(): Promise<ResponseDto<DispensingPointDto[]>>;
 

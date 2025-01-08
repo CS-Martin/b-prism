@@ -9,18 +9,24 @@ export class DispensingPointController {
     constructor(private readonly dispensingPointServiceLibService: DispensingPointServiceLibService) {}
 
     @Post('create')
-    create(@Body() createDispensingPointDto: CreateDispensingPointDto) {
-        return this.dispensingPointServiceLibService.create(createDispensingPointDto);
+    create(@Body() payload: { data: CreateDispensingPointDto; author: string }) {
+        const { data, author } = payload;
+
+        return this.dispensingPointServiceLibService.create(data, author);
     }
 
     @Put('update/:id')
-    update(@Param('id') id: string, @Body() updateDispensingPointDto: UpdateDispensingPointDto) {
-        return this.dispensingPointServiceLibService.update(id, updateDispensingPointDto);
+    update(@Param('id') @Body() payload: { id: string; data: UpdateDispensingPointDto; author: string }) {
+        const { id, data, author } = payload;
+
+        return this.dispensingPointServiceLibService.update(id, data, author);
     }
 
     @Delete('delete/:id')
-    delete(@Param('id') id: string) {
-        return this.dispensingPointServiceLibService.delete(id);
+    delete(@Param('id') payload: { id: string; author: string }) {
+        const { id, author } = payload;
+
+        return this.dispensingPointServiceLibService.delete(id, author);
     }
 
     @Get(':id')
