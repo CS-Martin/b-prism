@@ -7,10 +7,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
     return (
         <SidebarProvider>
             <AppSidebar setSelectedAction={() => null} />
-            <main className='w-full'>
-                <Topbar />
-                {children}
-            </main>
+            <main className='w-full'>{children}</main>
         </SidebarProvider>
     );
 }
