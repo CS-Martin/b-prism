@@ -3,18 +3,12 @@ import { DispensingPointServiceAbstractClass } from './dispensing-point.abstract
 import { DispensingPointMongodbLibService } from '@b-prism/dispensing-point-mongodb-lib';
 import { CreateDispensingPointDto, DispensingPointAddressDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto, UserDto } from '@dto';
 import { DispensingPoint } from '@prisma/client';
-import { UserServiceLibService } from '@b-prism/user-service-lib';
-import { ActivityLogServiceLibService } from '@b-prisma/activity-log-service-lib';
 
 @Injectable()
 export class DispensingPointServiceLibService implements DispensingPointServiceAbstractClass {
     private readonly logger = new Logger(DispensingPointServiceLibService.name);
 
-    constructor(
-        private readonly dispensingPointMongodbService: DispensingPointMongodbLibService,
-        private readonly userServiceLibService: UserServiceLibService,
-        private readonly activityLogService: ActivityLogServiceLibService,
-    ) {}
+    constructor(private readonly dispensingPointMongodbService: DispensingPointMongodbLibService) {}
 
     async create(data: CreateDispensingPointDto): Promise<ResponseDto<DispensingPointDto>> {
         this.logger.log('Creating dispensing point', data);
@@ -32,14 +26,6 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
                 created_at: new Date(),
                 updated_at: new Date(),
             });
-
-            const user: ResponseDto<UserDto> = await this.userServiceLibService.findById(dispensingPoint.user_id ? dispensingPoint.user_id : '');
-
-            await this.activityLogService.create(
-                'CREATE',
-                `${user.body.given_name} ${user.body.family_name} successfully created a new dispensing point ${dispensingPoint.name}.`,
-                user.body.given_name + user.body.family_name,
-            );
 
             const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(201, this.convertToDto(dispensingPoint));
 
@@ -60,14 +46,6 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
                 updated_at: new Date(),
             });
 
-            const user: ResponseDto<UserDto> = await this.userServiceLibService.findById(dispensingPoint.user_id ? dispensingPoint.user_id : '');
-
-            await this.activityLogService.create(
-                'UPDATE',
-                `${user.body.given_name} ${user.body.family_name} successfully updated dispensing point ${dispensingPoint.name}.`,
-                user.body.given_name + user.body.family_name,
-            );
-
             const response: ResponseDto<DispensingPointDto> = new ResponseDto<DispensingPointDto>(200, this.convertToDto(dispensingPoint));
 
             return response;
@@ -85,14 +63,6 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
         try {
             await this.dispensingPointMongodbService.delete(id);
-
-            const user: ResponseDto<UserDto> = await this.userServiceLibService.findById(dispensingPoint.user_id ? dispensingPoint.user_id : '');
-
-            await this.activityLogService.create(
-                'CREATE',
-                `${user.body.given_name} ${user.body.family_name} successfully updated dispensing point ${dispensingPoint.name}.`,
-                user.body.given_name + user.body.family_name,
-            );
         } catch (error) {
             console.log(error);
 

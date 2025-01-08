@@ -6,7 +6,7 @@ import { UserServiceLibModule } from '@b-prism/user-service-lib';
 
 @Module({
     controllers: [],
-    imports: [DispensingPointMongodbLibModule, ActivityLogServiceLibModule, UserServiceLibModule],
+    imports: [DispensingPointMongodbLibModule],
     providers: [DispensingPointServiceLibService],
     exports: [DispensingPointServiceLibService],
 })
