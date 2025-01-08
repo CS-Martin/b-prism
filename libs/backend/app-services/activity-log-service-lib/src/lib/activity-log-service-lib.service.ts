@@ -1,10 +1,9 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ActivityLogServiceAbstractClass } from './activity-log-service-lib.abstract.class';
-import { CreateActivityLogDto, ResponseDto } from '@dto';
+import { ActivityLogDto, CreateActivityLogDto, ResponseDto } from '@dto';
 import { ActivityLog } from '@prisma/client';
 
 import { ActivityLogMongodbLibService } from '@b-prism/activity-log-mongodb-lib';
-import { ActivityLogDto } from '@dto';
 
 @Injectable()
 export class ActivityLogServiceLibService implements ActivityLogServiceAbstractClass {
@@ -12,13 +11,11 @@ export class ActivityLogServiceLibService implements ActivityLogServiceAbstractC
 
     constructor(private readonly activityLogMongodbService: ActivityLogMongodbLibService) {}
 
-    async create(action: string, description: string, author: string): Promise<ResponseDto<ActivityLog>> {
-        this.logger.log('Creating activity log', action);
-        this.logger.log('Creating activity log', description);
-        this.logger.log('Creating activity log', author);
+    async create(data: CreateActivityLogDto): Promise<ResponseDto<ActivityLog>> {
+        this.logger.log('Creating activity log', data);
 
         try {
-            const activityLog = await this.activityLogMongodbService.create(action, description, author);
+            const activityLog = await this.activityLogMongodbService.create(data);
 
             const response: ResponseDto<ActivityLogDto> = new ResponseDto<ActivityLogDto>(201, this.convertToDto(activityLog));
 
@@ -55,8 +52,10 @@ export class ActivityLogServiceLibService implements ActivityLogServiceAbstractC
         activityLogDto.id = activityLog.id ?? '';
         activityLogDto.action = activityLog.action ?? '';
         activityLogDto.description = activityLog.description ?? '';
-        activityLogDto.user_id = activityLog.user_id ?? '';
-        activityLogDto.created_at = activityLog.created_at ?? new Date();
+        activityLogDto.resource = activityLog.resource ?? '';
+        activityLogDto.resource_id = activityLog.resource ?? '';
+        activityLogDto.author = activityLog.author ?? '';
+        activityLogDto.timestamp = activityLog.timestamp ?? new Date();
 
         return activityLogDto;
     }
