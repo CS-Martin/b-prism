@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationMongodbLibService } from '@authentication-mongodb-lib';
-import { CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
+import { CreateActivityLogDto, CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { AuthenticationServiceAbstractClass } from './authentication-service.abstract.class';
 import { comparePassword, hashPassword } from '@lib-utils';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
@@ -27,7 +27,15 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
             const user: User = await this.authenticationMongodbService.create(userData);
 
-            await this.activityLogLibService.create('CREATE', `A new user account was successfully created for ${user.given_name} ${user.family_name}`, user.id);
+            const logging_var: CreateActivityLogDto = new CreateActivityLogDto();
+
+            logging_var.action = 'CREATE';
+            logging_var.description = `A new user account was successfully created for ${user.given_name} ${user.family_name}`;
+            logging_var.resource = 'Authentication';
+            logging_var.resource_id = user.id;
+            logging_var.author = `${user.given_name} + ${user.family_name}`;
+
+            await this.activityLogLibService.create(logging_var);
 
             const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
 
@@ -73,7 +81,15 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         try {
             const user: User = await this.authenticationMongodbService.update(id, newUserData);
 
-            await this.activityLogLibService.create('UPDATE', `Account details of user ${user.given_name} ${user.family_name} were sucessfully updated.`, id);
+            const logging_var: CreateActivityLogDto = new CreateActivityLogDto();
+
+            logging_var.action = 'UPDATE';
+            logging_var.description = `Account details of user ${user.given_name} ${user.family_name} were sucessfully updated`;
+            logging_var.resource = 'Authentication';
+            logging_var.resource_id = user.id;
+            logging_var.author = `${user.given_name} + ${user.family_name}`;
+
+            await this.activityLogLibService.create(logging_var);
 
             const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
 
