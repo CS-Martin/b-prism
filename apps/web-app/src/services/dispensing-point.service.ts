@@ -9,9 +9,9 @@ class DispensingPointService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_DISPENSING_POINT_SERVICE_API_PORT ?? ''}`;
     }
 
-    public async create(dispensingPoint: CreateDispensingPointDto, author: string): Promise<DispensingPointDto> {
+    public async create(data: CreateDispensingPointDto, author: string): Promise<DispensingPointDto> {
         const payload = {
-            dispensingPoint,
+            data,
             author,
         };
 
@@ -38,14 +38,16 @@ class DispensingPointService {
         }
     }
 
-    public async update(id: string, dispensingPoint: UpdateDispensingPointDto): Promise<DispensingPointDto> {
+    public async update(id: string, data: UpdateDispensingPointDto, author: string): Promise<DispensingPointDto> {
+        const payload = { id, data, author };
+
         try {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-point/update/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(dispensingPoint),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
@@ -62,12 +64,13 @@ class DispensingPointService {
         }
     }
 
-    public async delete(id: string): Promise<void> {
+    public async delete(id: string, author: string): Promise<void> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-point/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-Author': author,
                 },
             });
 

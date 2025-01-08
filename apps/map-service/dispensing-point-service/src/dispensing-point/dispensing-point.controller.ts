@@ -1,6 +1,6 @@
 import { DispensingPointServiceLibService } from '@b-prism/dispensing-point-service-lib';
 import { CreateDispensingPointDto, UpdateDispensingPointDto } from '@dto';
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Param, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Dispensing Point Endpoints')
@@ -23,9 +23,7 @@ export class DispensingPointController {
     }
 
     @Delete('delete/:id')
-    delete(@Param('id') payload: { id: string; author: string }) {
-        const { id, author } = payload;
-
+    delete(@Param('id') id: string, @Headers('X-Author') author: string) {
         return this.dispensingPointServiceLibService.delete(id, author);
     }
 

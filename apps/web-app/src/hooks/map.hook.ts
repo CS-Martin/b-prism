@@ -156,11 +156,14 @@ export const useFindOneDispensingPoint = (id: string) => {
 export const useCreateDispensingPoint = () => {
     const { toast } = useToast();
 
-    const createDispensingPoint = async (data: CreateDispensingPointDto) => {
-        await dispensingPointService.create({
-            ...data,
-            capacity: Number(data.capacity),
-        });
+    const createDispensingPoint = async (data: CreateDispensingPointDto, author: string) => {
+        await dispensingPointService.create(
+            {
+                ...data,
+                capacity: Number(data.capacity),
+            },
+            author,
+        );
 
         toast({
             title: 'Success!',
@@ -175,8 +178,8 @@ export const useCreateDispensingPoint = () => {
 export const useUpdateDispensingPoint = () => {
     const { toast } = useToast();
 
-    const updateDispensingPoint = async (id: string, data: UpdateDispensingPointDto) => {
-        await dispensingPointService.update(id, data);
+    const updateDispensingPoint = async (id: string, data: UpdateDispensingPointDto, author: string) => {
+        await dispensingPointService.update(id, data, author);
 
         toast({
             title: 'Success!',
@@ -188,11 +191,11 @@ export const useUpdateDispensingPoint = () => {
     return { updateDispensingPoint };
 };
 
-export const useDeleteDispensingPoint = (dispensingPointId: string) => {
+export const useDeleteDispensingPoint = () => {
     const { toast } = useToast();
 
-    const deleteDispensingPoint = async () => {
-        await dispensingPointService.delete(dispensingPointId);
+    const deleteDispensingPoint = async (id: string, author: string) => {
+        await dispensingPointService.delete(id, author);
 
         toast({
             title: 'Dispensing point deleted successfully!',
