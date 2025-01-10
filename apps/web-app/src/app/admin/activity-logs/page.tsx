@@ -1,9 +1,8 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage, ScrollArea } from '@b-prism/shadcn-ui/index';
 import Topbar from 'apps/web-app/src/components/topbar';
 import { useDisplayActivityLogs } from 'apps/web-app/src/hooks/activity-log.hook';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format } from 'date-fns';
 import ActionIcon from './_components/action-icon';
 import ActivityCard from './_components/activity-card';
 import { useEffect, useRef, useState } from 'react';
