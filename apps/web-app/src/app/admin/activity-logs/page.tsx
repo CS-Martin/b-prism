@@ -38,8 +38,8 @@ export default function ActivityLogging() {
         <div className='px-3 h-[100%]'>
             <Topbar
                 items={[
-                    { label: 'Links', href: '/' },
-                    { label: 'Activity Logs', href: '/admin/activity-logs' },
+                    { label: 'Admin', href: '/' },
+                    { label: 'Activity Logs History', href: '/admin/activity-logs' },
                 ]}
             />
 

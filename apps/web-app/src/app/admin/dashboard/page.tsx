@@ -33,7 +33,7 @@ export default function AdminDashboard() {
         <div className='px-3'>
             <Topbar
                 items={[
-                    { label: 'Links', href: '/' },
+                    { label: 'Admin', href: '/' },
                     { label: 'Admin Dashboard', href: '/admin/dashboard' },
                 ]}
             />
