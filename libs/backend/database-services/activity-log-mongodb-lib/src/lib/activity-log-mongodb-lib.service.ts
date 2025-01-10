@@ -14,7 +14,11 @@ export class ActivityLogMongodbLibService {
     }
 
     async findAll(): Promise<ActivityLog[]> {
-        const activityLogs = await this.prisma.activityLog.findMany();
+        const activityLogs = await this.prisma.activityLog.findMany({
+            orderBy: {
+                timestamp: 'desc',
+            },
+        });
 
         return activityLogs;
     }
