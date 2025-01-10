@@ -1,37 +1,31 @@
-import Topbar from 'apps/web-app/src/components/topbar';
+'use client';
 
-const activities = [
-    {
-        time: 'January 9, 2025',
-        icon: '💧', // Replace this with an appropriate icon or image
-        title: 'Morning watering initiated.',
-        description: 'Scheduled Activity',
-        action: 'View Cameras',
-    },
-    {
-        time: 'January 9, 2025',
-        icon: '🌬️',
-        title: 'Ventilation system power set to 80%',
-        description: 'Scheduled Activity',
-    },
-    {
-        time: 'January 9, 2025',
-        icon: '👤',
-        title: 'Authorized personnel entered facility.',
-        description: 'Nick R. @ Main Entrance',
-        extra: 'Show 3 similar activities',
-    },
-    {
-        time: 'January 9, 2025',
-        icon: '☀️',
-        title: 'Main light source set to 1200 LUX',
-        description: 'Nancy T. · Manually Set',
-    },
-];
+import { Avatar, AvatarFallback, AvatarImage, ScrollArea } from '@b-prism/shadcn-ui/index';
+import Topbar from 'apps/web-app/src/components/topbar';
+import { useDisplayActivityLogs } from 'apps/web-app/src/hooks/activity-log.hook';
+import { format, formatDistanceToNow } from 'date-fns';
+import ActionIcon from './_components/action-icon';
+import ActivityCard from './_components/activity-card';
+import { useEffect, useRef, useState } from 'react';
 
 export default function ActivityLogging() {
+    const scrollAreaRef = useRef<HTMLDivElement>(null);
+    const { logs, isLoading, fetchAllActivityLogs } = useDisplayActivityLogs();
+    const [visibleLogs, setVisibleLogs] = useState(10);
+
+    console.log(logs);
+
+    useEffect(() => {
+        // Scrolldown on render
+        scrollAreaRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [logs]);
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
     return (
-        <div className='px-3'>
+        <div className='px-3 h-[100%]'>
             <Topbar
                 items={[
                     { label: 'Links', href: '/' },
@@ -39,35 +33,31 @@ export default function ActivityLogging() {
                 ]}
             />
 
-            <p className='py-6'>Activity Log History</p>
-            <div className='bg-[#18181A] rounded-md p-6 w-[80%]'>
-                <div className='relative'>
+            <div className='bg-[#18181A] rounded-md py-6 w-[80%] mt-6'>
+                {/* If scroll hits the top, show 'show more' button */}
+                <ScrollArea className='relative h-[45rem] px-6'>
                     {/* Timeline Items */}
-                    {activities.map((activity, index) => (
+                    {logs.map((log, index) => (
                         <div
                             key={index}
+                            ref={scrollAreaRef}
                             className='relative flex items-start h-[120px] rounded-md'>
                             {/* Circle and Line */}
-                            <div className='relative flex flex-col items-center h-full'>
+                            <div className='relative flex flex-col items-center h-full py-2'>
                                 {/* Circle */}
-                                <div className='w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center z-10'></div>
+                                {ActionIcon(log.action)}
+
                                 {/* Line below the circle */}
-                                {index < activities.length - 1 && <div className='h-[65%] rounded-full w-[0.7px] bg-gray-500 absolute top-8'></div>}
+                                {index < logs.length - 1 && <div className='h-[60%] rounded-full w-[0.7px] bg-gray-500 absolute top-11'></div>}
+                            </div>
+                            <div className='ml-10 w-full text-center py-2 max-w-[120px]'>
+                                <p className='text-[#a1a1aa] text-[12px]'>{format(new Date(log.timestamp), 'hh:mm a')}</p>
                             </div>
 
-                            <div className='ml-10 w-full text-center text-gray-400 max-w-[120px]'>
-                                <p>12 min ago</p>
-                            </div>
-
-                            {/* Content */}
-                            <div className='ml-6 hover:bg-slate-500 w-full h-[85%] rounded-md px-3 cursor-pointer'>
-                                <p className=' text-gray-500'>{activity.time}</p>
-                                <h3 className=''>{activity.title}</h3>
-                                <p className='text-gray-700'>{activity.description}</p>
-                            </div>
+                            {ActivityCard(log)}
                         </div>
                     ))}
-                </div>
+                </ScrollArea>
             </div>
         </div>
     );

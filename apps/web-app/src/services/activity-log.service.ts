@@ -31,6 +31,24 @@ class ActivityLogService {
             throw new BadRequestException(`Failed to create activity log for ${data}`);
         }
     }
+
+    public async findAllActivityLogs(): Promise<ResponseDto<ActivityLogDto[]>> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/activity-log`);
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message);
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error(error);
+
+            throw new BadRequestException('Failed to fetch all activity logs');
+        }
+    }
 }
 
 export const activityLogService = new ActivityLogService();
