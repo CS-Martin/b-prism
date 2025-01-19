@@ -29,6 +29,9 @@
         --ring: 240 5.9% 10%;
         --radius: 0.5rem !important;
 
+        --prism-card-bg: #fafafa;
+        --prism-card-border: rgb(228, 228, 231);
+
         --sidebar-background: 0 0% 98%;
         --sidebar-foreground: 240 5.3% 26.1%;
         --sidebar-primary: 240 5.9% 10%;
@@ -61,6 +64,9 @@
         --ring: 240 4.9% 83.9%;
         --radius: 0.5rem !important;
 
+        --prism-card-bg: #18181a;
+        --prism-card-border: #262627;
+
         --sidebar-background: 240 5.9% 10%;
         --sidebar-foreground: 240 4.8% 95.9%;
         --sidebar-primary: 224.3 76.3% 48%;
@@ -90,6 +96,13 @@
     overflow: hidden;
     z-index: -1;
     box-shadow: inset 0px 0px 100px 30px rgba(0, 0, 0, 0.315);
+}
+
+.prism-card-bg {
+    background-color: var(--prism-card-bg);
+    border: 1px solid;
+    border-color: var(--prism-card-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* .spline-hero::before {

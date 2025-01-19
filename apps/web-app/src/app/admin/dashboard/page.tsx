@@ -37,11 +37,13 @@ export default function AdminDashboard() {
                     { label: 'Admin Dashboard', href: '/admin/dashboard' },
                 ]}
             />
-            <DataTable
-                columns={columns}
-                data={users}
-                handleRoleChange={handleRoleChange}
-            />
+            <div className='prism-card-bg p-5 rounded-md mt-5'>
+                <DataTable
+                    columns={columns}
+                    data={users}
+                    handleRoleChange={handleRoleChange}
+                />
+            </div>
         </div>
     );
 }
