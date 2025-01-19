@@ -1,3 +1,9 @@
+import UploadThing from './_components/uploadthing';
+
 export default function CompleteProfilePage() {
-    return <div>Hello</div>;
+    return (
+        <div>
+            <UploadThing />
+        </div>
+    );
 }

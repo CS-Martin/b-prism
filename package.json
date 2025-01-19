@@ -39,6 +39,7 @@
         "@splinetool/react-spline": "^4.0.0",
         "@tanstack/react-table": "^8.20.5",
         "@types/mapbox-gl": "^3.4.0",
+        "@uploadthing/react": "^7.1.5",
         "axios": "^1.6.0",
         "bcrypt": "^5.1.1",
         "class-transformer": "^0.5.1",
@@ -60,7 +61,8 @@
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.8.0",
         "tailwind-merge": "^2.5.4",
-        "tailwindcss-animate": "^1.0.7"
+        "tailwindcss-animate": "^1.0.7",
+        "uploadthing": "^7.4.4"
     },
     "devDependencies": {
         "@babel/core": "^7.14.5",
