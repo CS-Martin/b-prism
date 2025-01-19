@@ -6,7 +6,7 @@ import { withUt } from 'uploadthing/tw';
 import type { Config } from 'tailwindcss';
 
 export function buildConfig(appDir: string): Config {
-    return withUt({
+    return {
         darkMode: ['class'],
         content: [join(appDir, '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'), ...createGlobPatternsForDependencies(appDir)],
         theme: {
@@ -92,5 +92,5 @@ export function buildConfig(appDir: string): Config {
             },
         },
         plugins: [TailwindAnimate],
-    });
+    };
 }
