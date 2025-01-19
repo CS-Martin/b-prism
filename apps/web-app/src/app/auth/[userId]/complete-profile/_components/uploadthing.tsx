@@ -7,6 +7,7 @@ import { Button, Label } from '@b-prism/shadcn-ui/index';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import Link from 'next/link';
 import { authService } from 'apps/web-app/src/services/authentication.service';
+import { UpdateUserDto } from '@dto';
 
 export default function UploadThing() {
     const { toast } = useToast();
@@ -37,7 +38,10 @@ export default function UploadThing() {
 
     // Store key into id_image_url of a user
     const onSubmit = async (id: string, key: string) => {
-        await authService.upload_id(id, key);
+        const user: UpdateUserDto = {
+            id_image_url: key,
+        };
+        await authService.update(id, user);
     };
 
     return (

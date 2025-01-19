@@ -33,33 +33,6 @@ class AuthenticationService {
         }
     }
 
-    public async upload_id(id: string, key: string): Promise<UserDto> {
-        const user: UpdateUserDto = new UpdateUserDto();
-        user.id_image_url = key;
-
-        try {
-            const response = await fetch(`${this.API_BASE_URL}/authentication/update/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(user),
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-
-                throw new BadRequestException(error.message);
-            }
-
-            return response.json();
-        } catch (error) {
-            console.error(error);
-
-            throw new BadRequestException(`Failed to update user ${user.email}`);
-        }
-    }
-
     public async update(id: string, user: UpdateUserDto): Promise<UserDto> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/authentication/update/${id}`, {
