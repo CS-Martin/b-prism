@@ -1,9 +1,5 @@
-import UploadThing from './_components/uploadthing';
+// import UploadThing from './_components/uploadthing';
 
 export default function CompleteProfilePage() {
-    return (
-        <div>
-            <UploadThing />
-        </div>
-    );
+    return <div>{/* <UploadThing /> */}</div>;
 }
