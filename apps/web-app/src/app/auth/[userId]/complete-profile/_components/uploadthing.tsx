@@ -66,9 +66,9 @@ export default function UploadThing() {
                 ) : (
                     <div>
                         <Image
-                            src={'/img/no-img-found.png'}
-                            width={500}
-                            height={500}
+                            src={'/img/dummy-id.jpg'}
+                            width={200}
+                            height={200}
                             alt='Selected file preview'
                             className='w-full rounded-md h-[230px] object-cover shadow-md'
                         />
