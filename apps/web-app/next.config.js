@@ -11,6 +11,9 @@ const nextConfig = {
         // See: https://github.com/gregberge/svgr
         svgr: false,
     },
+    images: {
+        domains: ['utfs.io'],
+    },
 };
 
 const plugins = [

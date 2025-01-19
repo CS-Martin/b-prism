@@ -2,10 +2,24 @@
 
 import { ColumnDef, Row } from '@tanstack/react-table';
 
-import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@b-prism/shadcn-ui/index';
+import {
+    Button,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+    Label,
+} from '@b-prism/shadcn-ui/index';
 import { UserRole } from '@b-prism/enums';
 import { UserDto } from '@dto';
 import { ArrowUpDown } from 'lucide-react';
+import Image from 'next/image';
 
 const customRole = (rowA: Row<Partial<UserDto>>, rowB: Row<Partial<UserDto>>) => {
     const order = [UserRole.admin, UserRole.verified, UserRole.unverified];
@@ -91,13 +105,24 @@ export const createColumns = (handleRoleChange: (userId: string, newRole: UserRo
         accessorKey: 'position',
         header: ({ column }) => {
             return (
-                <Button
-                    variant='ghost'
-                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    className='rounded-sm'>
-                    Position
-                    <ArrowUpDown className='ml-2 h-4 w-4' />
-                </Button>
+                <div className='text-center'>
+                    <Button
+                        variant='ghost'
+                        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                        className='rounded-sm'>
+                        Position
+                        <ArrowUpDown className='ml-2 h-4 w-4' />
+                    </Button>
+                </div>
+            );
+        },
+        cell: ({ row }) => {
+            const position: string = row.original.position!;
+
+            return (
+                <div className='text-center'>
+                    <p>{position}</p>
+                </div>
             );
         },
     },
@@ -105,13 +130,37 @@ export const createColumns = (handleRoleChange: (userId: string, newRole: UserRo
         accessorKey: 'id_image_url',
         header: ({ column }) => {
             return (
-                <Button
-                    variant='ghost'
-                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    className='rounded-sm'>
-                    ID Image
-                    <ArrowUpDown className='ml-2 h-4 w-4' />
-                </Button>
+                <div className='text-center p-4'>
+                    <p>ID Image</p>
+                </div>
+            );
+        },
+        cell: ({ row }) => {
+            const user = row.original;
+
+            return (
+                <div className='text-center'>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button variant='outline'>View Image</Button>
+                        </DialogTrigger>
+                        <DialogContent className=''>
+                            <DialogHeader>
+                                <DialogTitle>test</DialogTitle>
+                                <DialogDescription>test</DialogDescription>
+                            </DialogHeader>
+                            <div className='h-full'>
+                                <Image
+                                    src={`${process.env.NEXT_PUBLIC_UPLOADTHING_URL}${user.id_image_url}`}
+                                    height={500}
+                                    width={500}
+                                    alt={`${user.given_name} ${user.family_name} identification image.`}
+                                    className=' max-h-[200px] object-cover'
+                                />
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </div>
             );
         },
     },
