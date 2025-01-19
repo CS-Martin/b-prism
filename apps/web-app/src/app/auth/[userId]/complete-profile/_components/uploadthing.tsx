@@ -1,12 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { UploadDropzone } from '../../../../../utils/uploadingthing';
+import { UploadDropzone } from '../../../../../utils/uploadthing';
 import Image from 'next/image';
 import { Button, Label } from '@b-prism/shadcn-ui/index';
-import { Ghost } from 'lucide-react';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { title } from 'process';
 import Link from 'next/link';
 import { authService } from 'apps/web-app/src/services/authentication.service';
 import { UpdateUserDto } from '@dto';
