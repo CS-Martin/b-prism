@@ -43,7 +43,7 @@ export default function ActivityLogging() {
                 ]}
             />
 
-            <div className='bg-[#18181A] rounded-md py-6 w-[80%] mt-6'>
+            <div className='prism-card-bg rounded-md py-6 w-[80%] mt-6'>
                 <div
                     className='relative h-[45rem] px-6 flex flex-col-reverse overflow-y-scroll'
                     ref={scrollAreaRef}

@@ -1,11 +1,12 @@
 import { createGlobPatternsForDependencies } from '@nx/react/tailwind';
 import { join } from 'node:path';
 import TailwindAnimate from 'tailwindcss-animate';
+import { withUt } from 'uploadthing/tw';
 
 import type { Config } from 'tailwindcss';
 
 export function buildConfig(appDir: string): Config {
-    return {
+    return withUt({
         darkMode: ['class'],
         content: [join(appDir, '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'), ...createGlobPatternsForDependencies(appDir)],
         theme: {
@@ -91,5 +92,5 @@ export function buildConfig(appDir: string): Config {
             },
         },
         plugins: [TailwindAnimate],
-    };
+    });
 }

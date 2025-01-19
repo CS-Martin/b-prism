@@ -88,7 +88,7 @@ export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: Da
 
     return (
         <div className='relative'>
-            <div className='h-[calc(100vh-100px)]'>
+            <div className='h-[calc(100vh-150px)]'>
                 <Table className='w-full'>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
