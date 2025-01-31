@@ -112,12 +112,15 @@ export default function UploadThing() {
                             }}
                         />
                     </div>
+                    <p className={`${isUploadComplete ? 'hidden' : 'block'} text-green-300 text-center mt-3`}>
+                        You have successfully submitted your ID for review. Click &apos;Complete&apos; button to finish the process.
+                    </p>
                 </div>
             </div>
             <div className='p-5 flex justify-end gap-2 border border-t'>
                 <Button
-                    asChild
-                    variant='ghost'>
+                    variant='ghost'
+                    disabled={!isUploadComplete}>
                     <Link href={'/home'}>Skip</Link>
                 </Button>
                 <Button
