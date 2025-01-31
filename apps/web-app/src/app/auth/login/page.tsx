@@ -6,6 +6,7 @@ import { Input } from '@b-prism/shadcn-ui/index';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { userService } from 'apps/web-app/src/services/user.service';
+import { UserDto } from '@dto';
 
 export default function LoginPage() {
     const { toast } = useToast();
@@ -39,10 +40,16 @@ export default function LoginPage() {
 
             const response = await userService.fetchUserByEmail(data.email);
 
-            const isIncompleteProfile = response.body.id_image_url === null;
+            if (response.statusCode !== 201) {
+                throw new Error('Failed to fetch user');
+            }
+
+            const user: UserDto = response.body;
+
+            const isIncompleteProfile = user.id_image_url === undefined || user.id_image_url === null || user.id_image_url === '';
 
             if (isIncompleteProfile) {
-                router.push('/auth/new-user');
+                router.push(`/auth/${user.id}/complete-profile`);
             } else {
                 router.push('/home');
             }
