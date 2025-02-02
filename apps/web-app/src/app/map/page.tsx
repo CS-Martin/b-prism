@@ -123,7 +123,7 @@ const MapPage = () => {
                         pitch: 75,
                     }}
                     style={{ position: 'absolute', width: '100%', height: '100%' }}
-                    mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
+                    mapStyle={'mapbox://styles/cs-martin/cm6ncgu5p007601sg2skp6qpr'}
                     onClick={handleMapClick}>
                     {/* Trigger the dialog to create a warehouse */}
                     {selectedAction === 'createWarehouse' && (
