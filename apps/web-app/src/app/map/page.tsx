@@ -2,10 +2,9 @@
 
 import { AppSidebar } from '@b-prism/shadcn-ui/index';
 import { SelectedActionType } from '@b-prism/enums';
-
-import Map, { MapMouseEvent, MapRef } from 'react-map-gl';
+import Map, { MapMouseEvent, MapRef, Source, Layer, MapLayerMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
@@ -14,9 +13,10 @@ import CreateWarehouseDialog from './_components/warehouse/create-warehouse-dial
 import RenderWarehouse from './_components/warehouse/render-warehouse';
 import DeleteItem from './_components/delete-item';
 import CreateDispensingPointDialog from './_components/dispensing_point/create.dispensing-point-dialog';
-import RenderDispensingPoint from './_components/dispensing_point/render.dispensing-point';
 import ControlPanel from './_components/control-panel';
 import RescuePostPanel from './_components/rescue-post-panel';
+import RenderDispensingPoint from './_components/dispensing_point/render.dispensing-point';
+import { isMap } from 'util/types';
 
 interface MarkerType {
     longitude: string;
@@ -24,64 +24,59 @@ interface MarkerType {
 }
 
 const MapPage = () => {
-    const mapRef = useRef<MapRef | null>(null); // Reference for the map instance
+    const mapRef = useRef<MapRef | null>(null);
+
+    // Temporary fix *****
+    // To solve issue where selectedAction value is always null inside onLoad function of map
+    const [selectedAction, setSelectedAction] = useState<SelectedActionType | null>(null);
+    const selectedActionRef = useRef<string | null>(selectedAction);
 
     const { warehouses, fetchAllWarehouses } = useDisplayWarehouses();
     const { dispensingPoints, fetchAllDispensingPoints } = useDisplayDispensingPoints();
-    const [selectedAction, setSelectedAction] = useState<SelectedActionType | null>(null);
-    const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
     const [isOpen, setIsOpen] = useState(false);
+    const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
     const [itemToDelete, setItemtoDelete] = useState<{ type: string; id: string }>();
     const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
+    const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [visibility, setVisibility] = useState({
         warehouses: true,
         dispensingPoints: true,
     });
 
-    // Geocoder function to interpret coordinates
-    // const coordinatesGeocoder = (query: string) => {
-    //     const matches = query.match(/^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i);
-    //     if (!matches) return null;
+    useEffect(() => {
+        selectedActionRef.current = selectedAction;
+    }, [selectedAction]);
 
-    //     const coordinateFeature = (lng: number, lat: number) => ({
-    //         center: [lng, lat],
-    //         geometry: { type: 'Point', coordinates: [lng, lat] },
-    //         place_name: `Lat: ${lat}, Lng: ${lng}`,
-    //         place_type: ['coordinate'],
-    //         properties: {},
-    //         type: 'Feature',
-    //     });
-
-    //     const coord1 = Number(matches[1]);
-    //     const coord2 = Number(matches[2]);
-    //     const geocodes = [];
-
-    //     if (coord1 < -90 || coord1 > 90) geocodes.push(coordinateFeature(coord1, coord2));
-    //     if (coord2 < -90 || coord2 > 90) geocodes.push(coordinateFeature(coord2, coord1));
-    //     if (geocodes.length === 0) {
-    //         geocodes.push(coordinateFeature(coord1, coord2));
-    //         geocodes.push(coordinateFeature(coord2, coord1));
-    //     }
-
-    //     return geocodes;
-    // };
+    // Convert dispensing points into GeoJSON format
+    const geoJsonData = useMemo(
+        () => ({
+            type: 'FeatureCollection',
+            features: dispensingPoints.map((dp) => ({
+                type: 'Feature',
+                properties: { id: dp.id, type: dp.type, name: dp.name },
+                geometry: {
+                    type: dp.type,
+                    coordinates: [Number(dp.longitude), Number(dp.latitude)],
+                },
+            })),
+        }),
+        [dispensingPoints],
+    );
 
     useEffect(() => {
         if (mapRef.current) {
             const mapboxMap = mapRef.current.getMap();
-
-            // Add Geocoder control
             const geocoder = new MapboxGeocoder({
                 accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN!,
                 zoom: 10,
                 placeholder: 'Enter coordinates (e.g., -40, 170)',
                 reverseGeocode: true,
             });
-
             mapboxMap.addControl(geocoder);
         }
     }, []);
 
+    // Handles map click events
     const handleMapClick = (event: MapMouseEvent) => {
         const longitude: string = event.lngLat.lng.toString();
         const latitude: string = event.lngLat.lat.toString();
@@ -95,12 +90,20 @@ const MapPage = () => {
         }
     };
 
+    // This is for visibility control for cpanel
     const handleVisibilityChange = (layer: string, isVisible: boolean) => {
         setVisibility((prev) => ({ ...prev, [layer]: isVisible }));
     };
 
+    /**
+     * Handles the click event on a marker.
+     *
+     * @param {string | null} type - The type of the marker (e.g., 'dispensingPoint' or 'warehouse').
+     * @param {string | null} id - The ID of the marker.
+     *
+     */
     const handleMarkerClick = (type: string | null, id: string | null) => {
-        if (selectedAction === 'deleteItem' && type && id) {
+        if (selectedActionRef.current === 'deleteItem' && type && id) {
             setItemtoDelete({ type, id });
             setIsOpen(true);
         }
@@ -109,7 +112,7 @@ const MapPage = () => {
     };
 
     return (
-        <main className=''>
+        <main>
             <div id='map'>
                 <Map
                     ref={mapRef}
@@ -124,7 +127,29 @@ const MapPage = () => {
                     }}
                     style={{ position: 'absolute', width: '100%', height: '100%' }}
                     mapStyle={'mapbox://styles/cs-martin/cm6ncgu5p007601sg2skp6qpr'}
-                    onClick={handleMapClick}>
+                    onClick={handleMapClick}
+                    onLoad={(e) => {
+                        // Load the map first before loading layers
+                        setIsMapLoaded(true);
+
+                        const map = e.target;
+
+                        map.on('click', 'unclustered_points', (event: MapMouseEvent) => {
+                            const item = event.features;
+
+                            if (!item || item.length === 0) return;
+
+                            // Get
+                            const clickedItem = item[0];
+                            const type = clickedItem.properties?.type;
+                            const id = clickedItem.properties?.id;
+                            console.log(clickedItem);
+
+                            if (id) {
+                                handleMarkerClick(type, id);
+                            }
+                        });
+                    }}>
                     {/* Trigger the dialog to create a warehouse */}
                     {selectedAction === 'createWarehouse' && (
                         <CreateWarehouseDialog
@@ -145,33 +170,17 @@ const MapPage = () => {
                         />
                     )}
 
-                    {visibility.warehouses &&
-                        warehouses.map((warehouse, index) => (
-                            <RenderWarehouse
-                                key={index}
-                                warehouse={warehouse}
-                                selectedMarkerId={selectedMarkerId}
-                                handleMarkerClick={handleMarkerClick}
-                                selectedAction={selectedAction}
-                            />
-                        ))}
+                    {/* Render the dispensing points as layer */}
+                    <RenderDispensingPoint
+                        geoJsonData={geoJsonData}
+                        isMapLoaded={isMapLoaded}
+                        visibility={visibility}
+                    />
 
-                    {/* Conditionally render dispensing points based on visibility */}
-                    {visibility.dispensingPoints &&
-                        dispensingPoints.map((dispensingPoint, index) => (
-                            <RenderDispensingPoint
-                                key={index}
-                                dispensingPoint={dispensingPoint}
-                                selectedMarkerId={selectedMarkerId}
-                                handleMarkerClick={handleMarkerClick}
-                                selectedAction={selectedAction}
-                            />
-                        ))}
-
-                    {/* Control the visibility items on the map */}
+                    {/* Control Panel */}
                     <ControlPanel
                         visibility={visibility}
-                        onVisibilityChange={handleVisibilityChange}
+                        onVisibilityChange={(layer, isVisible) => setVisibility((prev) => ({ ...prev, [layer]: isVisible }))}
                     />
 
                     <RescuePostPanel mapRef={mapRef} />

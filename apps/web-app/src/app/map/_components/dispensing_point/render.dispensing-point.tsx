@@ -1,63 +1,50 @@
-import { DispensingPointDto } from '@dto';
-import Image from 'next/image';
-import { Marker } from 'react-map-gl';
-import UpdateDispensingPointDialog from './update.dispensing-point-dialog';
-import { useState } from 'react';
+import { Source, Layer } from 'react-map-gl';
 
 interface RenderDispensingPointProps {
-    dispensingPoint: DispensingPointDto;
-    selectedMarkerId: string | null;
-    handleMarkerClick: (type: string | null, id: string | null) => void;
-    selectedAction: string | null;
+    geoJsonData: any;
+    isMapLoaded: boolean;
+    visibility: { dispensingPoints: boolean };
 }
 
-const RenderDispensingPoint = ({ dispensingPoint, selectedMarkerId, handleMarkerClick, selectedAction }: RenderDispensingPointProps) => {
-    // Local state to manage the dialog's open state
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-    const handleMarkerClickAndOpenDialog = (e: any) => {
-        e.originalEvent.preventDefault();
-        e.originalEvent.stopPropagation();
-
-        handleMarkerClick(dispensingPoint.type, dispensingPoint.id);
-
-        if (selectedAction === 'deleteItem') {
-            setIsDialogOpen(false);
-        } else {
-            setIsDialogOpen(true);
-        }
-    };
+const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility }: RenderDispensingPointProps) => {
+    if (!isMapLoaded || !visibility.dispensingPoints) return null;
 
     return (
-        <>
-            <Marker
-                longitude={Number(dispensingPoint.longitude)}
-                latitude={Number(dispensingPoint.latitude)}
-                onClick={handleMarkerClickAndOpenDialog}
-                className='cursor-pointer animate-fade-in'>
-                <Image
-                    priority
-                    src={`/icons/dispensing-point.icon.svg`}
-                    alt='dispensing point'
-                    width={24}
-                    height={24}
-                    style={{
-                        filter: 'drop-shadow(0 0 10px rgba(0, 0, 0, 0.5))',
-                    }}
-                    className='hover:scale-150 transition-all duration-300 hover:bg-blue-500 hover:bg-opacity-50 rounded-full'
-                />
-                <p className='text-white text-center'>{dispensingPoint.name}</p>
-            </Marker>
+        <Source
+            id='dispensing_points'
+            type='geojson'
+            data={geoJsonData}
+            cluster={true}
+            clusterMaxZoom={14}
+            clusterRadius={50}>
+            {/* Clustered Points */}
+            <Layer
+                id='clusters'
+                type='circle'
+                source='dispensing_points'
+                filter={['has', 'point_count']}
+                paint={{
+                    'circle-color': '#2196F3',
+                    'circle-radius': ['step', ['get', 'point_count'], 20, 10, 30, 50, 40],
+                    'circle-stroke-width': 2,
+                    'circle-stroke-color': '#fff',
+                }}
+            />
 
-            {/* Update Dispensing Point Dialog */}
-            {selectedMarkerId === dispensingPoint.id && (
-                <UpdateDispensingPointDialog
-                    isOpen={isDialogOpen}
-                    setIsOpen={setIsDialogOpen}
-                    dispensingPointId={dispensingPoint.id}
-                />
-            )}
-        </>
+            {/* Individual Points */}
+            <Layer
+                id='unclustered_points'
+                type='circle'
+                source='dispensing_points'
+                filter={['!', ['has', 'point_count']]}
+                paint={{
+                    'circle-color': '#FF5722',
+                    'circle-radius': 8,
+                    'circle-stroke-width': 2,
+                    'circle-stroke-color': '#fff',
+                }}
+            />
+        </Source>
     );
 };
 
