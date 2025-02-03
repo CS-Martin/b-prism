@@ -17,6 +17,7 @@ import ControlPanel from './_components/control-panel';
 import RescuePostPanel from './_components/rescue-post-panel';
 import RenderDispensingPoint from './_components/dispensing_point/render.dispensing-point';
 import { isMap } from 'util/types';
+import { createProjectFileMapUsingProjectGraph } from '@nx/devkit';
 
 interface MarkerType {
     longitude: string;
@@ -36,12 +37,14 @@ const MapPage = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
     const [itemToDelete, setItemtoDelete] = useState<{ type: string; id: string }>();
-    const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
+    // const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
     const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [visibility, setVisibility] = useState({
         warehouses: true,
         dispensingPoints: true,
     });
+
+    console.log(selectedAction);
 
     useEffect(() => {
         selectedActionRef.current = selectedAction;
@@ -102,6 +105,7 @@ const MapPage = () => {
      * @param {string | null} id - The ID of the marker.
      *
      */
+
     const handleMarkerClick = (type: string | null, id: string | null) => {
         if (selectedActionRef.current === 'deleteItem' && type && id) {
             setItemtoDelete({ type, id });
@@ -110,9 +114,8 @@ const MapPage = () => {
 
         // If selected action isn't 'deleteItem', it is in 'view' state
         // Therefore we must send the ID to view/update component to fetch the corresponding item
-        setSelectedMarkerId(id);
+        // setSelectedMarkerId(id);
     };
-
     return (
         <main>
             <div id='map'>
@@ -177,7 +180,7 @@ const MapPage = () => {
                         geoJsonData={geoJsonData}
                         isMapLoaded={isMapLoaded}
                         visibility={visibility}
-                        selectedAction={selectedActionRef.current}
+                        selectedAction={selectedAction}
                     />
 
                     {/* Control Panel */}

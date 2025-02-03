@@ -15,8 +15,8 @@ interface RenderDispensingPointProps {
 const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedAction }: RenderDispensingPointProps) => {
     const { current: map } = useMap();
 
-    const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
-    const [dispensingPointId, setDispensingPointId] = useState('');
+    const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState<boolean>(false);
+    const [dispensingPointId, setDispensingPointId] = useState<string>('');
 
     useEffect(() => {
         if (!map || !isMapLoaded) return;
@@ -29,18 +29,12 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
             const clickedFeature = dp[0];
             const id = clickedFeature.properties?.id;
 
-            console.log('HAHHA', selectedAction);
-
             if (selectedAction === null) {
-                console.log('TEST1', selectedAction);
+                if (id) setDispensingPointId(id);
+
                 setIsUpdateDialogOpen(true);
             } else {
-                console.log('TEST', selectedAction);
                 setIsUpdateDialogOpen(false);
-            }
-
-            if (id) {
-                setDispensingPointId(id);
             }
         };
 
