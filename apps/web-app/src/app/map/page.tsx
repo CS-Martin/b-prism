@@ -108,6 +108,8 @@ const MapPage = () => {
             setIsOpen(true);
         }
 
+        // If selected action isn't 'deleteItem', it is in 'view' state
+        // Therefore we must send the ID to view/update component to fetch the corresponding item
         setSelectedMarkerId(id);
     };
 
@@ -139,7 +141,7 @@ const MapPage = () => {
 
                             if (!item || item.length === 0) return;
 
-                            // Get
+                            // Get the details of the clicked item
                             const clickedItem = item[0];
                             const type = clickedItem.properties?.type;
                             const id = clickedItem.properties?.id;
@@ -175,6 +177,7 @@ const MapPage = () => {
                         geoJsonData={geoJsonData}
                         isMapLoaded={isMapLoaded}
                         visibility={visibility}
+                        selectedAction={selectedActionRef.current}
                     />
 
                     {/* Control Panel */}
@@ -190,7 +193,10 @@ const MapPage = () => {
             {isOpen && itemToDelete && (
                 <DeleteItem
                     item={itemToDelete}
-                    onCancel={() => setIsOpen(false)}
+                    onCancel={() => {
+                        setIsOpen(false);
+                        setItemtoDelete(undefined);
+                    }}
                     fetchAllWarehouses={fetchAllWarehouses}
                     fetchAllDispensingPoints={fetchAllDispensingPoints}
                 />
