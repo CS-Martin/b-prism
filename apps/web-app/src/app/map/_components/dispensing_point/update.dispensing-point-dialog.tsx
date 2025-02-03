@@ -27,7 +27,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 interface DialogProps {
-    dispensingPointId: string | null;
+    dispensingPointId: string;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
 }
