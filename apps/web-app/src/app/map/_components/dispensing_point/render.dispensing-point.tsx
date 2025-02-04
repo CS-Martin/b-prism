@@ -95,7 +95,7 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
 
                 {/* Individual Points */}
                 <Layer
-                    id='unclustered_points'
+                    id='dispensing_points'
                     type='circle'
                     source='dispensing_points'
                     filter={['!', ['has', 'point_count']]}

@@ -44,8 +44,6 @@ const MapPage = () => {
         dispensingPoints: true,
     });
 
-    console.log(selectedAction, visibility);
-
     useEffect(() => {
         selectedActionRef.current = selectedAction;
     }, [selectedAction]);
@@ -77,8 +75,6 @@ const MapPage = () => {
         }),
         [dispensingPoints, warehouses],
     );
-
-    console.log(geoJsonData);
 
     useEffect(() => {
         if (mapRef.current) {
@@ -162,7 +158,6 @@ const MapPage = () => {
                             const clickedItem = item[0];
                             const type = clickedItem.properties?.type;
                             const id = clickedItem.properties?.id;
-                            console.log(clickedItem);
 
                             if (id) {
                                 handleMarkerClick(type, id);
