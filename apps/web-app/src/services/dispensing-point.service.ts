@@ -41,8 +41,6 @@ class DispensingPointService {
     public async update(id: string, data: UpdateDispensingPointDto, author: string): Promise<DispensingPointDto> {
         const payload = { id, data, author };
 
-        console.log('HELOLO', payload);
-
         try {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-point/update/${id}`, {
                 method: 'PUT',

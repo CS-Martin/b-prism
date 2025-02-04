@@ -66,7 +66,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                 region: warehouse?.address?.region,
                 country: warehouse?.address?.country,
             },
-            user_id: user.id,
+            user_id: user?.id,
             created_at: new Date(),
             updated_at: new Date(),
         },

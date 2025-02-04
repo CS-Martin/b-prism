@@ -24,31 +24,13 @@ import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useUpdateDispensingPoint, useFindOneDispensingPoint } from 'apps/web-app/src/hooks/map.hook';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 interface DialogProps {
     dispensingPointId: string;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
 }
-
-const AddressField = ({ id, label, placeholder, control, fieldName }: { id: string; label: string; placeholder: string; control: any; fieldName: string }) => (
-    <div className='w-1/2'>
-        <Label htmlFor={id}>{label}</Label>
-        <Controller
-            name={fieldName}
-            control={control}
-            render={({ field }) => (
-                <Input
-                    {...field}
-                    id={id}
-                    className='rounded-sm mt-1'
-                    placeholder={placeholder}
-                />
-            )}
-        />
-    </div>
-);
 
 const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId, isOpen, setIsOpen }) => {
     const { data: session } = useSession();
