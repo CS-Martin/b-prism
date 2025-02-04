@@ -87,6 +87,14 @@ const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction 
                         'icon-image': 'warehouse-icon',
                         'icon-size': 0.1,
                         'icon-allow-overlap': true,
+                        'text-field': ['get', 'name'], // Use the 'name' property for the label
+                        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                        'text-size': 12,
+                        'text-offset': [0, 1.5], // Position the label below the icon
+                        'text-anchor': 'top',
+                    }}
+                    paint={{
+                        'text-color': '#FFFFFF', // Set the text color
                     }}
                 />
             </Source>
