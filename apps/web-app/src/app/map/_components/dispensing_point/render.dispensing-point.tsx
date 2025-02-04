@@ -10,7 +10,15 @@ interface RenderDispensingPointProps {
 }
 
 /**
- * Renders the Dispensing Point layer and handles click events.
+ * Renders the dispensing points on the map as layer.
+ *
+ * @param {Object} props - The properties for the component.
+ * @param {any} props.geoJsonData - The GeoJSON data for the dispensing points.
+ * @param {boolean} props.isMapLoaded - A flag indicating whether the map is loaded.
+ * @param {Object} props.visibility - An object containing visibility settings for different layers.
+ * @param {boolean} props.visibility.dispensingPoints - A flag indicating whether the dispensing points layer is visible.
+ *
+ * @returns {JSX.Element | null} The rendered component or null if the map is not loaded or the dispensing points layer is not visible.
  */
 const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedAction }: RenderDispensingPointProps) => {
     const { current: map } = useMap();
@@ -29,6 +37,8 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
             const clickedFeature = dp[0];
             const id = clickedFeature.properties?.id;
 
+            // When null, it means action is default to viewing
+            // 'Default' will trigger UpdateDispensingPoint dialog
             if (selectedAction === null) {
                 if (id) setDispensingPointId(id);
 
@@ -62,10 +72,23 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
                     source='dispensing_points'
                     filter={['has', 'point_count']}
                     paint={{
-                        'circle-color': '#2196F3',
-                        'circle-radius': ['step', ['get', 'point_count'], 20, 10, 30, 50, 40],
-                        'circle-stroke-width': 2,
-                        'circle-stroke-color': '#fff',
+                        'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 100, '#f1f075', 750, '#f28cb1'],
+                        'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
+                    }}
+                />
+
+                <Layer
+                    id='cluster-count'
+                    type='symbol'
+                    source='dispensing_points'
+                    filter={['has', 'point_count']}
+                    layout={{
+                        'text-field': '{point_count_abbreviated}',
+                        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                        'text-size': 12,
+                    }}
+                    paint={{
+                        'text-color': '#ffffff',
                     }}
                 />
 
