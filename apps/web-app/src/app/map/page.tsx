@@ -174,6 +174,13 @@ const MapPage = () => {
                         />
                     )}
 
+                    <RenderWarehouse
+                        geoJsonData={geoJsonData}
+                        isMapLoaded={isMapLoaded}
+                        visibility={visibility}
+                        selectedAction={selectedAction}
+                    />
+
                     {/* Trigger the dialog to create a dispensing point */}
                     {selectedAction === 'createDispensingPoint' && (
                         <CreateDispensingPointDialog
@@ -183,13 +190,6 @@ const MapPage = () => {
                             fetchAllDispensingPoints={fetchAllDispensingPoints}
                         />
                     )}
-
-                    <RenderWarehouse
-                        geoJsonData={geoJsonData}
-                        isMapLoaded={isMapLoaded}
-                        visibility={visibility}
-                        selectedAction={selectedAction}
-                    />
 
                     {/* Render the dispensing points as layer */}
                     <RenderDispensingPoint

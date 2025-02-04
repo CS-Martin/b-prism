@@ -86,6 +86,7 @@ const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction 
                     layout={{
                         'icon-image': 'warehouse-icon',
                         'icon-size': 0.1,
+                        'icon-allow-overlap': true,
                     }}
                 />
             </Source>
