@@ -86,8 +86,33 @@ const MapPage = () => {
                 reverseGeocode: true,
             });
             mapboxMap.addControl(geocoder);
+
+            const handleLayerClick = (event: MapMouseEvent) => {
+                console.log('test');
+                const item = event.features;
+
+                if (!item || item.length === 0) return;
+
+                // Get the details of the clicked item
+                const clickedItem = item[0];
+                const type = clickedItem.properties?.type;
+                const id = clickedItem.properties?.id;
+
+                if (id) {
+                    console.log('DELETE');
+                    handleMarkerClick(type, id);
+                }
+            };
+
+            mapboxMap.on('click', 'warehouse_points', handleLayerClick);
+            mapboxMap.on('click', 'dispensing_points', handleLayerClick);
+
+            return () => {
+                mapboxMap.off('click', 'warehouse_points', handleLayerClick);
+                mapboxMap.off('click', 'dispensing_points', handleLayerClick);
+            };
         }
-    }, []);
+    }, [isMapLoaded]);
 
     // Handles map click events
     const handleMapClick = (event: MapMouseEvent) => {
@@ -146,23 +171,6 @@ const MapPage = () => {
                     onLoad={(e) => {
                         // Load the map first before loading layers
                         setIsMapLoaded(true);
-
-                        const map = e.target;
-
-                        map.on('click', 'unclustered_points', (event: MapMouseEvent) => {
-                            const item = event.features;
-
-                            if (!item || item.length === 0) return;
-
-                            // Get the details of the clicked item
-                            const clickedItem = item[0];
-                            const type = clickedItem.properties?.type;
-                            const id = clickedItem.properties?.id;
-
-                            if (id) {
-                                handleMarkerClick(type, id);
-                            }
-                        });
                     }}>
                     {/* Trigger the dialog to create a warehouse */}
                     {selectedAction === 'createWarehouse' && (

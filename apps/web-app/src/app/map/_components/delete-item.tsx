@@ -70,7 +70,9 @@ const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoin
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                    <AlertDialogDescription>This action cannot be undone. This will permanently delete the selected warehouse.</AlertDialogDescription>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete the selected {item.type === 'warehouse' ? 'Warehouse' : 'Dispensing Point'}.
+                    </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
