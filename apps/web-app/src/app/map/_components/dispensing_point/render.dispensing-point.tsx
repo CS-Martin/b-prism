@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Source, Layer, useMap } from 'react-map-gl';
 import UpdateDispensingPointDialog from './update.dispensing-point-dialog';
+import { features } from 'process';
 
 interface RenderDispensingPointProps {
     geoJsonData: any;
@@ -36,7 +37,7 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
 
             const clickedFeature = dp[0];
             const id = clickedFeature.properties?.id;
-
+            console.log(dp, clickedFeature);
             // When null, it means action is default to viewing
             // 'Default' will trigger UpdateDispensingPoint dialog
             if (selectedAction === null) {
@@ -48,10 +49,10 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
             }
         };
 
-        map.on('click', 'unclustered_points', handleLayerClick);
+        map.on('click', 'dispensing_points', handleLayerClick);
 
         return () => {
-            map.off('click', 'unclustered_points', handleLayerClick);
+            map.off('click', 'dispensing_points', handleLayerClick);
         };
     }, [map, isMapLoaded, selectedAction]);
 
@@ -62,7 +63,7 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
             <Source
                 id='dispensing_points'
                 type='geojson'
-                data={geoJsonData}
+                data={{ type: 'FeatureCollection', features: geoJsonData.DispensingPoint }}
                 cluster={true}
                 clusterMaxZoom={14}
                 clusterRadius={50}>
@@ -72,7 +73,7 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
                     source='dispensing_points'
                     filter={['has', 'point_count']}
                     paint={{
-                        'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 100, '#f1f075', 750, '#f28cb1'],
+                        'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 100, '#f1f075', 750, '#51bbd6'],
                         'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
                     }}
                 />
@@ -99,7 +100,7 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
                     source='dispensing_points'
                     filter={['!', ['has', 'point_count']]}
                     paint={{
-                        'circle-color': '#FF5722',
+                        'circle-color': '#51bbd6',
                         'circle-radius': 8,
                         'circle-stroke-width': 2,
                         'circle-stroke-color': '#fff',

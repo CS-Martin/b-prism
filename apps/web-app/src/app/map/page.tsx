@@ -44,7 +44,7 @@ const MapPage = () => {
         dispensingPoints: true,
     });
 
-    console.log(selectedAction);
+    console.log(selectedAction, visibility);
 
     useEffect(() => {
         selectedActionRef.current = selectedAction;
@@ -54,17 +54,31 @@ const MapPage = () => {
     const geoJsonData = useMemo(
         () => ({
             type: 'FeatureCollection',
-            features: dispensingPoints.map((dp) => ({
-                type: 'Feature',
-                properties: { id: dp.id, type: dp.type, name: dp.name },
-                geometry: {
-                    type: dp.type,
-                    coordinates: [Number(dp.longitude), Number(dp.latitude)],
-                },
-            })),
+            DispensingPoint: [
+                ...dispensingPoints.map((dp) => ({
+                    type: 'Feature',
+                    properties: { id: dp.id, type: 'dispensing_point', name: dp.name },
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [Number(dp.longitude), Number(dp.latitude)],
+                    },
+                })),
+            ],
+            Warehouse: [
+                ...warehouses.map((wh) => ({
+                    type: 'Feature',
+                    properties: { id: wh.id, type: 'warehouse', name: wh.name },
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [Number(wh.longitude), Number(wh.latitude)],
+                    },
+                })),
+            ],
         }),
-        [dispensingPoints],
+        [dispensingPoints, warehouses],
     );
+
+    console.log(geoJsonData);
 
     useEffect(() => {
         if (mapRef.current) {
@@ -174,6 +188,13 @@ const MapPage = () => {
                             fetchAllDispensingPoints={fetchAllDispensingPoints}
                         />
                     )}
+
+                    <RenderWarehouse
+                        geoJsonData={geoJsonData}
+                        isMapLoaded={isMapLoaded}
+                        visibility={visibility}
+                        selectedAction={selectedAction}
+                    />
 
                     {/* Render the dispensing points as layer */}
                     <RenderDispensingPoint

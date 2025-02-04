@@ -1,59 +1,79 @@
 import { WarehouseDto } from '@dto';
-import Image from 'next/image';
-import { Marker, Popup } from 'react-map-gl';
+import { Layer, Source, useMap } from 'react-map-gl';
 import UpdateWarehouseDialog from './update.warehouse-dialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface RenderWarehouseProps {
-    warehouse: WarehouseDto;
-    selectedMarkerId: string | null;
-    handleMarkerClick: (type: string | null, id: string | null) => void;
+    geoJsonData: any;
+    isMapLoaded: boolean;
+    visibility: { warehouses: boolean };
     selectedAction: string | null;
 }
 
-const RenderWarehouse = ({ warehouse, selectedMarkerId, handleMarkerClick, selectedAction }: RenderWarehouseProps) => {
-    // Local state to manage the dialog's open state
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction }: RenderWarehouseProps) => {
+    const { current: map } = useMap();
 
-    const handleMarkerClickAndOpenDialog = (e: any) => {
-        e.originalEvent.preventDefault();
-        e.originalEvent.stopPropagation();
+    const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState<boolean>(false);
+    const [warehouseId, setWarehouseId] = useState<string>('');
 
-        handleMarkerClick(warehouse.type, warehouse.id);
+    useEffect(() => {
+        if (!map || !isMapLoaded) return;
 
-        if (selectedAction === 'deleteItem') {
-            setIsDialogOpen(false);
-        } else {
-            setIsDialogOpen(true);
-        }
-    };
+        const handleLayerClick = (event: any) => {
+            const warehouse = event.features;
+
+            if (!warehouse || warehouse.length === 0) return;
+
+            const clickedWarehouse = warehouse[0];
+            const id = clickedWarehouse.properties?.id;
+
+            // When null, it means action is default to viewing
+            // 'Default' will trigger UpdateWarehouse dialog
+            if (selectedAction === null) {
+                if (id) setWarehouseId(id);
+
+                setIsUpdateDialogOpen(true);
+            } else {
+                setIsUpdateDialogOpen(false);
+            }
+        };
+
+        map.on('click', 'warehouse_points', handleLayerClick);
+
+        return () => {
+            map.off('click', 'warehouse_points', handleLayerClick);
+        };
+    }, [map, isMapLoaded, selectedAction]);
+
+    if (!isMapLoaded || !visibility.warehouses) return null;
 
     return (
-        <Marker
-            longitude={Number(warehouse.longitude)}
-            latitude={Number(warehouse.latitude)}
-            onClick={handleMarkerClickAndOpenDialog}
-            className='cursor-pointer animate-fade-in'>
-            <Image
-                priority
-                src={`/icons/warehouse.icon.svg`}
-                alt='warehouse'
-                width={50}
-                height={50}
-                style={{
-                    filter: 'drop-shadow(0 0 10px rgba(0, 0, 0, 0.5))',
-                }}
-                className='hover:scale-125 transition-all duration-300'
-            />
-            <p className='text-white text-center'>{warehouse.name}</p>
-            {selectedMarkerId === warehouse.id && !selectedAction && (
-                <UpdateWarehouseDialog
-                    isOpen={isDialogOpen}
-                    setIsOpen={setIsDialogOpen}
-                    warehouseId={warehouse.id}
+        <>
+            <Source
+                id='warehouse'
+                type='geojson'
+                data={{ type: 'FeatureCollection', features: geoJsonData.Warehouse }}
+                cluster={false}>
+                {/* Individual Points */}
+                <Layer
+                    id='warehouse_points'
+                    type='circle'
+                    source='warehouse'
+                    paint={{
+                        'circle-color': '#51bbd6',
+                        'circle-radius': 8,
+                        'circle-stroke-width': 2,
+                        'circle-stroke-color': '#fff',
+                    }}
                 />
-            )}
-        </Marker>
+            </Source>
+
+            <UpdateWarehouseDialog
+                warehouseId={warehouseId}
+                isOpen={isUpdateDialogOpen}
+                setIsOpen={setIsUpdateDialogOpen}
+            />
+        </>
     );
 };
 
