@@ -19,6 +19,31 @@ const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction 
     useEffect(() => {
         if (!map || !isMapLoaded) return;
 
+        // Load the image
+        const loadImage = async () => {
+            try {
+                const response = await fetch('/img/warehouse-image.png');
+
+                if (!response.ok) {
+                    console.error('Failed to load warehouse image');
+
+                    throw new Error('Failed to load warehouse image');
+                }
+
+                const blob = await response.blob();
+                const image = await createImageBitmap(blob);
+
+                if (!map.hasImage('warehouse-icon')) {
+                    map.addImage('warehouse-icon', image);
+                    console.log('Warehouse icon added to map');
+                }
+            } catch (error) {
+                console.error('Error loading warehouse icon');
+            }
+        };
+
+        loadImage();
+
         const handleLayerClick = (event: any) => {
             const warehouse = event.features;
 
@@ -52,18 +77,15 @@ const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction 
             <Source
                 id='warehouse'
                 type='geojson'
-                data={{ type: 'FeatureCollection', features: geoJsonData.Warehouse }}
-                cluster={false}>
+                data={{ type: 'FeatureCollection', features: geoJsonData.Warehouse }}>
                 {/* Individual Points */}
                 <Layer
                     id='warehouse_points'
-                    type='circle'
+                    type='symbol'
                     source='warehouse'
-                    paint={{
-                        'circle-color': '#51bbd6',
-                        'circle-radius': 8,
-                        'circle-stroke-width': 2,
-                        'circle-stroke-color': '#fff',
+                    layout={{
+                        'icon-image': 'warehouse-icon',
+                        'icon-size': 0.1,
                     }}
                 />
             </Source>
