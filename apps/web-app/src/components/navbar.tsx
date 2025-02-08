@@ -1,8 +1,10 @@
+'use client';
+
 import { Button, Separator } from '@b-prism/shadcn-ui/index';
 
 import { NavigationMenuContent, NavigationMenuItem, NavigationMenu, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from '@b-prism/shadcn-ui/index';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { cn } from '@b-prism/shadcn-lib/cn';
 
 const components: { title: string; href: string; description: string }[] = [
@@ -39,8 +41,22 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 const Navbar = () => {
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <nav className='px-[350px] z-50 py-5 flex justify-between items-center fixed top-0 w-full'>
+        <nav
+            className={`z-50 fixed top-0 w-full flex justify-between items-center transition-all duration-500 ${
+                isScrolled ? 'h-[80px] px-[350px] bg-black bg-opacity-60 shadow-md' : 'h-[130px] px-[75px] translate-all duration-500'
+            }`}>
             <div className='flex items-center gap-10'>
                 <p className='font-semibold'>Logo</p>
                 <NavbarItems />
