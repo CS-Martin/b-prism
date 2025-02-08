@@ -73,7 +73,9 @@ const Navbar = () => {
                     role='separator'
                     className='bg-white h-3 w-[1px]'
                 />
-                <Button className='rounded-full px-7 bg-blue-500 text-white'>
+                <Button
+                    asChild
+                    className='rounded-full px-8 bg-blue-500 hover:bg-blue-400 text-white'>
                     <Link href='/auth/login'>Sign in</Link>
                 </Button>
             </div>
@@ -86,7 +88,7 @@ const NavbarItems = () => {
         <NavigationMenu>
             <NavigationMenuList className='gap-3'>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger className='bg-transparent'>Getting started</NavigationMenuTrigger>
+                    <NavigationMenuTrigger className='bg-transparent font-semibold'>Getting started</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className='grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'>
                             <li className='row-span-3'>
@@ -120,7 +122,7 @@ const NavbarItems = () => {
                     </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger className='bg-transparent'>Solutions</NavigationMenuTrigger>
+                    <NavigationMenuTrigger className='bg-transparent font-semibold'>Solutions</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] '>
                             {components.map((component) => (
@@ -134,21 +136,15 @@ const NavbarItems = () => {
                         </ul>
                     </NavigationMenuContent>
                 </NavigationMenuItem>
-                <NavigationMenuItem className='font-semibold text-sm'>
-                    <Link
-                        href='/docs'
-                        legacyBehavior
-                        passHref>
-                        Documentation
-                    </Link>
+                <NavigationMenuItem
+                    asChild
+                    className='font-semibold text-sm'>
+                    <Link href='/docs'>Documentation</Link>
                 </NavigationMenuItem>
-                <NavigationMenuItem className='font-semibold text-sm'>
-                    <Link
-                        href='/map'
-                        legacyBehavior
-                        passHref>
-                        Map
-                    </Link>
+                <NavigationMenuItem
+                    asChild
+                    className='font-semibold text-sm'>
+                    <Link href='/map'>Map</Link>
                 </NavigationMenuItem>
             </NavigationMenuList>
         </NavigationMenu>
