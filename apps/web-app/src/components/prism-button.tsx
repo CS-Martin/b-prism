@@ -7,7 +7,7 @@ interface PrismButtonProps {
     isLoading: boolean;
     label: string;
     loadingLabel: string;
-    link: string;
+    link: string | null;
     style: string;
 }
 
@@ -17,7 +17,7 @@ export const PrismButton = ({ isLoading, label, loadingLabel, link, style }: Pri
             type='submit'
             disabled={isLoading}
             className={`group relative ${style}`}>
-            {!isLoading ? (
+            {isLoading ? (
                 <>
                     <PacmanLoader
                         className={`${isLoading ? 'pacman-loader-slide-in' : 'pacman-loader-slide-out'}`}
@@ -31,10 +31,16 @@ export const PrismButton = ({ isLoading, label, loadingLabel, link, style }: Pri
                         size={24}
                         className='absolute left-0 ml-4 animate-bounce transition-opacity duration-500 ease-in-out group-hover:ml-4 group-hover:opacity-100 sm:opacity-0'
                     /> */}
-                    <Link href={link}>
-                        {label}
-                        {/* <p className='translate-x-6 transition-transform duration-500 ease-in-out group-hover:translate-x-6 sm:translate-x-0'>{label}</p> */}
-                    </Link>
+
+                    {/* To handle events that sometimes do not require links */}
+                    {link ? (
+                        <Link href={link}>
+                            {label}
+                            {/* <p className='translate-x-6 transition-transform duration-500 ease-in-out group-hover:translate-x-6 sm:translate-x-0'>{label}</p> */}
+                        </Link>
+                    ) : (
+                        <span>{label}</span>
+                    )}
                 </>
             )}
         </Button>
