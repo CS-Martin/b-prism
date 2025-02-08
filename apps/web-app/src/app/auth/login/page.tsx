@@ -7,16 +7,19 @@ import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { userService } from 'apps/web-app/src/services/user.service';
 import { UserDto } from '@dto';
+import { PrismButton } from 'apps/web-app/src/components/prism-button';
 
 export default function LoginPage() {
     const { toast } = useToast();
     const router = useRouter();
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
     const [data, setData] = useState({
         email: '',
         password: '',
     });
 
-    const [error, setError] = useState('');
     const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -38,6 +41,8 @@ export default function LoginPage() {
             // if incomplete, redirect to /auth/new-user
             // if complete, redirect to /home
 
+            setIsLoading(true);
+
             const response = await userService.fetchUserByEmail(data.email);
 
             if (response.statusCode !== 201) {
@@ -53,6 +58,8 @@ export default function LoginPage() {
             } else {
                 router.push('/home');
             }
+
+            setIsLoading(false);
         }
     };
 
@@ -108,7 +115,7 @@ export default function LoginPage() {
                                 <div className='text-sm'>
                                     <a
                                         href='#'
-                                        className='font-semibold text-indigo-600 hover:text-indigo-500'>
+                                        className='font-semibold text-blue-500 hover:text-blue-400'>
                                         Forgot password?
                                     </a>
                                 </div>
@@ -132,11 +139,13 @@ export default function LoginPage() {
                         </div>
 
                         <div>
-                            <button
-                                type='submit'
-                                className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
-                                Sign in
-                            </button>
+                            <PrismButton
+                                isLoading={isLoading}
+                                label='Sign in'
+                                loadingLabel='Signing in...'
+                                link={null}
+                                style='flex w-full justify-center rounded-md bg-blue-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                            />
                         </div>
                     </form>
 
@@ -146,7 +155,7 @@ export default function LoginPage() {
                         Don&apos;t have an account yet?{' '}
                         <a
                             href='/auth/register'
-                            className='font-semibold text-indigo-600 hover:text-indigo-500'>
+                            className='font-semibold text-blue-500 hover:text-blue-400'>
                             Sign up
                         </a>
                     </p>
