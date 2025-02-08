@@ -58,7 +58,7 @@ const Navbar = () => {
                     className='bg-white h-3 w-[1px]'
                 />
                 <Button className='rounded-full px-7 bg-blue-500 text-white'>
-                    <Link href='/auth/login'>Sign up</Link>
+                    <Link href='/auth/login'>Sign in</Link>
                 </Button>
             </div>
         </nav>
