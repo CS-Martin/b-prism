@@ -1,11 +1,13 @@
 import { BadRequestException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationMongodbLibService } from '@authentication-mongodb-lib';
-import { CreateActivityLogDto, CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
+import { ChangePasswordDto, CreateActivityLogDto, CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { AuthenticationServiceAbstractClass } from './authentication-service.abstract.class';
 import { comparePassword, hashPassword } from '@lib-utils';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
 import { User, UserRole } from '@prisma/client';
 import { ActivityLogServiceLibService } from '@b-prisma/activity-log-service-lib';
+
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthenticationServiceLibService implements AuthenticationServiceAbstractClass {
@@ -68,6 +70,33 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             return response;
         } catch (error) {
             this.logger.error('Error verifying user', error);
+
+            throw new BadRequestException(error);
+        }
+    }
+
+    async changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<ResponseDto<UserDto>> {
+        console.log('HERERERER', id, changePasswordDto);
+        this.logger.log('Changing password of user', id);
+
+        const user: UserDto = (await this.userServiceLibService.findById(id)).body;
+
+        try {
+            const isOldPasswordValid: boolean = await bcrypt.compare(changePasswordDto.oldPassword, user.password);
+
+            if (!isOldPasswordValid) {
+                throw new BadRequestException('Old password is incorrect');
+            }
+
+            const hashedNewPassword: string = await hashPassword(changePasswordDto.oldPassword);
+            user.password = hashedNewPassword;
+
+            const updatedUser: User = await this.authenticationMongodbService.changePassword(user);
+            const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(updatedUser));
+
+            return response;
+        } catch (error) {
+            this.logger.error('An error occured while changing user password', user.id);
 
             throw new BadRequestException(error);
         }

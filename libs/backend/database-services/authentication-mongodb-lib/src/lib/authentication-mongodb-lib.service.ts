@@ -1,4 +1,4 @@
-import { UpdateUserDto, UserDto } from '@dto';
+import { ChangePasswordDto, UpdateUserDto, UserDto } from '@dto';
 import { CreateUserDto } from '@dto';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaDbLibService } from '@prisma-db-lib';
@@ -8,10 +8,10 @@ import { User } from '@prisma/client';
 export class AuthenticationMongodbLibService {
     constructor(private readonly prisma: PrismaDbLibService) {}
 
-    async create(userData: CreateUserDto): Promise<User> {
+    async create(createUserDto: CreateUserDto): Promise<User> {
         const user = await this.prisma.user.create({
             data: {
-                ...userData,
+                ...createUserDto,
             },
         });
 
@@ -24,6 +24,15 @@ export class AuthenticationMongodbLibService {
                 id: id,
             },
             data: userData,
+        });
+
+        return user;
+    }
+
+    async changePassword(updateUserDto: UpdateUserDto): Promise<User> {
+        const user = await this.prisma.user.update({
+            where: { id: updateUserDto.id },
+            data: { password: updateUserDto.password },
         });
 
         return user;

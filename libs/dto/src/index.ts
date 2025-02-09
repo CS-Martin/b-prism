@@ -26,3 +26,5 @@ export * from './lib/rescue-post/contact-person.dto';
 
 export * from './lib/activity-log/activity-log.dto';
 export * from './lib/activity-log/create.activity-log.dto';
+
+export * from './lib/authentication/change-password.dto';
