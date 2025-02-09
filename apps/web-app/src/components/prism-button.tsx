@@ -1,9 +1,11 @@
 import { Button } from '@b-prism/shadcn-ui/index';
+import { ButtonType } from '@b-prism/types';
 import { ArrowDown } from 'lucide-react';
 import Link from 'next/link';
 import { PacmanLoader } from 'react-spinners';
 
 interface PrismButtonProps {
+    type: ButtonType;
     isLoading: boolean;
     label: string;
     loadingLabel: string;
@@ -11,10 +13,10 @@ interface PrismButtonProps {
     style: string;
 }
 
-export const PrismButton = ({ isLoading, label, loadingLabel, link, style }: PrismButtonProps) => {
+export const PrismButton = ({ type, isLoading, label, loadingLabel, link, style }: PrismButtonProps) => {
     return (
         <Button
-            type='submit'
+            type={type}
             disabled={isLoading}
             className={`group relative ${style}`}>
             {isLoading ? (

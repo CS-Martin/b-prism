@@ -6,6 +6,7 @@ import { NavigationMenuContent, NavigationMenuItem, NavigationMenu, NavigationMe
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { cn } from '@b-prism/shadcn-lib/cn';
+import { useSession } from 'next-auth/react';
 
 const components: { title: string; href: string; description: string }[] = [
     {
@@ -41,6 +42,8 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 const Navbar = () => {
+    const { data: session } = useSession();
+    console.log(session);
     const [isScrolled, setIsScrolled] = useState(false);
 
     useEffect(() => {
@@ -58,7 +61,11 @@ const Navbar = () => {
                 isScrolled ? 'h-[80px] px-[350px] bg-black bg-opacity-60 shadow-md' : 'h-[130px] px-[75px] translate-all duration-500'
             }`}>
             <div className='flex items-center gap-10'>
-                <p className='font-semibold'>Logo</p>
+                <Link
+                    href={'/home'}
+                    className='font-semibold'>
+                    Logo
+                </Link>
                 <NavbarItems />
             </div>
 
@@ -73,11 +80,19 @@ const Navbar = () => {
                     role='separator'
                     className='bg-white h-3 w-[1px]'
                 />
-                <Button
-                    asChild
-                    className='rounded-full px-8 bg-blue-500 hover:bg-blue-400 text-white'>
-                    <Link href='/auth/login'>Sign in</Link>
-                </Button>
+                {session ? (
+                    <Button
+                        asChild
+                        className='rounded-full px-8 bg-blue-500 hover:bg-blue-400 text-white'>
+                        <Link href={'/api/auth/signout'}>Sign out</Link>
+                    </Button>
+                ) : (
+                    <Button
+                        asChild
+                        className='rounded-full px-8 bg-blue-500 hover:bg-blue-400 text-white'>
+                        <Link href='/auth/login'>Sign in</Link>
+                    </Button>
+                )}
             </div>
         </nav>
     );
