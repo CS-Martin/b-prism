@@ -140,6 +140,7 @@ export default function LoginPage() {
 
                         <div>
                             <PrismButton
+                                type='submit'
                                 isLoading={isLoading}
                                 label='Sign in'
                                 loadingLabel='Signing in...'

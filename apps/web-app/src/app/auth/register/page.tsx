@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 import { authService } from '../../../services/authentication.service';
 import { UserRole } from '@prisma/client';
 import { Button, Input } from '@b-prism/shadcn-ui/index';
+import { PrismButton } from 'apps/web-app/src/components/prism-button';
 
 export default function RegisterPage() {
     const router = useRouter();
 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [data, setData] = useState({
         given_name: '',
         family_name: '',
@@ -23,10 +25,12 @@ export default function RegisterPage() {
 
     const registerUser = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setIsLoading(true);
 
         await authService.create(data);
 
         router.push('/auth/login');
+        setIsLoading(false);
     };
 
     return (
@@ -201,11 +205,14 @@ export default function RegisterPage() {
                         </div>
 
                         <div>
-                            <Button
+                            <PrismButton
                                 type='submit'
-                                className='w-full'>
-                                Register
-                            </Button>
+                                isLoading={isLoading}
+                                label='Register'
+                                loadingLabel='Creating your account...'
+                                link={null}
+                                style='flex w-full justify-center rounded-md bg-blue-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                            />
                         </div>
                     </form>
 
@@ -213,7 +220,7 @@ export default function RegisterPage() {
                         Already have an account?{' '}
                         <a
                             href='/auth/login'
-                            className='font-semibold text-indigo-600 hover:text-indigo-500'>
+                            className='font-semibold text-blue-500 hover:text-blue-400'>
                             Sign in
                         </a>
                     </p>
