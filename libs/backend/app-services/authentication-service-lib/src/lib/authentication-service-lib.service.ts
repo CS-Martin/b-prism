@@ -87,17 +87,21 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         const code: string = randomInt(100000, 999999).toString();
         const expiresAt: Date = addMinutes(new Date(), 3);
 
+        console.log('code', code, 'dete', expiresAt);
+
         try {
             // Generate code
             // Generate expiration date 3 minutes
             // Send to user's gmail
 
-            const mailer: CreateMailerDto = new CreateMailerDto({
-                code: code,
-                user_id: user.id,
-                expiresAt: expiresAt,
-                created_at: new Date(),
-            });
+            const mailer: CreateMailerDto = new CreateMailerDto();
+
+            mailer.code = code;
+            mailer.expires_at = expiresAt;
+            mailer.user_id = user.id;
+            mailer.created_at = new Date();
+
+            this.logger.log('Mailer Data ===========', mailer);
 
             await this.mailerMongodbService.upsert(mailer);
         } catch (error) {
