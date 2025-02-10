@@ -30,7 +30,7 @@ export class MailerServiceLibService {
             await this.transporter.sendMail({
                 from: 'projectharibon@gmail.com',
                 to: userDto.email,
-                subject: 'Reset Your HARIBON Account Password',
+                subject: 'Your HARIBON Password Reset Code',
                 html: EMAIL_TEMPLATES.forgotPassword(userDto.given_name + ' ' + userDto.family_name, mailerDto.code),
             });
 
@@ -48,7 +48,7 @@ export class MailerServiceLibService {
             await this.transporter.sendMail({
                 from: 'projectharibon@gmail.com',
                 to: userDto.email,
-                subject: 'HARIBON Account Password Reset Alert',
+                subject: 'Someone tried to reset your password',
                 html: EMAIL_TEMPLATES.resetPasswordAlert(userDto.given_name + ' ' + userDto.family_name),
             });
 
