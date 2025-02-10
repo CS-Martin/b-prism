@@ -95,3 +95,11 @@ model ActivityLog {
   author      String // ID of the user who performed the action
   timestamp   DateTime @default(now()) // Timestamp of when the activity occurred
 }
+
+model Mailer {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  code       String
+  user_id    String   @unique
+  expires_at DateTime
+  created_at DateTime @default(now())
+}
