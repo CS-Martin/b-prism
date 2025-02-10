@@ -12,7 +12,7 @@ import {
     UserDto,
 } from '@dto';
 import { DispensingPoint } from '@prisma/client';
-import { ActivityLogServiceLibService } from '@b-prisma/activity-log-service-lib';
+import { ActivityLogServiceLibService } from '@b-prism/activity-log-service-lib';
 
 @Injectable()
 export class DispensingPointServiceLibService implements DispensingPointServiceAbstractClass {

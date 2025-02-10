@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { AuthenticationController } from './authentication.controller';
-import { AuthenticationServiceLibModule } from '@authentication-service-lib';
+import { AuthenticationServiceLibModule } from '@b-prism/authentication-service-lib';
 
 @Module({
     imports: [AuthenticationServiceLibModule],
