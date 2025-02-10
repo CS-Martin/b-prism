@@ -1,4 +1,4 @@
-import { ActivityLogServiceLibService } from '@b-prisma/activity-log-service-lib';
+import { ActivityLogServiceLibService } from '@b-prism/activity-log-service-lib';
 import { CreateActivityLogDto } from '@dto';
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';

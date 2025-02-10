@@ -1,0 +1,9 @@
+{
+    "name": "mailer-service-lib",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/backend/app-services/mailer-service-lib/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project mailer-service-lib --web",
+    "targets": {}
+}

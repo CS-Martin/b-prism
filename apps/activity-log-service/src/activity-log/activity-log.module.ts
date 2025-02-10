@@ -1,4 +1,4 @@
-import { ActivityLogServiceLibModule } from '@b-prisma/activity-log-service-lib';
+import { ActivityLogServiceLibModule } from '@b-prism/activity-log-service-lib';
 import { Module } from '@nestjs/common';
 import { ActivityLogController } from './activity-log.controller';
 

@@ -1,4 +1,4 @@
-import { AuthenticationServiceLibService } from '@authentication-service-lib';
+import { AuthenticationServiceLibService } from '@b-prism/authentication-service-lib';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
 import { ChangePasswordDto, CreateUserDto, UpdateUserDto, VerifyUserDto } from '@dto';
 import { Controller, Post, Body, Put, Param, Get } from '@nestjs/common';

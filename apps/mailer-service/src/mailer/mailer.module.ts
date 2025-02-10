@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-
-import { AuthenticationController } from './authentication.controller';
+import { MailerController } from './mailer.controller';
 import { AuthenticationServiceLibModule } from '@b-prism/authentication-service-lib';
 
 @Module({
     imports: [AuthenticationServiceLibModule],
-    controllers: [AuthenticationController],
+    controllers: [MailerController],
 })
-export class AuthenticationModule {}
+export class MailerModule {}

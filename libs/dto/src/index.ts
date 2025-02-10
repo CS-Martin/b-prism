@@ -28,3 +28,6 @@ export * from './lib/activity-log/activity-log.dto';
 export * from './lib/activity-log/create.activity-log.dto';
 
 export * from './lib/authentication/change-password.dto';
+
+export * from './lib/mailer/create.mailer.dto';
+export * from './lib/mailer/mailer.dto';

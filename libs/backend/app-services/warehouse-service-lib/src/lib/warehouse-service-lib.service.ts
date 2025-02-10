@@ -3,7 +3,7 @@ import { BadRequestException, Injectable, Logger, NotFoundException } from '@nes
 import { WarehouseServiceAbstractClass } from './warehouse-service.abstract.class';
 import { WarehouseMongodbLibService } from '@b-prism/warehouse-mongodb-lib';
 import { Warehouse } from '@prisma/client';
-import { ActivityLogServiceLibService } from '@b-prisma/activity-log-service-lib';
+import { ActivityLogServiceLibService } from '@b-prism/activity-log-service-lib';
 
 @Injectable()
 export class WarehouseServiceLibService implements WarehouseServiceAbstractClass {
