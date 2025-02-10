@@ -6,6 +6,8 @@ export abstract class AuthenticationServiceAbstractClass {
 
     abstract verify(email: string, password: string): Promise<ResponseDto<UserDto>>;
 
+    abstract forgotPassword(email: string): Promise<void>;
+
     abstract changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<ResponseDto<UserDto>>;
 
     abstract update(id: string, updateUserDto: UpdateUserDto): Promise<ResponseDto<UserDto>>;

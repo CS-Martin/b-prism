@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { AuthenticationMongodbLibService } from '@authentication-mongodb-lib';
-import { ChangePasswordDto, CreateActivityLogDto, CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
+import { AuthenticationMongodbLibService } from '@b-prism/authentication-mongodb-lib';
+import { ChangePasswordDto, CreateActivityLogDto, CreateMailerDto, CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { AuthenticationServiceAbstractClass } from './authentication-service.abstract.class';
 import { comparePassword, hashPassword } from '@lib-utils';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
@@ -8,6 +8,9 @@ import { User, UserRole } from '@prisma/client';
 import { ActivityLogServiceLibService } from '@b-prisma/activity-log-service-lib';
 
 import * as bcrypt from 'bcrypt';
+import { randomInt } from 'crypto';
+import { addMinutes } from 'date-fns';
+import { MailerMongodbLibService } from '@b-prism/mailer-mongodb-lib';
 
 @Injectable()
 export class AuthenticationServiceLibService implements AuthenticationServiceAbstractClass {
@@ -15,6 +18,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
     constructor(
         private readonly authenticationMongodbService: AuthenticationMongodbLibService,
+        private readonly mailerMongodbService: MailerMongodbLibService,
         private readonly userServiceLibService: UserServiceLibService,
         private readonly activityLogLibService: ActivityLogServiceLibService,
     ) {}
@@ -75,8 +79,35 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
+    async forgotPassword(email: string): Promise<void> {
+        this.logger.log('Forgetting password for user', email);
+
+        const user: UserDto = (await this.userServiceLibService.findByEmail(email)).body;
+
+        const code: string = randomInt(100000, 999999).toString();
+        const expiresAt: Date = addMinutes(new Date(), 3);
+
+        try {
+            // Generate code
+            // Generate expiration date 3 minutes
+            // Send to user's gmail
+
+            const mailer: CreateMailerDto = new CreateMailerDto({
+                code: code,
+                user_id: user.id,
+                expiresAt: expiresAt,
+                created_at: new Date(),
+            });
+
+            await this.mailerMongodbService.upsert(mailer);
+        } catch (error) {
+            this.logger.error('An error occured while forgetting user password', user.id);
+
+            throw new BadRequestException(error);
+        }
+    }
+
     async changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<ResponseDto<UserDto>> {
-        console.log('HERERERER', id, changePasswordDto);
         this.logger.log('Changing password of user', id);
 
         const user: UserDto = (await this.userServiceLibService.findById(id)).body;
