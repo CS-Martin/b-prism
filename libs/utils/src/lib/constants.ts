@@ -19,7 +19,7 @@ export const EMAIL_TEMPLATES = {
             <body>
                 <h2>Reset Your Password</h2>
                 <p>Hello <strong>${userName}</strong>,</p>
-                <p>We received a request to reset your password for your HARIBON account.</p>
+                <p>We received a request to reset your password for your account.</p>
                 <p>Please click the button below to set a new password:</p>
                 <div style="text-align: center;">
                     <a href="${process.env['NEXTAUTH_URL']}" 
