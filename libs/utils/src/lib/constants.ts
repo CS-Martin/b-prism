@@ -8,7 +8,7 @@ export const EMAIL_TEMPLATES = {
                     .code-box { 
                         display: block; font-size: 28px; font-weight: bold; 
                         text-align: center; 
-                        padding: 12px; border: 2px dashed #007bff; 
+                        padding: 12px; border: 2px dashed 
                         margin: 20px auto; width: fit-content;
                         border-radius: 12px;
                     }
