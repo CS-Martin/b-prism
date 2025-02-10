@@ -2,10 +2,11 @@ import { BadRequestException, Injectable, Logger, NotFoundException, Unauthorize
 import { AuthenticationMongodbLibService } from '@b-prism/authentication-mongodb-lib';
 import { ChangePasswordDto, CreateActivityLogDto, CreateMailerDto, CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { AuthenticationServiceAbstractClass } from './authentication-service.abstract.class';
-import { comparePassword, hashPassword } from '@lib-utils';
+import { comparePassword, hashPassword } from '@b-prism/lib-utils';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
-import { User, UserRole } from '@prisma/client';
-import { ActivityLogServiceLibService } from '@b-prisma/activity-log-service-lib';
+import { Mailer, User, UserRole } from '@prisma/client';
+import { ActivityLogServiceLibService } from '@b-prism/activity-log-service-lib';
+import { MailerServiceLibService } from '@b-prism/mailer-service-lib';
 
 import * as bcrypt from 'bcrypt';
 import { randomInt } from 'crypto';
@@ -19,8 +20,10 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
     constructor(
         private readonly authenticationMongodbService: AuthenticationMongodbLibService,
         private readonly mailerMongodbService: MailerMongodbLibService,
+
         private readonly userServiceLibService: UserServiceLibService,
         private readonly activityLogLibService: ActivityLogServiceLibService,
+        private readonly mailerServiceLibService: MailerServiceLibService,
     ) {}
 
     async create(userData: CreateUserDto): Promise<ResponseDto<UserDto>> {
@@ -101,7 +104,10 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
             this.logger.log('Mailer Data', mailer);
 
-            await this.mailerMongodbService.upsert(mailer);
+            const upsertedMailer: Mailer = await this.mailerMongodbService.upsert(mailer);
+
+            await this.mailerServiceLibService.sendResetPasswordAlert(user);
+            await this.mailerServiceLibService.sendVerificationCode(user, upsertedMailer);
         } catch (error) {
             this.logger.error('An error occured while forgetting user password', user.id);
 
