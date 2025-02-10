@@ -11,7 +11,7 @@ export class MailerServiceLibService {
 
     private transporter: nodemailer.Transporter;
 
-    constructor(private readonly mailerMongodbLibService: MailerMongodbLibService) {
+    constructor() {
         this.transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 587,

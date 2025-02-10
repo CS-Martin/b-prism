@@ -4,7 +4,7 @@ import { MailerMongodbLibModule } from '@b-prism/mailer-mongodb-lib';
 
 @Module({
     controllers: [],
-    imports: [MailerMongodbLibModule],
+    imports: [],
     providers: [MailerServiceLibService],
     exports: [MailerServiceLibService],
 })
