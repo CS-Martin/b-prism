@@ -10,7 +10,6 @@ import { useSendVerificationCode } from 'apps/web-app/src/hooks/mailer.hook';
 import { MailerDto, ResponseDto } from '@dto';
 import { PacmanLoader } from 'react-spinners';
 import { useVerifyEmailCode } from 'apps/web-app/src/hooks/authentication.hook';
-import { validateEmail } from '@b-prism/lib-utils';
 
 export default function ForgotPasswordPage() {
     const [mail, setMail] = useState<ResponseDto<MailerDto>>();
@@ -183,3 +182,7 @@ export default function ForgotPasswordPage() {
         </div>
     );
 }
+
+const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
