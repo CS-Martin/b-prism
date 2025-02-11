@@ -119,6 +119,36 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
+    async verifyEmailCode(email: string, code: string): Promise<ResponseDto<boolean>> {
+        this.logger.log('Verifying the code sent to user', email, code);
+
+        const user: UserDto = (await this.userServiceLibService.findByEmail(email)).body;
+
+        try {
+            const mailer: MailerDto | null = await this.mailerMongodbService.verifyEmailCode(user.id, code);
+
+            if (!mailer) {
+                this.logger.log(`Invalid verification code for user: ${user.given_name} ${user.family_name}`);
+
+                throw new BadRequestException('Invalid Verification Code');
+            }
+
+            // If mailer.expireAt already expired throw error to notify in the client that code is already expired
+            const now = new Date();
+            if (new Date(mailer.expires_at) < now) {
+                this.logger.warn(`Verification code expired for user: ${user.id}`);
+
+                throw new BadRequestException('Verification code has expired');
+            }
+
+            return new ResponseDto<boolean>(200, true);
+        } catch (error) {
+            this.logger.error('An error occured while verifying code sent', user.id, code);
+
+            throw new BadRequestException(error);
+        }
+    }
+
     async changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<ResponseDto<UserDto>> {
         this.logger.log('Changing password of user', id);
 
