@@ -1,4 +1,4 @@
-import { CreateUserDto, ResponseDto, UserDto, UpdateUserDto, ChangePasswordDto } from '@dto';
+import { CreateUserDto, ResponseDto, UserDto, UpdateUserDto, ChangePasswordDto, MailerDto } from '@dto';
 import { User } from '@prisma/client';
 
 export abstract class AuthenticationServiceAbstractClass {
@@ -6,7 +6,7 @@ export abstract class AuthenticationServiceAbstractClass {
 
     abstract verify(email: string, password: string): Promise<ResponseDto<UserDto>>;
 
-    abstract forgotPassword(email: string): Promise<void>;
+    abstract forgotPassword(email: string): Promise<ResponseDto<MailerDto>>;
 
     abstract changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<ResponseDto<UserDto>>;
 

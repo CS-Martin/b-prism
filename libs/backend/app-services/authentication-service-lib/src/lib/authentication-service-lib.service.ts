@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationMongodbLibService } from '@b-prism/authentication-mongodb-lib';
-import { ChangePasswordDto, CreateActivityLogDto, CreateMailerDto, CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
+import { ChangePasswordDto, CreateActivityLogDto, CreateMailerDto, CreateUserDto, MailerDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { AuthenticationServiceAbstractClass } from './authentication-service.abstract.class';
 import { comparePassword, hashPassword } from '@b-prism/lib-utils';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
@@ -82,7 +82,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
-    async forgotPassword(email: string): Promise<void> {
+    async forgotPassword(email: string): Promise<ResponseDto<MailerDto>> {
         this.logger.log('Forgetting password for user', email);
 
         const user: UserDto = (await this.userServiceLibService.findByEmail(email)).body;
@@ -108,8 +108,42 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
             await this.mailerServiceLibService.sendResetPasswordAlert(user);
             await this.mailerServiceLibService.sendVerificationCode(user, upsertedMailer);
+
+            const response: ResponseDto<MailerDto> = new ResponseDto<MailerDto>(201, upsertedMailer);
+
+            return response;
         } catch (error) {
             this.logger.error('An error occured while forgetting user password', user.id);
+
+            throw new BadRequestException(error);
+        }
+    }
+
+    async verifyEmailCode(email: string, code: string): Promise<ResponseDto<boolean>> {
+        this.logger.log('Verifying the code sent to user', email, code);
+
+        const user: UserDto = (await this.userServiceLibService.findByEmail(email)).body;
+
+        try {
+            const mailer: MailerDto | null = await this.mailerMongodbService.verifyEmailCode(user.id, code);
+
+            if (!mailer) {
+                this.logger.log(`Invalid verification code for user: ${user.given_name} ${user.family_name}`);
+
+                throw new BadRequestException('Invalid Verification Code');
+            }
+
+            // If mailer.expireAt already expired throw error to notify in the client that code is already expired
+            const now = new Date();
+            if (new Date(mailer.expires_at) < now) {
+                this.logger.warn(`Verification code expired for user: ${user.id}`);
+
+                throw new BadRequestException('Verification code had already expired. Please request a new verification code.');
+            }
+
+            return new ResponseDto<boolean>(200, true);
+        } catch (error) {
+            this.logger.error('An error occured while verifying code sent', user.id, code);
 
             throw new BadRequestException(error);
         }

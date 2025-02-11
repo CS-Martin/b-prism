@@ -66,8 +66,6 @@ export const useCreateWarehouse = () => {
     const createWarehouse = async (data: CreateWarehouseDto, author: string) => {
         await warehouseService.create(data, author);
 
-        console.log(data);
-
         toast({
             title: 'Success!',
             description: `The warehouse ${data.name} has been created successfully`,

@@ -1,4 +1,4 @@
-import { CreateUserDto, UpdateUserDto, UserDto } from '@dto';
+import { CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 
 class AuthenticationService {
@@ -105,6 +105,30 @@ class AuthenticationService {
         }
 
         return await response.json();
+    }
+
+    public async verifyEmailCode(email: string, code: string): Promise<ResponseDto<boolean>> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/authentication/verify-email-code`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, code }),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message || 'Failed to verify email code');
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error('Authentication Service Error:', error);
+
+            throw error;
+        }
     }
 }
 

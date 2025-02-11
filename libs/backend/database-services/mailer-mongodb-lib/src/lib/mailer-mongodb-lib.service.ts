@@ -17,8 +17,16 @@ export class MailerMongodbLibService {
         return mailer;
     }
 
+    async verifyEmailCode(user_id: string, code: string): Promise<Mailer | null> {
+        const mailer = this.prisma.mailer.findFirst({
+            where: { user_id: user_id, code: code },
+        });
+
+        return mailer;
+    }
+
     async delete(id: string): Promise<void> {
-        this.prisma.mailer.delete({
+        await this.prisma.mailer.delete({
             where: {
                 id,
             },

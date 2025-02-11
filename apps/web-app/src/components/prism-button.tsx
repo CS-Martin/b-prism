@@ -8,7 +8,7 @@ interface PrismButtonProps {
     type: ButtonType;
     isLoading: boolean;
     label: string;
-    loadingLabel: string;
+    loadingLabel: string | null;
     link: string | null;
     style: string;
 }
