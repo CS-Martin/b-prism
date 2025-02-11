@@ -9,7 +9,7 @@ export const InputEmail = ({ email, setEmail }: InputEmailProps) => {
     return (
         <div>
             <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>Email Address</label>
-            <input
+            <Input
                 type='email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -17,6 +17,7 @@ export const InputEmail = ({ email, setEmail }: InputEmailProps) => {
                 placeholder='Enter your email'
                 required
             />
+            <p className='mt-2 text-sm text-gray-500 dark:text-gray-400'>Please enter your email address to receive a verification code.</p>
         </div>
     );
 };

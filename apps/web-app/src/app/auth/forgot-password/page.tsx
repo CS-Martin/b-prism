@@ -10,6 +10,7 @@ import { useSendVerificationCode } from 'apps/web-app/src/hooks/mailer.hook';
 import { MailerDto, ResponseDto } from '@dto';
 import { PacmanLoader } from 'react-spinners';
 import { useVerifyEmailCode } from 'apps/web-app/src/hooks/authentication.hook';
+import { validateEmail } from '@b-prism/lib-utils';
 
 export default function ForgotPasswordPage() {
     const [mail, setMail] = useState<ResponseDto<MailerDto>>();
@@ -60,9 +61,7 @@ export default function ForgotPasswordPage() {
             ),
         },
     ];
-    const validateEmail = (email: string) => {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    };
+
     const handleNext = async () => {
         // Should reset error before proceeding
         setError(null);
@@ -110,7 +109,7 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className='flex flex-col items-center justify-center min-h-screen h-[]  p-8'>
+        <div className='flex flex-col items-center justify-center min-h-screen  p-8'>
             <div className='w-full max-w-[600px] bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6'>
                 {/* Progress Steps */}
                 <div className='flex justify-between items-start relative mb-6 '>
@@ -121,13 +120,13 @@ export default function ForgotPasswordPage() {
                             {/* Connector Line */}
                             {index !== steps.length && (
                                 <div
-                                    className={`absolute top-5 left-1/2 transform -translate-x-1/2 h-1 w-full rounded-full ${index < currentStep ? 'bg-green-500' : 'bg-gray-300'}`}
+                                    className={`absolute top-5 left-1/2 transform -translate-x-1/2 h-1 w-full rounded-full ${index < currentStep + 1 ? 'bg-green-500' : 'bg-gray-300'}`}
                                 />
                             )}
 
                             {/* Step Circle */}
                             <div
-                                className={`z-10 flex items-center justify-center w-11 h-11 rounded-full border-[5px] border-gray-800 ${index <= currentStep ? 'bg-blue-500 ' : 'bg-white'}`}>
+                                className={`z-10 flex items-center justify-center w-11 h-11 rounded-full border-[5px] border-gray-800 ${index <= currentStep ? 'bg-green-500 ' : 'bg-white'}`}>
                                 {index < currentStep ? <span className='text-white text-lg font-bold'>✔</span> : <span className='text-gray-700 font-semibold'>{index + 1}</span>}
                             </div>
 
@@ -141,7 +140,7 @@ export default function ForgotPasswordPage() {
                 </div>
 
                 {/* Step Content */}
-                <div className='mb-4 min-h-[150px] max-h-[200px]'>{steps[currentStep].component}</div>
+                <div className='mb-4 min-h-fit max-h-[200px] transition-all duration-500'>{steps[currentStep].component}</div>
 
                 {/* Error Message */}
                 {error && <p className='text-red-500 text-sm mb-4'>{error}</p>}
