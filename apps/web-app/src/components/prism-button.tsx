@@ -8,12 +8,13 @@ interface PrismButtonProps {
     type: ButtonType;
     isLoading: boolean;
     label: string;
-    loadingLabel: string;
+    loadingLabel: string | null;
     link: string | null;
     style: string;
+    onClick: () => Promise<void>;
 }
 
-export const PrismButton = ({ type, isLoading, label, loadingLabel, link, style }: PrismButtonProps) => {
+export const PrismButton = ({ type, isLoading, onClick, label, loadingLabel, link, style }: PrismButtonProps) => {
     return (
         <Button
             type={type}

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationMongodbLibService } from '@b-prism/authentication-mongodb-lib';
-import { ChangePasswordDto, CreateActivityLogDto, CreateMailerDto, CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
+import { ChangePasswordDto, CreateActivityLogDto, CreateMailerDto, CreateUserDto, MailerDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { AuthenticationServiceAbstractClass } from './authentication-service.abstract.class';
 import { comparePassword, hashPassword } from '@b-prism/lib-utils';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
@@ -82,7 +82,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
-    async forgotPassword(email: string): Promise<void> {
+    async forgotPassword(email: string): Promise<ResponseDto<MailerDto>> {
         this.logger.log('Forgetting password for user', email);
 
         const user: UserDto = (await this.userServiceLibService.findByEmail(email)).body;
@@ -108,6 +108,10 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
             await this.mailerServiceLibService.sendResetPasswordAlert(user);
             await this.mailerServiceLibService.sendVerificationCode(user, upsertedMailer);
+
+            const response: ResponseDto<MailerDto> = new ResponseDto<MailerDto>(201, upsertedMailer);
+
+            return response;
         } catch (error) {
             this.logger.error('An error occured while forgetting user password', user.id);
 
