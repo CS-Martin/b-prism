@@ -21,14 +21,14 @@ class MailerService {
             if (!response.ok) {
                 const error = await response.json();
 
-                throw new BadRequestException(error.message);
+                throw new BadRequestException(error.message || 'Failed to send verification code');
             }
 
             return response.json();
         } catch (error) {
-            console.error(error);
+            console.error('MailerService Error:', error);
 
-            throw new BadRequestException(`Failed to send verification code to ${email}`);
+            throw error;
         }
     }
 }

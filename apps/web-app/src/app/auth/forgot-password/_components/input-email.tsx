@@ -9,7 +9,7 @@ export const InputEmail = ({ email, setEmail }: InputEmailProps) => {
     return (
         <div>
             <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>Email Address</label>
-            <Input
+            <input
                 type='email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

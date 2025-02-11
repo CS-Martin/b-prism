@@ -1,3 +1,4 @@
+import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator, Label, Button } from '@b-prism/shadcn-ui/index';
 import { MailerDto, ResponseDto } from '@dto';
 import { useSendVerificationCode } from 'apps/web-app/src/hooks/mailer.hook';
@@ -54,6 +55,7 @@ export const OTPInput = ({ email, mail, setMail, otp, setOtp }: OTPInputProps) =
     const generateNewCode = async () => {
         try {
             const response: ResponseDto<MailerDto> = await sendVerificationCode(email);
+            setOtp('');
             setMail(response);
         } catch (error) {
             console.error(error);

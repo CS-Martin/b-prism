@@ -138,7 +138,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             if (new Date(mailer.expires_at) < now) {
                 this.logger.warn(`Verification code expired for user: ${user.id}`);
 
-                throw new BadRequestException('Verification code has expired');
+                throw new BadRequestException('Verification code had already expired. Please request a new verification code.');
             }
 
             return new ResponseDto<boolean>(200, true);

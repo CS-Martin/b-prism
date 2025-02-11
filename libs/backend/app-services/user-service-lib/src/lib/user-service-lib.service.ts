@@ -41,6 +41,8 @@ export class UserServiceLibService implements UserServiceAbstractClass {
         const user: User | null = await this.userMongodbLibService.findByEmail(email);
 
         if (!user) {
+            console.error(`User with email ${email} not found`);
+
             throw new NotFoundException(`User with email ${email} not found`);
         }
 

@@ -9,6 +9,7 @@ import { ArrowLeft, Ghost } from 'lucide-react';
 import { useSendVerificationCode } from 'apps/web-app/src/hooks/mailer.hook';
 import { MailerDto, ResponseDto } from '@dto';
 import { PacmanLoader } from 'react-spinners';
+import { useVerifyEmailCode } from 'apps/web-app/src/hooks/authentication.hook';
 
 export default function ForgotPasswordPage() {
     const [mail, setMail] = useState<ResponseDto<MailerDto>>();
@@ -17,8 +18,10 @@ export default function ForgotPasswordPage() {
     const [otp, setOtp] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState<string | null>('');
 
-    const { sendVerificationCode, isLoading } = useSendVerificationCode();
+    const { sendVerificationCode, isLoading: isSendingCode } = useSendVerificationCode();
+    const { verifyEmailCode, isLoading: isVerifyingCode } = useVerifyEmailCode();
 
     const steps = [
         {
@@ -57,21 +60,46 @@ export default function ForgotPasswordPage() {
             ),
         },
     ];
-
+    const validateEmail = (email: string) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
     const handleNext = async () => {
-        if (currentStep === 0 && !email) {
-            return;
-        } else {
+        // Should reset error before proceeding
+        setError(null);
+
+        if (currentStep === 0) {
+            if (!email) return setError('Please enter your email.');
+
+            if (!validateEmail(email)) return setError('Please enter a valid email address.');
+
             try {
-                const response: ResponseDto<MailerDto> = await sendVerificationCode(email);
-                setMail(response);
+                const mailer: ResponseDto<MailerDto> = await sendVerificationCode(email);
+                setMail(mailer);
             } catch (error) {
-                console.error(error);
+                if (error instanceof Error) {
+                    setError(error.message); // Use the backend error message
+                } else {
+                    setError('An unknown error occurred while sending the verification code.');
+                }
                 return;
             }
         }
 
-        if (currentStep === 1 && otp.length !== 6) return;
+        if (currentStep === 1) {
+            if (otp.length !== 6) return setError('OTP must be 6 digits.');
+
+            try {
+                const response: ResponseDto<boolean> = await verifyEmailCode(email, otp);
+            } catch (error) {
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError('An unknown error occurred while sending the verification code');
+                }
+                return;
+            }
+        }
+
         if (currentStep === 2 && (password.length < 6 || password !== confirmPassword)) return;
 
         setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
@@ -115,21 +143,25 @@ export default function ForgotPasswordPage() {
                 {/* Step Content */}
                 <div className='mb-4 min-h-[150px] max-h-[200px]'>{steps[currentStep].component}</div>
 
+                {/* Error Message */}
+                {error && <p className='text-red-500 text-sm mb-4'>{error}</p>}
+
                 {/* Navigation Buttons */}
                 <div className='mt-6 flex flex-col items-center gap-y-2 justify-between'>
                     <Button
+                        type='submit'
                         onClick={handleNext}
                         className='px-4 w-full py-2 rounded-lg text-white bg-blue-500 hover:bg-blue-400 disabled:opacity-50'
                         disabled={
-                            isLoading || // Disable while the request is in progress
+                            isSendingCode ||
+                            isVerifyingCode || // Disable while the request is in progress
                             (currentStep === 0 && !email) ||
                             (currentStep === 1 && otp.length !== 6) ||
                             (currentStep === 2 && (password.length < 6 || password !== confirmPassword))
                         }>
-                        {isLoading ? (
+                        {isSendingCode || isVerifyingCode ? (
                             <>
                                 <PacmanLoader
-                                    className={`${isLoading ? 'pacman-loader-slide-in' : 'pacman-loader-slide-out'}`}
                                     color='white'
                                     size={10}
                                 />
