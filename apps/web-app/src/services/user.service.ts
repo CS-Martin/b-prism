@@ -24,7 +24,7 @@ class UserService {
         } catch (error) {
             console.error(error);
 
-            throw new BadRequestException('Failed to fetch users');
+            throw error;
         }
     }
 
@@ -42,7 +42,7 @@ class UserService {
         } catch (error) {
             console.error(error);
 
-            throw new BadRequestException('Failed to fetch user');
+            throw error;
         }
     }
 }
