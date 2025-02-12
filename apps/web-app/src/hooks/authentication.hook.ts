@@ -56,3 +56,34 @@ export const useVerifyEmailCode = () => {
 
     return { verifyEmailCode, isLoading };
 };
+
+export const useResetPassword = () => {
+    const { toast } = useToast();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const resetPassword = async (email: string, password: string, confirmPassword: string) => {
+        setIsLoading(true);
+
+        try {
+            const response = await authService.resetPassword(email, { password, confirmPassword });
+
+            setIsLoading(false);
+
+            if (response.statusCode === 201) {
+                toast({
+                    title: 'Reset Password Succesful!',
+                    description: 'You have successfuly reset your password. Please proceed to continue.',
+                    variant: 'success',
+                });
+            }
+
+            return response;
+        } catch (error) {
+            setIsLoading(false);
+
+            throw error;
+        }
+    };
+
+    return { resetPassword, isLoading };
+};
