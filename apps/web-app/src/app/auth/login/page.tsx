@@ -6,10 +6,13 @@ import { Input } from '@b-prism/shadcn-ui/index';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { userService } from 'apps/web-app/src/services/user.service';
-import { UserDto } from '@dto';
+import { ResponseDto, UserDto } from '@dto';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
+import { useLoginUser } from 'apps/web-app/src/hooks/authentication.hook';
 
 export default function LoginPage() {
+    const { loginUser, isLoading: isLoggingIn } = useLoginUser();
+
     const { toast } = useToast();
     const router = useRouter();
 
@@ -20,7 +23,7 @@ export default function LoginPage() {
         password: '',
     });
 
-    const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleLoginUser = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const result = await signIn('credentials', {
@@ -30,6 +33,8 @@ export default function LoginPage() {
         });
 
         if (result?.error) {
+            setError(result.error);
+
             toast({
                 title: 'Error',
                 description: result.error,
@@ -40,26 +45,28 @@ export default function LoginPage() {
             // TODO: check if user has incomplete profile
             // if incomplete, redirect to /auth/new-user
             // if complete, redirect to /home
+            // setIsLoading(true);
+            // const response = await userService.fetchUserByEmail(data.email);
+            // if (response.statusCode !== 201) {
+            //     throw new Error('Failed to fetch user');
+            // }
+            // const user: UserDto = response.body;
+            // const isIncompleteProfile = user.id_image_url === undefined || user.id_image_url === null || user.id_image_url === '';
+            // if (isIncompleteProfile) {
+            // } else {
+            //     router.push('/home');
+            // }
+            // setIsLoading(false);
 
-            setIsLoading(true);
-
-            const response = await userService.fetchUserByEmail(data.email);
-
-            if (response.statusCode !== 201) {
-                throw new Error('Failed to fetch user');
-            }
-
+            const response: ResponseDto<UserDto> = await loginUser(data.email);
             const user: UserDto = response.body;
+            const isUserNoValidId: boolean = user.id_image_url === undefined || user.id_image_url === null || user.id_image_url === '';
 
-            const isIncompleteProfile = user.id_image_url === undefined || user.id_image_url === null || user.id_image_url === '';
-
-            if (isIncompleteProfile) {
+            if (isUserNoValidId) {
                 router.push(`/auth/${user.id}/complete-profile`);
             } else {
                 router.push('/home');
             }
-
-            setIsLoading(false);
         }
     };
 
@@ -78,7 +85,7 @@ export default function LoginPage() {
                 <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
                     <form
                         action='#'
-                        onSubmit={loginUser}
+                        onSubmit={handleLoginUser}
                         className='space-y-6'>
                         <div>
                             <label
@@ -141,7 +148,7 @@ export default function LoginPage() {
                         <div>
                             <PrismButton
                                 type='submit'
-                                isLoading={isLoading}
+                                isLoading={isLoggingIn}
                                 label='Sign in'
                                 loadingLabel='Signing in...'
                                 link={null}
@@ -149,8 +156,6 @@ export default function LoginPage() {
                             />
                         </div>
                     </form>
-
-                    {error && <p className='mt-10 text-center text-sm/6 text-red-500'>{error}</p>}
 
                     <p className='mt-10 text-center text-sm/6 text-gray-500'>
                         Don&apos;t have an account yet?{' '}
