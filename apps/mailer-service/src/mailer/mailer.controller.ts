@@ -11,6 +11,6 @@ export class MailerController {
     @Post('upsert')
     @ApiBody({ schema: { type: 'object', properties: { email: { type: 'string' } } } })
     upsert(@Body('email') email: string) {
-        return this.authenticationServiceLibService.forgotPassword(email);
+        return this.authenticationServiceLibService.sendVerificationCodeMail(email);
     }
 }

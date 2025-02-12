@@ -7,11 +7,13 @@ import { PasswordInput } from './_components/password-input';
 import { Button } from '@b-prism/shadcn-ui/index';
 import { ArrowLeft, Ghost } from 'lucide-react';
 import { useSendVerificationCode } from 'apps/web-app/src/hooks/mailer.hook';
-import { MailerDto, ResponseDto } from '@dto';
+import { MailerDto, ResponseDto, UserDto } from '@dto';
 import { PacmanLoader } from 'react-spinners';
-import { useVerifyEmailCode } from 'apps/web-app/src/hooks/authentication.hook';
+import { useResetPassword, useVerifyEmailCode } from 'apps/web-app/src/hooks/authentication.hook';
+import { useRouter } from 'next/navigation';
 
 export default function ForgotPasswordPage() {
+    const router = useRouter();
     const [mail, setMail] = useState<ResponseDto<MailerDto>>();
     const [currentStep, setCurrentStep] = useState(0);
     const [email, setEmail] = useState('');
@@ -22,6 +24,7 @@ export default function ForgotPasswordPage() {
 
     const { sendVerificationCode, isLoading: isSendingCode } = useSendVerificationCode();
     const { verifyEmailCode, isLoading: isVerifyingCode } = useVerifyEmailCode();
+    const { resetPassword, isLoading: isResettingPassword } = useResetPassword();
 
     const steps = [
         {
@@ -88,6 +91,10 @@ export default function ForgotPasswordPage() {
 
             try {
                 const response: ResponseDto<boolean> = await verifyEmailCode(email, otp);
+
+                if (response.body !== true) {
+                    return;
+                }
             } catch (error) {
                 if (error instanceof Error) {
                     setError(error.message);
@@ -98,7 +105,22 @@ export default function ForgotPasswordPage() {
             }
         }
 
-        if (currentStep === 2 && (password.length < 6 || password !== confirmPassword)) return;
+        if (currentStep === 2) {
+            if (password.length < 6 || password !== confirmPassword) return;
+
+            try {
+                const response: ResponseDto<UserDto> = await resetPassword(email, password, confirmPassword);
+
+                router.push('/auth/login');
+            } catch (error) {
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError('An unknown error occurred resetting your password.');
+                }
+                return;
+            }
+        }
 
         setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
     };
@@ -106,6 +128,8 @@ export default function ForgotPasswordPage() {
     const handleBack = () => {
         setCurrentStep((prev) => Math.max(prev - 1, 0));
     };
+
+    console.log(currentStep);
 
     return (
         <div className='flex flex-col items-center justify-center min-h-screen  p-8'>
@@ -153,13 +177,15 @@ export default function ForgotPasswordPage() {
                         disabled={
                             isSendingCode ||
                             isVerifyingCode || // Disable while the request is in progress
+                            isResettingPassword ||
                             (currentStep === 0 && !email) ||
                             (currentStep === 1 && otp.length !== 6) ||
                             (currentStep === 2 && (password.length < 6 || password !== confirmPassword))
                         }>
-                        {isSendingCode || isVerifyingCode ? (
+                        {isSendingCode || isVerifyingCode || isResettingPassword ? (
                             <>
                                 <PacmanLoader
+                                    className='pacman-loader'
                                     color='white'
                                     size={10}
                                 />

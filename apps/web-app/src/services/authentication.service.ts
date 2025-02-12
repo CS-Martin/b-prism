@@ -1,4 +1,4 @@
-import { CreateUserDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
+import { CreateUserDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 
 class AuthenticationService {
@@ -29,7 +29,7 @@ class AuthenticationService {
         } catch (error) {
             console.error(error);
 
-            throw new BadRequestException('Failed to create user');
+            throw error;
         }
     }
 
@@ -51,9 +51,9 @@ class AuthenticationService {
 
             return response.json();
         } catch (error) {
-            console.error(error);
+            console.error('Authentication Service Error', error);
 
-            throw new BadRequestException(`Failed to update user ${user.email}`);
+            throw error;
         }
     }
 
@@ -77,34 +77,70 @@ class AuthenticationService {
 
             return user.body;
         } catch (error) {
-            console.error(error);
+            console.error('Authentication Service Error:', error);
 
-            throw new BadRequestException('Your email or password is incorrect. Please try again.');
+            throw error;
         }
     }
 
     public async findById(id: string): Promise<UserDto> {
-        const response = await fetch(`${this.API_BASE_URL}/authentication/find/${id}`);
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/authentication/find/${id}`);
 
-        if (!response.ok) {
-            const error = await response.json();
+            if (!response.ok) {
+                const error = await response.json();
 
-            throw new BadRequestException(error.message);
+                throw new BadRequestException(error.message || 'Failed to find user by id');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Authentication Service Error:', error);
+
+            throw error;
         }
-
-        return await response.json();
     }
 
     public async findByEmail(email: string): Promise<UserDto> {
-        const response = await fetch(`${this.API_BASE_URL}/authentication/find/email/${email}`);
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/authentication/find/email/${email}`);
 
-        if (!response.ok) {
-            const error = await response.json();
+            if (!response.ok) {
+                const error = await response.json();
 
-            throw new BadRequestException(error.message);
+                throw new BadRequestException(error.message || 'Failed to find user by email');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Authentication Service Error:', error);
+
+            throw error;
         }
+    }
 
-        return await response.json();
+    public async resetPassword(email: string, resetPasswordDto: ResetPasswordDto): Promise<ResponseDto<UserDto>> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/authentication/reset-password`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, resetPasswordDto }),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message || 'Failed to find user by email');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Authentication Service Error:', error);
+
+            throw error;
+        }
     }
 
     public async verifyEmailCode(email: string, code: string): Promise<ResponseDto<boolean>> {

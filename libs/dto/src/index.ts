@@ -29,6 +29,7 @@ export * from './lib/activity-log/create.activity-log.dto';
 
 export * from './lib/authentication/change-password.dto';
 export * from './lib/authentication/verify-email-code.dto';
+export * from './lib/authentication/reset-password.dto';
 
 export * from './lib/mailer/create.mailer.dto';
 export * from './lib/mailer/mailer.dto';

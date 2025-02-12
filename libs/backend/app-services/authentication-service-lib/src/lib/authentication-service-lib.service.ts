@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationMongodbLibService } from '@b-prism/authentication-mongodb-lib';
-import { ChangePasswordDto, CreateActivityLogDto, CreateMailerDto, CreateUserDto, MailerDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
+import { ChangePasswordDto, CreateActivityLogDto, CreateMailerDto, CreateUserDto, MailerDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { AuthenticationServiceAbstractClass } from './authentication-service.abstract.class';
 import { comparePassword, hashPassword } from '@b-prism/lib-utils';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
@@ -82,7 +82,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
-    async forgotPassword(email: string): Promise<ResponseDto<MailerDto>> {
+    async sendVerificationCodeMail(email: string): Promise<ResponseDto<MailerDto>> {
         this.logger.log('Forgetting password for user', email);
 
         const user: UserDto = (await this.userServiceLibService.findByEmail(email)).body;
@@ -114,6 +114,35 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             return response;
         } catch (error) {
             this.logger.error('An error occured while forgetting user password', user.id);
+
+            throw new BadRequestException(error);
+        }
+    }
+
+    async resetPassword(email: string, resetPasswordDto: ResetPasswordDto): Promise<ResponseDto<UserDto>> {
+        this.logger.log('Forgetting password for user', email);
+
+        const existingUser: UserDto = (await this.userServiceLibService.findByEmail(email)).body;
+
+        try {
+            const hashedPassword = await hashPassword(resetPasswordDto.password);
+            const user: User = await this.authenticationMongodbService.resetPassword(existingUser.id, hashedPassword);
+
+            const logging_var: CreateActivityLogDto = new CreateActivityLogDto();
+
+            logging_var.action = 'UPDATE';
+            logging_var.description = `${user.given_name} ${user.family_name} has reset their account password.`;
+            logging_var.resource = 'Authentication';
+            logging_var.resource_id = user.id;
+            logging_var.author = `${user.given_name} ${user.family_name}`;
+
+            await this.activityLogLibService.create(logging_var);
+
+            const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
+
+            return response;
+        } catch (error) {
+            this.logger.error('An error occured while resetting password', existingUser.id);
 
             throw new BadRequestException(error);
         }
