@@ -1,6 +1,7 @@
 export * from './hooks/use-mobile';
 
 export * from './providers/theme-provider';
+export * from './providers/aos-provider';
 
 export * from './components/ui/button';
 export * from './components/ui/dropdown-menu';
@@ -29,3 +30,4 @@ export * from './components/ui/scroll-area';
 export * from './components/ui/collapsible';
 export * from './components/ui/tabs';
 export * from './components/ui/input-otp';
+export * from './components/ui/card';
