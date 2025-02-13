@@ -33,7 +33,8 @@ const BenefitsSection = () => {
                     {benefits.map((benefit, index) => (
                         <Card
                             key={index}
-                            className='bg-transparent border'>
+                            className='bg-transparent border'
+                            data-aos='fade-up'>
                             <CardContent className='flex flex-col items-start text-left p-6'>
                                 <div className='mb-4'>{benefit.icon}</div>
                                 <h3 className='text-xl font-semibold mb-2'>{benefit.title}</h3>
