@@ -126,10 +126,12 @@ export default function ForgotPasswordPage() {
     };
 
     const handleBack = () => {
-        setCurrentStep((prev) => Math.max(prev - 1, 0));
+        if (currentStep === 0) {
+            router.back();
+        } else {
+            setCurrentStep((prev) => Math.max(prev - 1, 0));
+        }
     };
-
-    console.log(currentStep);
 
     return (
         <div className='flex flex-col items-center justify-center min-h-screen  p-8'>
@@ -191,7 +193,7 @@ export default function ForgotPasswordPage() {
                                 />
                             </>
                         ) : currentStep === 2 ? (
-                            'Submit'
+                            'Change password'
                         ) : (
                             'Next'
                         )}
@@ -199,7 +201,7 @@ export default function ForgotPasswordPage() {
                     <Button
                         variant='ghost'
                         onClick={handleBack}
-                        className='px-4 py-2 w-1/6 rounded-lg disabled:opacity-50'>
+                        className='px-4 py-2 w-1/6 rounded-lg disabled:opacity-50 hover:bg-transparent'>
                         <ArrowLeft />
                         Back
                     </Button>

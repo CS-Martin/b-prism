@@ -7,7 +7,7 @@ const inter = Inter({
     weight: ['400', '500', '600', '700'],
 });
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function HomeLayout({ children }: { children: React.ReactNode }) {
     return (
         <main className={`${inter.variable} font-sans`}>
             <Navbar />

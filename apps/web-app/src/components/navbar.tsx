@@ -57,7 +57,7 @@ const Navbar = () => {
 
     return (
         <nav
-            className={`z-50 fixed top-0 w-full flex justify-between items-center transition-all duration-500 ${
+            className={`z-50 fixed top-0 w-full flex justify-between  items-center transition-all duration-500 ${
                 isScrolled ? 'h-[80px] px-[350px] bg-black bg-opacity-60 shadow-md' : 'h-[130px] px-[75px] translate-all duration-500'
             }`}>
             <div className='flex items-center gap-10'>

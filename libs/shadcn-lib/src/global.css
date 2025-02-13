@@ -93,11 +93,85 @@
     }
 }
 
+.spline-section {
+    height: calc(100vh - 100[x]);
+}
+
 .spline-hero {
     background-color: #180825;
     overflow: hidden;
     z-index: -1;
     box-shadow: inset 0px 0px 100px 30px rgba(0, 0, 0, 0.315);
+}
+
+.neon-border {
+    border-bottom: 4px solid rgb(59, 130, 246);
+    box-shadow:
+        0 0 5px rgba(59, 130, 246, 0.3),
+        0 0 10px rgba(59, 130, 246, 0.4),
+        0 0 15px rgba(59, 130, 246, 0.5),
+        0 0 20px rgba(59, 130, 246, 0.6),
+        0 0 25px rgba(59, 130, 246, 0.7);
+
+    /* Add animation */
+    animation: neonMove 5s ease-in-out infinite;
+}
+
+/* Define the neon movement animation */
+@keyframes neonMove {
+    0% {
+        box-shadow:
+            0 0 5px rgba(59, 130, 246, 0.3),
+            0 0 10px rgba(59, 130, 246, 0.4),
+            0 0 15px rgba(59, 130, 246, 0.5),
+            0 0 20px rgba(59, 130, 246, 0.6),
+            0 0 25px rgba(59, 130, 246, 0.7);
+    }
+    25% {
+        box-shadow:
+            0 0 10px rgba(59, 130, 246, 0.4),
+            0 0 15px rgba(59, 130, 246, 0.5),
+            0 0 20px rgba(59, 130, 246, 0.6),
+            0 0 25px rgba(59, 130, 246, 0.7),
+            0 0 30px rgba(59, 130, 246, 0.8);
+    }
+    50% {
+        box-shadow:
+            0 0 15px rgba(59, 130, 246, 0.3),
+            0 0 20px rgba(59, 130, 246, 0.4),
+            0 0 25px rgba(59, 130, 246, 0.5),
+            0 0 30px rgba(59, 130, 246, 0.6),
+            0 0 35px rgba(59, 130, 246, 0.7);
+    }
+    75% {
+        box-shadow:
+            0 0 10px rgba(59, 130, 246, 0.4),
+            0 0 15px rgba(59, 130, 246, 0.5),
+            0 0 20px rgba(59, 130, 246, 0.6),
+            0 0 25px rgba(59, 130, 246, 0.7),
+            0 0 30px rgba(59, 130, 246, 0.8);
+    }
+    100% {
+        box-shadow:
+            0 0 5px rgba(59, 130, 246, 0.3),
+            0 0 10px rgba(59, 130, 246, 0.4),
+            0 0 15px rgba(59, 130, 246, 0.5),
+            0 0 20px rgba(59, 130, 246, 0.6),
+            0 0 25px rgba(59, 130, 246, 0.7);
+    }
+}
+
+.parallax {
+    position: relative;
+    width: 90%;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, white 30%, white 70%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, white 30%, white 70%, transparent);
+}
+
+.scroller {
+    display: flex;
+    gap: 10px;
 }
 
 .prism-card-bg {
