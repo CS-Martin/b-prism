@@ -1,19 +1,15 @@
 'use client';
 
-import { options } from '../api/auth/[...nextauth]/options';
-import { getServerSession } from 'next-auth';
-import Spline from '@splinetool/react-spline';
 import Link from 'next/link';
 
 import { Button } from '@b-prism/shadcn-ui/index';
 import { useRef } from 'react';
-import { ArrowDown, ChevronDown } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { ParallaxText, SupportersParallax } from './_components/parallax-text';
+import { SplineSection } from './_components/spline-section';
 
 export default function Home() {
     const { data: session } = useSession();
-    console.log(session);
     const bottomRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
@@ -22,29 +18,8 @@ export default function Home() {
 
     return (
         <div className='mt-[100px] '>
-            <section className='relative px-[75px] h-[100vh]'>
-                <div className='h-[80vh]'>
-                    <Spline
-                        className='rounded-2xl shadow-2xl neon-border'
-                        scene='https://prod.spline.design/ng-ni62YpZyz95ES/scene.splinecode'
-                    />
-                    <div className='absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black rounded-2xl'></div>
-
-                    <div className='absolute inset-0 flex flex-col items-center top-[10px] text-center mt-14'>
-                        <p className='text-[40px] font-black'>
-                            Unite for Resilience, <br />
-                            Act with Precision
-                        </p>
-                        <p className='text-lg mt-3 text-gray-400'>
-                            Coordinate rescue efforts, strengthen disaster response, and <br /> safeguard communities with our all-in-one platform.
-                        </p>
-                    </div>
-
-                    <SupportersParallax />
-                </div>
-
-                {/* I want a running horizontal icons of  */}
-            </section>
+            <SplineSection />
+            <section className='h-[100vh]'></section>
 
             {session?.user ? (
                 <div>
