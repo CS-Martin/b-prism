@@ -1,3 +1,4 @@
+import { AOSInit } from '@b-prism/shadcn-ui/index';
 import Navbar from '../../components/navbar';
 import { Inter, Montserrat } from 'next/font/google';
 
@@ -10,6 +11,7 @@ const inter = Inter({
 export default function HomeLayout({ children }: { children: React.ReactNode }) {
     return (
         <main className={`${inter.variable} font-sans`}>
+            <AOSInit />
             <Navbar />
             {children}
         </main>

@@ -19,6 +19,9 @@ export const SplineSection = () => {
         <section className='relative overflow-hidden px-[75px] h-[100vh]'>
             <div className=''>
                 <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1 }}
                     style={{ y: splineBackground }}
                     className='h-[80vh] relative'>
                     <Spline
@@ -28,6 +31,9 @@ export const SplineSection = () => {
                     <div className='absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black rounded-2xl'></div>
 
                     <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 3 }}
                         style={{ y: splineText }}
                         className='absolute inset-0 flex h-[80%] flex-col items-center top-[10px] text-center mt-14'>
                         <p className='text-[40px] font-black'>
@@ -42,9 +48,12 @@ export const SplineSection = () => {
                     </motion.div>
                 </motion.div>
 
-                <section className=' mt-5'>
+                <motion.section
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className=' mt-5 border-b pb-5'>
                     <SupportersParallax />
-                </section>
+                </motion.section>
             </div>
 
             {/* I want a running horizontal icons of  */}

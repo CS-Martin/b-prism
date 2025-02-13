@@ -7,6 +7,8 @@ import { useRef } from 'react';
 import { ArrowDown } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { SplineSection } from './_components/spline-section';
+import BenefitsSection from './_components/benefits-section';
+import QuoteCarouselSection from './_components/quote-section';
 
 export default function Home() {
     const { data: session } = useSession();
@@ -19,6 +21,8 @@ export default function Home() {
     return (
         <div className='mt-[100px] '>
             <SplineSection />
+            <QuoteCarouselSection />
+            <BenefitsSection />
             <section className='h-[100vh]'></section>
 
             {session?.user ? (
