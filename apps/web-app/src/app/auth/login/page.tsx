@@ -42,27 +42,11 @@ export default function LoginPage() {
             });
             return;
         } else {
-            // TODO: check if user has incomplete profile
-            // if incomplete, redirect to /auth/new-user
-            // if complete, redirect to /home
-            // setIsLoading(true);
-            // const response = await userService.fetchUserByEmail(data.email);
-            // if (response.statusCode !== 201) {
-            //     throw new Error('Failed to fetch user');
-            // }
-            // const user: UserDto = response.body;
-            // const isIncompleteProfile = user.id_image_url === undefined || user.id_image_url === null || user.id_image_url === '';
-            // if (isIncompleteProfile) {
-            // } else {
-            //     router.push('/home');
-            // }
-            // setIsLoading(false);
-
             const response: ResponseDto<UserDto> = await loginUser(data.email);
             const user: UserDto = response.body;
-            const isUserNoValidId: boolean = user.id_image_url === undefined || user.id_image_url === null || user.id_image_url === '';
+            const userHasNoValidId: boolean = user.id_image_url === undefined || user.id_image_url === null || user.id_image_url === '';
 
-            if (isUserNoValidId) {
+            if (userHasNoValidId) {
                 router.push(`/auth/${user.id}/complete-profile`);
             } else {
                 router.push('/home');

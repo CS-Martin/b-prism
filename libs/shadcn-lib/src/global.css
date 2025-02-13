@@ -93,11 +93,28 @@
     }
 }
 
+.spline-section {
+    height: calc(100vh - 100[x]);
+}
+
 .spline-hero {
     background-color: #180825;
     overflow: hidden;
     z-index: -1;
     box-shadow: inset 0px 0px 100px 30px rgba(0, 0, 0, 0.315);
+}
+
+.parallax {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
+}
+
+.scroller {
+    display: flex;
+    gap: 10px;
 }
 
 .prism-card-bg {
