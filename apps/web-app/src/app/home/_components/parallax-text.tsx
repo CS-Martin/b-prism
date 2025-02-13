@@ -15,11 +15,12 @@ export function ParallaxText({ children, baseVelocity = 100 }: ParallaxProps) {
         damping: 50,
         stiffness: 400,
     });
+
     const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], {
         clamp: false,
     });
 
-    const x = useTransform(baseX, (v) => `${wrap(20, -45, v)}%`);
+    const x = useTransform(baseX, (v) => `${wrap(-10, 10, v)}%`);
     const directionFactor = useRef<number>(1);
 
     useAnimationFrame((t, delta) => {
@@ -36,9 +37,9 @@ export function ParallaxText({ children, baseVelocity = 100 }: ParallaxProps) {
     });
 
     return (
-        <div className='parallax overflow-hidden relative'>
+        <div className='parallax overflow-hidden relative flex mx-auto max-h-[70px]'>
             <motion.div
-                className='scroller flex mb-3 space-x-10 justify-center items-center'
+                className='scroller flex mb-3 space-x-5 justify-center items-center'
                 style={{ x }}>
                 {children}
                 {children}
@@ -66,7 +67,7 @@ export const SupportersParallax = () => {
                         <img
                             src={company.logo}
                             alt={`${company.name} logo`}
-                            className='filter w-[200px] h-auto invert-[100%] brightness-0'
+                            className='filter w-[300px] h-auto invert-[100%] brightness-0'
                             style={{ objectFit: 'contain' }}
                         />
                     </div>
@@ -80,7 +81,7 @@ export const SupportersParallax = () => {
                         <img
                             src={company.logo}
                             alt={`${company.name} logo`}
-                            className='filter w-[200px] h-auto invert-[100%] brightness-0'
+                            className='filter w-[300px] h-auto invert-[100%] brightness-0'
                             style={{ objectFit: 'contain' }}
                         />
                     </div>

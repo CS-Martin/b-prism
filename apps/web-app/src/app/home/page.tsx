@@ -25,7 +25,7 @@ export default function Home() {
             <section className='relative px-[75px] h-[100vh]'>
                 <div className='h-[80vh]'>
                     <Spline
-                        className='rounded-2xl shadow-2xl'
+                        className='rounded-2xl shadow-2xl neon-border'
                         scene='https://prod.spline.design/ng-ni62YpZyz95ES/scene.splinecode'
                     />
                     <div className='absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black rounded-2xl'></div>
