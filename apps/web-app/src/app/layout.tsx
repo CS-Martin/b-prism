@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <SessionComponentProvider>
                     <ThemeProvider
                         attribute='class'
-                        defaultTheme='system'
+                        defaultTheme='dark'
                         enableSystem
                         disableTransitionOnChange>
                         {children}

@@ -16,14 +16,14 @@ export const SplineSection = () => {
     const splineText = useTransform(scrollYProgress, [0, 1], ['7%', '-200%']);
 
     return (
-        <section className='relative overflow-hidden px-[7px] md:px-[75px] h-[100vh]'>
+        <section className='relative overflow-hidden px-[7px] md:px-[75px]  md:h-[100vh]'>
             <div className=''>
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1 }}
                     style={{ y: splineBackground }}
-                    className='h-[70vh] md:h-[80vh] relative'>
+                    className='h-[77vh] md:h-[80vh] relative'>
                     <Spline
                         className='rounded-2xl shadow-2xl neon-border'
                         scene='https://prod.spline.design/ng-ni62YpZyz95ES/scene.splinecode'
