@@ -23,7 +23,7 @@ const QuoteCarouselSection = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % quotes.length);
-        }, 10000); // Change quote every 10s
+        }, 7000); // Change quote every 10s
 
         return () => clearInterval(interval);
     }, []);
@@ -43,18 +43,18 @@ const QuoteCarouselSection = () => {
                         height={35}
                         width={35}
                         alt='quote.svg'
-                        className='text-white'
+                        className='text-white w-5 md:w-10 h-auto'
                         style={{ fill: 'white' }}
                         data-aos='fade-up'
                     />
                     <p
                         data-aos='fade-up'
-                        className='text-2xl md:text-3xl italic flex'>
+                        className='text-lg md:text-3xl italic flex'>
                         {quotes[currentIndex].text}
                     </p>
                     <p
                         data-aos='fade-up'
-                        className='mt-4 text-lg md:text-xl font-semibold'>
+                        className='mt-4 text-md md:text-xl font-semibold'>
                         — {quotes[currentIndex].author}
                     </p>
                 </motion.div>

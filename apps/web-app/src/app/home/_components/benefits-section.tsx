@@ -29,7 +29,7 @@ const BenefitsSection = () => {
     return (
         <div className=' text-white py-12'>
             <div className=' mx-auto sm:px-6 lg:px-[350px]'>
-                <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+                <div className='grid grid-cols-1 md:grid-cols-3 md:gap-8'>
                     {benefits.map((benefit, index) => (
                         <Card
                             key={index}

@@ -9,6 +9,7 @@ import { useSession } from 'next-auth/react';
 import { SplineSection } from './_components/spline-section';
 import BenefitsSection from './_components/benefits-section';
 import QuoteCarouselSection from './_components/quote-section';
+import FeaturesSection from './_components/features-section';
 
 export default function Home() {
     const { data: session } = useSession();
@@ -19,10 +20,11 @@ export default function Home() {
     };
 
     return (
-        <div className='mt-[100px] '>
+        <div className='pt-20'>
             <SplineSection />
             <QuoteCarouselSection />
             <BenefitsSection />
+            <FeaturesSection />
             <section className='h-[100vh]'></section>
 
             {session?.user ? (

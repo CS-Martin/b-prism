@@ -63,11 +63,11 @@ export const SupportersParallax = () => {
                 {companies.map((company, index) => (
                     <div
                         key={index}
-                        className='flex flex-col items-center'>
+                        className='flex flex-col items-center w-[100px] h-auto'>
                         <img
                             src={company.logo}
                             alt={`${company.name} logo`}
-                            className='filter w-[300px] h-auto invert-[100%] brightness-0'
+                            className='filter w-[100px] h-auto md:w-[200px] lg:w-[300px] invert-[100%] brightness-0'
                             style={{ objectFit: 'contain' }}
                         />
                     </div>
@@ -77,11 +77,11 @@ export const SupportersParallax = () => {
                 {companies.map((company, index) => (
                     <div
                         key={index}
-                        className='flex flex-col items-center'>
+                        className='flex flex-col items-center w-[125px] h-auto'>
                         <img
                             src={company.logo}
                             alt={`${company.name} logo`}
-                            className='filter w-[300px] h-auto invert-[100%] brightness-0'
+                            className='filter w-[100px] h-auto md:w-[200px] lg:w-[300px] invert-[100%] brightness-0'
                             style={{ objectFit: 'contain' }}
                         />
                     </div>
