@@ -12,18 +12,18 @@ export const SplineSection = () => {
         offset: ['start start', 'end start'],
     });
 
-    const splineBackground = useTransform(scrollYProgress, [0, 1], ['2%', '-100%']);
+    const splineBackground = useTransform(scrollYProgress, [0, 1], ['4%', '-120%']);
     const splineText = useTransform(scrollYProgress, [0, 1], ['7%', '-200%']);
 
     return (
-        <section className='relative overflow-hidden px-[75px] h-[100vh]'>
+        <section className='relative overflow-hidden px-[7px] md:px-[75px] h-[100vh]'>
             <div className=''>
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1 }}
                     style={{ y: splineBackground }}
-                    className='h-[80vh] relative'>
+                    className='h-[70vh] md:h-[80vh] relative'>
                     <Spline
                         className='rounded-2xl shadow-2xl neon-border'
                         scene='https://prod.spline.design/ng-ni62YpZyz95ES/scene.splinecode'
@@ -36,12 +36,12 @@ export const SplineSection = () => {
                         transition={{ duration: 3 }}
                         style={{ y: splineText }}
                         className='absolute inset-0 flex h-[80%] flex-col items-center top-[10px] text-center mt-14'>
-                        <p className='text-[40px] font-black'>
+                        <p className='text-[22px] md:text-[40px] font-black'>
                             Unite for Resilience, <br />
                             Act with Precision
                         </p>
-                        <p className='text-lg mt-3 text-gray-400'>
-                            Coordinate rescue efforts, strengthen disaster response, and <br /> safeguard communities with our all-in-one platform.
+                        <p className='md:text-lg mt-3 text-gray-400'>
+                            Coordinate rescue efforts, strengthen disaster response, and <br className='md:block hidden' /> safeguard communities with our all-in-one platform.
                         </p>
 
                         <Button className='bg-blue-500 text-white hover:bg-blue-400 px-6 mt-4 rounded-full'>Start Contributing Now!</Button>

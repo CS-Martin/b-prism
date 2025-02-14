@@ -23,7 +23,7 @@ const QuoteCarouselSection = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % quotes.length);
-        }, 10000); // Change quote every 10s
+        }, 7000); // Change quote every 10s
 
         return () => clearInterval(interval);
     }, []);
