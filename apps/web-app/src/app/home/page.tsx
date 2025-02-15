@@ -20,27 +20,11 @@ export default function Home() {
     };
 
     return (
-        <div className='pt-20'>
+        <div className='pt-20 bg-black'>
             <SplineSection />
             <QuoteCarouselSection />
             <BenefitsSection />
             <FeaturesSection />
-            <section className='h-[100vh]'></section>
-
-            {session?.user ? (
-                <div>
-                    <p>Hi {session.user.email}</p>
-                </div>
-            ) : (
-                <p>User not logged in</p>
-            )}
-
-            <Button>Button</Button>
-
-            <Link href='/admin/dashboard'>Admin Dashboard</Link>
-            <Link href='/auth/register'>Register</Link>
-            <Link href='/auth/login'>Login</Link>
-            <Link href='/api/auth/signout'>Logout</Link>
 
             {/* Floating Scroll Button */}
             <button

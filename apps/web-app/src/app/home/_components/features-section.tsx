@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
+import { Button } from '@b-prism/shadcn-ui/index';
+import { ArrowRight } from 'lucide-react';
 
 const FeaturesSection = () => {
     const features = [
@@ -38,56 +40,52 @@ const FeaturesSection = () => {
     ];
 
     return (
-        <section className='bg-black text-white py-20 px-5'>
-            <div className='mx-auto overflow-hidden features-parallax'>
-                <div className='features-grid grid relative'>
+        <section className='bg-black text-white md:py-5 px-5 overflow-hidden '>
+            <div className='mx-auto overflow-hidden '>
+                <div
+                    className='features-grid grid relative border-t features-vignette'
+                    style={{ width: '100%' }}>
                     {features.map((feature, index) => {
-                        // const ref = useRef(null);
-
-                        // const { scrollYProgress } = useScroll({
-                        //     target: ref,
-                        //     offset: ['0 1', '1 0.8'],
-                        // });
-
-                        // const scaleProgress = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
-
                         return (
                             <div
                                 key={index}
-                                className={`flex flex-col min-h-[300px] border-b overflow-hidden ${
+                                className={`flex md:px-[1rem] lg:px-[5rem] border-b xl:px-[150px] 2xl:px-[350px] flex-col min-h-[350px] items-start  overflow-hidden ${
                                     index % 2 === 0 ? 'md:flex-row-reverse' : 'md:flex-row'
-                                } items-start pt-10 gap-8 md:px-[70px] lg:px-[90px] xl:px-[120px] 2xl:px-[200px] feature-cell`}>
+                                } pt-10 gap-8 feature-cell`}>
                                 {/* Image */}
                                 <div
-                                    // ref={ref}
-                                    // style={{
-                                    //     scale: scaleProgress,
-                                    //     opacity: scrollYProgress,
-                                    // }}
                                     data-aos='fade-up'
                                     className={`md:w-1/2 relative`}>
-                                    <div className='absolute w-full h-full'>
+                                    <div className={`md:absolute w-full h-full flex ${index % 2 === 0 ? 'justify-start lg:pl-7' : 'justify-end lg:pr-7'}`}>
                                         <Image
                                             src={feature.image}
                                             alt={'missing'}
                                             width={1920}
                                             height={1080}
-                                            className='object-center object-cover h-[300px] rounded-xl border-2'
+                                            className='object-center object-cover md:h-[500px] max-h-[500px] w-[700px] rounded-xl border-2'
                                         />
+
+                                        {/* Vignette like fadeing effect for image */}
+                                        <div className={`${index % 2 === 0 ? 'image-fade-effect-right' : 'image-fade-effect-left'}`}></div>
                                     </div>
                                 </div>
 
                                 {/* Text Content */}
                                 <div
                                     data-aos={index % 2 === 0 ? 'fade-right' : 'fade-left'}
-                                    className={`w-full md:w-1/2 ${
-                                        index % 2 === 0
-                                            ? 'pl-[0.5rem] sm:pl-[1rem] lg:pl-[1rem xl:pl-[5rem] 2xl:pl-[7rem]'
-                                            : 'pr-[0.5rem] sm:pr-[1rem] lg:pr-[1rem xl:pr-[5rem] 2xl:pr-[7rem]'
-                                    }`}>
+                                    className={`w-full md:w-1/2  ${index % 2 === 0 ? 'lg:pr-7' : 'lg:pl-7'} mb-5 md:mb-0`}>
                                     <p className='text-blue-400 uppercase font-medium mb-10'>{feature.subtitle}</p>
-                                    <h3 className='text-2xl font-bold mb-4'>{feature.title}</h3>
+                                    <h3 className='text-xl font-bold mb-4'>{feature.title}</h3>
                                     <p className='text-gray-300 leading-relaxed'>{feature.description}</p>
+                                    <Button
+                                        variant='ghost'
+                                        className='mt-3 p-6 text-[12px] border rounded-md'>
+                                        TRY IT NOW!
+                                        <ArrowRight
+                                            size={24}
+                                            className='animate'
+                                        />
+                                    </Button>
                                 </div>
                             </div>
                         );

@@ -174,12 +174,12 @@
     -webkit-mask-composite: destination-in;
 }
 
-.features-parallax {
-    position: relative;
+.features-vignette {
+    position: absolute;
     width: 90%;
     overflow: hidden;
-    mask-image: linear-gradient(to right, transparent, white 20%, white 20%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, white 50%, white 50%, transparent);
+    /* mask-image: linear-gradient(to right, transparent, white 20%, white 20%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, white 30%, white 30%, transparent); */
     /* Ensure full visibility vertically */
     mask-composite: exclude;
     -webkit-mask-composite: destination-in;
@@ -226,17 +226,6 @@
     position: relative;
 }
 
-/* Horizontal border */
-.features-grid > *::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: rgb(39, 39, 42);
-}
-
 /* Vertical border */
 .features-grid > *::after {
     content: '';
@@ -246,6 +235,47 @@
     width: 1px;
     height: 100%;
     background-color: rgb(39, 39, 42); /* Tailwind gray-700 */
+}
+
+@media (max-width: 768px) {
+    .features-vignette {
+        mask-image: none;
+        -webkit-mask-image: none;
+        mask-composite: unset;
+        -webkit-mask-composite: unset;
+    }
+
+    .features-grid > *::before,
+    .features-grid > *::after {
+        content: none; /* Remove borders on mobile screens */
+    }
+
+    .image-fade-effect-right,
+    .image-fade-effect-left {
+        display: none; /* Remove fade effect on mobile screens */
+    }
+}
+
+.image-fade-effect-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 40%; /* Adjust width for the fade area */
+    overflow: visible;
+    /* background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%); */
+    background: linear-gradient(to left, rgb(3, 3, 3), rgb(3, 3, 3) 0%, rgba(3, 3, 3, 0) 100%);
+    pointer-events: none; /* Prevents interference with interactions on the image */
+}
+
+.image-fade-effect-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 40%; /* Adjust width for the fade area */
+    background: linear-gradient(to right, rgb(3, 3, 3), rgb(3, 3, 3) 0%, rgba(3, 3, 3, 0) 100%);
+    pointer-events: none; /* Prevents interference with interactions on the image */
 }
 
 /* .spline-hero::before {
