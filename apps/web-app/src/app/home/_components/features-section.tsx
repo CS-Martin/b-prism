@@ -40,7 +40,7 @@ const FeaturesSection = () => {
     ];
 
     return (
-        <section className='bg-black text-white py-20 px-5 overflow-hidden '>
+        <section className='bg-black text-white md:py-5 px-5 overflow-hidden '>
             <div className='mx-auto overflow-hidden '>
                 <div
                     className='features-grid grid relative border-t features-vignette'
