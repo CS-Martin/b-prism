@@ -26,7 +26,7 @@ import {
     useSidebar,
 } from '@b-prism/shadcn-ui/index';
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, History, Home, LayoutDashboard, LogIn, LogOut, LucideIcon, Map, MapPinned, MapPinPlus, MapPinXInside, MonitorCog } from 'lucide-react';
+import { Bell, ChevronDown, ChevronUp, History, Home, LayoutDashboard, LogIn, LogOut, LucideIcon, Map, MapPinned, MapPinPlus, MapPinXInside, MonitorCog } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@b-prism/shadcn-ui/index';
 import { UserDto } from '@dto';
 import Link from 'next/link';
@@ -193,6 +193,7 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                         <span className='truncate text-xs'>Project</span>
                         <span className='truncate font-bold'>HARIBON</span>
                     </div>
+                    <Bell size={24} />
                 </SidebarMenuButton>
             </SidebarHeader>
 
