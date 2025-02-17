@@ -7,6 +7,7 @@ import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuT
 import { Button, Separator } from '@b-prism/shadcn-ui/index';
 import { Sheet, SheetTrigger, SheetContent } from '@b-prism/shadcn-ui/index';
 import { cn } from '@b-prism/shadcn-lib/cn';
+import Image from 'next/image';
 
 interface ListItemProps {
     href: string;
@@ -78,26 +79,74 @@ const Navbar = () => {
                 </SheetTrigger>
                 <SheetContent side='left'>
                     <div className='py-6'>
-                        <Link
-                            href='/home'
-                            className='block w-full py-2 text-lg font-semibold'>
-                            Home
-                        </Link>
-                        <Link
-                            href='/about'
-                            className='block w-full py-2 text-lg font-semibold'>
-                            About
-                        </Link>
-                        <Link
-                            href='/services'
-                            className='block w-full py-2 text-lg font-semibold'>
-                            Services
-                        </Link>
-                        <Link
-                            href='/contact'
-                            className='block w-full py-2 text-lg font-semibold'>
-                            Contact
-                        </Link>
+                        <NavigationMenu>
+                            <NavigationMenuList className='gap-5 flex flex-col items-start'>
+                                <NavigationMenuItem>
+                                    <NavigationMenuTrigger className='bg-transparent font-semibold px-1'>Getting Started</NavigationMenuTrigger>
+                                    <NavigationMenuContent className='w-[90vw] md:w-[400px] lg:w-[500px]'>
+                                        <ul className='grid gap-3 p-6 lg:grid-cols-[.75fr_1fr]'>
+                                            <li className='row-span-3'>
+                                                <NavigationMenuLink asChild>
+                                                    <Link
+                                                        className='flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md'
+                                                        href='/'>
+                                                        {/* <Icons.logo className='h-6 w-6' /> */}
+                                                        <div className='mb-2 mt-4 text-lg font-medium'>shadcn/ui</div>
+                                                        <p className='text-sm leading-tight text-muted-foreground'>
+                                                            Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.
+                                                        </p>
+                                                    </Link>
+                                                </NavigationMenuLink>
+                                            </li>
+                                            <ListItem
+                                                href='/docs'
+                                                title='Introduction'>
+                                                Re-usable components built using Radix UI and Tailwind CSS.
+                                            </ListItem>
+                                            <ListItem
+                                                href='/docs/installation'
+                                                title='Installation'>
+                                                How to install dependencies and structure your app.
+                                            </ListItem>
+                                            <ListItem
+                                                href='/docs/primitives/typography'
+                                                title='Typography'>
+                                                Styles for headings, paragraphs, lists...etc
+                                            </ListItem>
+                                        </ul>
+                                    </NavigationMenuContent>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <NavigationMenuTrigger className='font-semibold bg-transparent px-0'>Components</NavigationMenuTrigger>
+                                    <NavigationMenuContent className='w-[90vw] md:w-[400px] lg:w-[500px] overflow-y-auto'>
+                                        <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] '>
+                                            {components.map((component) => (
+                                                <ListItem
+                                                    key={component.title}
+                                                    href={component.href}
+                                                    title={component.title}>
+                                                    {component.description}
+                                                </ListItem>
+                                            ))}
+                                        </ul>
+                                    </NavigationMenuContent>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem asChild>
+                                    <Link
+                                        href='/docs'
+                                        className='font-semibold'>
+                                        Documentation
+                                    </Link>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem asChild>
+                                    <Link
+                                        href='/map'
+                                        className='font-semibold'>
+                                        Map
+                                    </Link>
+                                </NavigationMenuItem>
+                            </NavigationMenuList>
+                        </NavigationMenu>
                     </div>
                 </SheetContent>
             </Sheet>
@@ -109,11 +158,21 @@ const Navbar = () => {
                         <NavigationMenuList className='gap-4'>
                             <Link
                                 href={'/home'}
-                                className='font-semibold'>
-                                Logo
+                                className='font-bold flex items-center gap-2'>
+                                <Image
+                                    src={'/logo/haribon-logo.svg'}
+                                    height={40}
+                                    width={40}
+                                    alt='haribon logo'
+                                />
+                                HARIBON
                             </Link>
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className='bg-transparent font-semibold'>Getting started</NavigationMenuTrigger>
+                                <NavigationMenuTrigger
+                                    className='bg-transparent font-semibold'
+                                    style={{ backgroundColor: 'transparent' }}>
+                                    Getting started
+                                </NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className='grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'>
                                         <li className='row-span-3'>
@@ -148,7 +207,7 @@ const Navbar = () => {
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className='font-semibold bg-transparent'>Getting Started</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className='font-semibold'>Components</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] '>
                                         {components.map((component) => (
