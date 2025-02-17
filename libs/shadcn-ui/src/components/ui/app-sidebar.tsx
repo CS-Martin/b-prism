@@ -26,7 +26,24 @@ import {
     useSidebar,
 } from '@b-prism/shadcn-ui/index';
 import { useState } from 'react';
-import { Bell, ChevronDown, ChevronUp, History, Home, LayoutDashboard, LogIn, LogOut, LucideIcon, Map, MapPinned, MapPinPlus, MapPinXInside, MonitorCog } from 'lucide-react';
+import {
+    Bell,
+    ChartArea,
+    ChartNoAxesCombined,
+    ChevronDown,
+    ChevronUp,
+    History,
+    Home,
+    LayoutDashboard,
+    LogIn,
+    LogOut,
+    LucideIcon,
+    Map,
+    MapPinned,
+    MapPinPlus,
+    MapPinXInside,
+    MonitorCog,
+} from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@b-prism/shadcn-ui/index';
 import { UserDto } from '@dto';
 import Link from 'next/link';
@@ -47,7 +64,7 @@ const generalLinks = [
     {
         id: 'dashboard',
         label: 'Resources Dashboard',
-        icon: LayoutDashboard,
+        icon: ChartNoAxesCombined,
         href: '/dashboard',
     },
     {
