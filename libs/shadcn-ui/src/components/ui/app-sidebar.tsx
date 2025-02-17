@@ -210,7 +210,10 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                         <span className='truncate text-xs'>Project</span>
                         <span className='truncate font-bold'>HARIBON</span>
                     </div>
-                    <Bell size={24} />
+                    <Bell
+                        size={24}
+                        className={`${state === 'collapsed' ? 'hidden' : 'block'}`}
+                    />
                 </SidebarMenuButton>
             </SidebarHeader>
 
