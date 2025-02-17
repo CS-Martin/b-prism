@@ -7,6 +7,7 @@ import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuT
 import { Button, Separator } from '@b-prism/shadcn-ui/index';
 import { Sheet, SheetTrigger, SheetContent } from '@b-prism/shadcn-ui/index';
 import { cn } from '@b-prism/shadcn-lib/cn';
+import Image from 'next/image';
 
 interface ListItemProps {
     href: string;
@@ -157,11 +158,21 @@ const Navbar = () => {
                         <NavigationMenuList className='gap-4'>
                             <Link
                                 href={'/home'}
-                                className='font-semibold'>
-                                Logo
+                                className='font-bold flex items-center gap-2'>
+                                <Image
+                                    src={'/logo/haribon-logo.svg'}
+                                    height={40}
+                                    width={40}
+                                    alt='haribon logo'
+                                />
+                                HARIBON
                             </Link>
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className='bg-transparent font-semibold'>Getting started</NavigationMenuTrigger>
+                                <NavigationMenuTrigger
+                                    className='bg-transparent font-semibold'
+                                    style={{ backgroundColor: 'transparent' }}>
+                                    Getting started
+                                </NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className='grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'>
                                         <li className='row-span-3'>
@@ -196,7 +207,7 @@ const Navbar = () => {
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className='font-semibold bg-transparent'>Components</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className='font-semibold'>Components</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] '>
                                         {components.map((component) => (

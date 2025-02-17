@@ -278,6 +278,10 @@
     pointer-events: none; /* Prevents interference with interactions on the image */
 }
 
+.navigation-menu-trigger[data-state='open']:hover {
+    background-color: transparent !important;
+}
+
 /* .spline-hero::before {
     content: '';
     position: absolute;
