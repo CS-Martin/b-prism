@@ -63,7 +63,7 @@ const Navbar = () => {
     return (
         <header
             className={`z-50 fixed top-0 w-full flex justify-between items-center transition-all duration-500 ${
-                isScrolled ? 'h-[80px] px-3 lg:px-[110px] 2xl:px-[350px] bg-black bg-opacity-60 shadow-md' : 'h-[130px] px-3 md:px-16 lg:px-18 translate-all duration-500'
+                isScrolled ? 'h-[80px] px-3 lg:px-[110px] 2xl:px-[350px] bg-black border-b shadow-md' : 'h-[130px] border-none px-3 md:px-16 lg:px-20 translate-all duration-500'
             }`}>
             {/* Mobile Menu */}
             <Sheet>
