@@ -52,24 +52,24 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         } catch (error) {
             this.logger.error('Error creating user', error);
 
-            throw new BadRequestException(error);
+            throw new BadRequestException('There was an issue creating your account. Please try again later.');
         }
     }
 
-    async verify(email: string, password: string): Promise<ResponseDto<UserDto>> {
+    async validateUserLogin(email: string, password: string): Promise<ResponseDto<UserDto>> {
         this.logger.log('Verifying user', email);
 
         try {
             const user: ResponseDto<UserDto> = await this.userServiceLibService.findByEmail(email);
 
             if (!user.body) {
-                throw new NotFoundException(`User with email ${email} not found`);
+                throw new NotFoundException(`No account found with this email address ${email}`);
             }
 
             const isPasswordValid = await comparePassword(password, user.body.password);
 
             if (!isPasswordValid) {
-                throw new UnauthorizedException('Invalid password');
+                throw new UnauthorizedException('The password you entered is incorrect. Please try again.');
             }
 
             const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user.body);

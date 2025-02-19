@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { Input } from '@b-prism/shadcn-ui/index';
+import { Input, Label } from '@b-prism/shadcn-ui/index';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { userService } from 'apps/web-app/src/services/user.service';
 import { ResponseDto, UserDto } from '@dto';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
 import { useLoginUser } from 'apps/web-app/src/hooks/authentication.hook';
+import Image from 'next/image';
 
 export default function LoginPage() {
     const { loginUser, isLoading: isLoggingIn } = useLoginUser();
@@ -56,27 +57,29 @@ export default function LoginPage() {
 
     return (
         <>
-            <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
-                <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
-                    {/* <Image
-                        alt="Your Company"
-                        src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-                        className="mx-auto h-10 w-auto"
-                    /> */}
-                    <h2 className='mt-20 text-center text-2xl/9 font-semibold tracking-tight'>Sign in to your account</h2>
+            <div className='flex min-h-full flex-1 flex-col justify-center lg:px-8'>
+                <div className='sm:mx-auto flex flex-col items-center sm:w-full sm:max-w-sm'>
+                    <Image
+                        alt='Your Company'
+                        src='/logo/haribon-logo.svg'
+                        height={50}
+                        width={50}
+                        className='h-32'
+                    />
+                    <h2 className='text-xl/10 font-semibold tracking-tight'>Sign in to Haribon</h2>
                 </div>
 
-                <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
+                <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-xs'>
                     <form
                         action='#'
                         onSubmit={handleLoginUser}
                         className='space-y-6'>
                         <div>
-                            <label
+                            <Label
                                 htmlFor='email'
                                 className='block text-sm/6 font-medium'>
                                 Email address
-                            </label>
+                            </Label>
                             <div className='mt-2'>
                                 <Input
                                     id='email'
