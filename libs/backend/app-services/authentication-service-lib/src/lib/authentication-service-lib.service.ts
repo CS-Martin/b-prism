@@ -56,6 +56,13 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
+    /**
+     * Validates user's email and password when logging in.
+     * @param email
+     * @param password
+     * @returns A promise that resolves to the validated user.
+     * @returns UnauthorizedException if email or password are incorrect.
+     */
     async validateUserLogin(email: string, password: string): Promise<ResponseDto<UserDto>> {
         this.logger.log('Verifying user', email);
 
@@ -63,7 +70,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             const user: ResponseDto<UserDto> = await this.userServiceLibService.findByEmail(email);
 
             if (!user.body) {
-                throw new NotFoundException(`No account found with this email address ${email}`);
+                throw new NotFoundException(`User with email ${email} not found. Please try again.`);
             }
 
             const isPasswordValid = await comparePassword(password, user.body.password);
@@ -82,6 +89,14 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
+    /**
+     * Sends a verification code to user's email
+     * @example Used when user request for password reset/forgot password.
+     *
+     * @param email - the user's email
+     * @returns A Promise containing the creater mailer
+     * @throws BadRequestException when it fails to send the email code
+     */
     async sendVerificationCodeMail(email: string): Promise<ResponseDto<MailerDto>> {
         this.logger.log('Forgetting password for user', email);
 
@@ -106,6 +121,12 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
             const upsertedMailer: Mailer = await this.mailerMongodbService.upsert(mailer);
 
+            if (!upsertedMailer) {
+                this.logger.error(`Failed to create verification code email to ${email}. Please try again.`);
+
+                throw new BadRequestException(`Failed to create verification code email to your account. Please try again.`);
+            }
+
             await this.mailerServiceLibService.sendResetPasswordAlert(user);
             await this.mailerServiceLibService.sendVerificationCode(user, upsertedMailer);
 
@@ -119,8 +140,21 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
+    /**
+     * Currently used when a user forgets their password
+     * @param email - Email of the user
+     * @param resetPasswordDto - New password and confirm password
+     * @returns A promise containing the user with newly reset password
+     * @throws BadRequestException if password doesn't match.
+     */
     async resetPassword(email: string, resetPasswordDto: ResetPasswordDto): Promise<ResponseDto<UserDto>> {
         this.logger.log('Forgetting password for user', email);
+
+        if (resetPasswordDto.password !== resetPasswordDto.confirmPassword) {
+            this.logger.error(`Password doesn't match for ${email} attempt to reset their password`);
+
+            throw new BadRequestException(`Password doesn&apos;t match. Please try again. `);
+        }
 
         const existingUser: UserDto = (await this.userServiceLibService.findByEmail(email)).body;
 
@@ -148,6 +182,13 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
+    /**
+     * Verifies the code input sent by the user
+     * @param email
+     * @param code
+     * @returns A boolean (true: if code match and exists in database, otherwise false.)
+     * @throws BadRequestException if code doesn't match
+     */
     async verifyEmailCode(email: string, code: string): Promise<ResponseDto<boolean>> {
         this.logger.log('Verifying the code sent to user', email, code);
 
@@ -159,7 +200,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             if (!mailer) {
                 this.logger.log(`Invalid verification code for user: ${user.given_name} ${user.family_name}`);
 
-                throw new BadRequestException('Invalid Verification Code');
+                throw new BadRequestException('The verification code you entered is incorrect. Please check the code and try again.');
             }
 
             // If mailer.expireAt already expired throw error to notify in the client that code is already expired
@@ -167,7 +208,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             if (new Date(mailer.expires_at) < now) {
                 this.logger.warn(`Verification code expired for user: ${user.id}`);
 
-                throw new BadRequestException('Verification code had already expired. Please request a new verification code.');
+                throw new BadRequestException('The verification code has expired. Please request a new code and try again');
             }
 
             return new ResponseDto<boolean>(200, true);
@@ -178,6 +219,12 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
+    /**
+     * A function used to change a users' password normally (not like reset passwrd)
+     * @param id - user's ID
+     * @param changePasswordDto - Contains old password and new password
+     * @returns A promise with the newly updated user's password
+     */
     async changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<ResponseDto<UserDto>> {
         this.logger.log('Changing password of user', id);
 
