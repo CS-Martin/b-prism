@@ -33,3 +33,7 @@ export * from './lib/authentication/reset-password.dto';
 
 export * from './lib/mailer/create.mailer.dto';
 export * from './lib/mailer/mailer.dto';
+
+export * from './lib/road-network/road-network-property.dto';
+export * from './lib/road-network/road-network-geometry.dto';
+export * from './lib/road-network/road-network.dto';

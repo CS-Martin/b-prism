@@ -103,3 +103,14 @@ model Mailer {
   expires_at DateTime
   created_at DateTime @default(now())
 }
+
+model RoadNetwork {
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  type               String
+  is_damaged         Boolean @default(false)
+  damage_probability Float
+  properties         Json
+  geometry           Json
+
+  @@index([is_damaged])
+}

@@ -41,7 +41,8 @@
                 "apps/map-service/dispensing-point-service-e2e/**/*",
                 "apps/rescue-post-service-e2e/**/*",
                 "apps/activity-log-service-e2e/**/*",
-                "apps/mailer-service-e2e/**/*"
+                "apps/mailer-service-e2e/**/*",
+                "apps/map-service/road-network-service-e2e/**/*"
             ]
         },
         {

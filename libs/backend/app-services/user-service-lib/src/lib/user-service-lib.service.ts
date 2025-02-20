@@ -27,7 +27,7 @@ export class UserServiceLibService implements UserServiceAbstractClass {
         const user: User | null = await this.userMongodbLibService.findById(id);
 
         if (!user) {
-            throw new NotFoundException(`User with id ${id} not found`);
+            throw new NotFoundException(`User with id ${id} not found. Please try again.`);
         }
 
         const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
@@ -43,7 +43,7 @@ export class UserServiceLibService implements UserServiceAbstractClass {
         if (!user) {
             console.error(`User with email ${email} not found`);
 
-            throw new NotFoundException(`User with email ${email} not found`);
+            throw new NotFoundException(`User with email ${email} not found. Please try again.`);
         }
 
         const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));

@@ -16,7 +16,7 @@ export class AuthenticationController {
 
     @Post('verify')
     verify(@Body() verifyUserDto: VerifyUserDto) {
-        return this.authenticationService.verify(verifyUserDto.email, verifyUserDto.password);
+        return this.authenticationService.validateUserLogin(verifyUserDto.email, verifyUserDto.password);
     }
 
     @Put('update/:id')
