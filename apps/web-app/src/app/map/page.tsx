@@ -12,12 +12,10 @@ import { useDisplayDispensingPoints, useDisplayWarehouses } from 'apps/web-app/s
 import CreateWarehouseDialog from './_components/warehouse/create-warehouse-dialog';
 import RenderWarehouse from './_components/warehouse/render-warehouse';
 import DeleteItem from './_components/delete-item';
-import CreateDispensingPointDialog from './_components/dispensing_point/create.dispensing-point-dialog';
+import CreateDispensingPointDialog from './_components/dispensing-point/create.dispensing-point-dialog';
 import ControlPanel from './_components/control-panel';
 import RescuePostPanel from './_components/rescue-post-panel';
-import RenderDispensingPoint from './_components/dispensing_point/render.dispensing-point';
-import { isMap } from 'util/types';
-import { createProjectFileMapUsingProjectGraph } from '@nx/devkit';
+import RenderDispensingPoint from './_components/dispensing-point/render.dispensing-point';
 
 interface MarkerType {
     longitude: string;
