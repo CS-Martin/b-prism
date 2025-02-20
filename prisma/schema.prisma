@@ -107,10 +107,10 @@ model Mailer {
 model RoadNetwork {
   id                 String  @id @default(auto()) @map("_id") @db.ObjectId
   type               String
-  status             Boolean @default(false)
+  is_damaged         Boolean @default(false)
   damage_probability Float
   properties         Json
   geometry           Json
 
-  @@index([status])
+  @@index([is_damaged])
 }

@@ -16,10 +16,10 @@ export class RoadNetworkMongodbLibService {
     async destroyRoad(roadId: string): Promise<void> {
         await this.prisma.roadNetwork.updateMany({
             where: {
-                AND: [{ id: roadId }, { status: false }],
+                AND: [{ id: roadId }, { is_damaged: false }],
             },
             data: {
-                status: true,
+                is_damaged: true,
             },
         });
     }
@@ -27,10 +27,10 @@ export class RoadNetworkMongodbLibService {
     async fixRoad(roadId: string): Promise<void> {
         await this.prisma.roadNetwork.updateMany({
             where: {
-                AND: [{ id: roadId }, { status: true }],
+                AND: [{ id: roadId }, { is_damaged: true }],
             },
             data: {
-                status: false,
+                is_damaged: false,
             },
         });
     }
@@ -41,5 +41,9 @@ export class RoadNetworkMongodbLibService {
         });
 
         return road;
+    }
+
+    async findAll(): Promise<RoadNetwork[]> {
+        return this.prisma.roadNetwork.findMany();
     }
 }

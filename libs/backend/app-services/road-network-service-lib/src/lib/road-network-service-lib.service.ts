@@ -2,7 +2,7 @@ import { ActivityLogServiceLibService } from '@b-prism/activity-log-service-lib'
 import { RoadNetworkMongodbLibService } from '@b-prism/road-network-mongodb-lib';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { RoadNetworkServiceAbstractClass } from './road-network-service-lib.abstract.class';
-import { ResponseDto, RoadNetworkDto, RoadNetworkPropertyDto } from '@dto';
+import { CreateActivityLogDto, ResponseDto, RoadNetworkDto, RoadNetworkPropertyDto } from '@dto';
 import { RoadNetwork } from '@prisma/client';
 
 @Injectable()
@@ -13,6 +13,25 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         private readonly roadNetworkMongodbService: RoadNetworkMongodbLibService,
         private readonly activityLogService: ActivityLogServiceLibService,
     ) {}
+
+    async findAll(): Promise<ResponseDto<RoadNetworkDto[]>> {
+        this.logger.log('Fetching all road networks');
+
+        try {
+            const roadNetwork: RoadNetwork[] = await this.roadNetworkMongodbService.findAll();
+
+            const response: ResponseDto<RoadNetworkDto[]> = new ResponseDto<RoadNetworkDto[]>(
+                200,
+                roadNetwork.map((road) => this.convertToDto(road)),
+            );
+
+            return response;
+        } catch (error) {
+            this.logger.log(`An error occured while fetching all road network`);
+
+            throw new BadRequestException(error);
+        }
+    }
 
     async findById(roadId: string): Promise<ResponseDto<RoadNetworkDto>> {
         this.logger.log('Finding road by ID, ', roadId);
@@ -36,13 +55,24 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         }
     }
 
-    async destroyRoad(roadId: string): Promise<void> {
+    async destroyRoad(roadId: string, author: string): Promise<void> {
         this.logger.log('Destroyinng road, ', roadId);
 
-        await this.findById(roadId);
+        const road = (await this.findById(roadId)).body;
 
         try {
             await this.roadNetworkMongodbService.destroyRoad(roadId);
+
+            const logData: CreateActivityLogDto = new CreateActivityLogDto();
+
+            logData.action = 'UPDATE';
+            logData.description = `Road network with ID ${road.id} has been destroyed manually by ${author}`;
+            logData.resource = 'Road Network';
+            logData.resource_id = road.id;
+            logData.author = author;
+            logData.timestamp = new Date();
+
+            await this.activityLogService.create(logData);
         } catch (error) {
             this.logger.error(`An unkown error occured while destroying road with id,`, roadId);
 
@@ -50,13 +80,24 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         }
     }
 
-    async fixRoad(roadId: string): Promise<void> {
+    async fixRoad(roadId: string, author: string): Promise<void> {
         this.logger.log('Fixing road with ID, ', roadId);
 
-        await this.findById(roadId);
+        const road = (await this.findById(roadId)).body;
 
         try {
-            await this.roadNetworkMongodbService.destroyRoad(roadId);
+            await this.roadNetworkMongodbService.fixRoad(roadId);
+
+            const logData: CreateActivityLogDto = new CreateActivityLogDto();
+
+            logData.action = 'UPDATE';
+            logData.description = `Road network with ID ${road.id} has been fixed by ${author}`;
+            logData.resource = 'Road Network';
+            logData.resource_id = road.id;
+            logData.author = author;
+            logData.timestamp = new Date();
+
+            await this.activityLogService.create(logData);
         } catch (error) {
             this.logger.error(`An unkown error occured while destroying road with id,`, roadId);
 
@@ -69,7 +110,7 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
 
         roadDto.id = road.id;
         roadDto.type = road.type;
-        roadDto.status = road.status;
+        roadDto.is_damaged = road.is_damaged;
         roadDto.damage_probability = road.damage_probability;
         roadDto.property = road.properties as unknown as JSON;
         roadDto.geometry = road.geometry as unknown as JSON;
