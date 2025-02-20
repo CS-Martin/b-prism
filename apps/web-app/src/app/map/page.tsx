@@ -46,6 +46,8 @@ const MapPage = () => {
         roadNetwork: true,
     });
 
+    console.log('uninterrupted data', roadNetwork);
+
     useEffect(() => {
         selectedActionRef.current = selectedAction;
     }, [selectedAction]);
@@ -80,8 +82,8 @@ const MapPage = () => {
                     properties: {
                         id: road.id,
                         is_damaged: road.is_damaged,
-                        damage_probability: road.damage_probability,
-                        ...road.property,
+                        damage_probability: road.damage_probability ?? 0,
+                        ...road.properties,
                     },
                     geometry: road.geometry,
                 })),

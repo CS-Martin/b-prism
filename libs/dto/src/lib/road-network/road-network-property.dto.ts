@@ -63,4 +63,10 @@ export class RoadNetworkPropertyDto {
 
     @ApiProperty({ required: false, nullable: true })
     tunnel?: string | null;
+
+    @ApiProperty({ required: true })
+    is_damaged!: boolean;
+
+    @ApiProperty({ required: true })
+    damage_probability!: number;
 }
