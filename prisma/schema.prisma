@@ -111,4 +111,6 @@ model RoadNetwork {
   damage_probability Float
   properties         Json
   geometry           Json
+
+  @@index([status])
 }
