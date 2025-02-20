@@ -10,7 +10,7 @@ export class RoadNetworkDto {
     type!: string;
 
     @ApiProperty({ type: RoadNetworkPropertyDto })
-    property!: JSON;
+    properties!: JSON;
 
     @ApiProperty({ type: RoadNetworkGeometryDto })
     geometry!: JSON;

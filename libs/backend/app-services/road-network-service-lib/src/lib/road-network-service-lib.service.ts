@@ -124,7 +124,7 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         roadDto.type = road.type;
         roadDto.is_damaged = road.is_damaged;
         roadDto.damage_probability = road.damage_probability;
-        roadDto.property = road.properties as unknown as JSON;
+        roadDto.properties = road.properties as unknown as JSON;
         roadDto.geometry = road.geometry as unknown as JSON;
 
         return roadDto;
