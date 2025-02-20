@@ -16,6 +16,8 @@ import CreateDispensingPointDialog from './_components/dispensing-point/create.d
 import ControlPanel from './_components/control-panel';
 import RescuePostPanel from './_components/rescue-post-panel';
 import RenderDispensingPoint from './_components/dispensing-point/render.dispensing-point';
+import { useDisplayRoadNetwork } from '../../hooks/road-network.hook';
+import { RenderRoadNetwork } from './_components/road-network/render-road-network';
 
 interface MarkerType {
     longitude: string;
@@ -32,6 +34,7 @@ const MapPage = () => {
 
     const { warehouses, fetchAllWarehouses } = useDisplayWarehouses();
     const { dispensingPoints, fetchAllDispensingPoints } = useDisplayDispensingPoints();
+    const { roadNetwork, fetchAllRoadNetwork, isLoading: isFetchingRoadNetwork } = useDisplayRoadNetwork();
     const [isOpen, setIsOpen] = useState(false);
     const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
     const [itemToDelete, setItemtoDelete] = useState<{ type: string; id: string }>();
@@ -40,6 +43,7 @@ const MapPage = () => {
     const [visibility, setVisibility] = useState({
         warehouses: true,
         dispensingPoints: true,
+        roadNetwork: true,
     });
 
     useEffect(() => {
@@ -70,8 +74,20 @@ const MapPage = () => {
                     },
                 })),
             ],
+            RoadNetwork: [
+                ...roadNetwork.map((road) => ({
+                    type: 'Feature',
+                    properties: {
+                        id: road.id,
+                        is_damaged: road.is_damaged,
+                        damage_probability: road.damage_probability,
+                        ...road.property,
+                    },
+                    geometry: road.geometry,
+                })),
+            ],
         }),
-        [dispensingPoints, warehouses],
+        [roadNetwork, dispensingPoints, warehouses],
     );
 
     useEffect(() => {
@@ -179,6 +195,13 @@ const MapPage = () => {
                             fetchAllWarehouses={fetchAllWarehouses}
                         />
                     )}
+
+                    <RenderRoadNetwork
+                        geoJsonData={geoJsonData}
+                        isMapLoaded={isMapLoaded}
+                        visibility={visibility}
+                        selectedAction={null}
+                    />
 
                     <RenderWarehouse
                         geoJsonData={geoJsonData}
