@@ -10,6 +10,7 @@ import { ResponseDto, UserDto } from '@dto';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
 import { useLoginUser } from 'apps/web-app/src/hooks/authentication.hook';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function LoginPage() {
     const { loginUser, isLoading: isLoggingIn } = useLoginUser();
@@ -59,13 +60,15 @@ export default function LoginPage() {
         <>
             <div className='flex min-h-full flex-1 flex-col justify-center lg:px-8'>
                 <div className='sm:mx-auto flex flex-col items-center sm:w-full sm:max-w-sm'>
-                    <Image
-                        alt='Your Company'
-                        src='/logo/haribon-logo.svg'
-                        height={50}
-                        width={50}
-                        className='h-32'
-                    />
+                    <Link href={'/home'}>
+                        <Image
+                            alt='Your Company'
+                            src='/logo/haribon-logo.svg'
+                            height={50}
+                            width={50}
+                            className='h-32'
+                        />
+                    </Link>
                     <h2 className='text-xl/10 font-semibold tracking-tight'>Sign in to Haribon</h2>
                 </div>
 
