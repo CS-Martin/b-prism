@@ -1,0 +1,9 @@
+{
+    "name": "road-network-mongodb-lib",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/backend/database-services/road-network-mongodb-lib/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project road-network-mongodb-lib --web",
+    "targets": {}
+}
