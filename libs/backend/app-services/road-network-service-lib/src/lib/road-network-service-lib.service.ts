@@ -61,6 +61,12 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         const road = (await this.findById(roadId)).body;
 
         try {
+            if (road.is_damaged === true) {
+                this.logger.error(`Request denied. Road ${road} is already damaged.`);
+
+                throw new BadRequestException(`Request denied. Road network is already damaged. Please try again.`);
+            }
+
             await this.roadNetworkMongodbService.destroyRoad(roadId);
 
             const logData: CreateActivityLogDto = new CreateActivityLogDto();
@@ -86,6 +92,12 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         const road = (await this.findById(roadId)).body;
 
         try {
+            if (road.is_damaged === false) {
+                this.logger.error(`Request denied. Road ${road} is already damaged.`);
+
+                throw new BadRequestException(`Request denied. Road network is already fixed. Please try again.`);
+            }
+
             await this.roadNetworkMongodbService.fixRoad(roadId);
 
             const logData: CreateActivityLogDto = new CreateActivityLogDto();
