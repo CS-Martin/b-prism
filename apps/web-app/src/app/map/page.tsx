@@ -50,6 +50,8 @@ const MapPage = () => {
         roadNetwork: true,
     });
 
+    console.log(roadNetwork, 'WGATASDASD');
+
     // I cannot fetch all road data (70k data) all at once
     // Had to fetch by data depending on user's bound box map viewport
     useEffect(() => {
@@ -58,9 +60,10 @@ const MapPage = () => {
         const mapboxMap = mapRef.current.getMap();
 
         const handleMove = () => {
-            fetchRoadByBounds(); // Fetch data when the user moves the map
+            fetchRoadByBounds();
         };
 
+        console.log(roadNetwork, 'HOIY');
         mapboxMap.on('moveend', handleMove);
 
         return () => {
@@ -103,7 +106,7 @@ const MapPage = () => {
                     properties: {
                         id: road.id,
                         is_damaged: road.is_damaged,
-                        damage_probability: road.damage_probability ?? 0,
+                        damage_probability: road.damage_probability,
                         ...road.properties,
                     },
                     geometry: road.geometry,

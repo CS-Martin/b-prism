@@ -1,5 +1,5 @@
 import { Layer, Source, useMap } from 'react-map-gl';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface RenderRoadNetworkProps {
     geoJsonData: any;
@@ -11,18 +11,30 @@ interface RenderRoadNetworkProps {
 export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, selectedAction }: RenderRoadNetworkProps) => {
     const { current: map } = useMap();
 
+    const [isDestroyDialogOpen, setIsDestroyDialogOpen] = useState(false);
+
     let hoveredRoadId: string | null = null;
 
     useEffect(() => {
         if (!map || !isMapLoaded) return;
+
+        const handleLayerClick = (e: any) => {
+            const road = map.queryRenderedFeatures(e.point, { layers: ['road_layer'] });
+
+            if (!road || road.length === 0) return;
+
+            const clickedRoad = road[0];
+            console.log('handleClick', road);
+            const clickedRoadId = clickedRoad.properties?.id;
+        };
 
         const handleMouseMove = (e: any) => {
             const features = map.queryRenderedFeatures(e.point, { layers: ['road_layer'] });
 
             if (features.length > 0) {
                 const road = features[0];
-                console.log(features);
-                console.log(road, 'HAHAHAHAHA');
+
+                map.getCanvas().style.cursor = 'pointer';
 
                 // Reset the previous hover state
                 if (hoveredRoadId !== null) {
@@ -33,24 +45,25 @@ export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, select
                 if (road.id !== undefined) {
                     hoveredRoadId = road.id as string;
 
-                    console.log('here hovered', hoveredRoadId);
                     map.setFeatureState({ source: 'road-network-source', id: hoveredRoadId }, { hover: true });
                 }
             }
         };
 
         const handleMouseLeave = () => {
-            console.log('Handle mouse leave');
             if (hoveredRoadId !== null) {
+                map.getCanvas().style.cursor = 'grab';
                 map.setFeatureState({ source: 'road-network-source', id: hoveredRoadId }, { hover: false });
             }
             hoveredRoadId = null;
         };
 
+        map.on('click', 'road_layer', handleLayerClick);
         map.on('mousemove', 'road_layer', handleMouseMove);
         map.on('mouseleave', 'road_layer', handleMouseLeave);
 
         return () => {
+            map.off('click', 'road_layer', handleLayerClick);
             map.off('mousemove', 'road_layer', handleMouseMove);
             map.off('mouseleave', 'road_layer', handleMouseLeave);
         };
@@ -74,7 +87,7 @@ export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, select
                         'line-width': [
                             'case',
                             ['boolean', ['feature-state', 'hover'], false],
-                            7, // Width when hovered
+                            12, // Width when hovered
                             5, // Default width
                         ],
                         'line-color': [
@@ -87,7 +100,7 @@ export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, select
                             'case',
                             ['boolean', ['feature-state', 'hover'], false],
                             1, // Fully visible when hovered
-                            0.5, // Slightly transparent otherwise
+                            0.6, // Slightly transparent otherwise
                         ],
                     }}
                 />

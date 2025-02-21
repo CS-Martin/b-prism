@@ -20,10 +20,13 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         try {
             const roads = await this.roadNetworkMongodbService.findByBounds(minLng, minLat, maxLng, maxLat);
 
+            console.log(roads, 'HEY');
             const response: ResponseDto<RoadNetworkDto[]> = new ResponseDto<RoadNetworkDto[]>(
                 200,
                 roads.map((road) => this.convertToDto(road)),
             );
+
+            // Why the id is being undefined after converting it into DTO???
 
             return response;
         } catch (error) {
