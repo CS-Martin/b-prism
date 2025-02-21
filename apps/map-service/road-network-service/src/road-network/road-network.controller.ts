@@ -1,5 +1,5 @@
 import { RoadNetworkServiceLibService } from '@b-prism/road-network-service-lib';
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Query } from '@nestjs/common';
 import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Road Network Endpoints')
@@ -65,5 +65,15 @@ export class RoadNetworkController {
         const { author } = payload;
 
         return this.roadNetworkServiceLibService.destroyRoad(id, author);
+    }
+
+    @Get('bounds/search')
+    async findByBounds(@Query('minLng') minLng: string, @Query('minLat') minLat: string, @Query('maxLng') maxLng: string, @Query('maxLat') maxLat: string) {
+        const parsedMinLng = parseFloat(minLng);
+        const parsedMinLat = parseFloat(minLat);
+        const parsedMaxLng = parseFloat(maxLng);
+        const parsedMaxLat = parseFloat(maxLat);
+
+        return this.roadNetworkServiceLibService.findByBounds(parsedMinLng, parsedMinLat, parsedMaxLng, parsedMaxLat);
     }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { AppSidebar } from '@b-prism/shadcn-ui/index';
+import { Alert, AlertDescription, AlertTitle, AppSidebar, Label, useSidebar } from '@b-prism/shadcn-ui/index';
 import { SelectedActionType } from '@b-prism/enums';
 import Map, { MapMouseEvent, MapRef, Source, Layer, MapLayerMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -16,8 +16,11 @@ import CreateDispensingPointDialog from './_components/dispensing-point/create.d
 import ControlPanel from './_components/control-panel';
 import RescuePostPanel from './_components/rescue-post-panel';
 import RenderDispensingPoint from './_components/dispensing-point/render.dispensing-point';
-import { useDisplayRoadNetwork } from '../../hooks/road-network.hook';
 import { RenderRoadNetwork } from './_components/road-network/render-road-network';
+import { useDisplayRoadNetworkByBounds } from '../../hooks/road-network.hook';
+import { Loader2, Terminal } from 'lucide-react';
+import Image from 'next/image';
+import FetchingIndicator from './_components/fetching-indicator';
 
 interface MarkerType {
     longitude: string;
@@ -34,7 +37,7 @@ const MapPage = () => {
 
     const { warehouses, fetchAllWarehouses } = useDisplayWarehouses();
     const { dispensingPoints, fetchAllDispensingPoints } = useDisplayDispensingPoints();
-    const { roadNetwork, fetchAllRoadNetwork, isLoading: isFetchingRoadNetwork } = useDisplayRoadNetwork();
+    const { roadNetwork, fetchRoadByBounds, isLoading: isFetchingRoadNetwork } = useDisplayRoadNetworkByBounds(mapRef);
     const [isOpen, setIsOpen] = useState(false);
     const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
     const [itemToDelete, setItemtoDelete] = useState<{ type: string; id: string }>();
@@ -46,7 +49,23 @@ const MapPage = () => {
         roadNetwork: true,
     });
 
-    console.log('uninterrupted data', roadNetwork);
+    // I cannot fetch all road data (70k data) all at once
+    // Had to fetch by data depending on user's bound box map viewport
+    useEffect(() => {
+        if (!mapRef.current) return;
+
+        const mapboxMap = mapRef.current.getMap();
+
+        const handleMove = () => {
+            fetchRoadByBounds();
+        };
+
+        mapboxMap.on('moveend', handleMove);
+
+        return () => {
+            mapboxMap.off('moveend', handleMove);
+        };
+    }, [mapRef, fetchRoadByBounds]);
 
     useEffect(() => {
         selectedActionRef.current = selectedAction;
@@ -77,12 +96,13 @@ const MapPage = () => {
                 })),
             ],
             RoadNetwork: [
-                ...roadNetwork.map((road) => ({
+                ...roadNetwork.map((road, index) => ({
                     type: 'Feature',
+                    id: index,
                     properties: {
                         id: road.id,
                         is_damaged: road.is_damaged,
-                        damage_probability: road.damage_probability ?? 0,
+                        damage_probability: road.damage_probability,
                         ...road.properties,
                     },
                     geometry: road.geometry,
@@ -104,7 +124,6 @@ const MapPage = () => {
             mapboxMap.addControl(geocoder);
 
             const handleLayerClick = (event: MapMouseEvent) => {
-                console.log('test');
                 const item = event.features;
 
                 if (!item || item.length === 0) return;
@@ -167,6 +186,8 @@ const MapPage = () => {
         // Therefore we must send the ID to view/update component to fetch the corresponding item
         // setSelectedMarkerId(id);
     };
+
+    // if (isFetchingRoadNetwork) return <div>loading</div>;
     return (
         <main>
             <div id='map'>
@@ -198,20 +219,6 @@ const MapPage = () => {
                         />
                     )}
 
-                    <RenderRoadNetwork
-                        geoJsonData={geoJsonData}
-                        isMapLoaded={isMapLoaded}
-                        visibility={visibility}
-                        selectedAction={null}
-                    />
-
-                    <RenderWarehouse
-                        geoJsonData={geoJsonData}
-                        isMapLoaded={isMapLoaded}
-                        visibility={visibility}
-                        selectedAction={selectedAction}
-                    />
-
                     {/* Trigger the dialog to create a dispensing point */}
                     {selectedAction === 'createDispensingPoint' && (
                         <CreateDispensingPointDialog
@@ -222,13 +229,30 @@ const MapPage = () => {
                         />
                     )}
 
-                    {/* Render the dispensing points as layer */}
-                    <RenderDispensingPoint
-                        geoJsonData={geoJsonData}
-                        isMapLoaded={isMapLoaded}
-                        visibility={visibility}
-                        selectedAction={selectedAction}
-                    />
+                    {isMapLoaded && (
+                        <>
+                            <RenderRoadNetwork
+                                geoJsonData={geoJsonData}
+                                isMapLoaded={isMapLoaded}
+                                visibility={visibility}
+                                mapRef={mapRef}
+                            />
+
+                            <RenderWarehouse
+                                geoJsonData={geoJsonData}
+                                isMapLoaded={isMapLoaded}
+                                visibility={visibility}
+                                selectedAction={selectedAction}
+                            />
+
+                            <RenderDispensingPoint
+                                geoJsonData={geoJsonData}
+                                isMapLoaded={isMapLoaded}
+                                visibility={visibility}
+                                selectedAction={selectedAction}
+                            />
+                        </>
+                    )}
 
                     {/* Control Panel */}
                     <ControlPanel
@@ -237,9 +261,9 @@ const MapPage = () => {
                     />
 
                     <RescuePostPanel mapRef={mapRef} />
+                    <FetchingIndicator isFetchingRoadNetwork={isFetchingRoadNetwork} />
                 </Map>
             </div>
-
             {isOpen && itemToDelete && (
                 <DeleteItem
                     item={itemToDelete}
@@ -251,7 +275,6 @@ const MapPage = () => {
                     fetchAllDispensingPoints={fetchAllDispensingPoints}
                 />
             )}
-
             <AppSidebar setSelectedAction={(action: string | null) => setSelectedAction(action as SelectedActionType | null)} />
         </main>
     );
