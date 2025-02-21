@@ -29,7 +29,6 @@ interface MarkerType {
 
 const MapPage = () => {
     const mapRef = useRef<MapRef | null>(null);
-    const { state } = useSidebar();
 
     // Temporary fix *****
     // To solve issue where selectedAction value is always null inside onLoad function of map
@@ -50,8 +49,6 @@ const MapPage = () => {
         roadNetwork: true,
     });
 
-    console.log(roadNetwork, 'WGATASDASD');
-
     // I cannot fetch all road data (70k data) all at once
     // Had to fetch by data depending on user's bound box map viewport
     useEffect(() => {
@@ -63,7 +60,6 @@ const MapPage = () => {
             fetchRoadByBounds();
         };
 
-        console.log(roadNetwork, 'HOIY');
         mapboxMap.on('moveend', handleMove);
 
         return () => {
@@ -128,7 +124,6 @@ const MapPage = () => {
             mapboxMap.addControl(geocoder);
 
             const handleLayerClick = (event: MapMouseEvent) => {
-                console.log('test');
                 const item = event.features;
 
                 if (!item || item.length === 0) return;
@@ -224,20 +219,6 @@ const MapPage = () => {
                         />
                     )}
 
-                    <RenderRoadNetwork
-                        geoJsonData={geoJsonData}
-                        isMapLoaded={isMapLoaded}
-                        visibility={visibility}
-                        selectedAction={null}
-                    />
-
-                    <RenderWarehouse
-                        geoJsonData={geoJsonData}
-                        isMapLoaded={isMapLoaded}
-                        visibility={visibility}
-                        selectedAction={selectedAction}
-                    />
-
                     {/* Trigger the dialog to create a dispensing point */}
                     {selectedAction === 'createDispensingPoint' && (
                         <CreateDispensingPointDialog
@@ -248,13 +229,30 @@ const MapPage = () => {
                         />
                     )}
 
-                    {/* Render the dispensing points as layer */}
-                    <RenderDispensingPoint
-                        geoJsonData={geoJsonData}
-                        isMapLoaded={isMapLoaded}
-                        visibility={visibility}
-                        selectedAction={selectedAction}
-                    />
+                    {isMapLoaded && (
+                        <>
+                            <RenderRoadNetwork
+                                geoJsonData={geoJsonData}
+                                isMapLoaded={isMapLoaded}
+                                visibility={visibility}
+                                mapRef={mapRef}
+                            />
+
+                            <RenderWarehouse
+                                geoJsonData={geoJsonData}
+                                isMapLoaded={isMapLoaded}
+                                visibility={visibility}
+                                selectedAction={selectedAction}
+                            />
+
+                            <RenderDispensingPoint
+                                geoJsonData={geoJsonData}
+                                isMapLoaded={isMapLoaded}
+                                visibility={visibility}
+                                selectedAction={selectedAction}
+                            />
+                        </>
+                    )}
 
                     {/* Control Panel */}
                     <ControlPanel

@@ -1,16 +1,18 @@
-import { Layer, Source, useMap } from 'react-map-gl';
-import { useEffect, useState } from 'react';
+import { Layer, MapRef, Source, useMap } from 'react-map-gl';
+import { RefObject, useEffect, useState } from 'react';
+import { DestroyRoad } from './destroy-road';
 
 interface RenderRoadNetworkProps {
     geoJsonData: any;
     isMapLoaded: boolean;
     visibility: { roadNetwork: boolean };
-    selectedAction: string | null;
+    mapRef: RefObject<MapRef>;
 }
 
-export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, selectedAction }: RenderRoadNetworkProps) => {
+export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, mapRef }: RenderRoadNetworkProps) => {
     const { current: map } = useMap();
 
+    const [selectedRoadId, setSelectedRoadId] = useState<string>();
     const [isDestroyDialogOpen, setIsDestroyDialogOpen] = useState(false);
 
     let hoveredRoadId: string | null = null;
@@ -24,8 +26,12 @@ export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, select
             if (!road || road.length === 0) return;
 
             const clickedRoad = road[0];
-            console.log('handleClick', road);
             const clickedRoadId = clickedRoad.properties?.id;
+
+            if (!selectedRoadId) {
+                setSelectedRoadId(clickedRoadId);
+                setIsDestroyDialogOpen(true);
+            }
         };
 
         const handleMouseMove = (e: any) => {
@@ -105,6 +111,14 @@ export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, select
                     }}
                 />
             </Source>
+
+            {isDestroyDialogOpen && (
+                <DestroyRoad
+                    setIsDestroyDialogOpen={setIsDestroyDialogOpen}
+                    roadId={selectedRoadId}
+                    mapRef={mapRef}
+                />
+            )}
         </>
     );
 };
