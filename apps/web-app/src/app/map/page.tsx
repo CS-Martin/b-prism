@@ -1,6 +1,6 @@
 'use client';
 
-import { AppSidebar, useSidebar } from '@b-prism/shadcn-ui/index';
+import { Alert, AlertDescription, AlertTitle, AppSidebar, Label, useSidebar } from '@b-prism/shadcn-ui/index';
 import { SelectedActionType } from '@b-prism/enums';
 import Map, { MapMouseEvent, MapRef, Source, Layer, MapLayerMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -18,6 +18,9 @@ import RescuePostPanel from './_components/rescue-post-panel';
 import RenderDispensingPoint from './_components/dispensing-point/render.dispensing-point';
 import { RenderRoadNetwork } from './_components/road-network/render-road-network';
 import { useDisplayRoadNetworkByBounds } from '../../hooks/road-network.hook';
+import { Loader2, Terminal } from 'lucide-react';
+import Image from 'next/image';
+import FetchingIndicator from './_components/fetching-indicator';
 
 interface MarkerType {
     longitude: string;
@@ -257,9 +260,9 @@ const MapPage = () => {
                     />
 
                     <RescuePostPanel mapRef={mapRef} />
+                    <FetchingIndicator isFetchingRoadNetwork={isFetchingRoadNetwork} />
                 </Map>
             </div>
-
             {isOpen && itemToDelete && (
                 <DeleteItem
                     item={itemToDelete}
@@ -271,10 +274,7 @@ const MapPage = () => {
                     fetchAllDispensingPoints={fetchAllDispensingPoints}
                 />
             )}
-
             <AppSidebar setSelectedAction={(action: string | null) => setSelectedAction(action as SelectedActionType | null)} />
-
-            {isFetchingRoadNetwork && <div className={`absolute bg-black bottom-3 ${state === 'collapsed' ? 'left-0' : 'left-[19rem]'}`}>Loading</div>}
         </main>
     );
 };

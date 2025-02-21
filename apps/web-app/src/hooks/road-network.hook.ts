@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { roadNetworkService } from '../services/road-network.service';
 import { ResponseDto, RoadNetworkDto } from '@dto';
 import { MapRef } from 'react-map-gl';
+import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 export const useDisplayRoadNetworkByBounds = (mapRef: React.RefObject<MapRef>) => {
+    const { toast } = useToast();
     const [roadNetwork, setRoadNetwork] = useState<RoadNetworkDto[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 

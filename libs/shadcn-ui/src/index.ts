@@ -31,3 +31,4 @@ export * from './components/ui/collapsible';
 export * from './components/ui/tabs';
 export * from './components/ui/input-otp';
 export * from './components/ui/card';
+export * from './components/ui/alert';
