@@ -14,6 +14,25 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         private readonly activityLogService: ActivityLogServiceLibService,
     ) {}
 
+    async findByBounds(minLng: number, minLat: number, maxLng: number, maxLat: number): Promise<ResponseDto<RoadNetworkDto[]>> {
+        this.logger.log(`Fetching roads within bounds: [${minLng}, ${minLat}] to [${maxLng}, ${maxLat}]`);
+
+        try {
+            const roads = await this.roadNetworkMongodbService.findByBounds(minLng, minLat, maxLng, maxLat);
+
+            const response: ResponseDto<RoadNetworkDto[]> = new ResponseDto<RoadNetworkDto[]>(
+                200,
+                roads.map((road) => this.convertToDto(road)),
+            );
+
+            return response;
+        } catch (error) {
+            this.logger.error(`An error occurred while fetching roads within bounds:`, error);
+
+            throw new BadRequestException(error);
+        }
+    }
+
     async findAll(): Promise<ResponseDto<RoadNetworkDto[]>> {
         this.logger.log('Fetching all road networks');
 

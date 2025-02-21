@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaDbLibService } from '@prisma-db-lib';
 import { RoadNetwork } from '@prisma/client';
+import { find } from 'rxjs';
 
 @Injectable()
 export class RoadNetworkMongodbLibService {
@@ -44,6 +45,37 @@ export class RoadNetworkMongodbLibService {
     }
 
     async findAll(): Promise<RoadNetwork[]> {
-        return this.prisma.roadNetwork.findMany();
+        return this.prisma.roadNetwork.findMany({
+            where: {
+                is_damaged: true,
+            },
+        });
+    }
+
+    async findByBounds(minLng: number, minLat: number, maxLng: number, maxLat: number): Promise<RoadNetwork[]> {
+        const result = await this.prisma.$runCommandRaw({
+            find: 'RoadNetwork',
+            filter: {
+                'geometry.coordinates': {
+                    $geoWithin: {
+                        $box: [
+                            [minLng, minLat], // Bottom-left corner
+                            [maxLng, maxLat], // Top-right corner
+                        ],
+                    },
+                },
+            },
+        });
+
+        // Explicitly define expected structure
+        interface MongoFindResponse {
+            cursor?: {
+                firstBatch?: RoadNetwork[];
+            };
+        }
+
+        const typedResult = result as MongoFindResponse; // Type assertion
+
+        return typedResult.cursor?.firstBatch ?? [];
     }
 }

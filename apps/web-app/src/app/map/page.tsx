@@ -1,6 +1,6 @@
 'use client';
 
-import { AppSidebar } from '@b-prism/shadcn-ui/index';
+import { AppSidebar, useSidebar } from '@b-prism/shadcn-ui/index';
 import { SelectedActionType } from '@b-prism/enums';
 import Map, { MapMouseEvent, MapRef, Source, Layer, MapLayerMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -16,8 +16,8 @@ import CreateDispensingPointDialog from './_components/dispensing-point/create.d
 import ControlPanel from './_components/control-panel';
 import RescuePostPanel from './_components/rescue-post-panel';
 import RenderDispensingPoint from './_components/dispensing-point/render.dispensing-point';
-import { useDisplayRoadNetwork } from '../../hooks/road-network.hook';
 import { RenderRoadNetwork } from './_components/road-network/render-road-network';
+import { useDisplayRoadNetworkByBounds } from '../../hooks/road-network.hook';
 
 interface MarkerType {
     longitude: string;
@@ -26,6 +26,7 @@ interface MarkerType {
 
 const MapPage = () => {
     const mapRef = useRef<MapRef | null>(null);
+    const { state } = useSidebar();
 
     // Temporary fix *****
     // To solve issue where selectedAction value is always null inside onLoad function of map
@@ -34,7 +35,7 @@ const MapPage = () => {
 
     const { warehouses, fetchAllWarehouses } = useDisplayWarehouses();
     const { dispensingPoints, fetchAllDispensingPoints } = useDisplayDispensingPoints();
-    const { roadNetwork, fetchAllRoadNetwork, isLoading: isFetchingRoadNetwork } = useDisplayRoadNetwork();
+    const { roadNetwork, fetchRoadByBounds, isLoading: isFetchingRoadNetwork } = useDisplayRoadNetworkByBounds(mapRef);
     const [isOpen, setIsOpen] = useState(false);
     const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
     const [itemToDelete, setItemtoDelete] = useState<{ type: string; id: string }>();
@@ -46,7 +47,23 @@ const MapPage = () => {
         roadNetwork: true,
     });
 
-    console.log('uninterrupted data', roadNetwork);
+    // I cannot fetch all road data (70k data) all at once
+    // Had to fetch by data depending on user's bound box map viewport
+    useEffect(() => {
+        if (!mapRef.current) return;
+
+        const mapboxMap = mapRef.current.getMap();
+
+        const handleMove = () => {
+            fetchRoadByBounds(); // Fetch data when the user moves the map
+        };
+
+        mapboxMap.on('moveend', handleMove);
+
+        return () => {
+            mapboxMap.off('moveend', handleMove);
+        };
+    }, [mapRef, fetchRoadByBounds]);
 
     useEffect(() => {
         selectedActionRef.current = selectedAction;
@@ -77,8 +94,9 @@ const MapPage = () => {
                 })),
             ],
             RoadNetwork: [
-                ...roadNetwork.map((road) => ({
+                ...roadNetwork.map((road, index) => ({
                     type: 'Feature',
+                    id: index,
                     properties: {
                         id: road.id,
                         is_damaged: road.is_damaged,
@@ -167,6 +185,8 @@ const MapPage = () => {
         // Therefore we must send the ID to view/update component to fetch the corresponding item
         // setSelectedMarkerId(id);
     };
+
+    // if (isFetchingRoadNetwork) return <div>loading</div>;
     return (
         <main>
             <div id='map'>
@@ -253,6 +273,8 @@ const MapPage = () => {
             )}
 
             <AppSidebar setSelectedAction={(action: string | null) => setSelectedAction(action as SelectedActionType | null)} />
+
+            {isFetchingRoadNetwork && <div className={`absolute bg-black bottom-3 ${state === 'collapsed' ? 'left-0' : 'left-[19rem]'}`}>Loading</div>}
         </main>
     );
 };
