@@ -1,5 +1,5 @@
 import { ResponseDto, UserDto } from '@dto';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { userService } from '../services/user.service';
 import { authService } from '../services/authentication.service';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';

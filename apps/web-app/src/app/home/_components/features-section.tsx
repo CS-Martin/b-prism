@@ -1,6 +1,4 @@
 import Image from 'next/image';
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
 import { Button } from '@b-prism/shadcn-ui/index';
 import { ArrowRight } from 'lucide-react';
 

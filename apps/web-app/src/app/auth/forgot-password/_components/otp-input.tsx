@@ -1,4 +1,3 @@
-import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator, Label, Button } from '@b-prism/shadcn-ui/index';
 import { MailerDto, ResponseDto } from '@dto';
 import { useSendVerificationCode } from 'apps/web-app/src/hooks/mailer.hook';

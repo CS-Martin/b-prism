@@ -1,5 +1,5 @@
 import { Input, Label } from '@b-prism/shadcn-ui/index';
-import { Controller, UseFormRegister } from 'react-hook-form';
+import { UseFormRegister } from 'react-hook-form';
 
 interface InputFieldProps {
     className?: string;

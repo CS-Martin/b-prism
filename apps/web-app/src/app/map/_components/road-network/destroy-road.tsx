@@ -9,21 +9,19 @@ import {
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/index';
 import { UserDto } from '@dto';
-import { useDestroyRoad, useDisplayRoadNetworkByBounds } from 'apps/web-app/src/hooks/road-network.hook';
+import { useDestroyRoad } from 'apps/web-app/src/hooks/road-network.hook';
 import { useSession } from 'next-auth/react';
-import React, { RefObject, useRef } from 'react';
-import { MapRef } from 'react-map-gl';
+import React from 'react';
 
 interface DestroyRoadProps {
     roadId: string | undefined;
-    setIsDestroyDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    mapRef: RefObject<MapRef>;
+    setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    fetchRoadByBounds: () => void;
 }
 
-export const DestroyRoad = ({ roadId, setIsDestroyDialogOpen, mapRef }: DestroyRoadProps) => {
+export const DestroyRoad = ({ roadId, setIsDialogOpen, fetchRoadByBounds }: DestroyRoadProps) => {
     const { data: session } = useSession();
     const { destroyRoad } = useDestroyRoad();
-    const { fetchRoadByBounds } = useDisplayRoadNetworkByBounds(mapRef);
 
     const user: UserDto = session?.user as UserDto;
     const requestAuthor = `${user.given_name} ${user.family_name}`;
@@ -31,26 +29,28 @@ export const DestroyRoad = ({ roadId, setIsDestroyDialogOpen, mapRef }: DestroyR
     const handleRoadDestroy = async () => {
         if (roadId) {
             await destroyRoad(roadId, requestAuthor);
-            setIsDestroyDialogOpen(false);
-        }
+            setIsDialogOpen(false);
 
-        if (fetchRoadByBounds) {
             fetchRoadByBounds();
         }
     };
 
     const handleCancel = () => {
-        setIsDestroyDialogOpen(false);
+        roadId = '';
+        setIsDialogOpen(false);
     };
 
     return (
         <AlertDialog
             open={true}
-            onOpenChange={setIsDestroyDialogOpen}>
+            onOpenChange={setIsDialogOpen}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Road?</AlertDialogTitle>
-                    <AlertDialogDescription>You are about to delete road from the transport network. Are you absolutely sure?</AlertDialogDescription>
+                    <AlertDialogTitle>Confirm Road Damage</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        You are about to mark this road as <b>damaged</b>. This action will update the road&apos;s status to indicate that it is <b>no longer passable</b>. Are you
+                        sure you want to proceed?
+                    </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={handleCancel}>No, Keep it</AlertDialogCancel>

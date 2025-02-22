@@ -1,8 +1,8 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle, AppSidebar, Label, useSidebar } from '@b-prism/shadcn-ui/index';
+import { AppSidebar } from '@b-prism/shadcn-ui/index';
 import { SelectedActionType } from '@b-prism/enums';
-import Map, { MapMouseEvent, MapRef, Source, Layer, MapLayerMouseEvent } from 'react-map-gl';
+import Map, { MapMouseEvent, MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
@@ -18,8 +18,6 @@ import RescuePostPanel from './_components/rescue-post-panel';
 import RenderDispensingPoint from './_components/dispensing-point/render.dispensing-point';
 import { RenderRoadNetwork } from './_components/road-network/render-road-network';
 import { useDisplayRoadNetworkByBounds } from '../../hooks/road-network.hook';
-import { Loader2, Terminal } from 'lucide-react';
-import Image from 'next/image';
 import FetchingIndicator from './_components/fetching-indicator';
 
 interface MarkerType {
@@ -164,9 +162,9 @@ const MapPage = () => {
     };
 
     // This is for visibility control for cpanel
-    const handleVisibilityChange = (layer: string, isVisible: boolean) => {
-        setVisibility((prev) => ({ ...prev, [layer]: isVisible }));
-    };
+    // const handleVisibilityChange = (layer: string, isVisible: boolean) => {
+    //     setVisibility((prev) => ({ ...prev, [layer]: isVisible }));
+    // };
 
     /**
      * Handles the click event on a marker.
@@ -235,7 +233,7 @@ const MapPage = () => {
                                 geoJsonData={geoJsonData}
                                 isMapLoaded={isMapLoaded}
                                 visibility={visibility}
-                                mapRef={mapRef}
+                                fetchRoadByBounds={fetchRoadByBounds}
                             />
 
                             <RenderWarehouse

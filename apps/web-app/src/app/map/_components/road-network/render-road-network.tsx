@@ -1,19 +1,21 @@
-import { Layer, MapRef, Source, useMap } from 'react-map-gl';
-import { RefObject, useEffect, useState } from 'react';
+import { Layer, Source, useMap } from 'react-map-gl';
+import { useEffect, useState } from 'react';
 import { DestroyRoad } from './destroy-road';
+import { FixRoad } from './fix-road';
 
 interface RenderRoadNetworkProps {
     geoJsonData: any;
     isMapLoaded: boolean;
     visibility: { roadNetwork: boolean };
-    mapRef: RefObject<MapRef>;
+    fetchRoadByBounds: () => void;
 }
 
-export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, mapRef }: RenderRoadNetworkProps) => {
+export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, fetchRoadByBounds }: RenderRoadNetworkProps) => {
     const { current: map } = useMap();
 
     const [selectedRoadId, setSelectedRoadId] = useState<string>();
-    const [isDestroyDialogOpen, setIsDestroyDialogOpen] = useState(false);
+    const [isDamaged, setIsDamaged] = useState<boolean>();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     let hoveredRoadId: string | null = null;
 
@@ -30,7 +32,8 @@ export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, mapRef
 
             if (!selectedRoadId) {
                 setSelectedRoadId(clickedRoadId);
-                setIsDestroyDialogOpen(true);
+                setIsDamaged(clickedRoad.properties?.is_damaged);
+                setIsDialogOpen(true);
             }
         };
 
@@ -112,13 +115,20 @@ export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, mapRef
                 />
             </Source>
 
-            {isDestroyDialogOpen && (
-                <DestroyRoad
-                    setIsDestroyDialogOpen={setIsDestroyDialogOpen}
-                    roadId={selectedRoadId}
-                    mapRef={mapRef}
-                />
-            )}
+            {isDialogOpen &&
+                (isDamaged ? (
+                    <FixRoad
+                        setIsDialogOpen={setIsDialogOpen}
+                        roadId={selectedRoadId}
+                        fetchRoadByBounds={fetchRoadByBounds}
+                    />
+                ) : (
+                    <DestroyRoad
+                        setIsDialogOpen={setIsDialogOpen}
+                        roadId={selectedRoadId}
+                        fetchRoadByBounds={fetchRoadByBounds}
+                    />
+                ))}
         </>
     );
 };

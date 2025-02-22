@@ -14,7 +14,6 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-    Label,
 } from '@b-prism/shadcn-ui/index';
 import { UserRole } from '@b-prism/enums';
 import { UserDto } from '@dto';
@@ -117,7 +116,7 @@ export const createColumns = (handleRoleChange: (userId: string, newRole: UserRo
             );
         },
         cell: ({ row }) => {
-            const position: string = row.original.position!;
+            const position: string | undefined | null = row.original.position;
 
             return (
                 <div className='text-center'>

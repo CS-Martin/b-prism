@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 
 export default function ActivityLogging() {
     const scrollAreaRef = useRef<HTMLDivElement>(null);
-    const { logs, isLoading, fetchAllActivityLogs } = useDisplayActivityLogs();
+    const { logs, isLoading } = useDisplayActivityLogs();
     const [visibleLogs, setVisibleLogs] = useState(10);
 
     console.log(logs);

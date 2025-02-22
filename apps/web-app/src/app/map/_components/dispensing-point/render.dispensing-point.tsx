@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Source, Layer, useMap } from 'react-map-gl';
 import UpdateDispensingPointDialog from './update.dispensing-point-dialog';
-import { features } from 'process';
 
 interface RenderDispensingPointProps {
     geoJsonData: any;

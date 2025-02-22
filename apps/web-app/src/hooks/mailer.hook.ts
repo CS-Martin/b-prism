@@ -1,5 +1,4 @@
-import { MailerDto, ResponseDto } from '@dto';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { mailerService } from '../services/mailer.service';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
