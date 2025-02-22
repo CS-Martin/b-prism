@@ -5,7 +5,7 @@ import { InputEmail } from './_components/input-email';
 import { OTPInput } from './_components/otp-input';
 import { PasswordInput } from './_components/password-input';
 import { Button } from '@b-prism/shadcn-ui/index';
-import { ArrowLeft, Ghost } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useSendVerificationCode } from 'apps/web-app/src/hooks/mailer.hook';
 import { MailerDto, ResponseDto, UserDto } from '@dto';
 import { PacmanLoader } from 'react-spinners';
@@ -110,6 +110,10 @@ export default function ForgotPasswordPage() {
 
             try {
                 const response: ResponseDto<UserDto> = await resetPassword(email, password, confirmPassword);
+
+                if (response.statusCode !== 200) {
+                    throw error;
+                }
 
                 router.push('/auth/login');
             } catch (error) {

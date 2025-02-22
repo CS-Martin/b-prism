@@ -1,8 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-
-import { Button } from '@b-prism/shadcn-ui/index';
 import { useRef } from 'react';
 import { ArrowDown } from 'lucide-react';
 import { useSession } from 'next-auth/react';
@@ -12,7 +9,6 @@ import QuoteCarouselSection from './_components/quote-section';
 import FeaturesSection from './_components/features-section';
 
 export default function Home() {
-    const { data: session } = useSession();
     const bottomRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {

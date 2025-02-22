@@ -1,6 +1,5 @@
 import { Button } from '@b-prism/shadcn-ui/index';
 import { ButtonType } from '@b-prism/types';
-import { ArrowDown } from 'lucide-react';
 import Link from 'next/link';
 import { PacmanLoader } from 'react-spinners';
 

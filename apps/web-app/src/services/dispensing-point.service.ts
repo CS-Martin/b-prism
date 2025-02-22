@@ -1,6 +1,5 @@
-import { ActivityLogDto, CreateActivityLogDto, CreateDispensingPointDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
+import { CreateDispensingPointDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
-import { activityLogService } from './activity-log.service';
 
 class DispensingPointService {
     private API_BASE_URL: string;

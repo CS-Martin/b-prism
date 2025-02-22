@@ -5,7 +5,6 @@ import { signIn } from 'next-auth/react';
 import { Input, Label } from '@b-prism/shadcn-ui/index';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRouter } from 'next/navigation';
-import { userService } from 'apps/web-app/src/services/user.service';
 import { ResponseDto, UserDto } from '@dto';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
 import { useLoginUser } from 'apps/web-app/src/hooks/authentication.hook';

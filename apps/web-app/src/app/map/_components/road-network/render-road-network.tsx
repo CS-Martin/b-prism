@@ -1,5 +1,5 @@
-import { Layer, MapRef, Source, useMap } from 'react-map-gl';
-import { RefObject, useEffect, useState } from 'react';
+import { Layer, Source, useMap } from 'react-map-gl';
+import { useEffect, useState } from 'react';
 import { DestroyRoad } from './destroy-road';
 import { FixRoad } from './fix-road';
 

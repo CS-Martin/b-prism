@@ -5,7 +5,6 @@ import Draggable from 'react-draggable';
 import { useDisplayRescuePosts } from '../../../hooks/map.hook';
 import { formatDistanceToNow } from 'date-fns';
 import mapboxgl from 'mapbox-gl';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { MapRef } from 'react-map-gl';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 

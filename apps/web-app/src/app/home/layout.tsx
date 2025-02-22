@@ -1,6 +1,6 @@
 import { AOSInit } from '@b-prism/shadcn-ui/index';
 import Navbar from '../../components/navbar';
-import { Inter, Montserrat } from 'next/font/google';
+import { Inter } from 'next/font/google';
 
 const inter = Inter({
     subsets: ['latin'],

@@ -1,7 +1,5 @@
 'use client';
 
-import { UserDto } from '@dto';
-
 import { useDisplayUsers } from '@b-prism/web-app/admin-dashboard-hooks';
 import { DataTable } from './_components/data-table';
 import { createColumns } from './_components/columns';

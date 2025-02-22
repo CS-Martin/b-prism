@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '../../../services/authentication.service';
 import { UserRole } from '@prisma/client';
-import { Button, Input } from '@b-prism/shadcn-ui/index';
+import { Input } from '@b-prism/shadcn-ui/index';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
 
 export default function RegisterPage() {

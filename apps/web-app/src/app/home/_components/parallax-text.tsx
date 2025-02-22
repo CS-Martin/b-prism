@@ -1,6 +1,7 @@
 import { motion, useScroll, useSpring, useTransform, useMotionValue, useVelocity, useAnimationFrame } from 'framer-motion';
 import { useRef } from 'react';
 import { wrap } from '@motionone/utils';
+import Image from 'next/image';
 
 interface ParallaxProps {
     children: React.ReactNode;
@@ -64,7 +65,9 @@ export const SupportersParallax = () => {
                     <div
                         key={index}
                         className='flex flex-col items-center w-[100px] h-auto'>
-                        <img
+                        <Image
+                            height={50}
+                            width={50}
                             src={company.logo}
                             alt={`${company.name} logo`}
                             className='filter w-[100px] h-auto md:w-[200px] lg:w-[300px] invert-[100%] brightness-0'
@@ -78,7 +81,9 @@ export const SupportersParallax = () => {
                     <div
                         key={index}
                         className='flex flex-col items-center w-[125px] h-auto'>
-                        <img
+                        <Image
+                            height={50}
+                            width={50}
                             src={company.logo}
                             alt={`${company.name} logo`}
                             className='filter w-[100px] h-auto md:w-[200px] lg:w-[300px] invert-[100%] brightness-0'
