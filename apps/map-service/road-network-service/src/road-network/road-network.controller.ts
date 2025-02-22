@@ -64,7 +64,7 @@ export class RoadNetworkController {
     fixRoad(@Param('id') id: string, @Body() payload: { author: string }) {
         const { author } = payload;
 
-        return this.roadNetworkServiceLibService.destroyRoad(id, author);
+        return this.roadNetworkServiceLibService.fixRoad(id, author);
     }
 
     @Get('bounds/search')

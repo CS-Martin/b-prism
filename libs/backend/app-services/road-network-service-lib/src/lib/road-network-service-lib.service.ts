@@ -25,8 +25,6 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
                 roads.map((road) => this.convertToDto(road)),
             );
 
-            // Why the id is being undefined after converting it into DTO???
-
             return response;
         } catch (error) {
             this.logger.error(`An error occurred while fetching roads within bounds:`, error);
@@ -77,7 +75,7 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
     }
 
     async destroyRoad(roadId: string, author: string): Promise<void> {
-        this.logger.log('Destroyinng road, ', roadId);
+        this.logger.log('Destroying road, ', roadId);
 
         const road = (await this.findById(roadId)).body;
 
@@ -114,7 +112,7 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
 
         try {
             if (road.is_damaged === false) {
-                this.logger.error(`Request denied. Road ${road} is already damaged.`);
+                this.logger.error(`Request denied. Road ${road} is already fixed.`);
 
                 throw new BadRequestException(`Request denied. Road network is already fixed. Please try again.`);
             }

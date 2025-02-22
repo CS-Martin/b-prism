@@ -235,7 +235,7 @@ const MapPage = () => {
                                 geoJsonData={geoJsonData}
                                 isMapLoaded={isMapLoaded}
                                 visibility={visibility}
-                                mapRef={mapRef}
+                                fetchRoadByBounds={fetchRoadByBounds}
                             />
 
                             <RenderWarehouse
