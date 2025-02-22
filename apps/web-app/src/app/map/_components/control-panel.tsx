@@ -19,11 +19,11 @@ function ControlPanel({ visibility, onVisibilityChange }: ControlPanelProps) {
         <Draggable
             handle='.drag-handle'
             bounds='parent'>
-            <div className='absolute top-0 right-0 z-50 max-w-[300px] rounded-[10px] shadow-xl m-[20px] outline-none bg-black bg-opacity-45'>
+            <div className='absolute top-0 right-0 z-50 max-w-[300px] rounded-[10px] shadow-xl m-[20px] outline-none bg-black bg-opacity-50'>
                 <div className={`drag-handle flex items-center justify-between transition-all duration-300 ${isExpanded ? 'px-5 pt-3.5 mb-3' : 'p-3'}`}>
-                    <Label className={`text-[16px] font-semibold cursor-move ${isExpanded ? '' : 'hidden'}`}>Dynamic Layer Control</Label>
+                    <Label className={`text-[16px] text-white font-semibold cursor-move ${isExpanded ? '' : 'hidden'}`}>Dynamic Layer Control</Label>
                     <div
-                        className='cursor-pointer'
+                        className='cursor-pointer text-white'
                         onClick={() => setIsExpanded(!isExpanded)}>
                         {isExpanded ? <PanelRight size={18} /> : <Layers size={18} />}
                     </div>
@@ -32,7 +32,7 @@ function ControlPanel({ visibility, onVisibilityChange }: ControlPanelProps) {
                 {isExpanded && (
                     <>
                         <div className='px-5'>
-                            <p className='text-sm text-gray-500'>Dynamically control the visibility of layers on the map</p>
+                            <p className='text-sm text-gray-200'>Dynamically control the visibility of layers on the map</p>
                         </div>
 
                         <Separator className='my-4 bg-gray-500 w-full' />
@@ -41,6 +41,7 @@ function ControlPanel({ visibility, onVisibilityChange }: ControlPanelProps) {
                             <div className='flex items-center gap-2 mb-3'>
                                 <Checkbox
                                     checked={visibility.warehouses}
+                                    className=' data-[state=checked]:bg-blue-500 border-gray-500 data-[state=checked]:text-white'
                                     onCheckedChange={(evt) => onVisibilityChange('warehouses', evt as boolean)}
                                 />
                                 <span className='flex items-center gap-2'>
@@ -50,13 +51,14 @@ function ControlPanel({ visibility, onVisibilityChange }: ControlPanelProps) {
                                         width={20}
                                         height={20}
                                     />
-                                    <Label className='font-normal uppercase'>Warehouses</Label>
+                                    <Label className='font-normal text-white uppercase'>Warehouses</Label>
                                 </span>
                             </div>
 
                             <div className='flex items-center gap-2 mb-3'>
                                 <Checkbox
                                     checked={visibility.dispensingPoints}
+                                    className='data-[state=checked]:bg-blue-500 border-gray-500 data-[state=checked]:text-white'
                                     onCheckedChange={(evt) => onVisibilityChange('dispensingPoints', evt as boolean)}
                                 />
                                 <span className='flex items-center gap-2'>
@@ -66,7 +68,7 @@ function ControlPanel({ visibility, onVisibilityChange }: ControlPanelProps) {
                                         width={20}
                                         height={20}
                                     />
-                                    <Label className='font-normal uppercase'>Dispensing Points</Label>
+                                    <Label className='font-normal text-white uppercase'>Dispensing Points</Label>
                                 </span>
                             </div>
                         </div>

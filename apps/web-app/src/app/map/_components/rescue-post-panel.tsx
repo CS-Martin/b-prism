@@ -74,7 +74,7 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
             <CollapsibleContent className='flex flex-col gap-2 mt-1 px-5 relative'>
                 <Separator
                     orientation='vertical'
-                    className='absolute top-0 left-2 h-full w-[1px] bg-white bg-opacity-20'
+                    className='absolute top-0 left-2 h-full w-[1px] bg-opacity-20'
                 />
                 {content}
             </CollapsibleContent>
@@ -91,9 +91,9 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                         isExpanded ? 'md:h-[720px]' : ''
                     }`}>
                     <div className={`cursor-move flex items-center justify-between transition-all duration-300 ${isExpanded ? 'px-5 pt-3.5 mb-3' : 'p-3'}`}>
-                        <Label className={`text-[16px] font-semibold ${isExpanded ? '' : 'hidden'}`}>Rescue Posts</Label>
+                        <Label className={`text-[16px] text-white font-semibold ${isExpanded ? '' : 'hidden'}`}>Rescue Posts</Label>
                         <div
-                            className='cursor-pointer'
+                            className='cursor-pointer text-white'
                             onClick={() => setIsExpanded(!isExpanded)}>
                             {isExpanded ? <PanelRight size={18} /> : <MessageSquareMore size={18} />}
                         </div>
@@ -102,7 +102,7 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                     {isExpanded && (
                         <div className='h-full'>
                             <div className='px-5 pb-3.5'>
-                                <p className='text-sm text-gray-500'>View and manage rescue posts on the map, sourced from a Facebook Messenger bot.</p>
+                                <p className='text-sm text-gray-200'>View and manage rescue posts on the map, sourced from a Facebook Messenger bot.</p>
                             </div>
                             <Separator className='my-3 bg-gray-500 w-full' />
                             <ScrollArea className='h-[calc(100%-130px)]'>
@@ -110,13 +110,13 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                                     {rescuePosts.map((post) => (
                                         <div
                                             key={post.id}
-                                            className='bg-[#1C1B1B] p-3 rounded-[5px]'
+                                            className='bg-sidebar p-3 rounded-[5px]'
                                             ref={scrollAreaRef}>
                                             <div className='flex justify-between items-center gap-2'>
                                                 <span className='flex items-center gap-2'>
                                                     <ShieldAlert
                                                         size={22}
-                                                        className='bg-red-500 rounded-full p-[3px]'
+                                                        className='bg-red-500 text-white rounded-full p-[3px]'
                                                     />
                                                     <p className='font-semibold'>
                                                         {new Date(post.created_at).toLocaleDateString()}{' '}
@@ -127,7 +127,8 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                                                     <Locate size={18} />
                                                 </button>
                                             </div>
-                                            <Separator className='my-4 bg-white bg-opacity-20 w-full' />
+
+                                            <Separator className='my-4 bg-opacity-20 w-full' />
 
                                             <div className='flex flex-col gap-2'>
                                                 {renderCollapsibleSection(
@@ -149,6 +150,7 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                                                         ))}
                                                     </>,
                                                 )}
+
                                                 {renderCollapsibleSection(
                                                     'Demographics',
                                                     <>

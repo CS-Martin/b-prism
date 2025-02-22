@@ -26,6 +26,7 @@ export function ModeToggle() {
                 id='theme-mode'
                 checked={resolvedTheme === 'dark'}
                 onCheckedChange={handleToggle}
+                className='data-[state=checked]:bg-blue-500'
             />
             <Label
                 htmlFor='theme-mode'

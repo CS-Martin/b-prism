@@ -17,19 +17,22 @@ const FetchingIndicator: React.FC<FetchingIndicatorProps> = ({ isFetchingWarehou
             handle='.drag-handle'
             bounds='parent'>
             <div
-                className={`absolute drag-handle bottom-0 text-[14px] cursor-move p-1.5 z-50 prisma-card-bg md:w-fit flex flex-row items-center gap-3 rounded-ss-lg ${state === 'collapsed' ? 'left-20' : 'left-[19rem]'}`}>
+                className={`absolute drag-handle bottom-0 text-[14px] cursor-move p-1.5 z-50 md:w-fit flex flex-row items-center gap-3 bg-black lg:bg-transparent w-full ${state === 'collapsed' ? 'lg:left-20 left-0 ' : 'lg:left-[19rem]'}`}>
                 <Terminal className='h-4 w-4' />
 
                 <div className='flex flex-row gap-x-2 items-center'>
                     {isFetchingWarehouses ? (
                         <>
                             <Loader2 className='h-5 w-5 animate-spin text-yellow-500' />
-                            <small className='text-yellow-500'>Loading warehouses. Please wait.</small>
+                            <small className='text-yellow-500 lg:hidden'>Loading...</small>
+                            <small className='text-yellow-500 hidden lg:block'>Loading warehouses. Please wait.</small>
                         </>
                     ) : (
                         <>
                             <House className='h-3.5 w-3.5' />
-                            <small className='text-white'>Warehouses ready.</small>
+
+                            <small className='text-white lg:hidden'>Ready</small>
+                            <small className='text-white hidden lg:block'>Warehouse ready.</small>
                         </>
                     )}
                 </div>
@@ -38,12 +41,14 @@ const FetchingIndicator: React.FC<FetchingIndicatorProps> = ({ isFetchingWarehou
                     {isFetchingDispensingPoints ? (
                         <>
                             <Loader2 className='h-5 w-5 animate-spin text-yellow-500' />
-                            <small className='text-yellow-500'>Loading warehouses. Please wait.</small>
+                            <small className='text-yellow-500 lg:hidden'>Loading...</small>
+                            <small className='text-yellow-500 hidden lg:block'>Loading warehouses. Please wait.</small>
                         </>
                     ) : (
                         <>
                             <MapPin className='h-3.5 w-3.5' />
-                            <small className='text-white'>Warehouses ready.</small>
+                            <small className='text-white lg:hidden'>Ready</small>
+                            <small className='text-white hidden lg:block'>Dispensing points ready.</small>
                         </>
                     )}
                 </div>
@@ -52,7 +57,8 @@ const FetchingIndicator: React.FC<FetchingIndicatorProps> = ({ isFetchingWarehou
                     {isFetchingRoadNetwork ? (
                         <>
                             <Loader2 className='h-5 w-5 animate-spin text-yellow-500' />
-                            <small className='text-yellow-500'>Loading road data. Please wait.</small>
+                            <small className='text-yellow-500 lg:hidden'>Loading...</small>
+                            <small className='text-yellow-500 hidden lg:block'>Loading road data. Please wait.</small>
                         </>
                     ) : (
                         <>
@@ -62,7 +68,8 @@ const FetchingIndicator: React.FC<FetchingIndicatorProps> = ({ isFetchingWarehou
                                 width={20}
                                 alt='road icon'
                             />
-                            <small className='text-white'>Road network ready.</small>
+                            <small className='text-white lg:hidden'>Ready</small>
+                            <small className='text-white hidden lg:block'>Road network ready.</small>
                         </>
                     )}
                 </div>

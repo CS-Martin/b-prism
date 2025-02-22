@@ -161,6 +161,7 @@ function SidebarActionItem({ id, label, icon: Icon, selectedAction, handleToggle
                     id={id}
                     checked={selectedAction === id}
                     onChange={() => handleToggle(id)}
+                    className='data-[state=checked]:bg-blue-500 '
                 />
             </SidebarMenuButton>
         </SidebarMenuItem>

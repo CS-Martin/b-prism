@@ -113,13 +113,13 @@ const MapPage = () => {
     useEffect(() => {
         if (mapRef.current) {
             const mapboxMap = mapRef.current.getMap();
-            const geocoder = new MapboxGeocoder({
-                accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN!,
-                zoom: 10,
-                placeholder: 'Enter coordinates (e.g., -40, 170)',
-                reverseGeocode: true,
-            });
-            mapboxMap.addControl(geocoder);
+            // const geocoder = new MapboxGeocoder({
+            //     accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN!,
+            //     zoom: 10,
+            //     placeholder: 'Enter coordinates (e.g., -40, 170)',
+            //     reverseGeocode: true,
+            // });
+            // mapboxMap.addControl(geocoder);
 
             const handleLayerClick = (event: MapMouseEvent) => {
                 const item = event.features;
