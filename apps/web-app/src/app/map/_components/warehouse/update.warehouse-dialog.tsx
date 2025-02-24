@@ -24,6 +24,8 @@ import { useEffect } from 'react';
 import { useFindOneWarehouse, useUpdateWarehouse } from 'apps/web-app/src/hooks/map.hook';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { error } from 'console';
+import { BadRequestException } from '@nestjs/common';
 
 interface DialogProps {
     isOpen: boolean;
@@ -82,6 +84,10 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
     // Form submission handler
     const onSubmit = async (data: UpdateWarehouseDto) => {
         try {
+            if (!user) {
+                throw new BadRequestException(`You don't have permission to edit a warehouse.`);
+            }
+
             const formattedData = {
                 ...data,
             };
@@ -95,7 +101,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
         } catch (error) {
             if (error instanceof Error) {
                 toast({
-                    title: 'Error',
+                    title: 'An error occured',
                     description: error.message,
                     variant: 'destructive',
                 });
@@ -363,11 +369,13 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                             </TabsContent>
 
                             {/* Submit Button */}
-                            <Button
-                                type='submit'
-                                className='bg-blue-500 absolute bottom-4 w-full max-w-[580px] hover:bg-blue-600 text-white px-4'>
-                                Update Warehouse
-                            </Button>
+                            {user && (
+                                <Button
+                                    type='submit'
+                                    className={`bg-blue-500 absolute bottom-4 w-full max-w-[580px] hover:bg-blue-600 text-white px-4 ${user ? 'block' : 'hidden'}`}>
+                                    Update Warehouse
+                                </Button>
+                            )}
                         </div>
                     </Tabs>
                 </form>

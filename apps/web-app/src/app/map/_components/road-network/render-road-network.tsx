@@ -2,6 +2,7 @@ import { Layer, Source, useMap } from 'react-map-gl';
 import { useEffect, useState } from 'react';
 import { DestroyRoad } from './destroy-road';
 import { FixRoad } from './fix-road';
+import { useSession } from 'next-auth/react';
 
 interface RenderRoadNetworkProps {
     geoJsonData: any;
@@ -11,6 +12,7 @@ interface RenderRoadNetworkProps {
 }
 
 export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, fetchRoadByBounds }: RenderRoadNetworkProps) => {
+    const { data: session } = useSession();
     const { current: map } = useMap();
 
     const [selectedRoadId, setSelectedRoadId] = useState<string>();
@@ -116,6 +118,7 @@ export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, fetchR
             </Source>
 
             {isDialogOpen &&
+                session &&
                 (isDamaged ? (
                     <FixRoad
                         setIsDialogOpen={setIsDialogOpen}

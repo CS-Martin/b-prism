@@ -57,7 +57,7 @@ export const DestroyRoad = ({ roadId, setIsDialogOpen, fetchRoadByBounds }: Dest
                     <AlertDialogAction
                         className='bg-red-500 hover:bg-red-600 text-white'
                         onClick={handleRoadDestroy}>
-                        Yes, Delete it!
+                        Yes, damage it!
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
