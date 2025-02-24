@@ -36,6 +36,9 @@ interface DialogProps {
 const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, warehouseId }) => {
     const { toast } = useToast();
     const { data: session } = useSession();
+
+    const isDisabled = !session;
+
     const { updateWarehouse } = useUpdateWarehouse();
     const { warehouse } = useFindOneWarehouse(warehouseId);
 
@@ -158,6 +161,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                             type='text'
                                             placeholder='Warehouse Name'
                                             className='w-full'
+                                            isDisabled={isDisabled}
                                         />
                                     </div>
 
@@ -167,6 +171,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                             {...register('description')}
                                             placeholder='Description'
                                             className='w-full'
+                                            disabled={isDisabled}
                                         />
                                     </div>
 
@@ -177,6 +182,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                             label='Capacity'
                                             type='number'
                                             placeholder='Ex. 1000'
+                                            isDisabled={isDisabled}
                                         />
                                     </div>
                                 </div>
@@ -206,6 +212,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                                 type='number'
                                                 placeholder='Ex. 1000'
                                                 className='w-1/2'
+                                                isDisabled={isDisabled}
                                             />
 
                                             <InputField
@@ -215,6 +222,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                                 type='number'
                                                 placeholder='Ex. 1000'
                                                 className='w-1/2 '
+                                                isDisabled={isDisabled}
                                             />
                                         </div>
 
@@ -226,6 +234,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                                 type='number'
                                                 placeholder='Ex. 1000'
                                                 className='w-1/2 '
+                                                isDisabled={isDisabled}
                                             />
                                         </div>
 
@@ -247,6 +256,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                                     type='number'
                                                     placeholder='Ex. 1000'
                                                     className='w-1/2'
+                                                    isDisabled={isDisabled}
                                                 />
 
                                                 <InputField
@@ -256,6 +266,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                                     type='number'
                                                     placeholder='Ex. 1000'
                                                     className='w-1/2'
+                                                    isDisabled={isDisabled}
                                                 />
                                             </div>
 
@@ -267,6 +278,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                                     type='number'
                                                     placeholder='Ex. 1000'
                                                     className='w-1/2'
+                                                    isDisabled={isDisabled}
                                                 />
 
                                                 <InputField
@@ -276,6 +288,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                                     type='number'
                                                     placeholder='Ex. 1000'
                                                     className='w-1/2'
+                                                    isDisabled={isDisabled}
                                                 />
                                             </div>
 
@@ -286,6 +299,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                                 type='number'
                                                 placeholder='Ex. 1000'
                                                 className='mt-2 mb-10'
+                                                isDisabled={isDisabled}
                                             />
                                         </div>
                                     </ScrollArea>
@@ -313,6 +327,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                         type='text'
                                         placeholder='Street'
                                         className='w-full'
+                                        isDisabled={isDisabled}
                                     />
                                 </div>
 
@@ -324,6 +339,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                         type='text'
                                         placeholder='Post Code'
                                         className='w-1/2'
+                                        isDisabled={isDisabled}
                                     />
 
                                     <InputField
@@ -333,6 +349,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                         type='text'
                                         placeholder='Locality'
                                         className='w-1/2'
+                                        isDisabled={isDisabled}
                                     />
                                 </div>
 
@@ -344,6 +361,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                         type='text'
                                         placeholder='Place'
                                         className='w-full'
+                                        isDisabled={isDisabled}
                                     />
                                 </div>
 
@@ -355,6 +373,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                         type='text'
                                         placeholder='Region'
                                         className='w-1/2'
+                                        isDisabled={isDisabled}
                                     />
 
                                     <InputField
@@ -364,6 +383,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                         type='text'
                                         placeholder='Country'
                                         className='w-1/2'
+                                        isDisabled={isDisabled}
                                     />
                                 </div>
                             </TabsContent>
