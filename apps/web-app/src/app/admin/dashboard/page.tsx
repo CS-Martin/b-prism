@@ -5,9 +5,6 @@ import { DataTable } from './_components/data-table';
 import { createColumns } from './_components/columns';
 import { UserRole } from '@b-prism/enums';
 import Topbar from 'apps/web-app/src/components/topbar';
-import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 
 export default function AdminDashboard() {
     const { users, isLoading, fetchAllUsers } = useDisplayUsers();

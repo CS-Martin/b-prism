@@ -45,6 +45,10 @@ export class RoadNetworkMongodbLibService {
     }
 
     async findAll(): Promise<RoadNetwork[]> {
+        return this.prisma.roadNetwork.findMany();
+    }
+
+    async findAllDamagedRoads(): Promise<RoadNetwork[]> {
         return this.prisma.roadNetwork.findMany({
             where: {
                 is_damaged: true,
@@ -64,6 +68,7 @@ export class RoadNetworkMongodbLibService {
                         ],
                     },
                 },
+                is_damaged: false,
             },
         });
 
