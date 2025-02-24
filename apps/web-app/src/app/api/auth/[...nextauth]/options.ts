@@ -37,6 +37,7 @@ export const options: NextAuthOptions = {
                     office?: string;
                     position?: string;
                     role?: string;
+                    id_image_url?: string;
                 };
             }
 
@@ -45,7 +46,6 @@ export const options: NextAuthOptions = {
         async jwt({ token, user }) {
             if (user) {
                 token.user = user;
-                token.role = (user as { role?: string }).role;
             }
 
             token.exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30;

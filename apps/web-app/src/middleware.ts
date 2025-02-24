@@ -1,6 +1,8 @@
 import { withAuth } from 'next-auth/middleware';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
+import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { UserDto } from '@dto';
 
 export default withAuth({
     callbacks: {
@@ -13,14 +15,17 @@ export default withAuth({
 });
 
 export const config = {
-    matcher: ['/', '/map', '/auth/register', '/auth/login', '/admin/:path*', '/api/:path*', '/api/auth/:path*'],
+    matcher: ['/', '/map', '/auth/register', '/auth/login', '/auth/:id/complete-profile', '/admin/:path*', '/api/:path*', '/api/auth/:path*'],
 };
 
 export async function middleware(req: NextRequest) {
+    // const { toast } = useToast();
     const { pathname } = req.nextUrl;
 
     const token = await getToken({ req });
     const isAuthenticated = !!token;
+
+    const user: UserDto = token?.user as UserDto;
 
     if (pathname === '/') {
         return NextResponse.redirect(new URL('/home', req.url));
@@ -28,6 +33,25 @@ export async function middleware(req: NextRequest) {
 
     if (isAuthenticated && (pathname === '/auth/login' || pathname === '/auth/register')) {
         return NextResponse.redirect(new URL('/home', req.url));
+    }
+
+    // Ensure users can only access their own complete-profile page
+    const completeProfileMatch = pathname.match(/^\/auth\/([^/]+)\/complete-profile$/);
+    if (completeProfileMatch) {
+        const requestedUserId = completeProfileMatch[1];
+
+        if (user?.id !== requestedUserId) {
+            console.log('Unauthorized profile access attempt:', {
+                requestedUserId,
+                actualUserId: token?.id,
+            });
+            return NextResponse.redirect(new URL('/home', req.url));
+        }
+
+        if (user?.id_image_url) {
+            console.log('You have already submitted your ID, redirecting to home');
+            return NextResponse.redirect(new URL('/home', req.url));
+        }
     }
 
     if (pathname === '/admin/dashboard' && token?.role !== 'admin') {
