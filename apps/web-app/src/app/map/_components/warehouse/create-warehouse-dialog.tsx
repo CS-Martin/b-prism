@@ -24,6 +24,7 @@ import { useEffect } from 'react';
 import { useCreateWarehouse, useGetAddress } from 'apps/web-app/src/hooks/map.hook';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { BadRequestException } from '@nestjs/common';
 
 interface MarkerType {
     longitude: string;
@@ -110,6 +111,10 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
     // Form submission handler
     const onSubmit = async (data: CreateWarehouseDto) => {
         try {
+            if (!user) {
+                throw new BadRequestException(`You don't have permission to create a warehouse.`);
+            }
+
             const formattedData = {
                 ...data,
                 longitude: marker.longitude,
@@ -127,7 +132,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
         } catch (error) {
             console.error('Error creating warehouse:', error);
             toast({
-                title: 'Error',
+                title: 'An error occured',
                 description: (error as Error).message,
                 variant: 'destructive',
             });

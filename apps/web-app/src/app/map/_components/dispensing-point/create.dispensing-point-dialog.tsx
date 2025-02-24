@@ -20,6 +20,7 @@ import {
     Textarea,
 } from '@b-prism/shadcn-ui/index';
 import { CreateDispensingPointDto, UserDto } from '@dto';
+import { BadRequestException } from '@nestjs/common';
 import { Type } from '@prisma/client';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useCreateDispensingPoint, useGetAddress } from 'apps/web-app/src/hooks/map.hook';
@@ -110,6 +111,10 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
 
     const onSubmit = async (data: CreateDispensingPointDto) => {
         try {
+            if (!user) {
+                throw new BadRequestException(`You don't have permission to create a dispensing points.`);
+            }
+
             const formattedData = {
                 ...data,
                 address,
@@ -126,7 +131,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
         } catch (error) {
             console.error('Error creating dispensing point:', error);
             toast({
-                title: 'Error',
+                title: 'An error occured',
                 description: (error as Error).message,
                 variant: 'destructive',
             });
@@ -178,6 +183,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                                             placeholder='Dispensing Point Name'
                                             rules={{ required: 'Dispensing Point Name is required' }}
                                             errors={errors.name}
+                                            isDisabled={!session}
                                         />
                                     </div>
 
@@ -188,6 +194,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                                             {...register('description')}
                                             className='rounded-sm mt-1'
                                             placeholder='Description'
+                                            disabled={!session}
                                         />
                                     </div>
 
@@ -198,6 +205,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                                             label='Capacity'
                                             type='number'
                                             placeholder='Ex. 1000'
+                                            isDisabled={!session}
                                         />
                                     </div>
                                 </div>
@@ -221,6 +229,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                                             type='text'
                                             placeholder='Street'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                         <InputField
                                             name='address.post_code'
@@ -229,6 +238,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                                             type='text'
                                             placeholder='Post Code'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                     </div>
 
@@ -240,6 +250,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                                             type='text'
                                             placeholder='Locality'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                         <InputField
                                             name='address.place'
@@ -248,6 +259,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                                             type='text'
                                             placeholder='Place'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                     </div>
 
@@ -259,6 +271,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                                             type='text'
                                             placeholder='Region'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                         <InputField
                                             name='address.country'
@@ -267,17 +280,20 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                                             type='text'
                                             placeholder='Country'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                     </div>
                                 </div>
                             </TabsContent>
 
                             {/* Submit Button */}
-                            <Button
-                                type='submit'
-                                className='bg-blue-500 absolute bottom-4 w-full max-w-[583px] hover:bg-blue-600 text-white px-4'>
-                                Create Dispensing Point
-                            </Button>
+                            {session && (
+                                <Button
+                                    type='submit'
+                                    className='bg-blue-500 absolute bottom-4 w-full max-w-[583px] hover:bg-blue-600 text-white px-4'>
+                                    Create Dispensing Point
+                                </Button>
+                            )}
                         </div>
                     </Tabs>
                 </form>

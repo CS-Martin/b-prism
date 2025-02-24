@@ -19,7 +19,6 @@ export const config = {
 };
 
 export async function middleware(req: NextRequest) {
-    // const { toast } = useToast();
     const { pathname } = req.nextUrl;
 
     const token = await getToken({ req });
@@ -54,7 +53,7 @@ export async function middleware(req: NextRequest) {
         }
     }
 
-    if (pathname === '/admin/dashboard' && token?.role !== 'admin') {
+    if (pathname === '/admin/dashboard' || (pathname === '/admin/activity-logs' && user?.role !== 'admin')) {
         console.log('GRANTING ACCESS TO ADMIN', token?.role);
 
         return NextResponse.redirect(new URL('/home', req.url));
