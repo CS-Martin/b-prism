@@ -15,7 +15,7 @@ export default withAuth({
 });
 
 export const config = {
-    matcher: ['/', '/map', '/auth/register', '/auth/login', '/auth/:id/complete-profile', '/admin/:path*', '/api/:path*', '/api/auth/:path*'],
+    matcher: ['/', '/home', '/map', '/auth/:path*', '/admin/:path*', '/api/:path*', '/api/auth/:path*'],
 };
 
 export async function middleware(req: NextRequest) {
