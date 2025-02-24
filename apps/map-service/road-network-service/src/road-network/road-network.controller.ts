@@ -76,4 +76,9 @@ export class RoadNetworkController {
 
         return this.roadNetworkServiceLibService.findByBounds(parsedMinLng, parsedMinLat, parsedMaxLng, parsedMaxLat);
     }
+
+    @Get('damaged-roads/all')
+    async findAllDamagedRoads() {
+        return this.roadNetworkServiceLibService.findAllDamagedRoads();
+    }
 }

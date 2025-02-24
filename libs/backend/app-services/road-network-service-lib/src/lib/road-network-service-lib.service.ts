@@ -18,10 +18,12 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         try {
             const damagedRoads = await this.roadNetworkMongodbService.findAllDamagedRoads();
 
-            const response: ResponseDto<RoadNetwork[]> = new ResponseDto<RoadNetwork[]>(
+            const response: ResponseDto<RoadNetworkDto[]> = new ResponseDto<RoadNetworkDto[]>(
                 200,
                 damagedRoads.map((road) => this.convertToDto(road)),
             );
+
+            return response;
         } catch (error) {
             this.logger.error(`An error occurred while fetching roads within bounds:`, error);
 
