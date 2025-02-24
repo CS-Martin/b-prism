@@ -40,6 +40,7 @@ interface DialogProps {
 const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllWarehouses }) => {
     const { toast } = useToast();
     const { data: session } = useSession();
+
     const { createWarehouse } = useCreateWarehouse();
     const { getAddress, address } = useGetAddress();
 
@@ -184,6 +185,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                             errors={errors.name}
                                             rules={{ required: 'Warehouse Name is required' }}
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                     </div>
 
@@ -204,6 +206,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                             type='number'
                                             placeholder='Ex. 1000'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                     </div>
                                 </div>
@@ -233,6 +236,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                                 type='number'
                                                 placeholder='Ex. 1000'
                                                 className='w-1/2'
+                                                isDisabled={!session}
                                             />
 
                                             <InputField
@@ -242,6 +246,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                                 type='number'
                                                 placeholder='Ex. 1000'
                                                 className='w-1/2 '
+                                                isDisabled={!session}
                                             />
                                         </div>
 
@@ -253,6 +258,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                                 type='number'
                                                 placeholder='Ex. 1000'
                                                 className='w-1/2 '
+                                                isDisabled={!session}
                                             />
                                         </div>
 
@@ -274,6 +280,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                                     type='number'
                                                     placeholder='Ex. 1000'
                                                     className='w-1/2'
+                                                    isDisabled={!session}
                                                 />
 
                                                 <InputField
@@ -283,6 +290,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                                     type='number'
                                                     placeholder='Ex. 1000'
                                                     className='w-1/2'
+                                                    isDisabled={!session}
                                                 />
                                             </div>
 
@@ -294,6 +302,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                                     type='number'
                                                     placeholder='Ex. 1000'
                                                     className='w-1/2'
+                                                    isDisabled={!session}
                                                 />
 
                                                 <InputField
@@ -303,6 +312,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                                     type='number'
                                                     placeholder='Ex. 1000'
                                                     className='w-1/2'
+                                                    isDisabled={!session}
                                                 />
                                             </div>
 
@@ -313,6 +323,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                                 type='number'
                                                 placeholder='Ex. 1000'
                                                 className='mt-2 mb-10'
+                                                isDisabled={!session}
                                             />
                                         </div>
                                     </ScrollArea>
@@ -340,6 +351,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                         type='text'
                                         placeholder='Street'
                                         className='w-full'
+                                        isDisabled={!session}
                                     />
                                 </div>
 
@@ -351,6 +363,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                         type='text'
                                         placeholder='Post Code'
                                         className='w-1/2'
+                                        isDisabled={!session}
                                     />
 
                                     <InputField
@@ -360,6 +373,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                         type='text'
                                         placeholder='Locality'
                                         className='w-1/2'
+                                        isDisabled={!session}
                                     />
                                 </div>
 
@@ -371,6 +385,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                         type='text'
                                         placeholder='Place'
                                         className='w-full'
+                                        isDisabled={!session}
                                     />
                                 </div>
 
@@ -382,6 +397,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                         type='text'
                                         placeholder='Region'
                                         className='w-1/2'
+                                        isDisabled={!session}
                                     />
 
                                     <InputField
@@ -391,16 +407,19 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                         type='text'
                                         placeholder='Country'
                                         className='w-1/2'
+                                        isDisabled={!session}
                                     />
                                 </div>
                             </TabsContent>
 
                             {/* Submit Button */}
-                            <Button
-                                type='submit'
-                                className='bg-blue-500 absolute bottom-4 w-full max-w-[580px] hover:bg-blue-600 text-white px-4'>
-                                Create Warehouse
-                            </Button>
+                            {session && (
+                                <Button
+                                    type='submit'
+                                    className='bg-blue-500 absolute bottom-4 w-full max-w-[580px] hover:bg-blue-600 text-white px-4'>
+                                    Create Warehouse
+                                </Button>
+                            )}
                         </div>
                     </Tabs>
                 </form>
