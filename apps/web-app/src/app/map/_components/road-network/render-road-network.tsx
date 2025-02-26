@@ -51,6 +51,22 @@ export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, isMa
             geometry: feature.geometry,
         })) ?? [];
 
+    // Encountered an issue where I cannot update the UI of fixed road
+    // Had to implement this to manually alter the property of the road inside the fixedRoadGeojson
+    // No need to worry because it is also updated in the database
+    const UpdateFixedRoad = (roadId: string) => {
+        // Finds the road
+        const roadIndex = fixedRoadNetworkGeoformat.findIndex((road) => road.properties.id === roadId);
+
+        // Change the propert.is_damage to tag it as passable
+        if (roadIndex !== -1) {
+            fixedRoadNetworkGeoformat[roadIndex].properties.is_damaged = false;
+        }
+
+        // Re-fetch to update UI
+        fetchDamagedRoads();
+    };
+
     useEffect(() => {
         if (!map || !isMapLoaded) return;
 
@@ -153,13 +169,14 @@ export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, isMa
                     <FixRoad
                         setIsDialogOpen={setIsDialogOpen}
                         roadId={selectedRoadId}
-                        fetchRoadByBounds={fetchFixedRoadsByBounds}
+                        fetchFixRoadByBounds={fetchFixedRoadsByBounds}
+                        UpdateFixedRoad={UpdateFixedRoad}
                     />
                 ) : (
                     <DestroyRoad
                         setIsDialogOpen={setIsDialogOpen}
                         roadId={selectedRoadId}
-                        fetchRoadByBounds={fetchDamagedRoads}
+                        fetchDamagedRoads={fetchDamagedRoads}
                     />
                 ))}
         </>
