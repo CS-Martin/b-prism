@@ -355,9 +355,9 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
                                 <SidebarMenuButton className='flex items-center h-auto group-data-[state=collapsed]:!p-0'>
                                     <Avatar style={{ borderRadius: '3px' }}>
                                         <AvatarImage src='https://github.com/shadcn.png' />
-                                        <AvatarFallback>US</AvatarFallback>
+                                        <AvatarFallback>{session ? `${user?.given_name[0]}${user?.family_name[0]}` : `GE`}</AvatarFallback>
                                     </Avatar>
-                                    <span className='group-data-[state=collapsed]:hidden ml-2'>{`${user?.given_name || ''} ${user?.family_name || ''}`}</span>
+                                    <span className='group-data-[state=collapsed]:hidden ml-2'>{`${user?.given_name || 'Guest'} ${user?.family_name || 'User'}`}</span>
                                     <ChevronUp className='ml-auto group-data-[state=collapsed]:hidden' />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>

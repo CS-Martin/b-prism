@@ -16,10 +16,10 @@ import React from 'react';
 interface DestroyRoadProps {
     roadId: string | undefined;
     setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    fetchRoadByBounds: () => void;
+    fetchDamagedRoads: () => void;
 }
 
-export const DestroyRoad = ({ roadId, setIsDialogOpen, fetchRoadByBounds }: DestroyRoadProps) => {
+export const DestroyRoad = ({ roadId, setIsDialogOpen, fetchDamagedRoads }: DestroyRoadProps) => {
     const { data: session } = useSession();
     const { destroyRoad } = useDestroyRoad();
 
@@ -31,7 +31,7 @@ export const DestroyRoad = ({ roadId, setIsDialogOpen, fetchRoadByBounds }: Dest
             await destroyRoad(roadId, requestAuthor);
             setIsDialogOpen(false);
 
-            fetchRoadByBounds();
+            fetchDamagedRoads();
         }
     };
 
@@ -57,7 +57,7 @@ export const DestroyRoad = ({ roadId, setIsDialogOpen, fetchRoadByBounds }: Dest
                     <AlertDialogAction
                         className='bg-red-500 hover:bg-red-600 text-white'
                         onClick={handleRoadDestroy}>
-                        Yes, Delete it!
+                        Yes, damage it!
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

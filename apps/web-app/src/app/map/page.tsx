@@ -17,7 +17,7 @@ import ControlPanel from './_components/control-panel';
 import RescuePostPanel from './_components/rescue-post-panel';
 import RenderDispensingPoint from './_components/dispensing-point/render.dispensing-point';
 import { RenderRoadNetwork } from './_components/road-network/render-road-network';
-import { useDisplayRoadNetworkByBounds } from '../../hooks/road-network.hook';
+import { useDisplayDamagedRoads, useDisplayFixedRoadNetworkByBounds } from '../../hooks/road-network.hook';
 import FetchingIndicator from './_components/fetching-indicator';
 
 interface MarkerType {
@@ -33,9 +33,11 @@ const MapPage = () => {
     const [selectedAction, setSelectedAction] = useState<SelectedActionType | null>(null);
     const selectedActionRef = useRef<string | null>(selectedAction);
 
+    const { fixedRoadNetwork, fetchFixedRoadsByBounds, isLoading: isFetchingRoadNetwork } = useDisplayFixedRoadNetworkByBounds(mapRef);
+    const { damagedRoads, fetchDamagedRoads, isLoading: isFetchingDamagedRoads } = useDisplayDamagedRoads();
+
     const { warehouses, fetchAllWarehouses } = useDisplayWarehouses();
     const { dispensingPoints, fetchAllDispensingPoints } = useDisplayDispensingPoints();
-    const { roadNetwork, fetchRoadByBounds, isLoading: isFetchingRoadNetwork } = useDisplayRoadNetworkByBounds(mapRef);
     const [isOpen, setIsOpen] = useState(false);
     const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
     const [itemToDelete, setItemtoDelete] = useState<{ type: string; id: string }>();
@@ -47,24 +49,6 @@ const MapPage = () => {
         roadNetwork: true,
     });
 
-    // I cannot fetch all road data (70k data) all at once
-    // Had to fetch by data depending on user's bound box map viewport
-    useEffect(() => {
-        if (!mapRef.current) return;
-
-        const mapboxMap = mapRef.current.getMap();
-
-        const handleMove = () => {
-            fetchRoadByBounds();
-        };
-
-        mapboxMap.on('moveend', handleMove);
-
-        return () => {
-            mapboxMap.off('moveend', handleMove);
-        };
-    }, [mapRef, fetchRoadByBounds]);
-
     useEffect(() => {
         selectedActionRef.current = selectedAction;
     }, [selectedAction]);
@@ -73,41 +57,20 @@ const MapPage = () => {
     const geoJsonData = useMemo(
         () => ({
             type: 'FeatureCollection',
-            DispensingPoint: [
+            features: [
                 ...dispensingPoints.map((dp) => ({
                     type: 'Feature',
                     properties: { id: dp.id, type: 'dispensing_point', name: dp.name },
-                    geometry: {
-                        type: 'Point',
-                        coordinates: [Number(dp.longitude), Number(dp.latitude)],
-                    },
+                    geometry: { type: 'Point', coordinates: [Number(dp.longitude), Number(dp.latitude)] },
                 })),
-            ],
-            Warehouse: [
                 ...warehouses.map((wh) => ({
                     type: 'Feature',
                     properties: { id: wh.id, type: 'warehouse', name: wh.name },
-                    geometry: {
-                        type: 'Point',
-                        coordinates: [Number(wh.longitude), Number(wh.latitude)],
-                    },
-                })),
-            ],
-            RoadNetwork: [
-                ...roadNetwork.map((road, index) => ({
-                    type: 'Feature',
-                    id: index,
-                    properties: {
-                        id: road.id,
-                        is_damaged: road.is_damaged,
-                        damage_probability: road.damage_probability,
-                        ...road.properties,
-                    },
-                    geometry: road.geometry,
+                    geometry: { type: 'Point', coordinates: [Number(wh.longitude), Number(wh.latitude)] },
                 })),
             ],
         }),
-        [roadNetwork, dispensingPoints, warehouses],
+        [dispensingPoints, warehouses],
     );
 
     useEffect(() => {
@@ -206,6 +169,8 @@ const MapPage = () => {
                     onLoad={(e) => {
                         // Load the map first before loading layers
                         setIsMapLoaded(true);
+                        fetchFixedRoadsByBounds();
+                        fetchDamagedRoads();
                     }}>
                     {/* Trigger the dialog to create a warehouse */}
                     {selectedAction === 'createWarehouse' && (
@@ -230,10 +195,12 @@ const MapPage = () => {
                     {isMapLoaded && (
                         <>
                             <RenderRoadNetwork
-                                geoJsonData={geoJsonData}
+                                fixedRoadNetworkData={fixedRoadNetwork}
+                                fetchFixedRoadsByBounds={fetchFixedRoadsByBounds}
+                                damagedRoadsData={damagedRoads}
+                                fetchDamagedRoads={fetchDamagedRoads}
                                 isMapLoaded={isMapLoaded}
                                 visibility={visibility}
-                                fetchRoadByBounds={fetchRoadByBounds}
                             />
 
                             <RenderWarehouse

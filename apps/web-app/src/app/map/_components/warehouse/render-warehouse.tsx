@@ -77,7 +77,10 @@ const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction 
             <Source
                 id='warehouse'
                 type='geojson'
-                data={{ type: 'FeatureCollection', features: geoJsonData.Warehouse }}>
+                data={{
+                    type: 'FeatureCollection',
+                    features: geoJsonData.features.filter((feature: any) => feature.properties.type === 'warehouse'),
+                }}>
                 {/* Individual Points */}
                 <Layer
                     id='warehouse_points'

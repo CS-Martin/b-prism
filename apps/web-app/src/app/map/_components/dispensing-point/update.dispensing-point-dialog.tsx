@@ -19,6 +19,7 @@ import {
     Textarea,
 } from '@b-prism/shadcn-ui/index';
 import { UpdateDispensingPointDto, UserDto } from '@dto';
+import { BadRequestException } from '@nestjs/common';
 import { Type } from '@prisma/client';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useUpdateDispensingPoint, useFindOneDispensingPoint } from 'apps/web-app/src/hooks/map.hook';
@@ -66,6 +67,10 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
     }, [dispensingPoint, reset]);
 
     const onSubmit = async (data: UpdateDispensingPointDto) => {
+        if (!user) {
+            throw new BadRequestException(`You don't have permission to edit a warehouse.`);
+        }
+
         const formattedData = {
             ...data,
             user_id: user.id,
@@ -119,6 +124,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                             type='text'
                                             placeholder='Dispensing Point Name'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                     </div>
 
@@ -129,6 +135,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                             {...register('description')}
                                             className='rounded-sm mt-1'
                                             placeholder='Description'
+                                            disabled={!session}
                                         />
                                     </div>
 
@@ -140,6 +147,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                             type='number'
                                             placeholder='Ex. 1000'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                     </div>
                                 </div>
@@ -163,6 +171,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                             type='text'
                                             placeholder='Street'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                         <InputField
                                             name='address.post_code'
@@ -171,6 +180,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                             type='text'
                                             placeholder='Post Code'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                     </div>
 
@@ -182,6 +192,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                             type='text'
                                             placeholder='Locality'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                         <InputField
                                             name='address.place'
@@ -190,6 +201,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                             type='text'
                                             placeholder='Place'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                     </div>
 
@@ -201,6 +213,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                             type='text'
                                             placeholder='Region'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                         <InputField
                                             name='address.country'
@@ -209,17 +222,20 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                             type='text'
                                             placeholder='Country'
                                             className='w-full'
+                                            isDisabled={!session}
                                         />
                                     </div>
                                 </div>
                             </TabsContent>
 
                             {/* Submit Button */}
-                            <Button
-                                type='submit'
-                                className='bg-blue-500 absolute bottom-4 w-full max-w-[583px] hover:bg-blue-600 text-white px-4'>
-                                Update Dispensing Point
-                            </Button>
+                            {session && (
+                                <Button
+                                    type='submit'
+                                    className='bg-blue-500 absolute bottom-4 w-full max-w-[583px] hover:bg-blue-600 text-white px-4'>
+                                    Update Dispensing Point
+                                </Button>
+                            )}
                         </div>
                     </Tabs>
                 </form>
