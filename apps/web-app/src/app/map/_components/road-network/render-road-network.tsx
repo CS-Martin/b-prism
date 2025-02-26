@@ -5,13 +5,13 @@ import { FixRoad } from './fix-road';
 import { useSession } from 'next-auth/react';
 
 interface RenderRoadNetworkProps {
-    geoJsonData: any;
+    roadNetworkData: any;
     isMapLoaded: boolean;
     visibility: { roadNetwork: boolean };
     fetchRoadByBounds: () => void;
 }
 
-export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, fetchRoadByBounds }: RenderRoadNetworkProps) => {
+export const RenderRoadNetwork = ({ roadNetworkData, isMapLoaded, visibility, fetchRoadByBounds }: RenderRoadNetworkProps) => {
     const { data: session } = useSession();
     const { current: map } = useMap();
 
@@ -87,10 +87,7 @@ export const RenderRoadNetwork = ({ geoJsonData, isMapLoaded, visibility, fetchR
             <Source
                 id='road-network-source'
                 type='geojson'
-                data={{
-                    type: 'FeatureCollection',
-                    features: [...geoJsonData.RoadNetwork],
-                }}>
+                data={{ roadNetworkData }}>
                 <Layer
                     id='road_layer'
                     type='line'

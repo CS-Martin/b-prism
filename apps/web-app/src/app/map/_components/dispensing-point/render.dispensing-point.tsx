@@ -62,7 +62,10 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
             <Source
                 id='dispensing_points'
                 type='geojson'
-                data={{ type: 'FeatureCollection', features: geoJsonData.DispensingPoint }}
+                data={{
+                    type: 'FeatureCollection',
+                    features: geoJsonData.features.filter((feature: any) => feature.properties.type === 'dispensing_point'),
+                }}
                 cluster={true}
                 clusterMaxZoom={14}
                 clusterRadius={50}>

@@ -73,41 +73,20 @@ const MapPage = () => {
     const geoJsonData = useMemo(
         () => ({
             type: 'FeatureCollection',
-            DispensingPoint: [
+            features: [
                 ...dispensingPoints.map((dp) => ({
                     type: 'Feature',
                     properties: { id: dp.id, type: 'dispensing_point', name: dp.name },
-                    geometry: {
-                        type: 'Point',
-                        coordinates: [Number(dp.longitude), Number(dp.latitude)],
-                    },
+                    geometry: { type: 'Point', coordinates: [Number(dp.longitude), Number(dp.latitude)] },
                 })),
-            ],
-            Warehouse: [
                 ...warehouses.map((wh) => ({
                     type: 'Feature',
                     properties: { id: wh.id, type: 'warehouse', name: wh.name },
-                    geometry: {
-                        type: 'Point',
-                        coordinates: [Number(wh.longitude), Number(wh.latitude)],
-                    },
-                })),
-            ],
-            RoadNetwork: [
-                ...roadNetwork.map((road, index) => ({
-                    type: 'Feature',
-                    id: index,
-                    properties: {
-                        id: road.id,
-                        is_damaged: road.is_damaged,
-                        damage_probability: road.damage_probability,
-                        ...road.properties,
-                    },
-                    geometry: road.geometry,
+                    geometry: { type: 'Point', coordinates: [Number(wh.longitude), Number(wh.latitude)] },
                 })),
             ],
         }),
-        [roadNetwork, dispensingPoints, warehouses],
+        [dispensingPoints, warehouses],
     );
 
     useEffect(() => {
@@ -230,7 +209,7 @@ const MapPage = () => {
                     {isMapLoaded && (
                         <>
                             <RenderRoadNetwork
-                                geoJsonData={geoJsonData}
+                                roadNetworkData={roadNetwork}
                                 isMapLoaded={isMapLoaded}
                                 visibility={visibility}
                                 fetchRoadByBounds={fetchRoadByBounds}
