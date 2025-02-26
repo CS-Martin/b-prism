@@ -14,7 +14,7 @@ import RenderWarehouse from './_components/warehouse/render-warehouse';
 import DeleteItem from './_components/delete-item';
 import CreateDispensingPointDialog from './_components/dispensing-point/create.dispensing-point-dialog';
 import ControlPanel from './_components/control-panel';
-import RescuePostPanel from './_components/rescue-post-panel';
+import RescuePostPanel from './_components/rescue-post/rescue-post-panel';
 import RenderDispensingPoint from './_components/dispensing-point/render.dispensing-point';
 import { RenderRoadNetwork } from './_components/road-network/render-road-network';
 import { useDisplayDamagedRoads, useDisplayFixedRoadNetworkByBounds } from '../../hooks/road-network.hook';

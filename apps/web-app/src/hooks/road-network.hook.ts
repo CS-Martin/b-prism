@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { roadNetworkService } from '../services/road-network.service';
 import { ResponseDto, RoadNetworkDto } from '@dto';
 import { MapRef } from 'react-map-gl';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { debounce } from 'lodash';
 
 export const useDisplayDamagedRoads = () => {
     const [damagedRoads, setDamagedRoads] = useState<RoadNetworkDto[]>([]);
@@ -55,7 +56,7 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
 
         if (boundsKey === prevBounds) return; // Prevent unnecessary re-fetch
 
-        setPrevBounds(boundsKey); // Move inside to prevent stale values
+        setPrevBounds(boundsKey);
         setIsLoading(true);
 
         try {
@@ -71,7 +72,12 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
         }
     }, [mapRef, prevBounds]);
 
-    // Attach Event Listener When Map is Ready**
+    // Debounce the fetch function
+    const debouncedFetchFixedRoadsByBounds = useMemo(
+        () => debounce(fetchFixedRoadsByBounds, 500), // Adjust debounce time (e.g., 500ms)
+        [fetchFixedRoadsByBounds],
+    );
+
     useEffect(() => {
         if (!mapRef.current) {
             console.log('Waiting for map to load...');
@@ -85,7 +91,7 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
 
         const handleMoveEnd = () => {
             console.log('Map moved! Fetching new bounds...');
-            fetchFixedRoadsByBounds();
+            debouncedFetchFixedRoadsByBounds();
         };
 
         map?.on('moveend', handleMoveEnd);
@@ -93,8 +99,9 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
         return () => {
             console.log('Cleaning up moveend event listener.');
             map?.off('moveend', handleMoveEnd);
+            debouncedFetchFixedRoadsByBounds.cancel(); // Cancel pending debounced calls on unmount
         };
-    }, [fetchFixedRoadsByBounds]);
+    }, [debouncedFetchFixedRoadsByBounds]);
 
     return { fixedRoadNetwork, fetchFixedRoadsByBounds, isLoading };
 };
