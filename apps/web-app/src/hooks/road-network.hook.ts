@@ -34,8 +34,6 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [prevBounds, setPrevBounds] = useState<string | null>(null);
 
-    console.log('1');
-
     const fetchFixedRoadsByBounds = useCallback(async () => {
         if (!mapRef.current) {
             console.log("MapRef is null, can't fetch bounds.");

@@ -50,12 +50,6 @@ const MapPage = () => {
     });
 
     useEffect(() => {
-        if (isMapLoaded) {
-            fetchFixedRoadsByBounds();
-        }
-    }, [fetchAllDispensingPoints]);
-
-    useEffect(() => {
         selectedActionRef.current = selectedAction;
     }, [selectedAction]);
 
@@ -175,6 +169,8 @@ const MapPage = () => {
                     onLoad={(e) => {
                         // Load the map first before loading layers
                         setIsMapLoaded(true);
+                        fetchFixedRoadsByBounds();
+                        fetchDamagedRoads();
                     }}>
                     {/* Trigger the dialog to create a warehouse */}
                     {selectedAction === 'createWarehouse' && (
@@ -201,6 +197,8 @@ const MapPage = () => {
                             <RenderRoadNetwork
                                 fixedRoadNetworkData={fixedRoadNetwork}
                                 fetchFixedRoadsByBounds={fetchFixedRoadsByBounds}
+                                damagedRoadsData={damagedRoads}
+                                fetchDamagedRoads={fetchDamagedRoads}
                                 isMapLoaded={isMapLoaded}
                                 visibility={visibility}
                             />
