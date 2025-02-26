@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import ActionIcon from './_components/action-icon';
 import ActivityCard from './_components/activity-card';
 import { Input, Menubar, MenubarCheckboxItem, MenubarContent, MenubarMenu, MenubarShortcut, MenubarTrigger } from '@b-prism/shadcn-ui/index';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Search } from 'lucide-react';
 
 export default function ActivityLogPage() {
     const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -61,14 +61,20 @@ export default function ActivityLogPage() {
 
             <div className='prism-card-bg rounded-md py-6 w-full max-w-7xl mt-6'>
                 {/* 🔍 Search & Menubar */}
-                <div className='px-4 pb-4 flex items-center gap-4 border-b flex-nowrap'>
-                    <Input
-                        type='text'
-                        placeholder='Search activity logs...'
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className='flex-1 min-w-0 p-2 border rounded-md shadow-sm'
-                    />
+                <div className='px-4 pb-4 flex flex-col md:flex-row items-center gap-4 border-b flex-nowrap'>
+                    <div className='relative flex flex-1 items-center min-w-0 w-full'>
+                        <Search
+                            size={18}
+                            className='absolute left-3 text-gray-500'
+                        />
+                        <Input
+                            type='text'
+                            placeholder='Search activity logs...'
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className='flex-1 min-w-0 p-2 pl-10 border rounded-md shadow-sm'
+                        />
+                    </div>
                     {/* Menubar for action filters */}
                     <Menubar className='w-auto'>
                         <MenubarMenu>
