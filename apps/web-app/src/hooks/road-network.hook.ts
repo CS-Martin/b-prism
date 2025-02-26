@@ -1,36 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { roadNetworkService } from '../services/road-network.service';
 import { ResponseDto, RoadNetworkDto } from '@dto';
 import { MapRef } from 'react-map-gl';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
-export const useDisplayRoadNetworkByBounds = (mapRef: React.RefObject<MapRef>) => {
-    const [roadNetwork, setRoadNetwork] = useState<RoadNetworkDto[]>([]);
+export const useDisplayDamagedRoads = () => {
+    const [damagedRoads, setDamagedRoads] = useState<RoadNetworkDto[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const fetchRoadByBounds = async () => {
-        if (!mapRef.current) return; // Ensure map is initialized
-
-        setIsLoading(true);
-
+    const fetchDamagedRoads = async () => {
         try {
-            // Get the current visible bounds from the Mapbox map
-            const bounds = mapRef.current.getBounds();
+            setIsLoading(true);
 
-            if (!bounds) return;
+            const response = await roadNetworkService.findAllDamagedRoads();
 
-            const minLng = bounds?.getWest();
-            const minLat = bounds?.getSouth();
-            const maxLng = bounds?.getEast();
-            const maxLat = bounds?.getNorth();
-
-            const response: ResponseDto<RoadNetworkDto[]> = await roadNetworkService.findByBounds(minLng, minLat, maxLng, maxLat);
-
-            if (response.statusCode !== 200) {
-                throw new Error('Failed to fetch road network');
-            }
-
-            setRoadNetwork(response.body);
+            setDamagedRoads(response.body);
         } catch (error) {
             console.error('Error fetching road network:', error);
         } finally {
@@ -39,10 +23,83 @@ export const useDisplayRoadNetworkByBounds = (mapRef: React.RefObject<MapRef>) =
     };
 
     useEffect(() => {
-        fetchRoadByBounds();
-    }, [mapRef]); // Fetch when map reference updates
+        fetchDamagedRoads();
+    }, []);
 
-    return { roadNetwork, fetchRoadByBounds, isLoading };
+    return { damagedRoads, fetchDamagedRoads, isLoading };
+};
+
+export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRef>) => {
+    const [fixedRoadNetwork, setFixedRoadNetwork] = useState<RoadNetworkDto[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const prevBoundsRef = useRef<string | null>(null);
+
+    const fetchFixedRoadsByBounds = useCallback(async () => {
+        if (!mapRef.current) {
+            console.log("MapRef is null, can't fetch bounds.");
+            return;
+        }
+
+        const bounds = mapRef.current.getBounds();
+        if (!bounds) {
+            console.log('Bounds are null, skipping fetch.');
+            return;
+        }
+
+        const minLng = bounds.getWest();
+        const minLat = bounds.getSouth();
+        const maxLng = bounds.getEast();
+        const maxLat = bounds.getNorth();
+
+        const boundsKey = `${minLng},${minLat},${maxLng},${maxLat}`;
+        console.log('Bounds Key:', boundsKey, 'Is Same as Previous:', boundsKey === prevBoundsRef.current);
+
+        if (boundsKey === prevBoundsRef.current) return; // Prevent unnecessary re-fetch
+
+        prevBoundsRef.current = boundsKey; // Update prevBounds synchronously
+        setIsLoading(true);
+
+        try {
+            const response: ResponseDto<RoadNetworkDto[]> = await roadNetworkService.findFixRoadByBounds(minLng, minLat, maxLng, maxLat);
+
+            if (response.statusCode !== 200) {
+                throw new Error('Failed to fetch road network');
+            }
+
+            setFixedRoadNetwork(response.body);
+        } catch (error) {
+            console.error('Error fetching road network:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [mapRef]);
+
+    // Attach Event Listener When Map is Ready**
+    useEffect(() => {
+        if (!mapRef.current) {
+            console.log('Waiting for map to load...');
+            return;
+        }
+
+        const map = mapRef.current;
+        console.log('Map is loaded! Attaching moveend event listener.');
+
+        fetchFixedRoadsByBounds(); // Initial fetch
+
+        const handleMoveEnd = () => {
+            console.log('Map moved! Fetching new bounds...');
+            fetchFixedRoadsByBounds();
+        };
+
+        map.on('moveend', handleMoveEnd);
+
+        return () => {
+            console.log('Cleaning up moveend event listener.');
+            map.off('moveend', handleMoveEnd);
+        };
+    }, [fetchFixedRoadsByBounds]);
+
+    return { fixedRoadNetwork, fetchFixedRoadsByBounds, isLoading };
 };
 
 export const useDestroyRoad = () => {

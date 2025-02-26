@@ -5,19 +5,20 @@ import { FixRoad } from './fix-road';
 import { useSession } from 'next-auth/react';
 
 interface RenderRoadNetworkProps {
-    roadNetworkData: any;
+    fixedRoadNetworkData: any;
     isMapLoaded: boolean;
     visibility: { roadNetwork: boolean };
-    fetchRoadByBounds: () => void;
+    fetchFixedRoadsByBounds: () => void;
 }
 
-export const RenderRoadNetwork = ({ roadNetworkData, isMapLoaded, visibility, fetchRoadByBounds }: RenderRoadNetworkProps) => {
+export const RenderRoadNetwork = ({ fixedRoadNetworkData, isMapLoaded, visibility, fetchFixedRoadsByBounds }: RenderRoadNetworkProps) => {
     const { data: session } = useSession();
     const { current: map } = useMap();
 
     const [selectedRoadId, setSelectedRoadId] = useState<string>();
     const [isDamaged, setIsDamaged] = useState<boolean>();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    console.log('DATA FROM RENDER ROAD NETWORK COMPONENT', fixedRoadNetworkData);
 
     let hoveredRoadId: string | null = null;
 
@@ -87,7 +88,10 @@ export const RenderRoadNetwork = ({ roadNetworkData, isMapLoaded, visibility, fe
             <Source
                 id='road-network-source'
                 type='geojson'
-                data={{ roadNetworkData }}>
+                data={{
+                    type: 'FeatureCollection',
+                    features: Array.isArray(fixedRoadNetworkData) ? fixedRoadNetworkData : [fixedRoadNetworkData],
+                }}>
                 <Layer
                     id='road_layer'
                     type='line'
@@ -114,7 +118,7 @@ export const RenderRoadNetwork = ({ roadNetworkData, isMapLoaded, visibility, fe
                 />
             </Source>
 
-            {isDialogOpen &&
+            {/* {isDialogOpen &&
                 session &&
                 (isDamaged ? (
                     <FixRoad
@@ -128,7 +132,7 @@ export const RenderRoadNetwork = ({ roadNetworkData, isMapLoaded, visibility, fe
                         roadId={selectedRoadId}
                         fetchRoadByBounds={fetchRoadByBounds}
                     />
-                ))}
+                ))} */}
         </>
     );
 };

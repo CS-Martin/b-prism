@@ -17,7 +17,7 @@ import ControlPanel from './_components/control-panel';
 import RescuePostPanel from './_components/rescue-post-panel';
 import RenderDispensingPoint from './_components/dispensing-point/render.dispensing-point';
 import { RenderRoadNetwork } from './_components/road-network/render-road-network';
-import { useDisplayRoadNetworkByBounds } from '../../hooks/road-network.hook';
+import { useDisplayDamagedRoads, useDisplayFixedRoadNetworkByBounds } from '../../hooks/road-network.hook';
 import FetchingIndicator from './_components/fetching-indicator';
 
 interface MarkerType {
@@ -33,9 +33,11 @@ const MapPage = () => {
     const [selectedAction, setSelectedAction] = useState<SelectedActionType | null>(null);
     const selectedActionRef = useRef<string | null>(selectedAction);
 
+    const { fixedRoadNetwork, fetchFixedRoadsByBounds, isLoading: isFetchingRoadNetwork } = useDisplayFixedRoadNetworkByBounds(mapRef);
+    const { damagedRoads, fetchDamagedRoads, isLoading: isFetchingDamagedRoads } = useDisplayDamagedRoads();
+
     const { warehouses, fetchAllWarehouses } = useDisplayWarehouses();
     const { dispensingPoints, fetchAllDispensingPoints } = useDisplayDispensingPoints();
-    const { roadNetwork, fetchRoadByBounds, isLoading: isFetchingRoadNetwork } = useDisplayRoadNetworkByBounds(mapRef);
     const [isOpen, setIsOpen] = useState(false);
     const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
     const [itemToDelete, setItemtoDelete] = useState<{ type: string; id: string }>();
@@ -47,23 +49,11 @@ const MapPage = () => {
         roadNetwork: true,
     });
 
-    // I cannot fetch all road data (70k data) all at once
-    // Had to fetch by data depending on user's bound box map viewport
     useEffect(() => {
-        if (!mapRef.current) return;
+        fetchFixedRoadsByBounds();
+    }, [fetchFixedRoadsByBounds]);
 
-        const mapboxMap = mapRef.current.getMap();
-
-        const handleMove = () => {
-            fetchRoadByBounds();
-        };
-
-        mapboxMap.on('moveend', handleMove);
-
-        return () => {
-            mapboxMap.off('moveend', handleMove);
-        };
-    }, [mapRef, fetchRoadByBounds]);
+    console.log(fixedRoadNetwork, 'HEHEHE');
 
     useEffect(() => {
         selectedActionRef.current = selectedAction;
@@ -209,10 +199,10 @@ const MapPage = () => {
                     {isMapLoaded && (
                         <>
                             <RenderRoadNetwork
-                                roadNetworkData={roadNetwork}
+                                fixedRoadNetworkData={fixedRoadNetwork}
+                                fetchFixedRoadsByBounds={fetchFixedRoadsByBounds}
                                 isMapLoaded={isMapLoaded}
                                 visibility={visibility}
-                                fetchRoadByBounds={fetchRoadByBounds}
                             />
 
                             <RenderWarehouse
