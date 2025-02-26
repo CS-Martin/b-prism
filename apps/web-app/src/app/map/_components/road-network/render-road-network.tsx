@@ -18,7 +18,6 @@ export const RenderRoadNetwork = ({ fixedRoadNetworkData, isMapLoaded, visibilit
     const [selectedRoadId, setSelectedRoadId] = useState<string>();
     const [isDamaged, setIsDamaged] = useState<boolean>();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    console.log('DATA FROM RENDER ROAD NETWORK COMPONENT', fixedRoadNetworkData);
 
     let hoveredRoadId: string | null = null;
 
@@ -46,6 +45,7 @@ export const RenderRoadNetwork = ({ fixedRoadNetworkData, isMapLoaded, visibilit
             if (features.length > 0) {
                 const road = features[0];
 
+                console.log(road);
                 map.getCanvas().style.cursor = 'pointer';
 
                 // Reset the previous hover state

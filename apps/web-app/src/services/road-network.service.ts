@@ -30,7 +30,6 @@ class RoadNetworkService {
     public async findFixRoadByBounds(minLng: number, minLat: number, maxLng: number, maxLat: number): Promise<ResponseDto<RoadNetworkDto[]>> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/road-network/bounds/search?minLng=${minLng}&minLat=${minLat}&maxLng=${maxLng}&maxLat=${maxLat}`);
-            console.log('API', response);
 
             if (!response.ok) {
                 const error = await response.json();

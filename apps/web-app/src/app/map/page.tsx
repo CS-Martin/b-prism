@@ -50,10 +50,10 @@ const MapPage = () => {
     });
 
     useEffect(() => {
-        fetchFixedRoadsByBounds();
-    }, [fetchFixedRoadsByBounds]);
-
-    console.log(fixedRoadNetwork, 'HEHEHE');
+        if (isMapLoaded) {
+            fetchFixedRoadsByBounds();
+        }
+    }, [fetchAllDispensingPoints]);
 
     useEffect(() => {
         selectedActionRef.current = selectedAction;

@@ -32,7 +32,9 @@ export const useDisplayDamagedRoads = () => {
 export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRef>) => {
     const [fixedRoadNetwork, setFixedRoadNetwork] = useState<RoadNetworkDto[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const prevBoundsRef = useRef<string | null>(null);
+    const [prevBounds, setPrevBounds] = useState<string | null>(null);
+
+    console.log('1');
 
     const fetchFixedRoadsByBounds = useCallback(async () => {
         if (!mapRef.current) {
@@ -52,27 +54,24 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
         const maxLat = bounds.getNorth();
 
         const boundsKey = `${minLng},${minLat},${maxLng},${maxLat}`;
-        console.log('Bounds Key:', boundsKey, 'Is Same as Previous:', boundsKey === prevBoundsRef.current);
 
-        if (boundsKey === prevBoundsRef.current) return; // Prevent unnecessary re-fetch
+        if (boundsKey === prevBounds) return; // Prevent unnecessary re-fetch
 
-        prevBoundsRef.current = boundsKey; // Update prevBounds synchronously
+        setPrevBounds(boundsKey); // Move inside to prevent stale values
         setIsLoading(true);
 
         try {
-            const response: ResponseDto<RoadNetworkDto[]> = await roadNetworkService.findFixRoadByBounds(minLng, minLat, maxLng, maxLat);
-
+            const response = await roadNetworkService.findFixRoadByBounds(minLng, minLat, maxLng, maxLat);
             if (response.statusCode !== 200) {
                 throw new Error('Failed to fetch road network');
             }
-
             setFixedRoadNetwork(response.body);
         } catch (error) {
             console.error('Error fetching road network:', error);
         } finally {
             setIsLoading(false);
         }
-    }, [mapRef]);
+    }, [mapRef, prevBounds]);
 
     // Attach Event Listener When Map is Ready**
     useEffect(() => {
@@ -91,11 +90,11 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
             fetchFixedRoadsByBounds();
         };
 
-        map.on('moveend', handleMoveEnd);
+        map?.on('moveend', handleMoveEnd);
 
         return () => {
             console.log('Cleaning up moveend event listener.');
-            map.off('moveend', handleMoveEnd);
+            map?.off('moveend', handleMoveEnd);
         };
     }, [fetchFixedRoadsByBounds]);
 
