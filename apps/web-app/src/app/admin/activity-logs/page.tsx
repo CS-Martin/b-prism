@@ -115,7 +115,7 @@ export default function ActivityLogPage() {
                                     {index > 0 && <div className='h-[60%] rounded-full w-[0.7px] bg-gray-500 absolute top-11'></div>}
                                 </div>
 
-                                <div className='flex flex-col md:flex-row'>
+                                <div className='flex flex-col md:flex-row w-full'>
                                     <div className='ml-6 w-full md:text-center py-2 min-w-[80px] md:max-w-[200px]'>
                                         <p className='text-[#a1a1aa] text-xs md:text-sm'>{format(new Date(log.timestamp), 'hh:mm a')}</p>
                                     </div>
