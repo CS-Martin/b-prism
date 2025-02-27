@@ -53,8 +53,8 @@ export async function middleware(req: NextRequest) {
         }
     }
 
-    if (pathname === '/admin/dashboard' || (pathname === '/admin/activity-logs' && user?.role !== 'admin')) {
-        console.log('GRANTING ACCESS TO ADMIN', token?.role);
+    if (pathname === '/admin/dashboard' || (pathname === '/admin/activity-logs' && user.role !== 'admin')) {
+        console.log('GRANTING ACCESS TO ADMIN', user.role);
 
         return NextResponse.redirect(new URL('/home', req.url));
     }

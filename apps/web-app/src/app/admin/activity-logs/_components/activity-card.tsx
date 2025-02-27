@@ -4,10 +4,11 @@ import { format, formatDistanceToNow } from 'date-fns';
 
 export default function ActivityCard(log: ActivityLogDto) {
     return (
-        <div className='ml-6 prism-card-hover w-full h-fit min-h-[115px] max-h-[170px] px-0 md:px-3 py-2 rounded-md cursor-pointer'>
+        <div className='ml-6 prism-card-hover w-[90%]  h-fit min-h-[115px] max-h-[170px] px-0 md:px-3 py-2 rounded-md cursor-pointer'>
             <p className='text-[12px] text-[#a1a1aa]'>
                 {format(new Date(log.timestamp), 'MMMM d, yyyy')} | {formatDistanceToNow(new Date(log.timestamp))} ago
             </p>
+
             <p className='py-2'>{log.description}</p>
 
             <div className='flex flex-row items-center gap-2 text-[12px] text-[#a1a1aa]'>
