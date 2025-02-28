@@ -64,7 +64,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
     const { getAddress, address } = useGetAddress();
     const { createDispensingPoint } = useCreateDispensingPoint();
 
-    const user: UserDto = session?.user as UserDto;
+    const user = session?.user;
 
     const {
         handleSubmit,
@@ -118,7 +118,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
             const formattedData = {
                 ...data,
                 address,
-                user_id: (session?.user as UserDto)?.id,
+                user_id: session.user.id,
             };
 
             if (formattedData.name === '') {

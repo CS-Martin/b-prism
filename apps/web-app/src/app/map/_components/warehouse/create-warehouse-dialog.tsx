@@ -45,7 +45,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
     const { createWarehouse } = useCreateWarehouse();
     const { getAddress, address } = useGetAddress();
 
-    const user: UserDto = session?.user as UserDto;
+    const user = session?.user;
 
     // Initialize react-hook-form with default values
     const {
@@ -79,7 +79,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                 region: '',
                 country: '',
             },
-            user_id: user.id,
+            user_id: user?.id,
             created_at: new Date(),
             updated_at: new Date(),
         },
