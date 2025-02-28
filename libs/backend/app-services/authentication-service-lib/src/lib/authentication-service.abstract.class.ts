@@ -4,7 +4,7 @@ import { User } from '@prisma/client';
 export abstract class AuthenticationServiceAbstractClass {
     abstract create(createUserDto: CreateUserDto): Promise<ResponseDto<UserDto>>;
 
-    abstract validateUserLogin(email: string, password: string): Promise<ResponseDto<UserDto>>;
+    abstract validateUserLogin(email: string, password: string): Promise<ResponseDto<{ user: UserDto; accessToken: string }>>;
 
     abstract sendVerificationCodeMail(email: string): Promise<ResponseDto<MailerDto>>;
 

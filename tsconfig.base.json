@@ -22,6 +22,8 @@
             "@b-prism/dispensing-point-mongodb-lib": ["libs/backend/database-services/dispensing-point-mongodb-lib/src/index.ts"],
             "@b-prism/dispensing-point-service-lib": ["libs/backend/app-services/dispensing-point-service-lib/src/index.ts"],
             "@b-prism/enums": ["libs/enums/src/index.ts"],
+            "@b-prism/guards-service-lib": ["libs/backend/app-services/guards-service-lib/src/index.ts"],
+            "@b-prism/l": ["l/src/index.ts"],
             "@b-prism/lib-utils": ["libs/utils/src/index.ts"],
             "@b-prism/mailer-mongodb-lib": ["libs/backend/database-services/mailer-mongodb-lib/src/index.ts"],
             "@b-prism/mailer-service-lib": ["libs/backend/app-services/mailer-service-lib/src/index.ts"],

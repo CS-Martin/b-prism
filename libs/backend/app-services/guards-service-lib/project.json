@@ -1,0 +1,9 @@
+{
+    "name": "guards-service-lib",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/backend/app-services/guards-service-lib/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project guards-service-lib --web",
+    "targets": {}
+}

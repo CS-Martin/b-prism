@@ -12,6 +12,7 @@ import * as bcrypt from 'bcrypt';
 import { randomInt } from 'crypto';
 import { addMinutes } from 'date-fns';
 import { MailerMongodbLibService } from '@b-prism/mailer-mongodb-lib';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthenticationServiceLibService implements AuthenticationServiceAbstractClass {
@@ -24,6 +25,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         private readonly userServiceLibService: UserServiceLibService,
         private readonly activityLogLibService: ActivityLogServiceLibService,
         private readonly mailerServiceLibService: MailerServiceLibService,
+        private readonly jwtService: JwtService,
     ) {}
 
     async create(userData: CreateUserDto): Promise<ResponseDto<UserDto>> {
@@ -63,30 +65,47 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
      * @returns A promise that resolves to the validated user.
      * @returns UnauthorizedException if email or password are incorrect.
      */
-    async validateUserLogin(email: string, password: string): Promise<ResponseDto<UserDto>> {
+    async validateUserLogin(email: string, password: string): Promise<ResponseDto<{ user: UserDto; accessToken: string }>> {
         this.logger.log('Verifying user', email);
 
         try {
-            const user: ResponseDto<UserDto> = await this.userServiceLibService.findByEmail(email);
+            // Find the user by email
+            const userResponse: ResponseDto<UserDto> = await this.userServiceLibService.findByEmail(email);
 
-            if (!user.body) {
+            if (!userResponse.body) {
                 throw new NotFoundException(`User with email ${email} not found. Please try again.`);
             }
 
-            const isPasswordValid = await comparePassword(password, user.body.password);
+            const user = userResponse.body;
 
+            // Validate password
+            const isPasswordValid = await comparePassword(password, user.password);
             if (!isPasswordValid) {
                 throw new UnauthorizedException('The password you entered is incorrect. Please try again.');
             }
 
-            const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, user.body);
+            // Generate access token
+            const accessToken = await this.generateAccessToken({
+                id: user.id,
+                email: user.email,
+                role: user.role,
+            });
 
-            return response;
+            // Return user and token
+            return new ResponseDto<{ user: UserDto; accessToken: string }>(201, {
+                user,
+                accessToken,
+            });
         } catch (error) {
             this.logger.error('Error verifying user', error);
-
             throw new BadRequestException(error);
         }
+    }
+
+    async generateAccessToken(user: { id: string; email: string; role: string }) {
+        const payload = { sub: user.id, email: user.email, role: user.role };
+
+        return this.jwtService.signAsync(payload);
     }
 
     /**
