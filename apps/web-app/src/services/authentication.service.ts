@@ -1,5 +1,6 @@
 import { CreateUserDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
+import { error } from 'console';
 import { useSession } from 'next-auth/react';
 
 class AuthenticationService {
@@ -189,7 +190,13 @@ class AuthenticationService {
 
             const data = await response.json();
 
-            return data;
+            if (!data.newAccessToken) {
+                console.error('No new access token found in response');
+
+                throw new BadRequestException('No new Access token found in response.');
+            }
+
+            return data.newAccessToken;
         } catch (error) {
             console.error('Error refreshing token:', error);
 

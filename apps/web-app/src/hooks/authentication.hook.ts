@@ -92,19 +92,3 @@ export const useResetPassword = () => {
 
     return { resetPassword, isLoading };
 };
-
-export const useRefreshSession = () => {
-    const { data: session, update } = useSession();
-
-    const refreshSession = async () => {
-        if (!session?.user.refreshToken) return;
-
-        const newAccessToken = await authService.refreshAccessToken(session.user.refreshToken);
-
-        if (newAccessToken) {
-            await update({ accessToken: newAccessToken }); // Update session with new token
-        }
-    };
-
-    return refreshSession;
-};

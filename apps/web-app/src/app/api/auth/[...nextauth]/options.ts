@@ -65,9 +65,8 @@ export const options: NextAuthOptions = {
 
             try {
                 // This only returns the new accessToken
-                const response = await authService.refreshAccessToken(token.refreshToken);
-                console.log('HAHAHA', response);
-                const newAccessToken = response.newAccessToken;
+                const newAccessToken = await authService.refreshAccessToken(token.refreshToken);
+                console.log(newAccessToken);
 
                 console.log(newAccessToken);
 
