@@ -1,7 +1,5 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { authService } from '../../../../services/authentication.service';
-import { JWT } from 'next-auth/jwt';
-import { Session } from 'next-auth';
 import { jwtDecode } from 'jwt-decode';
 import { NextAuthOptions } from 'next-auth';
 

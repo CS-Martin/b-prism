@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { userService } from '../services/user.service';
 import { authService } from '../services/authentication.service';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { useSession } from 'next-auth/react';
 
 export const useLoginUser = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);

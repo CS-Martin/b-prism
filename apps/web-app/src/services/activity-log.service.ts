@@ -1,8 +1,5 @@
 import { ActivityLogDto, CreateActivityLogDto, ResponseDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
-import { getServerSession } from 'next-auth';
-import { options } from '../app/api/auth/[...nextauth]/options';
-import { useRefreshSession } from '../hooks/authentication.hook';
 
 class ActivityLogService {
     private API_BASE_URL: string;

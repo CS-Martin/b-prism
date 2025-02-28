@@ -1,7 +1,5 @@
 import { CreateUserDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
-import { error } from 'console';
-import { useSession } from 'next-auth/react';
 
 class AuthenticationService {
     private API_BASE_URL: string;
