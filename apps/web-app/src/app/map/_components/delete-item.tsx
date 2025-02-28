@@ -39,8 +39,8 @@ const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoin
     const { deleteWarehouse } = useDeleteWarehouse();
     const { deleteDispensingPoint } = useDeleteDispensingPoint();
 
-    const user: UserDto = session?.user as UserDto;
-    const userFullname = `${user.given_name} ${user.family_name}`;
+    const user = session?.user;
+    const userFullname = `${user?.given_name} ${user?.family_name}`;
 
     /**
      * Handles the delete action based on the item type.
