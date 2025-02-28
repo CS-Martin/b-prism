@@ -1,5 +1,6 @@
 import { CreateUserDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
+import { useSession } from 'next-auth/react';
 
 class AuthenticationService {
     private API_BASE_URL: string;
@@ -168,6 +169,30 @@ class AuthenticationService {
             console.error('Authentication Service Error:', error);
 
             throw error;
+        }
+    }
+
+    public async refreshAccessToken(refreshToken?: string): Promise<string | null> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/authentication/refresh-token`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ refreshToken }),
+            });
+
+            if (!response.ok) {
+                console.error('Failed to refresh access token');
+                return null;
+            }
+
+            const data = await response.json();
+
+            return data.accessToken;
+        } catch (error) {
+            console.error('Error refreshing token:', error);
+            return null;
         }
     }
 }

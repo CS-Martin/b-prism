@@ -1,5 +1,5 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { JsonWebTokenError, JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { Request } from 'express';
 
 @Injectable()
@@ -29,8 +29,15 @@ export class AuthGuard implements CanActivate {
             // 💡 We're assigning the payload to the request object here
             // so that we can access it in our route handlers
             request['user'] = payload;
-        } catch {
-            throw new UnauthorizedException();
+        } catch (error) {
+            if (error instanceof TokenExpiredError) {
+                console.log('ERROR: TOKEN HAS EXPIRED');
+                throw new UnauthorizedException('Token has expired. Please refresh your token.');
+            } else if (error instanceof JsonWebTokenError) {
+                console.log('INVALID TOKEN');
+                throw new ForbiddenException('Invalid token');
+            }
+            throw new UnauthorizedException('Unauthorized');
         }
 
         return true;

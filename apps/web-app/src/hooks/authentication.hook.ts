@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { userService } from '../services/user.service';
 import { authService } from '../services/authentication.service';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { useSession } from 'next-auth/react';
 
 export const useLoginUser = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -90,4 +91,20 @@ export const useResetPassword = () => {
     };
 
     return { resetPassword, isLoading };
+};
+
+export const useRefreshSession = () => {
+    const { data: session, update } = useSession();
+
+    const refreshSession = async () => {
+        if (!session?.user.refreshToken) return;
+
+        const newAccessToken = await authService.refreshAccessToken(session.user.refreshToken);
+
+        if (newAccessToken) {
+            await update({ accessToken: newAccessToken }); // Update session with new token
+        }
+    };
+
+    return refreshSession;
 };
