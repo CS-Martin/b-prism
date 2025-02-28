@@ -57,7 +57,7 @@ class AuthenticationService {
         }
     }
 
-    public async verify(email: string, password: string): Promise<UserDto> {
+    public async verify(email: string, password: string): Promise<{ user: UserDto; accessToken: string }> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/authentication/verify`, {
                 method: 'POST',
@@ -73,9 +73,12 @@ class AuthenticationService {
                 throw new BadRequestException(error.message);
             }
 
-            const user = await response.json();
+            const responseJson = await response.json();
 
-            return user.body;
+            return {
+                user: responseJson.body.user,
+                accessToken: responseJson.body.accessToken,
+            };
         } catch (error) {
             console.error('Authentication Service Error:', error);
 

@@ -1,5 +1,7 @@
 import { ActivityLogDto, CreateActivityLogDto, ResponseDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
+import { getServerSession } from 'next-auth';
+import { options } from '../app/api/auth/[...nextauth]/options';
 
 class ActivityLogService {
     private API_BASE_URL: string;
@@ -33,6 +35,9 @@ class ActivityLogService {
     }
 
     public async findAllActivityLogs(): Promise<ResponseDto<ActivityLogDto[]>> {
+        const session = await getServerSession(options);
+
+        console.log(session);
         try {
             const response = await fetch(`${this.API_BASE_URL}/activity-log`);
 

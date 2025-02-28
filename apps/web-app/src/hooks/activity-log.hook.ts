@@ -1,3 +1,5 @@
+'use client';
+
 import { ActivityLogDto, ResponseDto } from '@dto';
 import { useEffect, useState } from 'react';
 import { activityLogService } from '../services/activity-log.service';
