@@ -171,7 +171,7 @@ function SidebarActionItem({ id, label, icon: Icon, selectedAction, handleToggle
 export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
     const { data: session } = useSession();
     const { toast } = useToast();
-    const user = (session?.user ?? {}) as Partial<UserDto>;
+    const user = session?.user;
     const [selectedAction, setInternalSelectedAction] = useState<string | null>(null);
     const { state } = useSidebar();
 
