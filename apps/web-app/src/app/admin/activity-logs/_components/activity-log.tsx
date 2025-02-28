@@ -7,10 +7,16 @@ import ActionIcon from './action-icon';
 import ActivityCard from './activity-card';
 import { Input, Menubar, MenubarCheckboxItem, MenubarContent, MenubarMenu, MenubarTrigger } from '@b-prism/shadcn-ui/index';
 import { ChevronDown, Search } from 'lucide-react';
+import { useDisplayActivityLogs } from 'apps/web-app/src/hooks/activity-log.hook';
 
-export default function ActivityLog({ initialLogs }: { initialLogs: any[] }) {
+interface ActivityLogProps {
+    token?: string;
+}
+
+export default function ActivityLog({ token }: ActivityLogProps) {
     const scrollAreaRef = useRef<HTMLDivElement>(null);
-    const [logs, setLogs] = useState(initialLogs);
+
+    const { logs, isLoading } = useDisplayActivityLogs(token);
     const [visibleLogs, setVisibleLogs] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedActions, setSelectedActions] = useState<string[]>(['Create', 'Update', 'Delete']);

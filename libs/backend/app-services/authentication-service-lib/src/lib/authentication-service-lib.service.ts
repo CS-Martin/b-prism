@@ -65,7 +65,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
      * @returns A promise that resolves to the validated user.
      * @returns UnauthorizedException if email or password are incorrect.
      */
-    async validateUserLogin(email: string, password: string): Promise<ResponseDto<{ user: UserDto; accessToken: string }>> {
+    async validateUserLogin(email: string, password: string): Promise<ResponseDto<{ user: UserDto; accessToken: string; refreshToken: string }>> {
         this.logger.log('Verifying user', email);
 
         try {
@@ -91,10 +91,18 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
                 role: user.role,
             });
 
+            // Generate long-live refresh token
+            const refreshToken = await this.generateRefreshToken({
+                id: user.id,
+                email: user.email,
+                role: user.role,
+            });
+
             // Return user and token
-            return new ResponseDto<{ user: UserDto; accessToken: string }>(201, {
+            return new ResponseDto<{ user: UserDto; accessToken: string; refreshToken: string }>(201, {
                 user,
                 accessToken,
+                refreshToken,
             });
         } catch (error) {
             this.logger.error('Error verifying user', error);
@@ -102,10 +110,26 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
-    async generateAccessToken(user: { id: string; email: string; role: string }) {
-        const payload = { sub: user.id, email: user.email, role: user.role };
+    async refreshToken(refreshToken: string): Promise<{ newAccesToken: string }> {
+        this.logger.log('Refreshing token:', refreshToken);
 
-        return this.jwtService.signAsync(payload);
+        try {
+            if (!refreshToken) {
+                throw new UnauthorizedException('Refresh token is required.');
+            }
+            // Verify refresh token
+            const payload = await this.jwtService.verifyAsync(refreshToken, {
+                secret: process.env['JWT_REFRESH_SECRET'],
+            });
+
+            // Generate a new access token
+            const newAccessToken = this.jwtService.sign({ sub: payload.sub, email: payload.email, role: payload.role }, { secret: process.env['JWT_SECRET'], expiresIn: '15m' });
+
+            return { newAccesToken: newAccessToken };
+        } catch (error) {
+            this.logger.error('An error occured while refreshing token.');
+            throw new UnauthorizedException('Invalid or expired refresh token');
+        }
     }
 
     /**
@@ -296,6 +320,24 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
             throw new BadRequestException(error);
         }
+    }
+
+    async generateAccessToken(user: { id: string; email: string; role: string }) {
+        const payload = { sub: user.id, email: user.email, role: user.role };
+
+        return this.jwtService.sign(payload, {
+            secret: process.env['JWT_TOKEN'],
+            expiresIn: '60s',
+        });
+    }
+
+    async generateRefreshToken(user: { id: string; email: string; role: string }) {
+        const payload = { sub: user.id, email: user.email, role: user.role };
+
+        return this.jwtService.sign(payload, {
+            secret: process.env['JWT_TOKEN'],
+            expiresIn: '3d',
+        });
     }
 
     convertToDto(user: User): UserDto {

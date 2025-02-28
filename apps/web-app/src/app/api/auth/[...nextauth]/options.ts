@@ -33,6 +33,7 @@ export const options: NextAuthOptions = {
                     role: response.user.role,
                     id_image_url: response.user.id_image_url ?? undefined,
                     accessToken: response.accessToken,
+                    refreshToken: response.refreshToken,
                 };
             },
         }),
@@ -47,6 +48,7 @@ export const options: NextAuthOptions = {
                 token.email = user.email;
                 token.role = user.role;
                 token.accessToken = user.accessToken;
+                token.refreshToken = user.refreshToken;
             }
             return token;
         },
@@ -60,6 +62,7 @@ export const options: NextAuthOptions = {
                 email: token.email,
                 role: token.role,
                 accessToken: token.accessToken ?? '',
+                refreshToken: token.refreshToken ?? '',
             };
 
             return session;

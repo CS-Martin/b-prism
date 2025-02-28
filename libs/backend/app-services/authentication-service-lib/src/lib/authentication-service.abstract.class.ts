@@ -6,6 +6,8 @@ export abstract class AuthenticationServiceAbstractClass {
 
     abstract validateUserLogin(email: string, password: string): Promise<ResponseDto<{ user: UserDto; accessToken: string }>>;
 
+    abstract refreshToken(refreshToken: string): Promise<{ newAccesToken: string }>;
+
     abstract sendVerificationCodeMail(email: string): Promise<ResponseDto<MailerDto>>;
 
     abstract changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<ResponseDto<UserDto>>;

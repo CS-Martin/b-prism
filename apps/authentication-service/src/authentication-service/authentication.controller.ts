@@ -66,4 +66,11 @@ export class AuthenticationController {
     verifyEmailCode(@Body() verifyEmailCode: VerifyEmailCode) {
         return this.authenticationService.verifyEmailCode(verifyEmailCode.email, verifyEmailCode.code);
     }
+
+    @Post('refresh-token')
+    async refreshToken(@Body() body: { refreshToken: string }) {
+        const { refreshToken } = body;
+
+        return this.authenticationService.refreshToken(refreshToken);
+    }
 }

@@ -9,9 +9,6 @@ import { useSession } from 'next-auth/react';
 
 export default function Home() {
     // const bottomRef = useRef<HTMLDivElement>(null);
-    const { data: session } = useSession();
-
-    console.log(session);
 
     // const scrollToBottom = () => {
     //     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });

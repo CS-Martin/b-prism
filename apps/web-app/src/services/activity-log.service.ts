@@ -34,12 +34,13 @@ class ActivityLogService {
         }
     }
 
-    public async findAllActivityLogs(): Promise<ResponseDto<ActivityLogDto[]>> {
-        const session = await getServerSession(options);
-
-        console.log(session);
+    public async findAllActivityLogs(token?: string): Promise<ResponseDto<ActivityLogDto[]>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/activity-log`);
+            const response = await fetch(`${this.API_BASE_URL}/activity-log`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
             if (!response.ok) {
                 const error = await response.json();

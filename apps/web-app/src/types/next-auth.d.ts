@@ -12,8 +12,8 @@ declare module 'next-auth' {
             role?: string;
             id_image_url?: string;
             accessToken: string;
+            refreshToken?: string;
         } & DefaultSession['user'];
-        accessToken?: string;
     }
 
     interface User {
@@ -25,7 +25,8 @@ declare module 'next-auth' {
         position?: string;
         role?: string;
         id_image_url?: string;
-        accessToken: string;
+        accessToken?: string;
+        refreshToken?: string;
     }
 }
 
@@ -40,5 +41,6 @@ declare module 'next-auth/jwt' {
         role?: string;
         id_image_url?: string;
         accessToken?: string;
+        refreshToken?: string;
     }
 }
