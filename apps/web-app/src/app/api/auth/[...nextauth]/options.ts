@@ -2,6 +2,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { authService } from '../../../../services/authentication.service';
 import { JWT } from 'next-auth/jwt';
 import { Session } from 'next-auth';
+import { jwtDecode } from 'jwt-decode';
 import { NextAuthOptions } from 'next-auth';
 
 export const options: NextAuthOptions = {
@@ -40,7 +41,7 @@ export const options: NextAuthOptions = {
     ],
     callbacks: {
         async jwt({ token, user }) {
-            // Add user data on initial sign-in
+            // Handle new user sign-in
             if (user) {
                 token.id = user.id;
                 token.given_name = user.given_name;
@@ -49,8 +50,46 @@ export const options: NextAuthOptions = {
                 token.role = user.role;
                 token.accessToken = user.accessToken;
                 token.refreshToken = user.refreshToken;
+
+                const decodedToken = jwtDecode<{ exp?: number }>(token.accessToken!);
+                token.accessTokenExpires = decodedToken?.exp ? decodedToken.exp * 1000 : Date.now() + 1000 * 60 * 15;
             }
-            return token;
+
+            // Check if the access token is still valid
+            if (typeof token.accessTokenExpires === 'number' && Date.now() < token.accessTokenExpires) {
+                console.log('✅ Token is still valid until:', new Date(token.accessTokenExpires));
+                return token;
+            }
+
+            console.log('🔄 Access token expired, refreshing token...');
+
+            try {
+                // This only returns the new accessToken
+                const response = await authService.refreshAccessToken(token.refreshToken);
+                console.log('HAHAHA', response);
+                const newAccessToken = response.newAccessToken;
+
+                console.log(newAccessToken);
+
+                if (!newAccessToken) {
+                    console.error('❌ Failed to refresh access token');
+                    return token;
+                }
+
+                console.log('✅ Successfully refreshed access token:', newAccessToken);
+                // Decode the new access token to update expiration time
+                const decodedNewToken = jwtDecode<{ exp?: number }>(newAccessToken);
+                const newExpiry = decodedNewToken?.exp ? decodedNewToken.exp * 1000 : Date.now() + 1000 * 60 * 15;
+
+                return {
+                    ...token,
+                    accessToken: newAccessToken,
+                    accessTokenExpires: newExpiry,
+                };
+            } catch (error) {
+                console.error('❌ Error refreshing token:', error);
+                return token;
+            }
         },
 
         async session({ session, token }) {

@@ -189,10 +189,11 @@ class AuthenticationService {
 
             const data = await response.json();
 
-            return data.accessToken;
+            return data;
         } catch (error) {
             console.error('Error refreshing token:', error);
-            return null;
+
+            throw error;
         }
     }
 }

@@ -110,28 +110,6 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
-    async refreshToken(refreshToken: string): Promise<{ newAccesToken: string }> {
-        this.logger.log('Refreshing token:', refreshToken);
-
-        try {
-            if (!refreshToken) {
-                throw new UnauthorizedException('Refresh token is required.');
-            }
-            // Verify refresh token
-            const payload = await this.jwtService.verifyAsync(refreshToken, {
-                secret: process.env['JWT_REFRESH_SECRET'],
-            });
-
-            // Generate a new access token
-            const newAccessToken = this.jwtService.sign({ sub: payload.sub, email: payload.email, role: payload.role }, { secret: process.env['JWT_SECRET'], expiresIn: '15m' });
-
-            return { newAccesToken: newAccessToken };
-        } catch (error) {
-            this.logger.error('An error occured while refreshing token.');
-            throw new UnauthorizedException('Invalid or expired refresh token');
-        }
-    }
-
     /**
      * Sends a verification code to user's email
      * @example Used when user request for password reset/forgot password.
@@ -322,6 +300,35 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         }
     }
 
+    async refreshToken(refreshToken: string): Promise<{ newAccessToken: string }> {
+        this.logger.log('Refreshing token:', refreshToken);
+
+        try {
+            if (!refreshToken) {
+                throw new UnauthorizedException('Refresh token is required.');
+            }
+            // Verify refresh token
+            const payload = await this.jwtService.verifyAsync(refreshToken, {
+                secret: process.env['JWT_REFRESH_SECRET'],
+            });
+
+            // Generate a new access token
+            const newAccessToken = this.jwtService.sign(
+                {
+                    sub: payload.sub,
+                    email: payload.email,
+                    role: payload.role,
+                },
+                { secret: process.env['JWT_SECRET'], expiresIn: '60s' },
+            );
+
+            return { newAccessToken: newAccessToken };
+        } catch (error) {
+            this.logger.error(`An error occurred while refreshing token: ${error}`);
+            throw new UnauthorizedException('Invalid or expired refresh token');
+        }
+    }
+
     async generateAccessToken(user: { id: string; email: string; role: string }) {
         const payload = { sub: user.id, email: user.email, role: user.role };
 
@@ -335,7 +342,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         const payload = { sub: user.id, email: user.email, role: user.role };
 
         return this.jwtService.sign(payload, {
-            secret: process.env['JWT_TOKEN'],
+            secret: process.env['JWT_REFRESH_SECRET'],
             expiresIn: '3d',
         });
     }
