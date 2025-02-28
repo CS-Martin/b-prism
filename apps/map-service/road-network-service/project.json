@@ -23,7 +23,8 @@
             "dependsOn": ["build"],
             "options": {
                 "buildTarget": "road-network-service:build",
-                "runBuildTargetDependencies": false
+                "runBuildTargetDependencies": false,
+                "watch": true
             },
             "configurations": {
                 "development": {

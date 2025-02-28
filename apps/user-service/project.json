@@ -11,7 +11,8 @@
             "dependsOn": ["build"],
             "options": {
                 "buildTarget": "user-service:build",
-                "runBuildTargetDependencies": false
+                "runBuildTargetDependencies": false,
+                "watch": true
             },
             "configurations": {
                 "development": {
