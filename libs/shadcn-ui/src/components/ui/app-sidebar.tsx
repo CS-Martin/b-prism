@@ -145,9 +145,9 @@ function SidebarLinkItem({ label, icon: Icon, href }: SidebarLinkItemProps) {
 
 function SidebarActionItem({ id, label, icon: Icon, selectedAction, handleToggle }: SidebarActionItemProps) {
     const { data: session } = useSession();
-    const user: UserDto = session?.user as UserDto;
+    const user: Partial<UserDto> = session?.user;
 
-    if (user?.role !== 'admin' && user?.role !== 'verified') {
+    if (user.role !== 'admin' && user.role !== 'verified') {
         return null;
     }
 
