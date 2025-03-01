@@ -57,7 +57,7 @@ class AuthenticationService {
         }
     }
 
-    public async verify(email: string, password: string): Promise<UserDto> {
+    public async verify(email: string, password: string): Promise<{ user: UserDto; accessToken: string; refreshToken: string }> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/authentication/verify`, {
                 method: 'POST',
@@ -73,9 +73,13 @@ class AuthenticationService {
                 throw new BadRequestException(error.message);
             }
 
-            const user = await response.json();
+            const responseJson = await response.json();
 
-            return user.body;
+            return {
+                user: responseJson.body.user,
+                accessToken: responseJson.body.accessToken,
+                refreshToken: responseJson.body.refreshToken,
+            };
         } catch (error) {
             console.error('Authentication Service Error:', error);
 
@@ -162,6 +166,37 @@ class AuthenticationService {
             return response.json();
         } catch (error) {
             console.error('Authentication Service Error:', error);
+
+            throw error;
+        }
+    }
+
+    public async refreshAccessToken(refreshToken?: string): Promise<string | null> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/authentication/refresh-token`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ refreshToken }),
+            });
+
+            if (!response.ok) {
+                console.error('Failed to refresh access token');
+                return null;
+            }
+
+            const data = await response.json();
+
+            if (!data.newAccessToken) {
+                console.error('No new access token found in response');
+
+                throw new BadRequestException('No new Access token found in response.');
+            }
+
+            return data.newAccessToken;
+        } catch (error) {
+            console.error('Error refreshing token:', error);
 
             throw error;
         }

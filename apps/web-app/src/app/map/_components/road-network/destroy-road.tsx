@@ -23,8 +23,8 @@ export const DestroyRoad = ({ roadId, setIsDialogOpen, fetchDamagedRoads }: Dest
     const { data: session } = useSession();
     const { destroyRoad } = useDestroyRoad();
 
-    const user: UserDto = session?.user as UserDto;
-    const requestAuthor = `${user.given_name} ${user.family_name}`;
+    const user = session?.user;
+    const requestAuthor = `${user?.given_name} ${user?.family_name}`;
 
     const handleRoadDestroy = async () => {
         if (roadId) {

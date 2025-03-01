@@ -1,15 +1,17 @@
+'use client';
+
 import { ActivityLogDto, ResponseDto } from '@dto';
 import { useEffect, useState } from 'react';
 import { activityLogService } from '../services/activity-log.service';
 
-export const useDisplayActivityLogs = () => {
+export const useDisplayActivityLogs = (token?: string) => {
     const [isLoading, setIsLoading] = useState(false);
     const [logs, setLogs] = useState<ActivityLogDto[]>([]);
 
     const fetchAllActivityLogs = async () => {
         setIsLoading(true);
 
-        const response: ResponseDto<ActivityLogDto[]> = await activityLogService.findAllActivityLogs();
+        const response: ResponseDto<ActivityLogDto[]> = await activityLogService.findAllActivityLogs(token);
 
         if (response.statusCode !== 200) {
             setIsLoading(false);

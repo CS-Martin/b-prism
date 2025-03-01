@@ -1,6 +1,5 @@
 'use client';
 
-import { AppSidebar } from '@b-prism/shadcn-ui/index';
 import { SelectedActionType } from '@b-prism/enums';
 import Map, { MapMouseEvent, MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -19,6 +18,7 @@ import RenderDispensingPoint from './_components/dispensing-point/render.dispens
 import { RenderRoadNetwork } from './_components/road-network/render-road-network';
 import { useDisplayDamagedRoads, useDisplayFixedRoadNetworkByBounds } from '../../hooks/road-network.hook';
 import FetchingIndicator from './_components/fetching-indicator';
+import { AppSidebar } from '../../components/sidebar';
 
 interface MarkerType {
     longitude: string;

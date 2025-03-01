@@ -1,3 +1,5 @@
+'use client';
+
 import Spline from '@splinetool/react-spline';
 import { SupportersParallax } from './parallax-text';
 import { motion, useScroll, useTransform } from 'motion/react';
