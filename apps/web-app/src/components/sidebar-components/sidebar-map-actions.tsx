@@ -44,6 +44,7 @@ interface SidebarMapActionProps {
 
 export const SidebarMapActions = ({ selectedAction, handleToggle }: SidebarMapActionProps) => {
     const { state } = useSidebar();
+
     return (
         <SidebarGroup>
             <SidebarMenu>

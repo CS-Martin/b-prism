@@ -36,6 +36,7 @@ const generalLinks = [
 
 export const SidebarGeneralLinks = () => {
     const { state } = useSidebar();
+
     return (
         <SidebarGroup>
             <SidebarMenu>

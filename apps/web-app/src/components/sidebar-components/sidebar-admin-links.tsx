@@ -30,6 +30,7 @@ const adminLinks = [
 
 export const SidebarAdminLinks = () => {
     const { state } = useSidebar();
+
     return (
         <SidebarGroup>
             <SidebarMenu>
