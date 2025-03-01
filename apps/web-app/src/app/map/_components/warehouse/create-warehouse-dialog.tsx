@@ -25,6 +25,7 @@ import { useCreateWarehouse, useGetAddress } from 'apps/web-app/src/hooks/map.ho
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { BadRequestException } from '@nestjs/common';
+import { Session } from 'next-auth';
 
 interface MarkerType {
     longitude: string;
@@ -36,11 +37,11 @@ interface DialogProps {
     setIsOpen: (isOpen: boolean) => void;
     marker: MarkerType;
     fetchAllWarehouses: () => void;
+    session?: Session | null;
 }
 
-const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllWarehouses }) => {
+const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllWarehouses, session }) => {
     const { toast } = useToast();
-    const { data: session } = useSession();
 
     const { createWarehouse } = useCreateWarehouse();
     const { getAddress, address } = useGetAddress();
@@ -125,7 +126,8 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                 throw new Error('Warehouse name is required');
             }
 
-            await createWarehouse(formattedData, `${user.given_name} ${user.family_name}`);
+            await createWarehouse(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
+
             fetchAllWarehouses();
             setIsOpen(false);
             reset();

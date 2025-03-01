@@ -92,6 +92,7 @@ export const TyphoonLayer = () => {
                             filter: ['==', ['get', 'size'], feature.properties!.size],
                             paint: {
                                 'circle-radius': ['/', ['get', 'size'], 2000],
+                                'circle-pitch-alignment': 'map',
                                 'circle-color': ['get', 'color'],
                                 'circle-stroke-width': 2,
                                 'circle-stroke-color': 'rgba(255, 50, 50, 0.5)',

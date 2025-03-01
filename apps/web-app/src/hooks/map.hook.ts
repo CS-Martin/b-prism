@@ -63,14 +63,26 @@ export const useFindOneWarehouse = (id: string) => {
 export const useCreateWarehouse = () => {
     const { toast } = useToast();
 
-    const createWarehouse = async (data: CreateWarehouseDto, author: string) => {
-        await warehouseService.create(data, author);
+    const createWarehouse = async (data: CreateWarehouseDto, author: string, accessToken: string) => {
+        try {
+            await warehouseService.create(data, author, accessToken);
 
-        toast({
-            title: 'Success!',
-            description: `The warehouse ${data.name} has been created successfully`,
-            variant: 'success',
-        });
+            toast({
+                title: 'Success!',
+                description: `The warehouse "${data.name}" has been created successfully.`,
+                variant: 'success',
+            });
+        } catch (error: any) {
+            console.error('Error creating warehouse:', error);
+
+            const errorMessage = error.message || 'Failed to create the warehouse. Please try again.';
+
+            toast({
+                title: 'Error!',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        }
     };
 
     return { createWarehouse };
@@ -79,14 +91,26 @@ export const useCreateWarehouse = () => {
 export const useUpdateWarehouse = () => {
     const { toast } = useToast();
 
-    const updateWarehouse = async (id: string, data: UpdateWarehouseDto, author: string) => {
-        await warehouseService.update(id, data, author);
+    const updateWarehouse = async (id: string, data: UpdateWarehouseDto, author: string, accessToken: string) => {
+        try {
+            await warehouseService.update(id, data, author, accessToken);
 
-        toast({
-            title: 'Success!',
-            description: `The warehouse ${data.name} has been updated successfully`,
-            variant: 'success',
-        });
+            toast({
+                title: 'Success!',
+                description: `The warehouse ${data.name} has been updated successfully`,
+                variant: 'success',
+            });
+        } catch (error: any) {
+            console.error('Error creating warehouse:', error);
+
+            const errorMessage = error.message || 'Failed to create the warehouse. Please try again.';
+
+            toast({
+                title: 'Error!',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        }
     };
 
     return { updateWarehouse };
@@ -95,13 +119,25 @@ export const useUpdateWarehouse = () => {
 export const useDeleteWarehouse = () => {
     const { toast } = useToast();
 
-    const deleteWarehouse = async (id: string, author: string) => {
-        await warehouseService.delete(id, author);
+    const deleteWarehouse = async (id: string, author: string, accessToken: string) => {
+        try {
+            await warehouseService.delete(id, author, accessToken);
 
-        toast({
-            title: 'Warehouse deleted successfully!',
-            variant: 'success',
-        });
+            toast({
+                title: 'Warehouse deleted successfully!',
+                variant: 'success',
+            });
+        } catch (error: any) {
+            console.error('Error creating warehouse:', error);
+
+            const errorMessage = error.message || 'Failed to create the warehouse. Please try again.';
+
+            toast({
+                title: 'Error!',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        }
     };
 
     return { deleteWarehouse };

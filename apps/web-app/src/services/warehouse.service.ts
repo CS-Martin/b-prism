@@ -9,42 +9,53 @@ class WarehouseService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_WAREHOUSE_SERVICE_API_PORT ?? ''}`;
     }
 
-    public async create(data: CreateWarehouseDto, author: string): Promise<WarehouseDto> {
-        const payload = {
-            data,
-            author,
-        };
+    public async create(data: CreateWarehouseDto, author: string, accessToken: string): Promise<WarehouseDto> {
+        const payload = { data, author };
 
         try {
             const response = await fetch(`${this.API_BASE_URL}/warehouse/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
                 },
                 body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
-                const error = await response.json();
+                let errorMessage = 'Failed to create warehouse';
 
-                throw new BadRequestException(error.message);
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
             }
 
-            return response.json();
-        } catch (error) {
-            console.error(error);
+            return await response.json();
+        } catch (error: any) {
+            console.error('Warehouse creation error:', error);
 
-            throw new BadRequestException('Failed to create warehouse');
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
         }
     }
 
-    public async update(id: string, data: UpdateWarehouseDto, author: string): Promise<WarehouseDto> {
+    public async update(id: string, data: UpdateWarehouseDto, author: string, accessToken: string): Promise<WarehouseDto> {
         const payload = { id, data, author };
+
         try {
             const response = await fetch(`${this.API_BASE_URL}/warehouse/update/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
                 },
                 body: JSON.stringify(payload),
             });
@@ -52,36 +63,45 @@ class WarehouseService {
             if (!response.ok) {
                 const error = await response.json();
 
-                throw new BadRequestException(error.message);
+                throw error;
             }
 
             return response.json();
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error('Warehouse update error:', error);
 
-            throw new BadRequestException('Failed to update warehouse');
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
         }
     }
 
-    public async delete(id: string, author: string): Promise<void> {
+    public async delete(id: string, author: string, accessToken: string): Promise<void> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/warehouse/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Author': author,
+                    Authorization: `Bearer ${accessToken}`,
                 },
             });
 
             if (!response.ok) {
                 const error = await response.json();
 
-                throw new BadRequestException(error.message);
+                throw error;
             }
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error('Warehouse deletion error:', error);
 
-            throw new BadRequestException('Failed to delete warehouse');
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
         }
     }
 
@@ -92,14 +112,18 @@ class WarehouseService {
             if (!response.ok) {
                 const error = await response.json();
 
-                throw new BadRequestException(error.message);
+                throw error;
             }
 
             return response.json();
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error('Fetching warehouses error:', error);
 
-            throw new BadRequestException('Failed to fetch warehouses');
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
         }
     }
 
@@ -114,10 +138,14 @@ class WarehouseService {
             }
 
             return response.json();
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error('Fetching warehouse error:', error);
 
-            throw new BadRequestException('Failed to find warehouse');
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
         }
     }
 }
