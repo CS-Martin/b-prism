@@ -6,8 +6,6 @@ import { options } from '../../api/auth/[...nextauth]/options';
 export default async function AdminDashboardPage() {
     const session = await getServerSession(options);
 
-    console.log(session);
-
     return (
         <div className='px-3'>
             <Topbar

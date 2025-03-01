@@ -1,4 +1,3 @@
-import { UserRole } from '@b-prism/enums';
 import { VerificationDto } from '@dto';
 
 class RoleChangeService {

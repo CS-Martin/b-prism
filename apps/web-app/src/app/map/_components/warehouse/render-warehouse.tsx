@@ -1,4 +1,3 @@
-import { WarehouseDto } from '@dto';
 import { Layer, Source, useMap } from 'react-map-gl';
 import UpdateWarehouseDialog from './update.warehouse-dialog';
 import { useEffect, useState } from 'react';

@@ -19,6 +19,7 @@ import { RenderRoadNetwork } from './_components/road-network/render-road-networ
 import { useDisplayDamagedRoads, useDisplayFixedRoadNetworkByBounds } from '../../hooks/road-network.hook';
 import FetchingIndicator from './_components/fetching-indicator';
 import { AppSidebar } from '../../components/sidebar';
+import { TyphoonLayer } from './_components/typhoon-simulation/typhoon-layer';
 
 interface MarkerType {
     longitude: string;
@@ -194,6 +195,7 @@ const MapPage = () => {
 
                     {isMapLoaded && (
                         <>
+                            <TyphoonLayer />
                             <RenderRoadNetwork
                                 fixedRoadNetworkData={fixedRoadNetwork}
                                 fetchFixedRoadsByBounds={fetchFixedRoadsByBounds}
