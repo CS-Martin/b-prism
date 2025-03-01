@@ -13,8 +13,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@b-prism/shadcn-ui/index';
-import { ChevronUp, Link, LogIn, LogOut } from 'lucide-react';
+import { ChevronUp, LogIn, LogOut } from 'lucide-react';
 import { Session } from 'next-auth';
+import Link from 'next/link';
 
 interface SidebarFooterProps {
     user?: Session['user'];
