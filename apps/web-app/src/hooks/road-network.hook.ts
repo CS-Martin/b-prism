@@ -37,13 +37,12 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
 
     const fetchFixedRoadsByBounds = useCallback(async () => {
         if (!mapRef.current) {
-            console.log("MapRef is null, can't fetch bounds.");
             return;
         }
 
         const bounds = mapRef.current.getBounds();
+
         if (!bounds) {
-            console.log('Bounds are null, skipping fetch.');
             return;
         }
 
@@ -80,24 +79,20 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
 
     useEffect(() => {
         if (!mapRef.current) {
-            console.log('Waiting for map to load...');
             return;
         }
 
         const map = mapRef.current;
-        console.log('Map is loaded! Attaching moveend event listener.');
 
         fetchFixedRoadsByBounds(); // Initial fetch
 
         const handleMoveEnd = () => {
-            console.log('Map moved! Fetching new bounds...');
             debouncedFetchFixedRoadsByBounds();
         };
 
         map?.on('moveend', handleMoveEnd);
 
         return () => {
-            console.log('Cleaning up moveend event listener.');
             map?.off('moveend', handleMoveEnd);
             debouncedFetchFixedRoadsByBounds.cancel(); // Cancel pending debounced calls on unmount
         };

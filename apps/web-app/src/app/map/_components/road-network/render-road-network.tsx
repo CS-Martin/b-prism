@@ -25,7 +25,6 @@ export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, isMa
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const hoveredRoadId = useRef<string | null>(null);
-    console.log(isDialogOpen);
 
     const fixedRoadNetworkGeoformat =
         fixedRoadNetworkData?.map((feature: RoadNetworkDto, index: number) => ({
@@ -77,8 +76,6 @@ export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, isMa
 
             const clickedRoad = road[0];
             const clickedRoadId = clickedRoad.properties?.id;
-
-            console.log(clickedRoad);
 
             setSelectedRoadId(clickedRoadId);
             setIsDamaged(clickedRoad.properties?.is_damaged ?? false);

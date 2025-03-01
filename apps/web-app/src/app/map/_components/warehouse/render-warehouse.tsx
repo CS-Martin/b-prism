@@ -1,16 +1,17 @@
-import { WarehouseDto } from '@dto';
 import { Layer, Source, useMap } from 'react-map-gl';
 import UpdateWarehouseDialog from './update.warehouse-dialog';
 import { useEffect, useState } from 'react';
+import { Session } from 'next-auth';
 
 interface RenderWarehouseProps {
     geoJsonData: any;
     isMapLoaded: boolean;
     visibility: { warehouses: boolean };
     selectedAction: string | null;
+    session?: Session | null;
 }
 
-const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction }: RenderWarehouseProps) => {
+const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction, session }: RenderWarehouseProps) => {
     const { current: map } = useMap();
 
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState<boolean>(false);
@@ -35,7 +36,6 @@ const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction 
 
                 if (!map.hasImage('warehouse-icon')) {
                     map.addImage('warehouse-icon', image);
-                    console.log('Warehouse icon added to map');
                 }
             } catch (error) {
                 console.error('Error loading warehouse icon');
@@ -106,6 +106,7 @@ const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction 
                 warehouseId={warehouseId}
                 isOpen={isUpdateDialogOpen}
                 setIsOpen={setIsUpdateDialogOpen}
+                session={session}
             />
         </>
     );

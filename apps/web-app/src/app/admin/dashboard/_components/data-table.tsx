@@ -19,6 +19,11 @@ import {
 } from '@b-prism/shadcn-ui/index';
 import { UserRole } from '@b-prism/enums';
 import { useState } from 'react';
+import { useDisplayUsers } from '@b-prism/web-app/admin-dashboard-hooks';
+import { createColumns } from './columns';
+import { AppSidebar } from 'apps/web-app/src/components/sidebar';
+import { useRoleChange } from 'apps/web-app/src/hooks/role-change.hook';
+import { Session } from 'next-auth';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -69,6 +74,35 @@ function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize:
         </div>
     );
 }
+
+export const DataTableContent = ({ session }: { session: Session | null }) => {
+    const { users, isLoading: isFetchingUser, fetchAllUsers } = useDisplayUsers();
+    const { roleChange, isLoading: isChangingRole } = useRoleChange();
+
+    const handleRoleChange = async (userId: string, newRole: UserRole) => {
+        if (!session?.user.accessToken) return;
+
+        console.log(userId, newRole);
+
+        const success = await roleChange(userId, newRole, session?.user.accessToken);
+
+        if (success) {
+            fetchAllUsers();
+        }
+    };
+
+    const columns = createColumns(handleRoleChange);
+
+    return (
+        <div className='prism-card-bg p-5 rounded-md mt-5'>
+            <DataTable
+                columns={columns}
+                data={users}
+                handleRoleChange={handleRoleChange}
+            />
+        </div>
+    );
+};
 
 export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);

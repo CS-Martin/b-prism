@@ -26,23 +26,23 @@ import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { error } from 'console';
 import { BadRequestException } from '@nestjs/common';
+import { Session } from 'next-auth';
 
 interface DialogProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
     warehouseId: string;
+    session?: Session | null;
 }
 
-const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, warehouseId }) => {
+const UpdateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, warehouseId, session }) => {
     const { toast } = useToast();
-    const { data: session } = useSession();
-
-    const isDisabled = !session;
 
     const { updateWarehouse } = useUpdateWarehouse();
     const { warehouse } = useFindOneWarehouse(warehouseId);
 
     const user = session?.user;
+    const isDisabled = !session;
 
     // Initialize react-hook-form with default values
     const { handleSubmit, reset, register } = useForm<UpdateWarehouseDto>({
@@ -99,7 +99,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                 throw new Error('Warehouse name is required');
             }
 
-            await updateWarehouse(warehouseId, formattedData, `${user.given_name} ${user.family_name}`);
+            await updateWarehouse(warehouseId, formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
             setIsOpen(false);
         } catch (error) {
             if (error instanceof Error) {
@@ -404,4 +404,4 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
     );
 };
 
-export default CreateWarehouseDialog;
+export default UpdateWarehouseDialog;

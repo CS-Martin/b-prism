@@ -23,7 +23,9 @@ import { CreateDispensingPointDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 import { Type } from '@prisma/client';
 import InputField from 'apps/web-app/src/components/forms/input-field';
-import { useCreateDispensingPoint, useGetAddress } from 'apps/web-app/src/hooks/map.hook';
+import { useCreateDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
+import { useGetAddress } from 'apps/web-app/src/hooks/map.hook';
+import { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -38,6 +40,7 @@ interface DialogProps {
     setIsOpen: (isOpen: boolean) => void;
     marker: MarkerType;
     fetchAllDispensingPoints: () => void;
+    session?: Session | null;
 }
 
 const AddressField = ({ id, label, placeholder, control, fieldName }: { id: string; label: string; placeholder: string; control: any; fieldName: string }) => (
@@ -58,9 +61,9 @@ const AddressField = ({ id, label, placeholder, control, fieldName }: { id: stri
     </div>
 );
 
-const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllDispensingPoints }) => {
+const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllDispensingPoints, session }) => {
+    console.log(session?.user);
     const { toast } = useToast();
-    const { data: session } = useSession();
     const { getAddress, address } = useGetAddress();
     const { createDispensingPoint } = useCreateDispensingPoint();
 
@@ -125,7 +128,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                 throw new Error('Dispensing Point Name is required');
             }
 
-            await createDispensingPoint(formattedData, `${user.given_name} ${user.family_name}`);
+            await createDispensingPoint(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
             fetchAllDispensingPoints();
             setIsOpen(false);
         } catch (error) {

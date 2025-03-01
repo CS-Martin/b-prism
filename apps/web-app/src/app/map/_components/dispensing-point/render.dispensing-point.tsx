@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Source, Layer, useMap } from 'react-map-gl';
 import UpdateDispensingPointDialog from './update.dispensing-point-dialog';
+import { Session } from 'next-auth';
 
 interface RenderDispensingPointProps {
     geoJsonData: any;
     isMapLoaded: boolean;
     visibility: { dispensingPoints: boolean };
     selectedAction: string | null;
+    session?: Session | null;
 }
 
 /**
@@ -20,7 +22,7 @@ interface RenderDispensingPointProps {
  *
  * @returns {JSX.Element | null} The rendered component or null if the map is not loaded or the dispensing points layer is not visible.
  */
-const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedAction }: RenderDispensingPointProps) => {
+const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedAction, session }: RenderDispensingPointProps) => {
     const { current: map } = useMap();
 
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState<boolean>(false);
@@ -114,6 +116,7 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
                 dispensingPointId={dispensingPointId}
                 isOpen={isUpdateDialogOpen}
                 setIsOpen={setIsUpdateDialogOpen}
+                session={session}
             />
         </>
     );

@@ -1,20 +1,8 @@
 import { useEffect, useState } from 'react';
-import {
-    CreateDispensingPointDto,
-    CreateWarehouseDto,
-    DispensingPointDto,
-    RescuePostDto,
-    ResponseDto,
-    UpdateDispensingPointDto,
-    UpdateWarehouseDto,
-    WarehouseAddressDto,
-    WarehouseDto,
-} from '@dto';
+import { CreateWarehouseDto, ResponseDto, UpdateWarehouseDto, WarehouseAddressDto, WarehouseDto } from '@dto';
 import { warehouseService } from '../services/warehouse.service';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { dispensingPointService } from '../services/dispensing-point.service';
 import { mapboxService } from '../services/mapbox.api.service';
-import { rescuePostService } from '../services/rescue-post.service';
 
 /**
  * @description Hooks for warehouses
@@ -63,14 +51,26 @@ export const useFindOneWarehouse = (id: string) => {
 export const useCreateWarehouse = () => {
     const { toast } = useToast();
 
-    const createWarehouse = async (data: CreateWarehouseDto, author: string) => {
-        await warehouseService.create(data, author);
+    const createWarehouse = async (data: CreateWarehouseDto, author: string, accessToken: string) => {
+        try {
+            await warehouseService.create(data, author, accessToken);
 
-        toast({
-            title: 'Success!',
-            description: `The warehouse ${data.name} has been created successfully`,
-            variant: 'success',
-        });
+            toast({
+                title: 'Success!',
+                description: `The warehouse "${data.name}" has been created successfully.`,
+                variant: 'success',
+            });
+        } catch (error: any) {
+            console.error('Error creating warehouse:', error);
+
+            const errorMessage = error.message || 'Failed to create the warehouse. Please try again.';
+
+            toast({
+                title: 'Error!',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        }
     };
 
     return { createWarehouse };
@@ -79,14 +79,26 @@ export const useCreateWarehouse = () => {
 export const useUpdateWarehouse = () => {
     const { toast } = useToast();
 
-    const updateWarehouse = async (id: string, data: UpdateWarehouseDto, author: string) => {
-        await warehouseService.update(id, data, author);
+    const updateWarehouse = async (id: string, data: UpdateWarehouseDto, author: string, accessToken: string) => {
+        try {
+            await warehouseService.update(id, data, author, accessToken);
 
-        toast({
-            title: 'Success!',
-            description: `The warehouse ${data.name} has been updated successfully`,
-            variant: 'success',
-        });
+            toast({
+                title: 'Success!',
+                description: `The warehouse ${data.name} has been updated successfully`,
+                variant: 'success',
+            });
+        } catch (error: any) {
+            console.error('Error creating warehouse:', error);
+
+            const errorMessage = error.message || 'Failed to update the warehouse. Please try again.';
+
+            toast({
+                title: 'Error!',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        }
     };
 
     return { updateWarehouse };
@@ -95,133 +107,28 @@ export const useUpdateWarehouse = () => {
 export const useDeleteWarehouse = () => {
     const { toast } = useToast();
 
-    const deleteWarehouse = async (id: string, author: string) => {
-        await warehouseService.delete(id, author);
+    const deleteWarehouse = async (id: string, author: string, accessToken: string) => {
+        try {
+            await warehouseService.delete(id, author, accessToken);
 
-        toast({
-            title: 'Warehouse deleted successfully!',
-            variant: 'success',
-        });
+            toast({
+                title: 'Warehouse deleted successfully!',
+                variant: 'success',
+            });
+        } catch (error: any) {
+            console.error('Error creating warehouse:', error);
+
+            const errorMessage = error.message || 'Failed to delete the warehouse. Please try again.';
+
+            toast({
+                title: 'Error!',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        }
     };
 
     return { deleteWarehouse };
-};
-
-/**
- * @description Hooks for dispensing points
- */
-
-export const useDisplayDispensingPoints = () => {
-    const [dispensingPoints, setDispensingPoints] = useState<DispensingPointDto[]>([]);
-
-    const fetchAllDispensingPoints = async () => {
-        const response: ResponseDto<DispensingPointDto[]> = await dispensingPointService.fetchAllDispensingPoints();
-
-        if (response.statusCode !== 200) {
-            throw new Error('Failed to fetch dispensing points');
-        }
-
-        setDispensingPoints(response.body);
-    };
-
-    useEffect(() => {
-        fetchAllDispensingPoints();
-    }, []);
-
-    return { dispensingPoints, fetchAllDispensingPoints };
-};
-
-export const useFindOneDispensingPoint = (id: string) => {
-    const [dispensingPoint, setDispensingPoint] = useState<DispensingPointDto>({} as DispensingPointDto);
-
-    const fetchOneDispensingPoint = async () => {
-        const response: ResponseDto<DispensingPointDto> = await dispensingPointService.findOne(id);
-
-        if (response.statusCode !== 200) {
-            throw new Error('Failed to fetch dispensing point');
-        }
-
-        setDispensingPoint(response.body);
-    };
-
-    useEffect(() => {
-        fetchOneDispensingPoint();
-    }, [id]);
-
-    return { dispensingPoint, fetchOneDispensingPoint };
-};
-
-export const useCreateDispensingPoint = () => {
-    const { toast } = useToast();
-
-    const createDispensingPoint = async (data: CreateDispensingPointDto, author: string) => {
-        await dispensingPointService.create(
-            {
-                ...data,
-                capacity: Number(data.capacity),
-            },
-            author,
-        );
-
-        toast({
-            title: 'Success!',
-            description: `The dispensing point ${data.name} has been created successfully`,
-            variant: 'success',
-        });
-    };
-
-    return { createDispensingPoint };
-};
-
-export const useUpdateDispensingPoint = () => {
-    const { toast } = useToast();
-
-    const updateDispensingPoint = async (id: string, data: UpdateDispensingPointDto, author: string) => {
-        await dispensingPointService.update(id, data, author);
-
-        toast({
-            title: 'Success!',
-            description: `The dispensing point ${data.name} has been updated successfully`,
-            variant: 'success',
-        });
-    };
-
-    return { updateDispensingPoint };
-};
-
-export const useDeleteDispensingPoint = () => {
-    const { toast } = useToast();
-
-    const deleteDispensingPoint = async (id: string, author: string) => {
-        await dispensingPointService.delete(id, author);
-
-        toast({
-            title: 'Dispensing point deleted successfully!',
-            variant: 'success',
-        });
-    };
-
-    return { deleteDispensingPoint };
-};
-
-export const useDisplayRescuePosts = () => {
-    const [rescuePosts, setRescuePosts] = useState<RescuePostDto[]>([]);
-
-    const fetchAllRescuePosts = async () => {
-        const response: ResponseDto<RescuePostDto[]> = await rescuePostService.findAll();
-
-        if (response.statusCode !== 200) {
-            throw new Error('Failed to fetch rescue posts');
-        }
-
-        setRescuePosts(response.body);
-    };
-
-    useEffect(() => {
-        fetchAllRescuePosts();
-    }, []);
-
-    return { rescuePosts };
 };
 
 /**

@@ -22,7 +22,8 @@ import { UpdateDispensingPointDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 import { Type } from '@prisma/client';
 import InputField from 'apps/web-app/src/components/forms/input-field';
-import { useUpdateDispensingPoint, useFindOneDispensingPoint } from 'apps/web-app/src/hooks/map.hook';
+import { useFindOneDispensingPoint, useUpdateDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
+import { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -31,10 +32,10 @@ interface DialogProps {
     dispensingPointId: string;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
+    session?: Session | null;
 }
 
-const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId, isOpen, setIsOpen }) => {
-    const { data: session } = useSession();
+const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId, isOpen, setIsOpen, session }) => {
     const { dispensingPoint } = useFindOneDispensingPoint(dispensingPointId);
     const { updateDispensingPoint } = useUpdateDispensingPoint();
 
@@ -76,7 +77,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
             user_id: user.id,
         };
 
-        await updateDispensingPoint(dispensingPointId, formattedData, `${user.given_name} ${user.family_name}`);
+        await updateDispensingPoint(dispensingPointId, formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
         setIsOpen(false);
     };
 

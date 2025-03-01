@@ -2,11 +2,11 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger, Label, ScrollArea,
 import { ChevronRight, Locate, MessageSquareMore, PanelRight, ShieldAlert } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import Draggable from 'react-draggable';
-import { useDisplayRescuePosts } from '../../../../hooks/map.hook';
 import mapboxgl from 'mapbox-gl';
 import { MapRef } from 'react-map-gl';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { RescuePostCard } from './rescue-post-card';
+import { useDisplayRescuePosts } from 'apps/web-app/src/hooks/rescue-post.hook';
 
 const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
     const { toast } = useToast();

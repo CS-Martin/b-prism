@@ -1,42 +1,48 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JsonWebTokenError, JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+    private readonly logger = new Logger(AuthGuard.name);
+
     constructor(private readonly jwtService: JwtService) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
 
-        console.log('INSIDE GUARD', token);
-
         if (!token) {
+            this.logger.warn('No token provided');
+
             throw new UnauthorizedException();
         }
 
         try {
-            console.log('TRYING');
-            console.log('JWT SECRET:', process.env['JWT_SECRET']);
+            this.logger.debug('Attempting token verification...');
 
             const payload = await this.jwtService.verifyAsync(token, {
                 secret: process.env['JWT_SECRET'],
             });
 
-            console.log('PAYLOAD~', payload);
+            this.logger.log(`Token verified successfully for user: ${payload?.userId || 'Unknown'}`);
 
             // 💡 We're assigning the payload to the request object here
             // so that we can access it in our route handlers
             request['user'] = payload;
         } catch (error) {
             if (error instanceof TokenExpiredError) {
-                console.log('ERROR: TOKEN HAS EXPIRED');
+                this.logger.error('Token has expired', error.stack);
+
                 throw new UnauthorizedException('Token has expired. Please refresh your token.');
             } else if (error instanceof JsonWebTokenError) {
-                console.log('INVALID TOKEN');
+                this.logger.error('Invalid token provided', error.stack);
+
                 throw new ForbiddenException('Invalid token');
             }
+
+            this.logger.error('Authorization failed', error);
+
             throw new UnauthorizedException('Unauthorized');
         }
 
