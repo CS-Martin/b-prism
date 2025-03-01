@@ -62,6 +62,7 @@ const AddressField = ({ id, label, placeholder, control, fieldName }: { id: stri
 );
 
 const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllDispensingPoints, session }) => {
+    console.log(session?.user);
     const { toast } = useToast();
     const { getAddress, address } = useGetAddress();
     const { createDispensingPoint } = useCreateDispensingPoint();

@@ -167,7 +167,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                         pitch: 75,
                     }}
                     style={{ position: 'absolute', width: '100%', height: '100%' }}
-                    mapStyle={'mapbox://styles/cs-martin/cm6ncgu5p007601sg2skp6qpr'}
+                    mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                     onClick={handleMapClick}
                     onLoad={(e) => {
                         // Load the map first before loading layers
@@ -193,6 +193,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                             setIsOpen={setIsOpen}
                             marker={marker}
                             fetchAllDispensingPoints={fetchAllDispensingPoints}
+                            session={session}
                         />
                     )}
 
