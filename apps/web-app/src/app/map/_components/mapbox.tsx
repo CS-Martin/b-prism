@@ -7,7 +7,7 @@ import { useEffect, useRef, useState, useMemo } from 'react';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import { useDisplayDispensingPoints, useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
+import { useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
 import CreateWarehouseDialog from './warehouse/create-warehouse-dialog';
 import RenderWarehouse from './warehouse/render-warehouse';
 import DeleteItem from './delete-item';
@@ -21,6 +21,7 @@ import FetchingIndicator from './fetching-indicator';
 import { TyphoonLayer } from './typhoon-simulation/typhoon-layer';
 import { AppSidebar } from 'apps/web-app/src/components/sidebar';
 import { Session } from 'next-auth';
+import { useDisplayDispensingPoints } from 'apps/web-app/src/hooks/dispensing-point.hook';
 
 interface MarkerType {
     longitude: string;
@@ -243,6 +244,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                     }}
                     fetchAllWarehouses={fetchAllWarehouses}
                     fetchAllDispensingPoints={fetchAllDispensingPoints}
+                    session={session}
                 />
             )}
             <AppSidebar setSelectedAction={(action: string | null) => setSelectedAction(action as SelectedActionType | null)} />

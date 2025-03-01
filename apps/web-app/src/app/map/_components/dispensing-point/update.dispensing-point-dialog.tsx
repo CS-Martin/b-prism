@@ -22,7 +22,7 @@ import { UpdateDispensingPointDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 import { Type } from '@prisma/client';
 import InputField from 'apps/web-app/src/components/forms/input-field';
-import { useUpdateDispensingPoint, useFindOneDispensingPoint } from 'apps/web-app/src/hooks/map.hook';
+import { useFindOneDispensingPoint, useUpdateDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';

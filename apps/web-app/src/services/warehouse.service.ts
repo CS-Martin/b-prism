@@ -61,9 +61,16 @@ class WarehouseService {
             });
 
             if (!response.ok) {
-                const error = await response.json();
+                let errorMessage = 'Failed to update warehouse';
 
-                throw error;
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
             }
 
             return response.json();
@@ -90,9 +97,16 @@ class WarehouseService {
             });
 
             if (!response.ok) {
-                const error = await response.json();
+                let errorMessage = 'Failed to delete warehouse';
 
-                throw error;
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
             }
         } catch (error: any) {
             console.error('Warehouse deletion error:', error);
@@ -110,9 +124,16 @@ class WarehouseService {
             const response = await fetch(`${this.API_BASE_URL}/warehouse`);
 
             if (!response.ok) {
-                const error = await response.json();
+                let errorMessage = 'Failed to fetch all warehouse';
 
-                throw error;
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
             }
 
             return response.json();
@@ -132,9 +153,16 @@ class WarehouseService {
             const response = await fetch(`${this.API_BASE_URL}/warehouse/${id}`);
 
             if (!response.ok) {
-                const error = await response.json();
+                let errorMessage = 'Failed to find warehouse';
 
-                throw new BadRequestException(error.message);
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
             }
 
             return response.json();

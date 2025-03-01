@@ -8,7 +8,7 @@ class DispensingPointService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_DISPENSING_POINT_SERVICE_API_PORT ?? ''}`;
     }
 
-    public async create(data: CreateDispensingPointDto, author: string): Promise<DispensingPointDto> {
+    public async create(data: CreateDispensingPointDto, author: string, accessToken: string): Promise<DispensingPointDto> {
         const payload = {
             data,
             author,
@@ -19,25 +19,37 @@ class DispensingPointService {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
                 },
                 body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
-                const error = await response.json();
+                let errorMessage = 'Failed to create dispensing point';
 
-                throw new BadRequestException(error.message);
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
             }
 
             return response.json();
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error('Dispensing point creation error:', error);
 
-            throw new BadRequestException('Failed to create dispensing point');
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
         }
     }
 
-    public async update(id: string, data: UpdateDispensingPointDto, author: string): Promise<DispensingPointDto> {
+    public async update(id: string, data: UpdateDispensingPointDto, author: string, accessToken: string): Promise<DispensingPointDto> {
         const payload = { id, data, author };
 
         try {
@@ -45,43 +57,67 @@ class DispensingPointService {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
                 },
                 body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
-                const error = await response.json();
+                let errorMessage = 'Failed to update dispensing point';
 
-                throw new BadRequestException(error.message);
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
             }
 
             return response.json();
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error('Failed to update dispensing point:', error);
 
-            throw new BadRequestException('Failed to update dispensing point');
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
         }
     }
 
-    public async delete(id: string, author: string): Promise<void> {
+    public async delete(id: string, author: string, accessToken: string): Promise<void> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-point/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Author': author,
+                    Authorization: `Bearer ${accessToken}`,
                 },
             });
 
             if (!response.ok) {
-                const error = await response.json();
+                let errorMessage = 'Failed to delete dispensing point';
 
-                throw new BadRequestException(error.message);
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
             }
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error('Dispensing point deletion error:', error);
 
-            throw new BadRequestException('Failed to delete dispensing point');
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
         }
     }
 
@@ -90,16 +126,27 @@ class DispensingPointService {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-point`);
 
             if (!response.ok) {
-                const error = await response.json();
+                let errorMessage = 'Failed to fetch all dispensing points';
 
-                throw new BadRequestException(error.message);
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
             }
 
             return response.json();
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error('Failed to fetch all dispensing points:', error);
 
-            throw new BadRequestException('Failed to fetch all dispensing points');
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
         }
     }
 
@@ -108,16 +155,27 @@ class DispensingPointService {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-point/${id}`);
 
             if (!response.ok) {
-                const error = await response.json();
+                let errorMessage = 'Failed to fetch one dispensing points';
 
-                throw new BadRequestException(error.message);
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
             }
 
             return response.json();
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error('Failed to fetch one dispensing point:', error);
 
-            throw new BadRequestException('Failed to find dispensing point');
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
         }
     }
 }
