@@ -221,6 +221,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                                 isMapLoaded={isMapLoaded}
                                 visibility={visibility}
                                 selectedAction={selectedAction}
+                                session={session}
                             />
                         </>
                     )}
