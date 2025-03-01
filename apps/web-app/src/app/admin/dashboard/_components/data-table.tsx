@@ -22,6 +22,8 @@ import { useState } from 'react';
 import { useDisplayUsers } from '@b-prism/web-app/admin-dashboard-hooks';
 import { createColumns } from './columns';
 import { AppSidebar } from 'apps/web-app/src/components/sidebar';
+import { useRoleChange } from 'apps/web-app/src/hooks/role-change.hook';
+import { Session } from 'next-auth';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -73,19 +75,20 @@ function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize:
     );
 }
 
-export const DataTableContent = () => {
-    const { users, isLoading, fetchAllUsers } = useDisplayUsers();
+export const DataTableContent = ({ session }: { session: Session | null }) => {
+    const { users, isLoading: isFetchingUser, fetchAllUsers } = useDisplayUsers();
+    const { roleChange, isLoading: isChangingRole } = useRoleChange();
 
     const handleRoleChange = async (userId: string, newRole: UserRole) => {
-        await fetch('http://localhost:3002/verification/verify', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userId, role: newRole }),
-        });
+        if (!session?.user.accessToken) return;
 
-        fetchAllUsers();
+        console.log(userId, newRole);
+
+        const success = await roleChange(userId, newRole, session?.user.accessToken);
+
+        if (success) {
+            fetchAllUsers();
+        }
     };
 
     const columns = createColumns(handleRoleChange);

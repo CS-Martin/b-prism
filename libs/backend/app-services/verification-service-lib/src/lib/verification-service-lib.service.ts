@@ -11,6 +11,7 @@ export class VerificationServiceLibService implements VerificationServiceAbstrac
     ) {}
 
     async verifyUser(userId: string, role: string): Promise<void> {
+        console.log('HERE', userId, role);
         if (!userId || !role) {
             throw new Error('Invalid user ID or role');
         }
