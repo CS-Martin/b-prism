@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { ResponseDto, UserDto } from '@dto';
 import { userService } from '../services/user.service';

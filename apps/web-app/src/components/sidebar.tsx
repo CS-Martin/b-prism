@@ -1,29 +1,13 @@
+'use client';
+
 import { useSession } from 'next-auth/react';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-    DropdownMenuItem,
-    ModeToggle,
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    useSidebar,
-} from '@b-prism/shadcn-ui/index';
+import { Sidebar, SidebarContent, useSidebar } from '@b-prism/shadcn-ui/index';
 import { useState } from 'react';
-import { ChevronUp, LogIn, LogOut } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@b-prism/shadcn-ui/index';
-import Link from 'next/link';
 import { SidebarHeaderComponent } from './sidebar-components/sidebar-header';
 import { SidebarGeneralLinks } from './sidebar-components/sidebar-general-links';
 import { SidebarAdminLinks } from './sidebar-components/sidebar-admin-links';
 import { mapActions, SidebarMapActions } from './sidebar-components/sidebar-map-actions';
-import { getServerSession } from 'next-auth';
-import { options } from '../app/api/auth/[...nextauth]/options';
 import { SidebarFooterComponent } from './sidebar-components/sidebar-footer';
 
 interface AppSidebarProps {

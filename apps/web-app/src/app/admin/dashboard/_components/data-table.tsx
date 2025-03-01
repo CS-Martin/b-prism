@@ -19,6 +19,9 @@ import {
 } from '@b-prism/shadcn-ui/index';
 import { UserRole } from '@b-prism/enums';
 import { useState } from 'react';
+import { useDisplayUsers } from '@b-prism/web-app/admin-dashboard-hooks';
+import { createColumns } from './columns';
+import { AppSidebar } from 'apps/web-app/src/components/sidebar';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -69,6 +72,34 @@ function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize:
         </div>
     );
 }
+
+export const DataTableContent = () => {
+    const { users, isLoading, fetchAllUsers } = useDisplayUsers();
+
+    const handleRoleChange = async (userId: string, newRole: UserRole) => {
+        await fetch('http://localhost:3002/verification/verify', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId, role: newRole }),
+        });
+
+        fetchAllUsers();
+    };
+
+    const columns = createColumns(handleRoleChange);
+
+    return (
+        <div className='prism-card-bg p-5 rounded-md mt-5'>
+            <DataTable
+                columns={columns}
+                data={users}
+                handleRoleChange={handleRoleChange}
+            />
+        </div>
+    );
+};
 
 export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
