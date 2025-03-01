@@ -36,7 +36,6 @@ const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction,
 
                 if (!map.hasImage('warehouse-icon')) {
                     map.addImage('warehouse-icon', image);
-                    console.log('Warehouse icon added to map');
                 }
             } catch (error) {
                 console.error('Error loading warehouse icon');

@@ -14,7 +14,6 @@ export const TyphoonLayer = () => {
                 const response = await fetch('/img/cyclone-img.png');
 
                 if (!response.ok) {
-                    console.error('Failed to load cyclone image');
                     throw new Error('Failed to load cyclone image');
                 }
 
@@ -23,7 +22,6 @@ export const TyphoonLayer = () => {
 
                 if (!map.hasImage('cyclone-icon')) {
                     map.addImage('cyclone-icon', image);
-                    console.log('Cyclone icon added to map');
                 }
             } catch (error) {
                 console.error('Error loading cyclone icon:', error);
