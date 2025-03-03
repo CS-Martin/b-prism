@@ -8,19 +8,19 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/index';
-import { RoadNetworkDto, UserDto } from '@dto';
 import { useFixRoad } from 'apps/web-app/src/hooks/road-network.hook';
 import { useSession } from 'next-auth/react';
-import React from 'react';
+import React, { useState } from 'react';
 
 interface FixRoadModalProps {
-    roadId: string | undefined;
-    setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    roadId: string | null;
 }
 
-export const FixRoadModal = ({ roadId, setIsDialogOpen }: FixRoadModalProps) => {
+export const FixRoadModal = ({ roadId }: FixRoadModalProps) => {
     const { data: session } = useSession();
     const { fixRoad } = useFixRoad();
+
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
     const user = session?.user;
     const requestAuthor = `${user?.given_name} ${user?.family_name}`;
@@ -33,13 +33,13 @@ export const FixRoadModal = ({ roadId, setIsDialogOpen }: FixRoadModalProps) => 
     };
 
     const handleCancel = () => {
-        roadId = '';
+        roadId = null;
         setIsDialogOpen(false);
     };
 
     return (
         <AlertDialog
-            open={true}
+            open={isDialogOpen}
             onOpenChange={setIsDialogOpen}>
             <AlertDialogContent>
                 <AlertDialogHeader>
