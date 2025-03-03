@@ -39,16 +39,24 @@ class MapboxApiService {
             const excludeParam = excludedPoints ? `&exclude=${excludedPoints}` : '';
 
             const response = await fetch(
-                `https://api.mapbox.com/directions/v5/mapbox/${profile}/${start[0]},${start[1]};${destination[0]},${destination[1]}?geometries=geojson${excludeParam}&access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
+                `https://api.mapbox.com/directions/v5/mapbox/${profile}/${start[0]},${start[1]};${destination[0]},${destination[1]}?geometries=geojson${excludeParam}&language=en&access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
             );
 
+            if (response.status === 422) {
+                console.error('All routes to the destination are damaged. Cannot proceed.');
+
+                throw new Error('All routes to the destination are damaged. Cannot proceed.');
+            }
+
             if (!response.ok) {
+                console.log('?', response);
                 console.error('Failed to fetch directions from Mapbox Direction API  ');
 
                 throw new Error('Failed to fetch directions from Mapbox API.');
             }
 
             const data = await response.json();
+            console.log(data);
 
             if (data.code !== 'Ok') {
                 console.error('Failed to fetch directions from Mapbox Direction API  ');
