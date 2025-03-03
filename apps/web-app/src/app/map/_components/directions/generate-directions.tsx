@@ -13,6 +13,9 @@ export const GenerateDirections = () => {
     const [start, setStart] = useState<[number, number] | null>(null);
     const [destination, setDestination] = useState<[number, number] | null>(null);
 
+    // Fetch all damaged roads
+    const damagedRoads = map?.queryRenderedFeatures;
+
     useEffect(() => {
         if (!map) return;
 

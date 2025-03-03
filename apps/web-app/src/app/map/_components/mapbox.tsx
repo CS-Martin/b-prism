@@ -204,8 +204,6 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                                 fetchFixedRoadsByBounds={fetchFixedRoadsByBounds}
                                 damagedRoadsData={damagedRoads}
                                 fetchDamagedRoads={fetchDamagedRoads}
-                                isMapLoaded={isMapLoaded}
-                                visibility={visibility}
                             />
 
                             <RenderWarehouse

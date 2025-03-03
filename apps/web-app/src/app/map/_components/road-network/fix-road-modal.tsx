@@ -8,30 +8,27 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/index';
-import { UserDto } from '@dto';
-import { useDestroyRoad } from 'apps/web-app/src/hooks/road-network.hook';
+import { RoadNetworkDto, UserDto } from '@dto';
+import { useFixRoad } from 'apps/web-app/src/hooks/road-network.hook';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 
-interface DestroyRoadProps {
+interface FixRoadModalProps {
     roadId: string | undefined;
     setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    fetchDamagedRoads: () => void;
 }
 
-export const DestroyRoad = ({ roadId, setIsDialogOpen, fetchDamagedRoads }: DestroyRoadProps) => {
+export const FixRoadModal = ({ roadId, setIsDialogOpen }: FixRoadModalProps) => {
     const { data: session } = useSession();
-    const { destroyRoad } = useDestroyRoad();
+    const { fixRoad } = useFixRoad();
 
     const user = session?.user;
     const requestAuthor = `${user?.given_name} ${user?.family_name}`;
 
     const handleRoadDestroy = async () => {
         if (roadId) {
-            await destroyRoad(roadId, requestAuthor);
+            await fixRoad(roadId, requestAuthor);
             setIsDialogOpen(false);
-
-            fetchDamagedRoads();
         }
     };
 
@@ -46,18 +43,18 @@ export const DestroyRoad = ({ roadId, setIsDialogOpen, fetchDamagedRoads }: Dest
             onOpenChange={setIsDialogOpen}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Confirm Road Damage</AlertDialogTitle>
+                    <AlertDialogTitle>Confirm Road Repair</AlertDialogTitle>
                     <AlertDialogDescription>
-                        You are about to mark this road as <b>damaged</b>. This action will update the road&apos;s status to indicate that it is <b>no longer passable</b>. Are you
-                        sure you want to proceed?
+                        You are about to mark this road as passable. This action will update the road&apos;s status to indicate that it is no longer damaged. Are you sure you want
+                        to proceed?
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={handleCancel}>No, Keep it</AlertDialogCancel>
                     <AlertDialogAction
-                        className='bg-red-500 hover:bg-red-600 text-white'
+                        className='bg-green-500 hover:bg-green-600 text-white'
                         onClick={handleRoadDestroy}>
-                        Yes, damage it!
+                        Yes, repair it!
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
