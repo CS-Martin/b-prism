@@ -1,20 +1,22 @@
 'use client';
 
 import { Input } from '@b-prism/shadcn-ui/index';
+import { RoadNetworkDto } from '@dto';
 import { useGetDirections } from 'apps/web-app/src/hooks/map.hook';
 import { mapboxService } from 'apps/web-app/src/services/mapbox.api.service';
 import { useEffect, useState } from 'react';
 import { useMap } from 'react-map-gl';
 
-export const GenerateDirections = () => {
+interface GenerateDirectionsProps {
+    damagedRoads: RoadNetworkDto[];
+}
+
+export const GenerateDirections = ({ damagedRoads }: GenerateDirectionsProps) => {
     const { current: map } = useMap();
     const { directions, getDirections, isLoading } = useGetDirections();
 
     const [start, setStart] = useState<[number, number] | null>(null);
     const [destination, setDestination] = useState<[number, number] | null>(null);
-
-    // Fetch all damaged roads
-    const damagedRoads = map?.queryRenderedFeatures;
 
     useEffect(() => {
         if (!map) return;
@@ -26,8 +28,6 @@ export const GenerateDirections = () => {
 
             const id = feature[0]?.layer?.id;
             const [lng, lat] = (feature[0].geometry as GeoJSON.Point).coordinates;
-
-            console.log(lng, lat);
 
             // Should only be dp and warehouse layer
             if (id !== 'warehouse_layer' && id !== 'dispensing_point_layer') return;
@@ -48,7 +48,7 @@ export const GenerateDirections = () => {
 
     useEffect(() => {
         if (start && destination) {
-            getDirections(start, destination, 'driving')
+            getDirections(start, destination, damagedRoads, 'driving')
                 .then(() => console.log('Directions:', directions))
                 .catch((err) => console.error('Error fetching directions:', err));
         }

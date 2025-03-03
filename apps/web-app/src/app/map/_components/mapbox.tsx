@@ -224,7 +224,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                                 session={session}
                             />
 
-                            <GenerateDirections />
+                            <GenerateDirections damagedRoads={damagedRoads} />
                         </>
                     )}
 
