@@ -8,45 +8,41 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/index';
+import { UserDto } from '@dto';
 import { useDestroyRoad } from 'apps/web-app/src/hooks/road-network.hook';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 interface DestroyRoadModalProps {
-    selectedRoadId: string | null;
+    roadId: string | undefined;
+    setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
     fetchDamagedRoads: () => void;
 }
 
-export const DestroyRoadModal = ({ selectedRoadId, fetchDamagedRoads }: DestroyRoadModalProps) => {
+export const DestroyRoadModal = ({ roadId, setIsDialogOpen, fetchDamagedRoads }: DestroyRoadModalProps) => {
     const { data: session } = useSession();
     const { destroyRoad } = useDestroyRoad();
 
-    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-
     const user = session?.user;
-    const requestAuthor = `${user?.given_name ?? ''} ${user?.family_name ?? ''}`.trim() || 'Unknown User';
-
-    useEffect(() => {
-        if (selectedRoadId) {
-            setIsDialogOpen(true);
-        }
-    }, [selectedRoadId]);
+    const requestAuthor = `${user?.given_name} ${user?.family_name}`;
 
     const handleRoadDestroy = async () => {
-        if (selectedRoadId) {
-            await destroyRoad(selectedRoadId, requestAuthor);
+        if (roadId) {
+            await destroyRoad(roadId, requestAuthor);
+            setIsDialogOpen(false);
+
             fetchDamagedRoads();
-            setIsDialogOpen(false); // Close modal after action
         }
     };
 
     const handleCancel = () => {
-        setIsDialogOpen(false); // Close modal on cancel
+        roadId = '';
+        setIsDialogOpen(false);
     };
 
     return (
         <AlertDialog
-            open={isDialogOpen}
+            open={true}
             onOpenChange={setIsDialogOpen}>
             <AlertDialogContent>
                 <AlertDialogHeader>
