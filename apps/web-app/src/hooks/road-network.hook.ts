@@ -10,6 +10,7 @@ export const useDisplayDamagedRoads = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const fetchDamagedRoads = async () => {
+        console.log('FETCHING DAMAGED ROADS');
         try {
             setIsLoading(true);
 

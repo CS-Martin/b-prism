@@ -1,9 +1,9 @@
 import { Layer, Source, useMap } from 'react-map-gl';
 import { useEffect, useState, useRef } from 'react';
-import { DestroyRoad } from './destroy-road';
-import { FixRoad } from './fix-road';
 import { useSession } from 'next-auth/react';
 import { RoadNetworkDto } from '@dto';
+import { FixRoadModal } from './fix-road-modal';
+import { DestroyRoadModal } from './destroy-road-modal';
 
 interface RenderRoadNetworkProps {
     fixedRoadNetworkData: RoadNetworkDto[];
@@ -76,6 +76,8 @@ export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, isMa
 
             const clickedRoad = road[0];
             const clickedRoadId = clickedRoad.properties?.id;
+
+            console.log(clickedRoad);
 
             setSelectedRoadId(clickedRoadId);
             setIsDamaged(clickedRoad.properties?.is_damaged ?? false);
@@ -163,14 +165,14 @@ export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, isMa
                 session &&
                 selectedRoadId &&
                 (isDamaged ? (
-                    <FixRoad
+                    <FixRoadModal
                         setIsDialogOpen={setIsDialogOpen}
                         roadId={selectedRoadId}
                         fetchFixRoadByBounds={fetchFixedRoadsByBounds}
                         UpdateFixedRoad={UpdateFixedRoad}
                     />
                 ) : (
-                    <DestroyRoad
+                    <DestroyRoadModal
                         setIsDialogOpen={setIsDialogOpen}
                         roadId={selectedRoadId}
                         fetchDamagedRoads={fetchDamagedRoads}

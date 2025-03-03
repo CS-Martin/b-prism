@@ -4,7 +4,6 @@ import { SelectedActionType } from '@b-prism/enums';
 import Map, { MapMouseEvent, MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useEffect, useRef, useState, useMemo } from 'react';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
@@ -22,6 +21,7 @@ import { TyphoonLayer } from './typhoon-simulation/typhoon-layer';
 import { AppSidebar } from 'apps/web-app/src/components/sidebar';
 import { Session } from 'next-auth';
 import { useDisplayDispensingPoints } from 'apps/web-app/src/hooks/dispensing-point.hook';
+import { GenerateDirections } from './directions/generate-directions';
 
 interface MarkerType {
     longitude: string;
@@ -98,17 +98,16 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                 const id = clickedItem.properties?.id;
 
                 if (id) {
-                    console.log('DELETE');
                     handleMarkerClick(type, id);
                 }
             };
 
-            mapboxMap.on('click', 'warehouse_points', handleLayerClick);
-            mapboxMap.on('click', 'dispensing_points', handleLayerClick);
+            mapboxMap.on('click', 'warehouse_layer', handleLayerClick);
+            mapboxMap.on('click', 'dispensing_point_layer', handleLayerClick);
 
             return () => {
-                mapboxMap.off('click', 'warehouse_points', handleLayerClick);
-                mapboxMap.off('click', 'dispensing_points', handleLayerClick);
+                mapboxMap.off('click', 'warehouse_layer', handleLayerClick);
+                mapboxMap.off('click', 'dispensing_point_layer', handleLayerClick);
             };
         }
     }, [isMapLoaded]);
@@ -199,7 +198,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
 
                     {isMapLoaded && (
                         <>
-                            <TyphoonLayer />
+                            {/* <TyphoonLayer /> */}
                             <RenderRoadNetwork
                                 fixedRoadNetworkData={fixedRoadNetwork}
                                 fetchFixedRoadsByBounds={fetchFixedRoadsByBounds}
@@ -224,6 +223,8 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                                 selectedAction={selectedAction}
                                 session={session}
                             />
+
+                            <GenerateDirections damagedRoads={damagedRoads} />
                         </>
                     )}
 

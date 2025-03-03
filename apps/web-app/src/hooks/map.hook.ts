@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { CreateWarehouseDto, ResponseDto, UpdateWarehouseDto, WarehouseAddressDto, WarehouseDto } from '@dto';
+import { useCallback, useEffect, useState } from 'react';
+import { CreateWarehouseDto, ResponseDto, RoadNetworkDto, UpdateWarehouseDto, WarehouseAddressDto, WarehouseDto } from '@dto';
 import { warehouseService } from '../services/warehouse.service';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { mapboxService } from '../services/mapbox.api.service';
@@ -159,4 +159,34 @@ export const useGetAddress = () => {
     };
 
     return { getAddress, address };
+};
+
+/**
+ * @description hook for getting directions
+ */
+
+export const useGetDirections = () => {
+    const [directions, setDirections] = useState<GeoJSON.Feature<GeoJSON.LineString> | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const getDirections = useCallback(
+        async (start: [number, number], destination: [number, number], damagedRoads: RoadNetworkDto[], profile?: 'driving' | 'walking' | 'cycling') => {
+            setIsLoading(true);
+
+            try {
+                const routes = await mapboxService.getDirections(start, destination, damagedRoads, profile);
+
+                setDirections(routes[0]);
+            } catch (error) {
+                console.error('Failed to fetch directions from Mapbox Direction API ');
+
+                throw error;
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        [],
+    );
+
+    return { directions, getDirections, isLoading };
 };
