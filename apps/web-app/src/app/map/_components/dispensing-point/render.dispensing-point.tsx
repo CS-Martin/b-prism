@@ -38,7 +38,6 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
 
             const clickedFeature = dp[0];
             const id = clickedFeature.properties?.id;
-            console.log(dp, clickedFeature);
             // When null, it means action is default to viewing
             // 'Default' will trigger UpdateDispensingPoint dialog
             if (selectedAction === null) {
@@ -50,10 +49,10 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
             }
         };
 
-        map.on('click', 'dispensing_points', handleLayerClick);
+        map.on('click', 'dispensing_point_layer', handleLayerClick);
 
         return () => {
-            map.off('click', 'dispensing_points', handleLayerClick);
+            map.off('click', 'dispensing_point_layer', handleLayerClick);
         };
     }, [map, isMapLoaded, selectedAction]);
 
@@ -99,7 +98,7 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
 
                 {/* Individual Points */}
                 <Layer
-                    id='dispensing_points'
+                    id='dispensing_point_layer'
                     type='circle'
                     source='dispensing_points'
                     filter={['!', ['has', 'point_count']]}

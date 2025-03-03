@@ -63,10 +63,10 @@ const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction,
             }
         };
 
-        map.on('click', 'warehouse_points', handleLayerClick);
+        map.on('click', 'warehouse_layer', handleLayerClick);
 
         return () => {
-            map.off('click', 'warehouse_points', handleLayerClick);
+            map.off('click', 'warehouse_layer', handleLayerClick);
         };
     }, [map, isMapLoaded, selectedAction]);
 
@@ -83,7 +83,7 @@ const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction,
                 }}>
                 {/* Individual Points */}
                 <Layer
-                    id='warehouse_points'
+                    id='warehouse_layer'
                     type='symbol'
                     source='warehouse'
                     layout={{
