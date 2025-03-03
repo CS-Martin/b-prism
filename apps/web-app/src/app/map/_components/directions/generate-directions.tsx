@@ -1,11 +1,12 @@
 'use client';
 
-import { Input } from '@b-prism/shadcn-ui/index';
 import { RoadNetworkDto } from '@dto';
 import { useGetDirections } from 'apps/web-app/src/hooks/map.hook';
-import { mapboxService } from 'apps/web-app/src/services/mapbox.api.service';
 import { useEffect, useState } from 'react';
 import { useMap } from 'react-map-gl';
+import { DirectionLayer } from './direction-layer';
+import { PromptGuide } from './prompt-guide';
+import { DirectionPanel } from './direction-stats-panel';
 
 interface GenerateDirectionsProps {
     damagedRoads: RoadNetworkDto[];
@@ -70,95 +71,6 @@ export const GenerateDirections = ({ damagedRoads }: GenerateDirectionsProps) =>
                 start={start}
                 destination={destination}
             />
-        </div>
-    );
-};
-
-export const DirectionLayer = ({ directions }: { directions: GeoJSON.Feature<GeoJSON.LineString> }) => {
-    const { current: mapRef } = useMap();
-
-    useEffect(() => {
-        if (!mapRef) return;
-
-        const map = mapRef.getMap();
-
-        if (!directions?.geometry) return;
-
-        const routeGeoJSON: GeoJSON.FeatureCollection = {
-            type: 'FeatureCollection',
-            features: [
-                {
-                    type: 'Feature',
-                    properties: {},
-                    geometry: directions.geometry,
-                },
-            ],
-        };
-
-        if (map.getSource('route')) {
-            (map.getSource('route') as mapboxgl.GeoJSONSource).setData(routeGeoJSON);
-        } else {
-            map.addSource('route', {
-                type: 'geojson',
-                data: routeGeoJSON,
-            });
-
-            map.addLayer({
-                id: 'route-line',
-                type: 'line',
-                source: 'route',
-                layout: { 'line-join': 'round', 'line-cap': 'round' },
-                paint: {
-                    'line-color': '#007AFF',
-                    'line-width': 5,
-                    'line-opacity': 0.75,
-                },
-            });
-        }
-    }, [directions, mapRef]);
-
-    return null; // No UI elements, just modifies the map
-};
-
-const PromptGuide = ({ start, destination }: { start: [number, number] | null; destination: [number, number] | null }) => {
-    let message = '';
-
-    if (!start) {
-        message = 'Select a Warehouse as a Starting Point';
-    } else if (!destination) {
-        message = 'Select a Dispensing Point as Destination';
-    }
-
-    if (!message) return null; // Hide if both are selected
-
-    return (
-        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/40 shadow-md px-4 py-2 rounded-md text-center text-white font-semibold text-lg'>
-            {message}
-        </div>
-    );
-};
-
-const DirectionPanel = ({ start, destination }: { start: [number, number] | null; destination: [number, number] | null }) => {
-    const formatCoord = (coord: number) => coord.toFixed(6);
-
-    return (
-        <div className='p-4 bg-white shadow-lg rounded-lg max-w-[20rem]'>
-            <div className='mb-2'>
-                <label className='block text-sm font-medium'>Start Coordinates</label>
-                <Input
-                    type='text'
-                    value={start ? `${formatCoord(start[0])}, ${formatCoord(start[1])}` : ''}
-                    readOnly
-                />
-            </div>
-            <div>
-                <label className='block text-sm font-medium'>Destination Coordinates</label>
-                <Input
-                    type='text'
-                    value={destination ? `${formatCoord(destination[0])}, ${formatCoord(destination[1])}` : ''}
-                    readOnly
-                />
-            </div>
         </div>
     );
 };
