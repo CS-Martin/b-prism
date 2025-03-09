@@ -10,7 +10,7 @@ import {
     useSidebar,
 } from '@b-prism/shadcn-ui/index';
 import { motion } from 'framer-motion';
-import { ChevronDown, MapPinned, MapPinPlus, MapPinXInside } from 'lucide-react';
+import { ChevronDown, MapPinned, MapPinPlus, MapPinXInside, Route } from 'lucide-react';
 import { SidebarActionItem } from './sidebar-action-item';
 
 export const mapActions = [
@@ -35,14 +35,16 @@ export const mapActions = [
         toastTitle: 'Delete an Item',
         toastDescription: 'Please click on the item you want to delete',
     },
+    {
+        id: 'findRoute',
+        label: 'Find Route',
+        icon: Route,
+        toastTitle: 'Find Route',
+        toastDescription: 'Please click on the map to find a route',
+    },
 ];
 
-interface SidebarMapActionProps {
-    selectedAction: string | null;
-    handleToggle: (action: string) => void;
-}
-
-export const SidebarMapActions = ({ selectedAction, handleToggle }: SidebarMapActionProps) => {
+export const SidebarMapActions = () => {
     const { state } = useSidebar();
 
     return (
@@ -75,8 +77,8 @@ export const SidebarMapActions = ({ selectedAction, handleToggle }: SidebarMapAc
                                             id={action.id}
                                             label={action.label}
                                             icon={action.icon}
-                                            selectedAction={selectedAction}
-                                            handleToggle={handleToggle}
+                                            toastTitle={action.toastTitle}
+                                            toastDescription={action.toastDescription}
                                         />
                                     ))}
                                 </SidebarMenu>

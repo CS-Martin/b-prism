@@ -10,30 +10,10 @@ import { SidebarAdminLinks } from './sidebar-components/sidebar-admin-links';
 import { mapActions, SidebarMapActions } from './sidebar-components/sidebar-map-actions';
 import { SidebarFooterComponent } from './sidebar-components/sidebar-footer';
 
-interface AppSidebarProps {
-    setSelectedAction: (action: string | null) => void;
-}
-
-export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
+export function AppSidebar() {
     const { data: session } = useSession();
     const { state } = useSidebar();
-    const { toast } = useToast();
     const user = session?.user;
-    const [selectedAction, setInternalSelectedAction] = useState<string | null>(null);
-
-    const handleToggle = (action: string) => {
-        const newAction = selectedAction === action ? null : action;
-        setInternalSelectedAction(newAction);
-        setSelectedAction(newAction);
-
-        const actionData = mapActions.find((a) => a.id === newAction);
-        if (actionData) {
-            toast({
-                title: actionData.toastTitle,
-                description: actionData.toastDescription,
-            });
-        }
-    };
 
     return (
         <Sidebar
@@ -50,10 +30,7 @@ export function AppSidebar({ setSelectedAction }: AppSidebarProps) {
 
                 <hr className={`border-t ${state === 'collapsed' ? 'mx-[20%]' : 'mx-[5%]'}`} />
 
-                <SidebarMapActions
-                    selectedAction={selectedAction}
-                    handleToggle={handleToggle}
-                />
+                <SidebarMapActions />
             </SidebarContent>
 
             <SidebarFooterComponent user={user} />

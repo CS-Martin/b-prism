@@ -12,11 +12,10 @@ interface RenderRoadNetworkProps {
     damagedRoadsData: RoadNetworkDto[];
     fetchDamagedRoads: () => void;
 
-    isMapLoaded: boolean;
     visibility: { roadNetwork: boolean };
 }
 
-export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, isMapLoaded, visibility, fetchFixedRoadsByBounds, fetchDamagedRoads }: RenderRoadNetworkProps) => {
+export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, visibility, fetchFixedRoadsByBounds, fetchDamagedRoads }: RenderRoadNetworkProps) => {
     const { data: session } = useSession();
     const { current: map } = useMap();
 
@@ -67,7 +66,7 @@ export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, isMa
     };
 
     useEffect(() => {
-        if (!map || !isMapLoaded) return;
+        if (!map) return;
 
         const handleLayerClick = (e: any) => {
             const road = map.queryRenderedFeatures(e.point, { layers: ['road_layer'] });
@@ -122,9 +121,7 @@ export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, isMa
             map.off('mousemove', 'road_layer', handleMouseMove);
             map.off('mouseleave', 'road_layer', handleMouseLeave);
         };
-    }, [map, isMapLoaded, selectedRoadId]);
-
-    if (!isMapLoaded) return null;
+    }, [map, selectedRoadId]);
 
     return (
         <>

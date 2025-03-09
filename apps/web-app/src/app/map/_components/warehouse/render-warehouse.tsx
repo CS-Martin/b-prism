@@ -5,20 +5,19 @@ import { Session } from 'next-auth';
 
 interface RenderWarehouseProps {
     geoJsonData: any;
-    isMapLoaded: boolean;
     visibility: { warehouses: boolean };
     selectedAction: string | null;
     session?: Session | null;
 }
 
-const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction, session }: RenderWarehouseProps) => {
+const RenderWarehouse = ({ geoJsonData, visibility, selectedAction, session }: RenderWarehouseProps) => {
     const { current: map } = useMap();
 
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState<boolean>(false);
     const [warehouseId, setWarehouseId] = useState<string>('');
 
     useEffect(() => {
-        if (!map || !isMapLoaded) return;
+        if (!map) return;
 
         // Load the image
         const loadImage = async () => {
@@ -68,9 +67,9 @@ const RenderWarehouse = ({ geoJsonData, isMapLoaded, visibility, selectedAction,
         return () => {
             map.off('click', 'warehouse_layer', handleLayerClick);
         };
-    }, [map, isMapLoaded, selectedAction]);
+    }, [map, selectedAction]);
 
-    if (!isMapLoaded || !visibility.warehouses) return null;
+    if (!visibility.warehouses) return null;
 
     return (
         <>

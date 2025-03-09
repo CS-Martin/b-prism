@@ -282,6 +282,11 @@
     background-color: transparent !important;
 }
 
+div.mapboxgl-popup-content {
+    padding: 3px 25px 3px 25px;
+    border-radius: 500px;
+}
+
 /* .spline-hero::before {
     content: '';
     position: absolute;

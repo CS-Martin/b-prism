@@ -10,9 +10,13 @@ class UserService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_USER_SERVICE_API_PORT ?? ''}`;
     }
 
-    public async fetchAllUsers(): Promise<ResponseDto<UserDto[]>> {
+    public async fetchAllUsers(accessToken: string | null): Promise<ResponseDto<UserDto[]>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/user/all`);
+            const response = await fetch(`${this.API_BASE_URL}/user/all`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
 
             if (!response.ok) {
                 const error = await response.json();

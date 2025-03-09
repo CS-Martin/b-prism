@@ -18,7 +18,7 @@ import {
     Table,
 } from '@b-prism/shadcn-ui/index';
 import { UserRole } from '@b-prism/enums';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDisplayUsers } from '@b-prism/web-app/admin-dashboard-hooks';
 import { createColumns } from './columns';
 import { AppSidebar } from 'apps/web-app/src/components/sidebar';
@@ -33,9 +33,9 @@ interface DataTableProps<TData, TValue> {
 
 function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize: number; dataLength: number; table: ReturnType<typeof useReactTable<TData>> }) {
     return (
-        <div className='absolute bottom-0 flex items-center justify-between border-t py-5 w-full'>
+        <div className='absolute bottom-0 flex items-center justify-between w-full py-5 border-t'>
             <div className='flex items-center justify-between w-1/2'>
-                <Label className=' font-normal'>
+                <Label className='font-normal '>
                     Showing {table.getState().pagination.pageIndex * pageSize + 1} to {Math.min((table.getState().pagination.pageIndex + 1) * pageSize, dataLength)} out of{' '}
                     {dataLength} results
                 </Label>
@@ -76,13 +76,17 @@ function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize:
 }
 
 export const DataTableContent = ({ session }: { session: Session | null }) => {
-    const { users, isLoading: isFetchingUser, fetchAllUsers } = useDisplayUsers();
+    const { users, isLoading: isFetchingUser, fetchAllUsers } = useDisplayUsers(session?.user.accessToken ?? null);
     const { roleChange, isLoading: isChangingRole } = useRoleChange();
+
+    useEffect(() => {
+        if (session?.user) {
+            fetchAllUsers();
+        }
+    }, [session?.user]);
 
     const handleRoleChange = async (userId: string, newRole: UserRole) => {
         if (!session?.user.accessToken) return;
-
-        console.log(userId, newRole);
 
         const success = await roleChange(userId, newRole, session?.user.accessToken);
 
@@ -94,7 +98,7 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
     const columns = createColumns(handleRoleChange);
 
     return (
-        <div className='prism-card-bg p-5 rounded-md mt-5'>
+        <div className='p-5 mt-5 rounded-md prism-card-bg'>
             <DataTable
                 columns={columns}
                 data={users}
@@ -158,7 +162,7 @@ export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: Da
                             <TableRow>
                                 <TableCell
                                     colSpan={columns.length}
-                                    className='h-28 text-center'>
+                                    className='text-center h-28'>
                                     No results.
                                 </TableCell>
                             </TableRow>

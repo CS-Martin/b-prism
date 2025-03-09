@@ -166,7 +166,7 @@ export const useGetAddress = () => {
  */
 
 export const useGetDirections = () => {
-    const [directions, setDirections] = useState<GeoJSON.Feature<GeoJSON.LineString> | null>(null);
+    const [directions, setDirections] = useState<GeoJSON.Feature<GeoJSON.LineString>[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const getDirections = useCallback(
@@ -176,7 +176,7 @@ export const useGetDirections = () => {
             try {
                 const routes = await mapboxService.getDirections(start, destination, damagedRoads, profile);
 
-                setDirections(routes[0]);
+                setDirections(routes);
             } catch (error) {
                 console.error('Failed to fetch directions from Mapbox Direction API ');
 

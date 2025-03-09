@@ -6,7 +6,7 @@ import { AppSidebar } from '../sidebar';
 export default function SidebarWrapper({ children }: { children: React.ReactNode }) {
     return (
         <div className='flex flex-1'>
-            <AppSidebar setSelectedAction={() => null} />
+            <AppSidebar />
             <main className='w-full'>{children}</main>
         </div>
     );
