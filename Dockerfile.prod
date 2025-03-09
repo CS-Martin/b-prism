@@ -1,0 +1,50 @@
+# -------------------
+# Builder Stage
+# -------------------
+FROM node:22-alpine AS builder
+
+# Install system dependencies required for bcrypt & Prisma
+RUN apk add --no-cache openssl
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files (Optimized for Docker caching)
+COPY package.json package-lock.json nx.json tsconfig* ./
+
+# Install dependencies (Only production dependencies for a smaller image)
+RUN npm install
+
+# Copy Prisma schema and generate client
+COPY prisma ./prisma/
+RUN npx prisma generate
+
+# Copy entire workspace AFTER installing dependencies
+COPY . .
+
+# Build all services using your package.json script
+RUN npm run build:all
+
+# -------------------
+# Runner Stage
+# -------------------
+FROM node:22-alpine AS runner
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json (Fixes missing package.json issue)
+COPY --from=builder /app/package.json /app/
+
+# Copy built files and node_modules from builder
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/node_modules /app/node_modules
+
+# Set environment variables
+ENV NODE_ENV=production
+
+# Expose service ports
+EXPOSE 3001 3002 3003 3004 3005 3006 3007 3008 3009
+
+# Start all services using npm script
+CMD ["npm", "run", "start:all:production"]
