@@ -1,0 +1,22 @@
+name: haribon
+
+services:
+    microservices:
+        build:
+            context: .
+            dockerfile: Dockerfile.prod
+        ports:
+            - '3001:3001'
+            - '3002:3002'
+            - '3003:3003'
+            - '3004:3004'
+            - '3005:3005'
+            - '3006:3006'
+            - '3007:3007'
+            - '3008:3008'
+            - '3009:3009'
+        env_file:
+            - .env
+        environment:
+            - NODE_ENV=production
+        restart: always

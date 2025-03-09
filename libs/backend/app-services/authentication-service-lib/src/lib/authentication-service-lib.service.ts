@@ -8,7 +8,7 @@ import { Mailer, User, UserRole } from '@prisma/client';
 import { ActivityLogServiceLibService } from '@b-prism/activity-log-service-lib';
 import { MailerServiceLibService } from '@b-prism/mailer-service-lib';
 
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { randomInt } from 'crypto';
 import { addMinutes } from 'date-fns';
 import { MailerMongodbLibService } from '@b-prism/mailer-mongodb-lib';

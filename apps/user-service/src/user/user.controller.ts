@@ -6,12 +6,12 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'libs/backend/app-services/guards-service-lib/src/lib/jwt-auth.guard';
 
 @ApiTags('User Endpoints')
-@UseGuards(AuthGuard)
 @Controller('user')
 export class UserController {
     constructor(private readonly userServiceLibService: UserServiceLibService) {}
 
     @Get('all')
+    @UseGuards(AuthGuard)
     async findAll(): Promise<ResponseDto<UserDto[]>> {
         return this.userServiceLibService.findAll();
     }
