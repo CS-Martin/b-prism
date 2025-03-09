@@ -5,7 +5,6 @@ import { Session } from 'next-auth';
 
 interface RenderDispensingPointProps {
     geoJsonData: any;
-    isMapLoaded: boolean;
     visibility: { dispensingPoints: boolean };
     selectedAction: string | null;
     session?: Session | null;
@@ -22,14 +21,14 @@ interface RenderDispensingPointProps {
  *
  * @returns {JSX.Element | null} The rendered component or null if the map is not loaded or the dispensing points layer is not visible.
  */
-const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedAction, session }: RenderDispensingPointProps) => {
+const RenderDispensingPoint = ({ geoJsonData, visibility, selectedAction, session }: RenderDispensingPointProps) => {
     const { current: map } = useMap();
 
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState<boolean>(false);
     const [dispensingPointId, setDispensingPointId] = useState<string>('');
 
     useEffect(() => {
-        if (!map || !isMapLoaded) return;
+        if (!map) return;
 
         const handleLayerClick = (event: any) => {
             const dp = event.features;
@@ -54,9 +53,9 @@ const RenderDispensingPoint = ({ geoJsonData, isMapLoaded, visibility, selectedA
         return () => {
             map.off('click', 'dispensing_point_layer', handleLayerClick);
         };
-    }, [map, isMapLoaded, selectedAction]);
+    }, [map, selectedAction]);
 
-    if (!isMapLoaded || !visibility.dispensingPoints) return null;
+    if (!visibility.dispensingPoints) return null;
 
     return (
         <>
