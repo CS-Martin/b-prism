@@ -14,7 +14,8 @@
         "start:road-network": "node dist/apps/map-service/road-network-service/main.js",
         "start:rescue-post": "node dist/apps/rescue-post-service/main.js",
         "start:user": "node dist/apps/user-service/main.js",
-        "start:verification": "node dist/apps/verification-service/main.js"
+        "start:verification": "node dist/apps/verification-service/main.js",
+        "vercel-build": "npx prisma db push && npx prisma generate && npx nx build web-app --prod"
     },
     "private": true,
     "dependencies": {
