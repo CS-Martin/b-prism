@@ -62,7 +62,7 @@ export const GenerateDirections = ({ damagedRoads }: GenerateDirectionsProps) =>
         <div
             className='absolute z-50 w-full h-full'
             style={{ pointerEvents: 'none' }}>
-            {directions && <DirectionLayer directions={directions} />}
+            {Array.isArray(directions) && <DirectionLayer directions={directions} />}
             <PromptGuide
                 start={start}
                 destination={destination}

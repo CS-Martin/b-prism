@@ -153,10 +153,10 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                             session={session}
                         />
                     )}
+
                     {isMapLoaded && (
                         <>
                             {selectedAction === 'findRoute' && <GenerateDirections damagedRoads={damagedRoads} />}
-
                             <RenderRoadNetwork
                                 fixedRoadNetworkData={fixedRoadNetwork}
                                 fetchFixedRoadsByBounds={fetchFixedRoadsByBounds}
