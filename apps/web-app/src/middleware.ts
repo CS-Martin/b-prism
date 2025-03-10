@@ -1,8 +1,6 @@
 import { withAuth } from 'next-auth/middleware';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
-import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { UserDto } from '@dto';
 
 export default withAuth({
     callbacks: {

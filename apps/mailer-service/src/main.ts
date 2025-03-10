@@ -20,7 +20,7 @@ async function bootstrap() {
         origin: isProduction
             ? ['https://project-haribon.vercel.app'] // Production allowed origin
             : ['http://localhost:3000', 'http://localhost'], // Local development allowed origins
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'UPSERT'],
         allowedHeaders: ['Content-Type', 'Authorization'],
     });
 
