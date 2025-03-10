@@ -12,7 +12,11 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
-    app.enableCors();
+    app.enableCors({
+        origin: ['https://project-haribon.vercel.app'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    });
 
     const config = new DocumentBuilder().setTitle('Warehouse Service').setDescription('Warehouse Service API').setVersion('1.0').build();
 

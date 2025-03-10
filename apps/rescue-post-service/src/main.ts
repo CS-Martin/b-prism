@@ -13,7 +13,11 @@ import { DocumentBuilder } from '@nestjs/swagger';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
-    app.enableCors();
+    app.enableCors({
+        origin: ['https://project-haribon.vercel.app'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    });
 
     const config = new DocumentBuilder().setTitle('Rescue Post Service').setDescription('Rescue Post Service API').setVersion('1.0').build();
 
