@@ -334,7 +334,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
         return this.jwtService.sign(payload, {
             secret: process.env['JWT_TOKEN'],
-            expiresIn: '60s',
+            expiresIn: '3',
         });
     }
 
@@ -343,7 +343,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
         return this.jwtService.sign(payload, {
             secret: process.env['JWT_REFRESH_SECRET'],
-            expiresIn: '3d',
+            expiresIn: '10',
         });
     }
 
