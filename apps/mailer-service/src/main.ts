@@ -12,7 +12,8 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
     // Get the current environment (default to 'development' if not set)
-    const isProduction = process.env.NODE_ENV === 'production';
+
+    const isProduction = process.env.APP_ENV === 'production';
 
     // Set CORS policy depending on the environment
     app.enableCors({
