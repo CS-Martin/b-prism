@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { roadNetworkService } from '../services/road-network.service';
-import { ResponseDto, RoadNetworkDto } from '@dto';
+import { RoadNetworkDto } from '@dto';
 import { MapRef } from 'react-map-gl';
-import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { debounce } from 'lodash';
 
 export const useDisplayDamagedRoads = () => {
@@ -64,7 +63,15 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
             if (response.statusCode !== 200) {
                 throw new Error('Failed to fetch road network');
             }
-            setFixedRoadNetwork(response.body);
+
+            const newRoads = response.body;
+
+            // Merge new roads with existing ones without duplicates
+            setFixedRoadNetwork((prevNetwork) => {
+                const existingRoadIds = new Set(prevNetwork.map((road) => road.id));
+                const updatedNetwork = [...prevNetwork, ...newRoads.filter((road) => !existingRoadIds.has(road.id))];
+                return updatedNetwork;
+            });
         } catch (error) {
             console.error('Error fetching road network:', error);
         } finally {
@@ -73,10 +80,7 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
     }, [mapRef, prevBounds]);
 
     // Debounce the fetch function
-    const debouncedFetchFixedRoadsByBounds = useMemo(
-        () => debounce(fetchFixedRoadsByBounds, 500), // Adjust debounce time (e.g., 500ms)
-        [fetchFixedRoadsByBounds],
-    );
+    const debouncedFetchFixedRoadsByBounds = useMemo(() => debounce(fetchFixedRoadsByBounds, 500), [fetchFixedRoadsByBounds]);
 
     useEffect(() => {
         if (!mapRef.current) {
@@ -95,79 +99,9 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
 
         return () => {
             map?.off('moveend', handleMoveEnd);
-            debouncedFetchFixedRoadsByBounds.cancel(); // Cancel pending debounced calls on unmount
+            debouncedFetchFixedRoadsByBounds.cancel();
         };
-    }, [debouncedFetchFixedRoadsByBounds]);
+    }, [debouncedFetchFixedRoadsByBounds, mapRef, fetchFixedRoadsByBounds]);
 
     return { fixedRoadNetwork, fetchFixedRoadsByBounds, isLoading };
-};
-
-export const useDestroyRoad = () => {
-    const { toast } = useToast();
-    const [isLoading, setIsLoading] = useState(false);
-
-    const destroyRoad = async (roadId: string, author: string) => {
-        setIsLoading(true);
-
-        try {
-            const response = await roadNetworkService.destroyRoad(roadId, author);
-
-            setIsLoading(false);
-
-            toast({
-                title: 'Road Deleted',
-                description: `The road has been successfully deleted.`,
-                variant: 'success',
-            });
-
-            return response;
-        } catch (error) {
-            setIsLoading(false);
-
-            toast({
-                title: 'Error Deleting Road',
-                description: `${error}`,
-                variant: 'destructive',
-            });
-
-            throw error;
-        }
-    };
-
-    return { destroyRoad, isLoading };
-};
-
-export const useFixRoad = () => {
-    const { toast } = useToast();
-    const [isLoading, setIsLoading] = useState(false);
-
-    const fixRoad = async (roadId: string, author: string) => {
-        setIsLoading(true);
-
-        try {
-            const response = await roadNetworkService.fixRoad(roadId, author);
-
-            setIsLoading(false);
-
-            toast({
-                title: 'Road Fixed',
-                description: `The road has been successfully fixed.`,
-                variant: 'success',
-            });
-
-            return response;
-        } catch (error) {
-            setIsLoading(false);
-
-            toast({
-                title: 'Error Fixing Road',
-                description: `${error}`,
-                variant: 'destructive',
-            });
-
-            throw error;
-        }
-    };
-
-    return { fixRoad, isLoading };
 };
