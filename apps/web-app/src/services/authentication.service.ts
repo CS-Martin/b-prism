@@ -1,5 +1,6 @@
 import { CreateUserDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
+import axios from 'axios';
 
 class AuthenticationService {
     private API_BASE_URL: string;
@@ -60,21 +61,9 @@ class AuthenticationService {
     public async verify(email: string, password: string): Promise<{ user: UserDto; accessToken: string; refreshToken: string }> {
         try {
             console.log(this.API_BASE_URL, 'fomr here');
-            const response = await fetch(`${this.API_BASE_URL}/authentication/verify`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
+            const response = await axios.post(`${this.API_BASE_URL}/authentication/verify`, { email, password }, { headers: { 'Content-Type': 'application/json' } });
 
-            if (!response.ok) {
-                const error = await response.json();
-
-                throw new BadRequestException(error.message);
-            }
-
-            const responseJson = await response.json();
+            const responseJson = response.data;
 
             return {
                 user: responseJson.body.user,
