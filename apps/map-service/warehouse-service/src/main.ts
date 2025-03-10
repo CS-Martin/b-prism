@@ -21,7 +21,7 @@ async function bootstrap() {
             ? ['https://project-haribon.vercel.app'] // Production allowed origin
             : ['http://localhost:3000', 'http://localhost'], // Local development allowed origins
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'X-Author'],
     });
 
     const config = new DocumentBuilder().setTitle('Warehouse Service').setDescription('Warehouse Service API').setVersion('1.0').build();
