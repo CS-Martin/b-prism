@@ -20,7 +20,7 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document, { useGlobalPrefix: true });
 
     const port = process.env.NEXT_PUBLIC_ROAD_NETWORK_SERVICE_API_PORT;
-    await app.listen(port);
+    await app.listen(port, '0.0.0.0');
 
     Logger.log(`🚀 Application is running on: http://localhost:${port}`);
     Logger.log(`🚀 API Documentation is running on: http://localhost:${port}/api`);

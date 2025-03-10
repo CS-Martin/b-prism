@@ -10,7 +10,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json nx.json tsconfig* ./
 
-RUN npm install
+RUN npm ci
 
 # Copy Prisma schema and generate client
 COPY prisma ./prisma/
