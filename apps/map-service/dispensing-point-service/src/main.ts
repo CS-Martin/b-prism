@@ -12,8 +12,14 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
+    // Get the current environment (default to 'development' if not set)
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    // Set CORS policy depending on the environment
     app.enableCors({
-        origin: ['https://project-haribon.vercel.app'],
+        origin: isProduction
+            ? ['https://project-haribon.vercel.app'] // Production allowed origin
+            : ['http://localhost:3000', 'http://localhost'], // Local development allowed origins
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization'],
     });
