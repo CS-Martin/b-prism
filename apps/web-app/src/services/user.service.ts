@@ -6,12 +6,12 @@ class UserService {
     private API_BASE_URL: string;
 
     constructor() {
-        // Change if production
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_USER_SERVICE_API_PORT ?? ''}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_USER_SERVICE_API_PORT}`;
     }
 
     public async fetchAllUsers(accessToken: string | null): Promise<ResponseDto<UserDto[]>> {
         try {
+            console.log(this.API_BASE_URL, 'APIAPIAPIAPIAPIAPIAPIAPIAPI');
             const response = await fetch(`${this.API_BASE_URL}/user/all`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -35,6 +35,8 @@ class UserService {
     public async fetchUserByEmail(email: string): Promise<ResponseDto<UserDto>> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/user/${email}`);
+            console.log(this.API_BASE_URL, 'email');
+            console.log(response);
 
             if (!response.ok) {
                 const error = await response.json();

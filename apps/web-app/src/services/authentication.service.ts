@@ -59,6 +59,7 @@ class AuthenticationService {
 
     public async verify(email: string, password: string): Promise<{ user: UserDto; accessToken: string; refreshToken: string }> {
         try {
+            console.log(this.API_BASE_URL, 'fomr here');
             const response = await fetch(`${this.API_BASE_URL}/authentication/verify`, {
                 method: 'POST',
                 headers: {

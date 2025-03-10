@@ -4,3 +4,4 @@ notebooks
 dataset
 dist
 node_modules
+.husky
