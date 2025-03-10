@@ -60,7 +60,7 @@ class AuthenticationService {
 
     public async verify(email: string, password: string): Promise<{ user: UserDto; accessToken: string; refreshToken: string }> {
         try {
-            console.debug('Received credentials', email, password);
+            console.log('Received credentials', email, password);
             const response = await axios({
                 method: 'POST',
                 url: `${this.API_BASE_URL}/authentication/verify`,
@@ -70,9 +70,8 @@ class AuthenticationService {
                 },
             });
 
-            console.debug('Here is response: ', response);
-
             const responseJson = response.data;
+            console.log('Here is response: ', responseJson.body);
 
             return {
                 user: responseJson.body.user,
