@@ -56,6 +56,7 @@ export const options: NextAuthOptions = {
             // Check if the access token is still valid
             if (typeof token.accessTokenExpires === 'number' && Date.now() < token.accessTokenExpires) {
                 console.log('✅ Token is still valid until:', new Date(token.accessTokenExpires));
+                console.log('Access token:', token.accessToken);
                 return token;
             }
 

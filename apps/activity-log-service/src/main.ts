@@ -17,9 +17,7 @@ async function bootstrap() {
 
     // Set CORS policy depending on the environment
     app.enableCors({
-        origin: isProduction
-            ? ['https://project-haribon.vercel.app'] // Production allowed origin
-            : ['http://localhost:3000', 'http://localhost'], // Local development allowed origins
+        origin: isProduction ? ['https://projectharibon.com', 'https://www.projectharibon.com'] : ['http://localhost:3000', 'http://localhost'], // Local development allowed origins
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization'],
     });
