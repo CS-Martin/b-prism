@@ -31,7 +31,7 @@ const QuoteCarouselSection = () => {
     }, []);
 
     return (
-        <div className='w-full h-48 flex items-center justify-center border-b text-white'>
+        <div className='flex items-center justify-center w-full h-48 text-white border-b border-b-zinc-800'>
             <AnimatePresence>
                 <motion.div
                     key={currentIndex}
@@ -39,24 +39,24 @@ const QuoteCarouselSection = () => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -50 }}
                     transition={{ duration: 0.8 }}
-                    className='absolute text-center px-4'>
+                    className='absolute px-4 text-center'>
                     <Image
                         src={'icons/quote.svg'}
                         height={35}
                         width={35}
                         alt='quote.svg'
-                        className='text-white w-5 md:w-10 h-auto'
+                        className='w-5 h-auto text-white md:w-10'
                         style={{ fill: 'white' }}
                         data-aos='fade-up'
                     />
                     <p
                         data-aos='fade-up'
-                        className='text-lg md:text-3xl italic flex'>
+                        className='flex text-lg italic md:text-3xl'>
                         {quotes[currentIndex].text}
                     </p>
                     <p
                         data-aos='fade-up'
-                        className='mt-4 text-md md:text-xl font-semibold'>
+                        className='mt-4 font-semibold text-md md:text-xl'>
                         — {quotes[currentIndex].author}
                     </p>
                 </motion.div>

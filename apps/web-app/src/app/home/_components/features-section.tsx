@@ -38,16 +38,16 @@ const FeaturesSection = () => {
     ];
 
     return (
-        <section className='bg-black text-white md:py-5 px-5 overflow-hidden '>
+        <section className='px-5 overflow-hidden text-white bg-black md:py-5 '>
             <div className='mx-auto overflow-hidden '>
                 <div
-                    className='features-grid grid relative border-t features-vignette'
+                    className='relative grid border-t features-grid border-t-zinc-800 features-vignette'
                     style={{ width: '100%' }}>
                     {features.map((feature, index) => {
                         return (
                             <div
                                 key={index}
-                                className={`flex md:px-[1rem] lg:px-[5rem] border-b xl:px-[150px] 2xl:px-[350px] flex-col min-h-[350px] items-start  overflow-hidden ${
+                                className={`flex md:px-[1rem] lg:px-[5rem] border-b border-b-zinc-800 xl:px-[150px] 2xl:px-[350px] flex-col min-h-[350px] items-start  overflow-hidden ${
                                     index % 2 === 0 ? 'md:flex-row-reverse' : 'md:flex-row'
                                 } pt-10 gap-8 feature-cell`}>
                                 {/* Image */}
@@ -60,7 +60,7 @@ const FeaturesSection = () => {
                                             alt={'missing'}
                                             width={1920}
                                             height={1080}
-                                            className='object-center object-cover md:h-[500px] max-h-[500px] w-[700px] rounded-xl border-2'
+                                            className='object-center object-cover md:h-[500px] max-h-[500px] w-[700px] rounded-xl border-2 border-gray-900'
                                         />
 
                                         {/* Vignette like fadeing effect for image */}
@@ -72,12 +72,12 @@ const FeaturesSection = () => {
                                 <div
                                     data-aos={index % 2 === 0 ? 'fade-right' : 'fade-left'}
                                     className={`w-full md:w-1/2  ${index % 2 === 0 ? 'lg:pr-7' : 'lg:pl-7'} mb-5 md:mb-0`}>
-                                    <p className='text-blue-400 uppercase font-medium mb-10'>{feature.subtitle}</p>
-                                    <h3 className='text-xl font-bold mb-4'>{feature.title}</h3>
-                                    <p className='text-gray-300 leading-relaxed'>{feature.description}</p>
+                                    <p className='mb-10 font-medium text-blue-400 uppercase'>{feature.subtitle}</p>
+                                    <h3 className='mb-4 text-xl font-bold'>{feature.title}</h3>
+                                    <p className='leading-relaxed text-gray-300'>{feature.description}</p>
                                     <Button
                                         variant='ghost'
-                                        className='mt-3 p-6 text-[12px] border rounded-md'>
+                                        className='mt-3 p-6 text-[12px] border rounded-md border-zinc-800'>
                                         TRY IT NOW!
                                         <ArrowRight
                                             size={24}

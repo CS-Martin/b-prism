@@ -28,23 +28,23 @@ const BenefitsSection = () => {
     ];
 
     return (
-        <div className='text-white py-12'>
+        <div className='py-12 text-white'>
             <div className='mx-auto sm:px-6 xl:px-[150px] 2xl:px-[350px]'>
-                <div className='grid grid-cols-1 md:grid-cols-3 gap-4 px-5 md:gap-8'>
+                <div className='grid grid-cols-1 gap-4 px-5 md:grid-cols-3 md:gap-8'>
                     {benefits.map((benefit, index) => (
                         <Card
                             key={index}
-                            className={`bg-transparent border group cursor-default transition duration-300`}
+                            className={`bg-transparent border border-zinc-800 group cursor-default transition duration-300`}
                             data-aos='fade-up'>
-                            <CardContent className='flex flex-col items-start text-left p-6'>
+                            <CardContent className='flex flex-col items-start p-6 text-left'>
                                 {/* Icon with dynamic hover color */}
                                 <div className={`mb-4 ${benefit.hoverClass}`}>
                                     {React.cloneElement(benefit.icon, {
-                                        className: `${benefit.icon.props.className} ${benefit.hoverClass}`,
+                                        className: `text-white ${benefit.icon.props.className} ${benefit.hoverClass}`,
                                     })}
                                 </div>
                                 {/* Title with dynamic hover color */}
-                                <h3 className={`text-xl font-semibold mb-2 transition duration-300 ${benefit.hoverClass}`}>{benefit.title}</h3>
+                                <h3 className={`text-xl font-semibold mb-2 transition duration-300 text-white ${benefit.hoverClass}`}>{benefit.title}</h3>
                                 <p className='text-gray-400'>{benefit.description}</p>
                             </CardContent>
                         </Card>

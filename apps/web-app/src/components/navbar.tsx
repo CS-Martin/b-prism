@@ -9,12 +9,6 @@ import { Sheet, SheetTrigger, SheetContent } from '@b-prism/shadcn-ui/index';
 import { cn } from '@b-prism/shadcn-lib/cn';
 import Image from 'next/image';
 
-interface ListItemProps {
-    href: string;
-    title: string;
-    children: React.ReactNode;
-}
-
 const components: { title: string; href: string; description: string }[] = [
     {
         title: 'Alert Dialog',
@@ -64,7 +58,9 @@ const Navbar = () => {
     return (
         <header
             className={`z-50 fixed top-0 w-full flex justify-between items-center transition-all duration-500 ${
-                isScrolled ? 'h-[80px] px-3 lg:px-[110px] 2xl:px-[350px] bg-black border-b shadow-md' : 'h-[130px] border-none px-3 md:px-16 lg:px-20 translate-all duration-500'
+                isScrolled
+                    ? 'h-[80px] px-3 lg:px-[110px] 2xl:px-[350px] bg-black border-b border-b-zinc-800 shadow-md'
+                    : 'h-[130px] border-none px-3 md:px-16 lg:px-20 translate-all duration-500'
             }`}>
             {/* Mobile Menu */}
             <Sheet>
@@ -73,25 +69,25 @@ const Navbar = () => {
                         variant='outline'
                         size='icon'
                         className='lg:hidden'>
-                        <MenuIcon className='h-6 w-6' />
+                        <MenuIcon className='w-6 h-6' />
                         <span className='sr-only'>Toggle navigation menu</span>
                     </Button>
                 </SheetTrigger>
                 <SheetContent side='left'>
                     <div className='py-6'>
                         <NavigationMenu>
-                            <NavigationMenuList className='gap-5 flex flex-col items-start'>
+                            <NavigationMenuList className='flex flex-col items-start gap-5'>
                                 <NavigationMenuItem>
-                                    <NavigationMenuTrigger className='bg-transparent font-semibold px-1'>Getting Started</NavigationMenuTrigger>
+                                    <NavigationMenuTrigger className='px-1 font-semibold text-white'>Getting Started</NavigationMenuTrigger>
                                     <NavigationMenuContent className='w-[90vw] md:w-[400px] lg:w-[500px]'>
                                         <ul className='grid gap-3 p-6 lg:grid-cols-[.75fr_1fr]'>
                                             <li className='row-span-3'>
                                                 <NavigationMenuLink asChild>
                                                     <Link
-                                                        className='flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md'
+                                                        className='flex flex-col justify-end w-full h-full p-6 no-underline rounded-md outline-none select-none bg-gradient-to-b from-muted/50 to-muted focus:shadow-md'
                                                         href='/'>
-                                                        {/* <Icons.logo className='h-6 w-6' /> */}
-                                                        <div className='mb-2 mt-4 text-lg font-medium'>shadcn/ui</div>
+                                                        {/* <Icons.logo className='w-6 h-6' /> */}
+                                                        <div className='mt-4 mb-2 text-lg font-medium'>shadcn/ui</div>
                                                         <p className='text-sm leading-tight text-muted-foreground'>
                                                             Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.
                                                         </p>
@@ -117,7 +113,7 @@ const Navbar = () => {
                                     </NavigationMenuContent>
                                 </NavigationMenuItem>
                                 <NavigationMenuItem>
-                                    <NavigationMenuTrigger className='font-semibold bg-transparent px-0'>Components</NavigationMenuTrigger>
+                                    <NavigationMenuTrigger className='px-0 font-semibold bg-transparent'>Components</NavigationMenuTrigger>
                                     <NavigationMenuContent className='w-[90vw] md:w-[400px] lg:w-[500px] overflow-y-auto'>
                                         <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] '>
                                             {components.map((component) => (
@@ -155,10 +151,10 @@ const Navbar = () => {
             <div className={`hidden lg:flex items-center justify-between w-full`}>
                 <div>
                     <NavigationMenu>
-                        <NavigationMenuList className='gap-4'>
+                        <NavigationMenuList className='gap-4 text-white'>
                             <Link
                                 href={'/home'}
-                                className='font-bold flex items-center gap-2'>
+                                className='flex items-center gap-2 font-bold'>
                                 <Image
                                     src={'/logo/haribon-logo.svg'}
                                     height={40}
@@ -168,20 +164,18 @@ const Navbar = () => {
                                 HARIBON
                             </Link>
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger
-                                    className='bg-transparent font-semibold'
-                                    style={{ backgroundColor: 'transparent' }}>
+                                <NavigationMenuTrigger className='font-semibold text-white bg-transparent data-[state=open]:bg-white data-[state=open]:text-black hover:bg-black'>
                                     Getting started
                                 </NavigationMenuTrigger>
-                                <NavigationMenuContent>
+                                <NavigationMenuContent className=''>
                                     <ul className='grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'>
                                         <li className='row-span-3'>
                                             <NavigationMenuLink asChild>
                                                 <Link
-                                                    className='flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md'
+                                                    className='flex flex-col justify-end w-full h-full p-6 no-underline rounded-md outline-none select-none bg-gradient-to-b from-muted/50 to-muted focus:shadow-md'
                                                     href='/'>
-                                                    {/* <Icons.logo className='h-6 w-6' /> */}
-                                                    <div className='mb-2 mt-4 text-lg font-medium'>shadcn/ui</div>
+                                                    {/* <Icons.logo className='w-6 h-6' /> */}
+                                                    <div className='mt-4 mb-2 text-lg font-medium'>shadcn/ui</div>
                                                     <p className='text-sm leading-tight text-muted-foreground'>
                                                         Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.
                                                     </p>
@@ -207,7 +201,9 @@ const Navbar = () => {
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className='font-semibold'>Components</NavigationMenuTrigger>
+                                <NavigationMenuTrigger className='font-semibold text-white bg-transparent data-[state=open]:bg-white data-[state=open]:text-black hover:bg-black'>
+                                    Components
+                                </NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] '>
                                         {components.map((component) => (
@@ -224,14 +220,14 @@ const Navbar = () => {
                             <NavigationMenuItem asChild>
                                 <Link
                                     href='/docs'
-                                    className='font-semibold'>
+                                    className='px-3 font-semibold text-white bg-transparent hover:bg-black'>
                                     Documentation
                                 </Link>
                             </NavigationMenuItem>
                             <NavigationMenuItem asChild>
                                 <Link
                                     href='/map'
-                                    className='font-semibold'>
+                                    className='px-2 font-semibold text-white bg-transparent hover:bg-black'>
                                     Map
                                 </Link>
                             </NavigationMenuItem>
@@ -239,9 +235,9 @@ const Navbar = () => {
                     </NavigationMenu>
                 </div>
                 {/* Desktop Actions */}
-                <div className='hidden lg:flex items-center gap-4'>
+                <div className='items-center hidden gap-4 lg:flex'>
                     <Button
-                        className='rounded-full hidden xl:flex'
+                        className='hidden rounded-full xl:flex'
                         variant='ghost'>
                         Contact Us
                     </Button>
@@ -252,21 +248,21 @@ const Navbar = () => {
                     {session ? (
                         <Button
                             asChild
-                            className='rounded-full px-8 bg-blue-500 hover:bg-blue-400 text-white'>
+                            className='px-8 text-white bg-blue-500 rounded-full hover:bg-blue-400'>
                             <Link href='/api/auth/signout'>Sign out</Link>
                         </Button>
                     ) : (
                         <Button
                             asChild
-                            className='rounded-full px-8 bg-blue-500 hover:bg-blue-400 text-white'>
+                            className='px-8 text-white bg-blue-500 rounded-full hover:bg-blue-400'>
                             <Link href='/auth/login'>Sign in</Link>
                         </Button>
                     )}
                 </div>
             </div>
-            <div className='flex items-center lg:hidden gap-4'>
+            <div className='flex items-center gap-4 lg:hidden'>
                 <Button
-                    className='rounded-full hidden xl:flex'
+                    className='hidden rounded-full xl:flex'
                     variant='ghost'>
                     Contact Us
                 </Button>
@@ -277,13 +273,13 @@ const Navbar = () => {
                 {session ? (
                     <Button
                         asChild
-                        className='rounded-full px-8 bg-blue-500 hover:bg-blue-400 text-white'>
+                        className='px-8 text-white bg-blue-500 rounded-full hover:bg-blue-400'>
                         <Link href='/api/auth/signout'>Sign out</Link>
                     </Button>
                 ) : (
                     <Button
                         asChild
-                        className='rounded-full px-8 bg-blue-500 hover:bg-blue-400 text-white'>
+                        className='px-8 text-white bg-blue-500 rounded-full hover:bg-blue-400'>
                         <Link href='/auth/login'>Sign in</Link>
                     </Button>
                 )}
@@ -304,7 +300,7 @@ const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWit
                     )}
                     {...props}>
                     <div className='text-sm font-medium leading-none'>{title}</div>
-                    <p className='line-clamp-2 text-sm leading-snug text-muted-foreground'>{children}</p>
+                    <p className='text-sm leading-snug line-clamp-2 text-muted-foreground'>{children}</p>
                 </a>
             </NavigationMenuLink>
         </li>
