@@ -55,7 +55,7 @@ export const DestroyRoadModal = ({ roadId, setIsDialogOpen, fetchDamagedRoads }:
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={handleCancel}>No, Keep it</AlertDialogCancel>
                     <AlertDialogAction
-                        className='bg-red-500 hover:bg-red-600 text-white'
+                        className='text-white bg-red-500 hover:bg-red-600'
                         onClick={handleRoadDestroy}>
                         Yes, damage it!
                     </AlertDialogAction>

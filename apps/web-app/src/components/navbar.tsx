@@ -237,7 +237,7 @@ const Navbar = () => {
                 {/* Desktop Actions */}
                 <div className='items-center hidden gap-4 lg:flex'>
                     <Button
-                        className='hidden rounded-full xl:flex'
+                        className='hidden text-white border rounded-full xl:flex border-zinc-800'
                         variant='ghost'>
                         Contact Us
                     </Button>
