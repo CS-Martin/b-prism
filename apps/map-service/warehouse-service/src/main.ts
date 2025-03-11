@@ -15,10 +15,13 @@ async function bootstrap() {
     // Get the current environment (default to 'development' if not set)
     const isProduction = process.env.APP_ENV === 'production';
 
+    // Set CORS policy depending on the environment
     app.enableCors({
-        origin: isProduction ? ['https://projectharibon.com', 'https://www.projectharibon.com'] : ['http://localhost:3000', 'http://localhost'], // Local development allowed origins
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
+        origin: isProduction
+            ? ['https://project-haribon.vercel.app'] // Production allowed origin
+            : ['http://localhost:3000', 'http://localhost'], // Local development allowed origins
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'X-Author'],
     });
 
     const config = new DocumentBuilder().setTitle('Warehouse Service').setDescription('Warehouse Service API').setVersion('1.0').build();

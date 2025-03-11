@@ -60,18 +60,20 @@ class AuthenticationService {
 
     public async verify(email: string, password: string): Promise<{ user: UserDto; accessToken: string; refreshToken: string }> {
         try {
-            console.log('Received credentials', email, password);
-            const response = await axios({
+            const response = await fetch(`${this.API_BASE_URL}/authentication/verify`, {
                 method: 'POST',
-                url: `${this.API_BASE_URL}/authentication/verify`,
-                data: { email, password },
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({ email, password }),
             });
 
-            const responseJson = response.data;
-            console.log('Here is response: ', responseJson.body);
+            if (!response.ok) {
+                const error = await response.json();
+                throw new BadRequestException(error.message || 'Failed to login user');
+            }
+
+            const responseJson = await response.json();
 
             return {
                 user: responseJson.body.user,
