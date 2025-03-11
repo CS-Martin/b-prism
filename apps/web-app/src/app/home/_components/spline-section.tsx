@@ -27,7 +27,7 @@ export const SplineSection = () => {
                     style={{ y: splineBackground }}
                     className='h-[77vh] md:h-[80vh] relative'>
                     <Spline
-                        className='rounded-2xl shadow-2xl neon-border'
+                        className='shadow-2xl rounded-2xl neon-border'
                         scene='https://prod.spline.design/ng-ni62YpZyz95ES/scene.splinecode'
                     />
                     <div className='absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black rounded-2xl'></div>
@@ -38,22 +38,22 @@ export const SplineSection = () => {
                         transition={{ duration: 3 }}
                         style={{ y: splineText }}
                         className='absolute inset-0 flex h-[80%] flex-col items-center top-[10px] text-center mt-14'>
-                        <p className='text-[22px] md:text-[40px] font-black'>
+                        <p className='text-[22px] md:text-[40px] font-black text-white'>
                             Unite for Resilience, <br />
                             Act with Precision
                         </p>
-                        <p className='md:text-lg mt-3 text-gray-400'>
-                            Coordinate rescue efforts, strengthen disaster response, and <br className='md:block hidden' /> safeguard communities with our all-in-one platform.
+                        <p className='mt-3 text-gray-400 md:text-lg'>
+                            Coordinate rescue efforts, strengthen disaster response, and <br className='hidden md:block' /> safeguard communities with our all-in-one platform.
                         </p>
 
-                        <Button className='bg-blue-500 text-white hover:bg-blue-400 px-6 mt-4 rounded-full'>Start Contributing Now!</Button>
+                        <Button className='px-6 mt-4 text-white bg-blue-500 rounded-full hover:bg-blue-400'>Start Contributing Now!</Button>
                     </motion.div>
                 </motion.div>
 
                 <motion.section
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className=' mt-5 border-b pb-5'>
+                    className='pb-5 mt-5 border-b border-b-zinc-800'>
                     <SupportersParallax />
                 </motion.section>
             </div>

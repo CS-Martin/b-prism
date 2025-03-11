@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { roadNetworkService } from '../services/road-network.service';
-import { ResponseDto, RoadNetworkDto } from '@dto';
+import { RoadNetworkDto } from '@dto';
 import { MapRef } from 'react-map-gl';
-import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { debounce } from 'lodash';
+import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 export const useDisplayDamagedRoads = () => {
     const [damagedRoads, setDamagedRoads] = useState<RoadNetworkDto[]>([]);
@@ -64,7 +64,15 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
             if (response.statusCode !== 200) {
                 throw new Error('Failed to fetch road network');
             }
-            setFixedRoadNetwork(response.body);
+
+            const newRoads = response.body;
+
+            // Merge new roads with existing ones without duplicates
+            setFixedRoadNetwork((prevNetwork) => {
+                const existingRoadIds = new Set(prevNetwork.map((road) => road.id));
+                const updatedNetwork = [...prevNetwork, ...newRoads.filter((road) => !existingRoadIds.has(road.id))];
+                return updatedNetwork;
+            });
         } catch (error) {
             console.error('Error fetching road network:', error);
         } finally {
@@ -73,10 +81,7 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
     }, [mapRef, prevBounds]);
 
     // Debounce the fetch function
-    const debouncedFetchFixedRoadsByBounds = useMemo(
-        () => debounce(fetchFixedRoadsByBounds, 500), // Adjust debounce time (e.g., 500ms)
-        [fetchFixedRoadsByBounds],
-    );
+    const debouncedFetchFixedRoadsByBounds = useMemo(() => debounce(fetchFixedRoadsByBounds, 500), [fetchFixedRoadsByBounds]);
 
     useEffect(() => {
         if (!mapRef.current) {
@@ -95,9 +100,9 @@ export const useDisplayFixedRoadNetworkByBounds = (mapRef: React.RefObject<MapRe
 
         return () => {
             map?.off('moveend', handleMoveEnd);
-            debouncedFetchFixedRoadsByBounds.cancel(); // Cancel pending debounced calls on unmount
+            debouncedFetchFixedRoadsByBounds.cancel();
         };
-    }, [debouncedFetchFixedRoadsByBounds]);
+    }, [debouncedFetchFixedRoadsByBounds, mapRef, fetchFixedRoadsByBounds]);
 
     return { fixedRoadNetwork, fetchFixedRoadsByBounds, isLoading };
 };
