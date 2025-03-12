@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Source, Layer, useMap } from 'react-map-gl';
 import UpdateDispensingPointDialog from './update.dispensing-point-dialog';
 import { Session } from 'next-auth';
-import { useDispensingPointsStore } from 'apps/web-app/src/stores/dispensing-point.store';
+import { useDispensingPointsStore } from 'apps/web-app/src/stores/map-stores/dispensing-point.store';
 
 interface RenderDispensingPointProps {
     visibility: { dispensingPoints: boolean };

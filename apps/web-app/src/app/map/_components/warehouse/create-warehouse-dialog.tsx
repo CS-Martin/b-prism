@@ -32,13 +32,11 @@ interface DialogProps {
     isOpen: boolean;
     coordinates: CoordinatesType;
     setIsOpen: (isOpen: boolean) => void;
-    fetchAllWarehouses: () => void;
     session?: Session | null;
 }
 
-const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coordinates, fetchAllWarehouses, session }) => {
+const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coordinates, session }) => {
     const { toast } = useToast();
-
     const { createWarehouse } = useCreateWarehouse();
     const { getAddress, address } = useGetAddress();
 
@@ -89,22 +87,22 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coord
         if (isOpen && coordinates.longitude && coordinates.latitude) {
             getAddress(coordinates.longitude, coordinates.latitude);
         }
-    }, [isOpen, coordinates, getAddress]);
+    }, [isOpen, coordinates.longitude, coordinates.latitude]);
 
     useEffect(() => {
-        if (address) {
+        if (address && isOpen) {
             reset((prev) => ({
                 ...prev,
                 address,
             }));
         }
-    }, [isOpen, coordinates, getAddress, address, reset]);
+    }, [address, reset]);
 
     // Reset form values when the coordinates update
     useEffect(() => {
         reset({ longitude: coordinates.longitude, latitude: coordinates.latitude });
     }, [coordinates, reset]);
-    // Form submission handler
+
     const onSubmit = async (data: CreateWarehouseDto) => {
         try {
             if (!user) {
@@ -123,7 +121,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coord
 
             await createWarehouse(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
 
-            fetchAllWarehouses();
+            // fetchAllWarehouses();
             setIsOpen(false);
             reset();
         } catch (error) {
@@ -135,6 +133,8 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coord
             });
         }
     };
+
+    if (!isOpen) return;
 
     return (
         <Dialog

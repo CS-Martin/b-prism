@@ -19,8 +19,6 @@ import { useSession } from 'next-auth/react';
 interface DeleteItemProps {
     item: { type: string; id: string };
     onCancel: () => void;
-    fetchAllWarehouses: () => void;
-    fetchAllDispensingPoints: () => void;
     session?: Session | null;
 }
 
@@ -37,7 +35,7 @@ interface DeleteItemProps {
  *
  * @returns {JSX.Element} The rendered component.
  */
-const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoints, session }: DeleteItemProps) => {
+const DeleteItem = ({ item, onCancel, session }: DeleteItemProps) => {
     const { deleteWarehouse } = useDeleteWarehouse();
     const { deleteDispensingPoint } = useDeleteDispensingPoint();
 
@@ -62,10 +60,6 @@ const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoin
             default:
                 break;
         }
-
-        // Trigger re-fetch of warehouses to update client
-        fetchAllWarehouses();
-        fetchAllDispensingPoints();
     };
 
     return (

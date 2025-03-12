@@ -1,16 +1,14 @@
 import { create } from 'zustand';
-import { dispensingPointService } from '../services/dispensing-point.service';
+import { dispensingPointService } from '../../services/dispensing-point.service';
 import { DispensingPointDto, ResponseDto } from '@dto';
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
-// Define Zustand state and actions
 interface DispensingPointsState {
     dispensingPointsGeoJson: { type: string; features: any[] };
     isLoading: boolean;
     fetchAllDispensingPoints: () => Promise<void>;
 }
 
-// Zustand store definition
 export const useDispensingPointsStore = create<DispensingPointsState>((set) => ({
     dispensingPointsGeoJson: { type: 'FeatureCollection', features: [] },
     isLoading: false,
