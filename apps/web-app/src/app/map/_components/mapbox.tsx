@@ -24,8 +24,8 @@ import { useDisplayDamagedRoads, useDisplayFixedRoadNetworkByBounds } from 'apps
 import { set } from 'lodash';
 
 interface MarkerType {
-    longitude: string;
-    latitude: string;
+    longitude: number | null;
+    latitude: number | null;
 }
 
 export const MapboxContext = ({ session }: { session: Session | null }) => {
@@ -38,7 +38,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
     const { dispensingPoints, fetchAllDispensingPoints } = useDisplayDispensingPoints();
 
     const [isOpen, setIsOpen] = useState(false);
-    const [marker, setMarker] = useState<MarkerType>({ longitude: '', latitude: '' });
+    const [marker, setMarker] = useState<MarkerType>({ longitude: null, latitude: null });
     const [itemToDelete, setItemToDelete] = useState<{ type: string; id: string } | null>(null);
     const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [visibility, setVisibility] = useState({
@@ -48,6 +48,8 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
         route: true,
     });
 
+    console.log(dispensingPoints);
+
     const geoJsonData = useMemo(
         () => ({
             type: 'FeatureCollection',
@@ -55,7 +57,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                 ...dispensingPoints.map((dp) => ({
                     type: 'Feature',
                     properties: { id: dp.id, type: 'dispensing_point', name: dp.name },
-                    geometry: { type: 'Point', coordinates: [Number(dp.longitude), Number(dp.latitude)] },
+                    geometry: { type: 'Point', coordinates: [dp.longitude, dp.latitude] },
                 })),
                 ...warehouses.map((wh) => ({
                     type: 'Feature',

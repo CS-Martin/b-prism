@@ -63,8 +63,8 @@ model DispensingPoint {
   type        Type     @default(dispensing_point)
   name        String
   description String?
-  longitude   String
-  latitude    String
+  longitude   Float
+  latitude    Float
   capacity    Int?
   user_id     String?
   address     Json?
