@@ -51,9 +51,13 @@ export const useFindOneWarehouse = (id: string) => {
 export const useCreateWarehouse = () => {
     const { toast } = useToast();
 
-    const createWarehouse = async (data: CreateWarehouseDto, author: string, accessToken: string) => {
+    const createWarehouse = async (data: CreateWarehouseDto, author: string, accessToken: string): Promise<WarehouseDto | undefined> => {
         try {
             const warehouse: WarehouseDto = await warehouseService.create(data, author, accessToken);
+
+            if (!warehouse) {
+                throw new Error('Failed to create the warehouse');
+            }
 
             toast({
                 title: 'Success!',

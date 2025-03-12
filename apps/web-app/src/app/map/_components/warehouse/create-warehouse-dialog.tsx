@@ -122,10 +122,9 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coord
                 throw new Error('Warehouse name is required');
             }
 
-            const newWarehouse: WarehouseDto = await createWarehouse(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
+            const newWarehouse: WarehouseDto | undefined = await createWarehouse(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
 
             if (newWarehouse) {
-                console.log(newWarehouse, 'newWarehouse');
                 useWarehouseStore.getState().addWarehouse(newWarehouse);
             }
 
