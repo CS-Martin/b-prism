@@ -79,9 +79,9 @@ export const useFindOneDispensingPoint = (id: string) => {
 export const useCreateDispensingPoint = () => {
     const { toast } = useToast();
 
-    const createDispensingPoint = async (data: CreateDispensingPointDto, author: string, accessToken: string) => {
+    const createDispensingPoint = async (data: CreateDispensingPointDto, author: string, accessToken: string): Promise<DispensingPointDto | undefined> => {
         try {
-            await dispensingPointService.create(
+            const newDispensingPoint: DispensingPointDto = await dispensingPointService.create(
                 {
                     ...data,
                     capacity: Number(data.capacity),
@@ -95,6 +95,8 @@ export const useCreateDispensingPoint = () => {
                 description: `The dispensing point ${data.name} has been created successfully`,
                 variant: 'success',
             });
+
+            return newDispensingPoint;
         } catch (error: any) {
             console.error('Error creating warehouse:', error);
 

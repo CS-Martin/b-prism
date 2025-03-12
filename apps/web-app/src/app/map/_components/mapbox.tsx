@@ -114,14 +114,14 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                             session={session}
                         />
                     )}
-                    {/* {selectedAction === 'createDispensingPoint' && (
+                    {selectedAction === 'createDispensingPoint' && (
                         <CreateDispensingPointDialog
                             isOpen={isOpen}
                             setIsOpen={setIsOpen}
                             coordinates={coordinates}
                             session={session}
                         />
-                    )} */}
+                    )}
 
                     <>
                         {/* {selectedAction === 'findRoute' && <GenerateDirections damagedRoads={damagedRoads} />}

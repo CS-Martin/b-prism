@@ -37,7 +37,7 @@ class DispensingPointService {
                 throw new Error(errorMessage);
             }
 
-            return response.json();
+            return (await response.json()).body;
         } catch (error: any) {
             console.error('Dispensing point creation error:', error);
 

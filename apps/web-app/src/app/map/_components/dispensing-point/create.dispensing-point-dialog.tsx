@@ -20,25 +20,25 @@ import {
     Textarea,
 } from '@b-prism/shadcn-ui/index';
 import { CoordinatesType } from '@b-prism/types';
-import { CreateDispensingPointDto } from '@dto';
+import { CreateDispensingPointDto, DispensingPointDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 import { Type } from '@prisma/client';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useCreateDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
 import { useGetAddress } from 'apps/web-app/src/hooks/map.hook';
+import { useDispensingPointsStore } from 'apps/web-app/src/stores/map-stores/dispensing-point.store';
 import { Session } from 'next-auth';
 import { useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 interface DialogProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
     coordinates: CoordinatesType;
-    fetchAllDispensingPoints: () => void;
     session?: Session | null;
 }
 
-const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coordinates, fetchAllDispensingPoints, session }) => {
+const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coordinates, session }) => {
     console.log(session?.user);
     const { toast } = useToast();
     const { getAddress, address } = useGetAddress();
@@ -105,9 +105,15 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                 throw new Error('Dispensing Point Name is required');
             }
 
-            await createDispensingPoint(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
-            fetchAllDispensingPoints();
+            const newDispensingPoint: DispensingPointDto | undefined = await createDispensingPoint(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
+
+            if (newDispensingPoint) {
+                console.log(newDispensingPoint, 'IS HERe');
+                useDispensingPointsStore.getState().addDispensingPoint(newDispensingPoint);
+            }
+
             setIsOpen(false);
+            reset();
         } catch (error) {
             console.error('Error creating dispensing point:', error);
             toast({
