@@ -17,7 +17,7 @@ import {
     TabsTrigger,
     Textarea,
 } from '@b-prism/shadcn-ui/index';
-import { CreateWarehouseDto, UserDto } from '@dto';
+import { CreateWarehouseDto, UserDto, WarehouseDto } from '@dto';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
@@ -27,6 +27,7 @@ import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { BadRequestException } from '@nestjs/common';
 import { Session } from 'next-auth';
 import { CoordinatesType } from '@b-prism/types';
+import { useWarehouseStore } from 'apps/web-app/src/stores/map-stores/warehouse.store';
 
 interface DialogProps {
     isOpen: boolean;
@@ -39,6 +40,8 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coord
     const { toast } = useToast();
     const { createWarehouse } = useCreateWarehouse();
     const { getAddress, address } = useGetAddress();
+
+    const fetchAllWarehouses = useWarehouseStore((state) => state.fetchAllWarehouses);
 
     const user = session?.user;
 
@@ -119,9 +122,13 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coord
                 throw new Error('Warehouse name is required');
             }
 
-            await createWarehouse(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
+            const newWarehouse: WarehouseDto = await createWarehouse(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
 
-            // fetchAllWarehouses();
+            if (newWarehouse) {
+                console.log(newWarehouse, 'newWarehouse');
+                useWarehouseStore.getState().addWarehouse(newWarehouse);
+            }
+
             setIsOpen(false);
             reset();
         } catch (error) {

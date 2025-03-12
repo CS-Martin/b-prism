@@ -53,13 +53,15 @@ export const useCreateWarehouse = () => {
 
     const createWarehouse = async (data: CreateWarehouseDto, author: string, accessToken: string) => {
         try {
-            await warehouseService.create(data, author, accessToken);
+            const warehouse: WarehouseDto = await warehouseService.create(data, author, accessToken);
 
             toast({
                 title: 'Success!',
                 description: `The warehouse "${data.name}" has been created successfully.`,
                 variant: 'success',
             });
+
+            return warehouse;
         } catch (error: any) {
             console.error('Error creating warehouse:', error);
 

@@ -8,6 +8,7 @@ type WarehouseState = {
     warehouseGeoJson: { type: string; features: any[] };
     isLoading: boolean;
     fetchAllWarehouses: () => Promise<void>;
+    addWarehouse: (newWarehouse: WarehouseDto) => void;
 };
 
 export const useWarehouseStore = create<WarehouseState>((set) => ({
@@ -54,5 +55,31 @@ export const useWarehouseStore = create<WarehouseState>((set) => ({
         } finally {
             set({ isLoading: false });
         }
+    },
+
+    // Instead of fetching from the server, we can add the new warehouse to the store
+    // This is useful for adding new warehouses without refreshing the page
+    // Very nice zustand!!!
+    addWarehouse: (newWarehouse: WarehouseDto) => {
+        set((state) => {
+            const newFeature = {
+                type: 'Feature',
+                properties: {
+                    id: newWarehouse.id,
+                    type: 'warehouse',
+                    name: newWarehouse.name,
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: [newWarehouse.longitude, newWarehouse.latitude],
+                },
+            };
+            return {
+                warehouseGeoJson: {
+                    ...state.warehouseGeoJson,
+                    features: [...state.warehouseGeoJson.features, newFeature],
+                },
+            };
+        });
     },
 }));

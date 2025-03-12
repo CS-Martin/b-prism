@@ -35,7 +35,7 @@ class WarehouseService {
                 throw new Error(errorMessage);
             }
 
-            return await response.json();
+            return (await response.json()).body;
         } catch (error: any) {
             console.error('Warehouse creation error:', error);
 
