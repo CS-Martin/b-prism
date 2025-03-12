@@ -103,7 +103,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             const logData: CreateActivityLogDto = new CreateActivityLogDto();
 
-            logData.action = 'CREATE';
+            logData.action = 'DELETE';
             logData.description = `Deleted dispensing point ${dispensingPoint.name}.`;
             logData.resource = 'Dispensing Point';
             logData.resource_id = dispensingPoint.id;
