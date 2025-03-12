@@ -21,12 +21,7 @@ import { AppSidebar } from 'apps/web-app/src/components/sidebar';
 import RenderDispensingPoint from './dispensing-point/render.dispensing-point';
 import { RenderRoadNetwork } from './road-network/render-road-network';
 import { useDisplayDamagedRoads, useDisplayFixedRoadNetworkByBounds } from 'apps/web-app/src/hooks/road-network.hook';
-import { set } from 'lodash';
-
-interface MarkerType {
-    longitude: number | null;
-    latitude: number | null;
-}
+import { CoordinatesType } from '@b-prism/types';
 
 export const MapboxContext = ({ session }: { session: Session | null }) => {
     const mapRef = useRef<MapRef | null>(null);
@@ -38,7 +33,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
     const { dispensingPoints, fetchAllDispensingPoints } = useDisplayDispensingPoints();
 
     const [isOpen, setIsOpen] = useState(false);
-    const [marker, setMarker] = useState<MarkerType>({ longitude: null, latitude: null });
+    const [coordinates, setCoordinates] = useState<CoordinatesType>({ longitude: 0, latitude: 0 });
     const [itemToDelete, setItemToDelete] = useState<{ type: string; id: string } | null>(null);
     const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [visibility, setVisibility] = useState({
@@ -109,9 +104,9 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
     }, [isMapLoaded, handleMarkerClick]);
 
     const handleMapClick = (event: MapMouseEvent) => {
-        setMarker({
-            longitude: event.lngLat.lng.toString(),
-            latitude: event.lngLat.lat.toString(),
+        setCoordinates({
+            longitude: event.lngLat.lng,
+            latitude: event.lngLat.lat,
         });
 
         if (!selectedAction) {
@@ -141,7 +136,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                         <CreateWarehouseDialog
                             isOpen={isOpen}
                             setIsOpen={setIsOpen}
-                            marker={marker}
+                            coordinates={coordinates}
                             fetchAllWarehouses={fetchAllWarehouses}
                             session={session}
                         />
@@ -150,7 +145,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                         <CreateDispensingPointDialog
                             isOpen={isOpen}
                             setIsOpen={setIsOpen}
-                            marker={marker}
+                            coordinates={coordinates}
                             fetchAllDispensingPoints={fetchAllDispensingPoints}
                             session={session}
                         />

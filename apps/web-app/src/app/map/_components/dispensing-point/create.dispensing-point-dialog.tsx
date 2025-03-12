@@ -19,6 +19,7 @@ import {
     TabsTrigger,
     Textarea,
 } from '@b-prism/shadcn-ui/index';
+import { CoordinatesType } from '@b-prism/types';
 import { CreateDispensingPointDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 import { Type } from '@prisma/client';
@@ -32,12 +33,12 @@ import { Controller, useForm } from 'react-hook-form';
 interface DialogProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
-    marker: MarkerType;
+    coordinates: CoordinatesType;
     fetchAllDispensingPoints: () => void;
     session?: Session | null;
 }
 
-const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllDispensingPoints, session }) => {
+const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coordinates, fetchAllDispensingPoints, session }) => {
     console.log(session?.user);
     const { toast } = useToast();
     const { getAddress, address } = useGetAddress();
@@ -56,8 +57,8 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
             type: 'dispensing_point' as Type,
             name: '',
             description: '',
-            longitude: marker.longitude,
-            latitude: marker.latitude,
+            longitude: coordinates.longitude,
+            latitude: coordinates.latitude,
             capacity: 0,
             address: {
                 street: '',
@@ -72,35 +73,35 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
 
     // Fetch address on dialog open
     useEffect(() => {
-        if (isOpen && marker.longitude && marker.latitude) {
-            getAddress(marker.longitude, marker.latitude);
+        if (isOpen && coordinates.longitude && coordinates.latitude) {
+            getAddress(coordinates.longitude, coordinates.latitude);
         }
-    }, [isOpen, marker]);
+    }, [coordinates]);
 
-    // Update form fields when address or marker changes
+    // Update form fields when address or coordinates changes
     useEffect(() => {
         if (address) {
             reset((prev) => ({ ...prev, address }));
         }
-    }, [address, reset]);
+    }, [address]);
 
     useEffect(() => {
-        reset({ longitude: marker.longitude, latitude: marker.latitude });
-    }, [marker, reset]);
+        reset({ longitude: coordinates.longitude, latitude: coordinates.latitude });
+    }, [coordinates, reset]);
 
     const onSubmit = async (data: CreateDispensingPointDto) => {
         try {
             if (!user) {
-                throw new BadRequestException(`You don't have permission to create a dispensing points.`);
+                throw new BadRequestException(`You don't have permission to create a dispensing point.`);
             }
 
             const formattedData = {
                 ...data,
                 address,
-                user_id: session.user.id,
+                user_id: user.id,
             };
 
-            if (formattedData.name === '') {
+            if (!formattedData.name) {
                 throw new Error('Dispensing Point Name is required');
             }
 
@@ -110,7 +111,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
         } catch (error) {
             console.error('Error creating dispensing point:', error);
             toast({
-                title: 'An error occured',
+                title: 'An error occurred!',
                 description: (error as Error).message,
                 variant: 'destructive',
             });

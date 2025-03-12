@@ -163,8 +163,8 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
         dispensingPointDto.id = dispensingPoint.id ?? '';
         dispensingPointDto.type = dispensingPoint.type ?? 'dispensing_point';
         dispensingPointDto.name = dispensingPoint.name ?? '';
-        dispensingPointDto.longitude = dispensingPoint.longitude ?? '';
-        dispensingPointDto.latitude = dispensingPoint.latitude ?? '';
+        dispensingPointDto.longitude = dispensingPoint.longitude;
+        dispensingPointDto.latitude = dispensingPoint.latitude;
         dispensingPointDto.description = dispensingPoint.description ?? '';
         dispensingPointDto.address = dispensingPoint.address as DispensingPointAddressDto;
         dispensingPointDto.capacity = dispensingPoint.capacity ?? null;

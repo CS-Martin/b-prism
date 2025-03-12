@@ -1,7 +1,7 @@
 import { RoadNetworkDto } from '@dto';
 
 class MapboxApiService {
-    public async reverse_geocoding(longitude: string, latitude: string) {
+    public async reverse_geocoding(longitude: number, latitude: number) {
         try {
             const response = await fetch(
                 `https://api.mapbox.com/search/geocode/v6/reverse?longitude=${longitude}&latitude=${latitude}&access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,

@@ -138,7 +138,7 @@ export const useDeleteWarehouse = () => {
 export const useGetAddress = () => {
     const [address, setAddress] = useState<WarehouseAddressDto>({} as WarehouseAddressDto);
 
-    const getAddress = async (longitude: string, latitude: string) => {
+    const getAddress = async (longitude: number, latitude: number) => {
         const response = await mapboxService.reverse_geocoding(longitude, latitude);
         const data = await response?.json();
 

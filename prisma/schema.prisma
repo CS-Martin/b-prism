@@ -45,8 +45,8 @@ model Warehouse {
   type              Type     @default(warehouse)
   name              String
   description       String?
-  longitude         String
-  latitude          String
+  longitude         Float
+  latitude          Float
   capacity          Int?
   cost_of_stockpile Int?
   family_food_packs Int?

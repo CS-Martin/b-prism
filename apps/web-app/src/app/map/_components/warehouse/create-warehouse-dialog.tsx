@@ -26,21 +26,17 @@ import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { BadRequestException } from '@nestjs/common';
 import { Session } from 'next-auth';
-
-interface MarkerType {
-    longitude: string;
-    latitude: string;
-}
+import { CoordinatesType } from '@b-prism/types';
 
 interface DialogProps {
     isOpen: boolean;
+    coordinates: CoordinatesType;
     setIsOpen: (isOpen: boolean) => void;
-    marker: MarkerType;
     fetchAllWarehouses: () => void;
     session?: Session | null;
 }
 
-const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllWarehouses, session }) => {
+const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coordinates, fetchAllWarehouses, session }) => {
     const { toast } = useToast();
 
     const { createWarehouse } = useCreateWarehouse();
@@ -59,8 +55,8 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
             type: 'warehouse',
             name: '',
             description: '',
-            longitude: marker.longitude,
-            latitude: marker.latitude,
+            longitude: coordinates.longitude,
+            latitude: coordinates.latitude,
             capacity: 0,
             cost_of_stockpile: 0,
             family_food_packs: 0,
@@ -90,10 +86,10 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
 
     // After opening the dialog, get the address
     useEffect(() => {
-        if (isOpen && marker.longitude && marker.latitude) {
-            getAddress(marker.longitude, marker.latitude);
+        if (isOpen && coordinates.longitude && coordinates.latitude) {
+            getAddress(coordinates.longitude, coordinates.latitude);
         }
-    }, [isOpen, marker]);
+    }, [isOpen, coordinates, getAddress]);
 
     useEffect(() => {
         if (address) {
@@ -102,13 +98,12 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                 address,
             }));
         }
-    }, [address, reset]);
+    }, [isOpen, coordinates, getAddress, address, reset]);
 
-    // Reset form values when the marker updates
+    // Reset form values when the coordinates update
     useEffect(() => {
-        reset({ longitude: marker.longitude, latitude: marker.latitude });
-    }, [marker, reset]);
-
+        reset({ longitude: coordinates.longitude, latitude: coordinates.latitude });
+    }, [coordinates, reset]);
     // Form submission handler
     const onSubmit = async (data: CreateWarehouseDto) => {
         try {
@@ -118,8 +113,8 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
 
             const formattedData = {
                 ...data,
-                longitude: marker.longitude,
-                latitude: marker.latitude,
+                longitude: coordinates.longitude,
+                latitude: coordinates.latitude,
             };
 
             if (!formattedData.longitude || !formattedData.latitude || !formattedData.name) {
@@ -279,7 +274,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                             {/* description */}
                                             <p className='text-sm text-gray-500'>Please enter the details of the warehouse non-food items.</p>
 
-                                            <div className='flex mt-3 flex-row gap-4'>
+                                            <div className='flex flex-row gap-4 mt-3'>
                                                 <InputField
                                                     name='non_food_items.family_kits'
                                                     register={register}
@@ -301,7 +296,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                                 />
                                             </div>
 
-                                            <div className='flex mt-3 flex-row gap-4'>
+                                            <div className='flex flex-row gap-4 mt-3'>
                                                 <InputField
                                                     name='non_food_items.hygiene_kits'
                                                     register={register}
@@ -340,7 +335,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                             {/* Address Tab */}
                             <TabsContent
                                 value='address'
-                                className='w-full flex flex-col gap-4'>
+                                className='flex flex-col w-full gap-4'>
                                 <div>
                                     <DialogHeader>
                                         <DialogTitle>Warehouse Address</DialogTitle>

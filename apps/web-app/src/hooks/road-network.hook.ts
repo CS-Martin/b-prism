@@ -10,12 +10,12 @@ export const useDisplayDamagedRoads = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const fetchDamagedRoads = async () => {
-        console.log('FETCHING DAMAGED ROADS');
         try {
             setIsLoading(true);
 
             const response = await roadNetworkService.findAllDamagedRoads();
 
+            console.log('FETCHING DAMAGED ROADS', response.body);
             setDamagedRoads(response.body);
         } catch (error) {
             console.error('Error fetching road network:', error);
