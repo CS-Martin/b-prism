@@ -2,6 +2,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { authService } from '../../../../services/authentication.service';
 import { jwtDecode } from 'jwt-decode';
 import { NextAuthOptions } from 'next-auth';
+import { useRouter } from 'next/navigation';
 
 export const options: NextAuthOptions = {
     providers: [
@@ -12,8 +13,6 @@ export const options: NextAuthOptions = {
                 password: { label: 'Password', type: 'password', placeholder: 'Password' },
             },
             async authorize(credentials) {
-                console.log('Received credentials:', credentials);
-
                 if (!credentials?.email || !credentials?.password) return null;
 
                 const response = await authService.verify(credentials.email, credentials.password);

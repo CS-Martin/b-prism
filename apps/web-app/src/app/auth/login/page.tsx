@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { Input, Label } from '@b-prism/shadcn-ui/index';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRouter } from 'next/navigation';
@@ -10,6 +10,7 @@ import { PrismButton } from 'apps/web-app/src/components/prism-button';
 import { useLoginUser } from 'apps/web-app/src/hooks/authentication.hook';
 import Image from 'next/image';
 import Link from 'next/link';
+import { set } from 'lodash';
 
 export default function LoginPage() {
     const { loginUser, isLoading: isLoggingIn } = useLoginUser();
@@ -25,6 +26,7 @@ export default function LoginPage() {
     });
 
     const handleLoginUser = async (event: React.FormEvent<HTMLFormElement>) => {
+        setIsLoading(true);
         event.preventDefault();
 
         const result = await signIn('credentials', {
@@ -41,24 +43,26 @@ export default function LoginPage() {
                 description: result.error,
                 variant: 'destructive',
             });
+
+            setIsLoading(false);
             return;
         } else {
-            const response: ResponseDto<UserDto> = await loginUser(data.email);
-            const user: UserDto = response.body;
-            const userHasNoValidId: boolean = user.id_image_url === undefined || user.id_image_url === null || user.id_image_url === '';
+            toast({
+                title: 'Success',
+                description: 'You have logged in successfully.',
+                variant: 'success',
+            });
 
-            if (userHasNoValidId) {
-                router.push(`/auth/${user.id}/complete-profile`);
-            } else {
-                router.push('/home');
-            }
+            setIsLoading(false);
+
+            router.push('/home');
         }
     };
 
     return (
         <>
-            <div className='flex min-h-full flex-1 flex-col justify-center lg:px-8'>
-                <div className='sm:mx-auto flex flex-col items-center sm:w-full sm:max-w-sm'>
+            <div className='flex flex-col justify-center flex-1 min-h-full lg:px-8'>
+                <div className='flex flex-col items-center sm:mx-auto sm:w-full sm:max-w-sm'>
                     <Link href={'/home'}>
                         <Image
                             alt='Your Company'
@@ -68,7 +72,7 @@ export default function LoginPage() {
                             className='h-32'
                         />
                     </Link>
-                    <h2 className='text-xl/10 font-semibold tracking-tight'>Sign in to Haribon</h2>
+                    <h2 className='font-semibold tracking-tight text-xl/10'>Sign in to Haribon</h2>
                 </div>
 
                 <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-xs'>
@@ -79,7 +83,7 @@ export default function LoginPage() {
                         <div>
                             <Label
                                 htmlFor='email'
-                                className='block text-sm/6 font-medium'>
+                                className='block font-medium text-sm/6'>
                                 Email address
                             </Label>
                             <div className='mt-2'>
@@ -105,7 +109,7 @@ export default function LoginPage() {
                             <div className='flex items-center justify-between'>
                                 <label
                                     htmlFor='password'
-                                    className='block text-sm/6 font-medium'>
+                                    className='block font-medium text-sm/6'>
                                     Password
                                 </label>
                                 <div className='text-sm'>
@@ -137,7 +141,7 @@ export default function LoginPage() {
                         <div>
                             <PrismButton
                                 type='submit'
-                                isLoading={isLoggingIn}
+                                isLoading={isLoading}
                                 label='Sign in'
                                 loadingLabel='Signing in...'
                                 link={null}
@@ -146,7 +150,7 @@ export default function LoginPage() {
                         </div>
                     </form>
 
-                    <p className='mt-10 text-center text-sm/6 text-gray-500'>
+                    <p className='mt-10 text-center text-gray-500 text-sm/6'>
                         Don&apos;t have an account yet?{' '}
                         <a
                             href='/auth/register'
