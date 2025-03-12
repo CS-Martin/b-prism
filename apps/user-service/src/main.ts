@@ -20,7 +20,16 @@ async function bootstrap() {
         allowedHeaders: ['Content-Type', 'Authorization'],
     });
 
-    const config = new DocumentBuilder().setTitle('User Service').setDescription('User Service API').setVersion('1.0').build();
+    const config = new DocumentBuilder()
+        .setTitle('User Service')
+        .setDescription('User Service API')
+        .setVersion('1.0')
+        .addBearerAuth({
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+        })
+        .build();
 
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document, { useGlobalPrefix: true });

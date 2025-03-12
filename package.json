@@ -68,6 +68,7 @@
         "class-validator": "^0.14.1",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
+        "curl": "^0.1.4",
         "date-fns": "^4.1.0",
         "dotenv": "^16.4.5",
         "input-otp": "^1.4.2",
