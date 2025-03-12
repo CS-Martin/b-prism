@@ -35,7 +35,9 @@ export const useDisplayDispensingPoints = () => {
     };
 
     useEffect(() => {
-        fetchAllDispensingPoints();
+        if (dispensingPoints.length === 0) {
+            fetchAllDispensingPoints();
+        }
     }, []);
 
     return { dispensingPoints, fetchAllDispensingPoints };

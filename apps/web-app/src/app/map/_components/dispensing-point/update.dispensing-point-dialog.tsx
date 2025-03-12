@@ -41,13 +41,13 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
 
     const user = session?.user;
 
-    const { handleSubmit, control, reset, register } = useForm<UpdateDispensingPointDto>({
+    const { handleSubmit, reset, register } = useForm<UpdateDispensingPointDto>({
         defaultValues: {
             type: 'dispensing_point' as Type,
             name: '',
             description: '',
-            longitude: '',
-            latitude: '',
+            longitude: 0,
+            latitude: 0,
             capacity: 0,
             address: {
                 street: '',
@@ -61,7 +61,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
     });
 
     useEffect(() => {
-        if (dispensingPoint) {
+        if (dispensingPoint && isOpen) {
             const { id, ...dispensingPointWithoutId } = dispensingPoint;
             reset(dispensingPointWithoutId);
         }
@@ -134,7 +134,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                         <Textarea
                                             id='description'
                                             {...register('description')}
-                                            className='rounded-sm mt-1'
+                                            className='mt-1 rounded-sm'
                                             placeholder='Description'
                                             disabled={!session}
                                         />

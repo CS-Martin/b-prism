@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { Source, Layer, useMap } from 'react-map-gl';
 import UpdateDispensingPointDialog from './update.dispensing-point-dialog';
 import { Session } from 'next-auth';
+import { useDispensingPointsStore } from 'apps/web-app/src/stores/dispensing-point.store';
 
 interface RenderDispensingPointProps {
-    geoJsonData: any;
     visibility: { dispensingPoints: boolean };
     selectedAction: string | null;
     session?: Session | null;
@@ -21,8 +21,16 @@ interface RenderDispensingPointProps {
  *
  * @returns {JSX.Element | null} The rendered component or null if the map is not loaded or the dispensing points layer is not visible.
  */
-const RenderDispensingPoint = ({ geoJsonData, visibility, selectedAction, session }: RenderDispensingPointProps) => {
+const RenderDispensingPoint = ({ visibility, selectedAction, session }: RenderDispensingPointProps) => {
     const { current: map } = useMap();
+
+    const { dispensingPointsGeoJson, fetchAllDispensingPoints, isLoading: isFetchingDispensingPoints } = useDispensingPointsStore();
+
+    useEffect(() => {
+        if (dispensingPointsGeoJson.features.length === 0) {
+            fetchAllDispensingPoints();
+        }
+    }, []);
 
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState<boolean>(false);
     const [dispensingPointId, setDispensingPointId] = useState<string>('');
@@ -64,7 +72,7 @@ const RenderDispensingPoint = ({ geoJsonData, visibility, selectedAction, sessio
                 type='geojson'
                 data={{
                     type: 'FeatureCollection',
-                    features: geoJsonData.features.filter((feature: any) => feature.properties.type === 'dispensing_point'),
+                    features: dispensingPointsGeoJson.features,
                 }}
                 cluster={true}
                 clusterMaxZoom={14}

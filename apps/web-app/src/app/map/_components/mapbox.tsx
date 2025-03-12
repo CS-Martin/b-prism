@@ -22,20 +22,22 @@ import RenderDispensingPoint from './dispensing-point/render.dispensing-point';
 import { RenderRoadNetwork } from './road-network/render-road-network';
 import { useDisplayDamagedRoads, useDisplayFixedRoadNetworkByBounds } from 'apps/web-app/src/hooks/road-network.hook';
 import { CoordinatesType } from '@b-prism/types';
+import { useMapStore } from 'apps/web-app/src/stores/mapbox.store';
+import { useDispensingPointsStore } from 'apps/web-app/src/stores/dispensing-point.store';
 
 export const MapboxContext = ({ session }: { session: Session | null }) => {
     const mapRef = useRef<MapRef | null>(null);
+
     const selectedAction = useMapActionStore((state) => state.selectedAction);
 
     const { fixedRoadNetwork, fetchFixedRoadsByBounds, isLoading: isFetchingRoadNetwork } = useDisplayFixedRoadNetworkByBounds(mapRef);
     const { damagedRoads, fetchDamagedRoads } = useDisplayDamagedRoads();
     const { warehouses, fetchAllWarehouses } = useDisplayWarehouses();
-    const { dispensingPoints, fetchAllDispensingPoints } = useDisplayDispensingPoints();
+    // const { dispensingPoints, fetchAllDispensingPoints } = useDisplayDispensingPoints();
 
     const [isOpen, setIsOpen] = useState(false);
     const [coordinates, setCoordinates] = useState<CoordinatesType>({ longitude: 0, latitude: 0 });
     const [itemToDelete, setItemToDelete] = useState<{ type: string; id: string } | null>(null);
-    const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [visibility, setVisibility] = useState({
         warehouses: true,
         dispensingPoints: true,
@@ -43,26 +45,29 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
         route: true,
     });
 
-    console.log(dispensingPoints);
+    // console.log(dispensingPoints);
 
-    const geoJsonData = useMemo(
-        () => ({
-            type: 'FeatureCollection',
-            features: [
-                ...dispensingPoints.map((dp) => ({
-                    type: 'Feature',
-                    properties: { id: dp.id, type: 'dispensing_point', name: dp.name },
-                    geometry: { type: 'Point', coordinates: [dp.longitude, dp.latitude] },
-                })),
-                ...warehouses.map((wh) => ({
-                    type: 'Feature',
-                    properties: { id: wh.id, type: 'warehouse', name: wh.name },
-                    geometry: { type: 'Point', coordinates: [Number(wh.longitude), Number(wh.latitude)] },
-                })),
-            ],
-        }),
-        [dispensingPoints, warehouses],
-    );
+    // const geoJsonData = useMemo(() => {
+    //     console.log('geoJsonData recomputed');
+
+    //     if (!dispensingPoints || !warehouses) return { type: 'FeatureCollection', features: [] };
+
+    //     return {
+    //         type: 'FeatureCollection',
+    //         features: [
+    //             ...dispensingPoints.map((dp) => ({
+    //                 type: 'Feature',
+    //                 properties: { id: dp.id, type: 'dispensing_point', name: dp.name },
+    //                 geometry: { type: 'Point', coordinates: [dp.longitude, dp.latitude] },
+    //             })),
+    //             ...warehouses.map((wh) => ({
+    //                 type: 'Feature',
+    //                 properties: { id: wh.id, type: 'warehouse', name: wh.name },
+    //                 geometry: { type: 'Point', coordinates: [Number(wh.longitude), Number(wh.latitude)] },
+    //             })),
+    //         ],
+    //     };
+    // }, [dispensingPoints, warehouses]);
 
     const handleMarkerClick = useCallback(
         (type: string | null, id: string | null) => {
@@ -101,7 +106,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                 mapboxMap.off('click', 'dispensing_point_layer', handleLayerClick);
             };
         }
-    }, [isMapLoaded, handleMarkerClick]);
+    }, [handleMarkerClick]);
 
     const handleMapClick = (event: MapMouseEvent) => {
         setCoordinates({
@@ -126,13 +131,8 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                     initialViewState={{ longitude: 123.700163, latitude: 13.122066, zoom: 9.41, bearing: -38.4, pitch: 75 }}
                     style={{ position: 'absolute', width: '100%', height: '100%' }}
                     mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
-                    onClick={handleMapClick}
-                    onLoad={() => {
-                        setIsMapLoaded(true);
-                        fetchFixedRoadsByBounds();
-                        fetchDamagedRoads();
-                    }}>
-                    {selectedAction === 'createWarehouse' && (
+                    onClick={handleMapClick}>
+                    {/* {selectedAction === 'createWarehouse' && (
                         <CreateWarehouseDialog
                             isOpen={isOpen}
                             setIsOpen={setIsOpen}
@@ -149,11 +149,10 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                             fetchAllDispensingPoints={fetchAllDispensingPoints}
                             session={session}
                         />
-                    )}
+                    )} */}
 
-                    {isMapLoaded && (
-                        <>
-                            {selectedAction === 'findRoute' && <GenerateDirections damagedRoads={damagedRoads} />}
+                    <>
+                        {/* {selectedAction === 'findRoute' && <GenerateDirections damagedRoads={damagedRoads} />}
                             <RenderRoadNetwork
                                 fixedRoadNetworkData={fixedRoadNetwork}
                                 fetchFixedRoadsByBounds={fetchFixedRoadsByBounds}
@@ -166,25 +165,23 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                                 visibility={visibility}
                                 selectedAction={selectedAction}
                                 session={session}
-                            />
-                            <RenderDispensingPoint
-                                geoJsonData={geoJsonData}
-                                visibility={visibility}
-                                selectedAction={selectedAction}
-                                session={session}
-                            />
-                        </>
-                    )}
-                    <ControlPanel
+                            /> */}
+                        <RenderDispensingPoint
+                            visibility={visibility}
+                            selectedAction={selectedAction}
+                            session={session}
+                        />
+                    </>
+                    {/* <ControlPanel
                         visibility={visibility}
                         onVisibilityChange={(layer, isVisible) => setVisibility((prev) => ({ ...prev, [layer]: isVisible }))}
                     />
                     <RescuePostPanel mapRef={mapRef} />
-                    <FetchingIndicator isFetchingRoadNetwork={isFetchingRoadNetwork} />
+                    <FetchingIndicator isFetchingRoadNetwork={isFetchingRoadNetwork} /> */}
                 </Map>
             </div>
 
-            {isOpen && itemToDelete && (
+            {/* {isOpen && itemToDelete && (
                 <DeleteItem
                     item={itemToDelete}
                     onCancel={() => {
@@ -197,7 +194,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                 />
             )}
 
-            <AppSidebar />
+            <AppSidebar /> */}
         </main>
     );
 };
