@@ -118,12 +118,14 @@ const RenderDispensingPoint = ({ visibility, selectedAction, session }: RenderDi
                 />
             </Source>
 
-            <UpdateDispensingPointDialog
-                dispensingPointId={dispensingPointId}
-                isOpen={isUpdateDialogOpen}
-                setIsOpen={setIsUpdateDialogOpen}
-                session={session}
-            />
+            {isUpdateDialogOpen && (
+                <UpdateDispensingPointDialog
+                    dispensingPointId={dispensingPointId}
+                    isOpen={isUpdateDialogOpen}
+                    setIsOpen={setIsUpdateDialogOpen}
+                    session={session}
+                />
+            )}
         </>
     );
 };

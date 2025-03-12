@@ -9,7 +9,6 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    Input,
     Label,
     Separator,
     Tabs,
@@ -18,13 +17,12 @@ import {
     TabsTrigger,
     Textarea,
 } from '@b-prism/shadcn-ui/index';
-import { UpdateDispensingPointDto, UserDto } from '@dto';
+import { UpdateDispensingPointDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 import { Type } from '@prisma/client';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useFindOneDispensingPoint, useUpdateDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
 import { Session } from 'next-auth';
-import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
