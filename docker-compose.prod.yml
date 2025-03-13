@@ -1,5 +1,3 @@
-name: haribon
-
 services:
     microservices:
         build:
