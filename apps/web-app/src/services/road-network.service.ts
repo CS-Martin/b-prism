@@ -1,5 +1,6 @@
 import { ResponseDto, RoadNetworkDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
 
 class RoadNetworkService {
     private API_BASE_URL;
@@ -9,7 +10,7 @@ class RoadNetworkService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ROAD_NETWORK_SERVICE_API_PORT ?? ''}`;
     }
 
-    public async findAllDamagedRoads(): Promise<ResponseDto<RoadNetworkDto[]>> {
+    public async findAllDamagedRoads(): Promise<RoadNetworkDto[]> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/road-network/damaged-roads/all`);
 
@@ -19,7 +20,7 @@ class RoadNetworkService {
                 throw new BadRequestException(error.message);
             }
 
-            return response.json();
+            return (await response.json()).body;
         } catch (error) {
             console.error(error);
 
@@ -27,7 +28,7 @@ class RoadNetworkService {
         }
     }
 
-    public async findFixRoadByBounds(minLng: number, minLat: number, maxLng: number, maxLat: number): Promise<ResponseDto<RoadNetworkDto[]>> {
+    public async findFixRoadByBounds(minLng: number, minLat: number, maxLng: number, maxLat: number): Promise<RoadNetworkDto[]> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/road-network/bounds/search?minLng=${minLng}&minLat=${minLat}&maxLng=${maxLng}&maxLat=${maxLat}`);
 
@@ -37,7 +38,7 @@ class RoadNetworkService {
                 throw new BadRequestException(error.message);
             }
 
-            return response.json();
+            return (await response.json()).body;
         } catch (error) {
             console.error(error);
 

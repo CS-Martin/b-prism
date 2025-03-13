@@ -4,66 +4,40 @@ import { useSession } from 'next-auth/react';
 import { RoadNetworkDto } from '@dto';
 import { FixRoadModal } from './fix-road-modal';
 import { DestroyRoadModal } from './destroy-road-modal';
+import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
+import { useMapStore } from 'apps/web-app/src/stores/map-stores/mapbox.store';
 
 interface RenderRoadNetworkProps {
-    fixedRoadNetworkData: RoadNetworkDto[];
-    fetchFixedRoadsByBounds: () => void;
-
-    damagedRoadsData: RoadNetworkDto[];
-    fetchDamagedRoads: () => void;
-
     visibility: { roadNetwork: boolean };
 }
 
-export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, visibility, fetchFixedRoadsByBounds, fetchDamagedRoads }: RenderRoadNetworkProps) => {
+export const RenderRoadNetwork = ({ visibility }: RenderRoadNetworkProps) => {
     const { data: session } = useSession();
     const { current: map } = useMap();
+
+    const { fixedRoads, damagedRoads, fetchDamagedRoads, fetchFixedRoadsByBounds } = useRoadNetworkStore();
+    const mapRef = useMapStore((state) => state.mapRef);
+    console.log('fixedRoads', fixedRoads);
+    console.log('damagedRoads', damagedRoads);
+
+    useEffect(() => {
+        if (mapRef?.current) {
+            const mapboxMap = mapRef.current;
+            fetchDamagedRoads();
+
+            mapboxMap.on('moveend', () => fetchFixedRoadsByBounds(mapRef));
+
+            return () => {
+                mapboxMap.off('moveend', () => fetchFixedRoadsByBounds(mapRef));
+            };
+        }
+    }, [fetchFixedRoadsByBounds, mapRef]);
 
     const [selectedRoadId, setSelectedRoadId] = useState<string | null>(null);
     const [isDamaged, setIsDamaged] = useState<boolean | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const hoveredRoadId = useRef<string | null>(null);
-
-    const fixedRoadNetworkGeoformat =
-        fixedRoadNetworkData?.map((feature: RoadNetworkDto, index: number) => ({
-            id: index,
-            properties: {
-                id: feature.id,
-                is_damaged: feature.is_damaged,
-                damage_probability: feature.damage_probability,
-                ...feature.properties,
-            },
-            geometry: feature.geometry,
-        })) ?? [];
-
-    const damagedRoadNetworkGeoformat =
-        damagedRoadsData?.map((feature: RoadNetworkDto, index: number) => ({
-            id: index + fixedRoadNetworkData.length, // Avoid duplicate IDs
-            properties: {
-                id: feature.id,
-                is_damaged: feature.is_damaged,
-                damage_probability: feature.damage_probability,
-                ...feature.properties,
-            },
-            geometry: feature.geometry,
-        })) ?? [];
-
-    // Encountered an issue where I cannot update the UI of fixed road
-    // Had to implement this to manually alter the property of the road inside the fixedRoadGeojson
-    // No need to worry because it is also updated in the database
-    const UpdateFixedRoad = (roadId: string) => {
-        // Finds the road
-        const roadIndex = fixedRoadNetworkGeoformat.findIndex((road) => road.properties.id === roadId);
-
-        // Change the propert.is_damage to tag it as passable
-        if (roadIndex !== -1) {
-            fixedRoadNetworkGeoformat[roadIndex].properties.is_damaged = false;
-        }
-
-        // Re-fetch to update UI
-        fetchDamagedRoads();
-    };
 
     useEffect(() => {
         if (!map) return;
@@ -130,7 +104,7 @@ export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, visi
                 type='geojson'
                 data={{
                     type: 'FeatureCollection',
-                    features: [...fixedRoadNetworkGeoformat, ...damagedRoadNetworkGeoformat],
+                    features: [...fixedRoads, ...damagedRoads],
                 }}>
                 <Layer
                     id='road_layer'
@@ -158,23 +132,20 @@ export const RenderRoadNetwork = ({ fixedRoadNetworkData, damagedRoadsData, visi
                 />
             </Source>
 
-            {isDialogOpen &&
+            {/* {isDialogOpen &&
                 session &&
                 selectedRoadId &&
                 (isDamaged ? (
                     <FixRoadModal
                         setIsDialogOpen={setIsDialogOpen}
                         roadId={selectedRoadId}
-                        fetchFixRoadByBounds={fetchFixedRoadsByBounds}
-                        UpdateFixedRoad={UpdateFixedRoad}
                     />
                 ) : (
                     <DestroyRoadModal
                         setIsDialogOpen={setIsDialogOpen}
                         roadId={selectedRoadId}
-                        fetchDamagedRoads={fetchDamagedRoads}
                     />
-                ))}
+                ))} */}
         </>
     );
 };

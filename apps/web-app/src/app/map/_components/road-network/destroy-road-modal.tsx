@@ -16,10 +16,9 @@ import React from 'react';
 interface DestroyRoadModalProps {
     roadId: string | undefined;
     setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    fetchDamagedRoads: () => void;
 }
 
-export const DestroyRoadModal = ({ roadId, setIsDialogOpen, fetchDamagedRoads }: DestroyRoadModalProps) => {
+export const DestroyRoadModal = ({ roadId, setIsDialogOpen }: DestroyRoadModalProps) => {
     const { data: session } = useSession();
     const { destroyRoad } = useDestroyRoad();
 
@@ -30,8 +29,6 @@ export const DestroyRoadModal = ({ roadId, setIsDialogOpen, fetchDamagedRoads }:
         if (roadId) {
             await destroyRoad(roadId, requestAuthor);
             setIsDialogOpen(false);
-
-            fetchDamagedRoads();
         }
     };
 

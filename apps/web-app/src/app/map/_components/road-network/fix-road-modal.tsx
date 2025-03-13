@@ -16,12 +16,9 @@ import React from 'react';
 interface FixRoadModalProps {
     roadId: string | undefined;
     setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    fetchFixRoadByBounds: (forceFetched: boolean) => void;
-
-    UpdateFixedRoad: (roadId: string) => void;
 }
 
-export const FixRoadModal = ({ roadId, setIsDialogOpen, fetchFixRoadByBounds, UpdateFixedRoad }: FixRoadModalProps) => {
+export const FixRoadModal = ({ roadId, setIsDialogOpen }: FixRoadModalProps) => {
     const { data: session } = useSession();
     const { fixRoad } = useFixRoad();
 
@@ -32,10 +29,6 @@ export const FixRoadModal = ({ roadId, setIsDialogOpen, fetchFixRoadByBounds, Up
         if (roadId) {
             await fixRoad(roadId, requestAuthor);
             setIsDialogOpen(false);
-
-            // Doesn't work because if same in previous bound, it will not fetch
-            // Need to think of a new method to update UI
-            UpdateFixedRoad(roadId);
         }
     };
 
@@ -59,7 +52,7 @@ export const FixRoadModal = ({ roadId, setIsDialogOpen, fetchFixRoadByBounds, Up
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={handleCancel}>No, Keep it</AlertDialogCancel>
                     <AlertDialogAction
-                        className='bg-green-500 hover:bg-green-600 text-white'
+                        className='text-white bg-green-500 hover:bg-green-600'
                         onClick={handleRoadDestroy}>
                         Yes, repair it!
                     </AlertDialogAction>

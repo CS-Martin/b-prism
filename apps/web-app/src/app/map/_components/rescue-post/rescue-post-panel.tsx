@@ -8,7 +8,7 @@ import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { RescuePostCard } from './rescue-post-card';
 import { useDisplayRescuePosts } from 'apps/web-app/src/hooks/rescue-post.hook';
 
-const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
+const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> | null }) => {
     const { toast } = useToast();
     const [currentMarker, setCurrentMarker] = useState<any>(null);
     const [isExpanded, setIsExpanded] = useState(true);
@@ -46,7 +46,7 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                 <div className={`cursor-move flex items-center justify-between transition-all duration-300 ${isExpanded ? 'px-5 pt-3.5 mb-3' : 'p-3'}`}>
                     <Label className={`text-[16px] text-white font-semibold ${isExpanded ? '' : 'hidden'}`}>Rescue Posts</Label>
                     <div
-                        className='cursor-pointer text-white'
+                        className='text-white cursor-pointer'
                         onClick={() => setIsExpanded(!isExpanded)}>
                         {isExpanded ? <PanelRight size={18} /> : <MessageSquareMore size={18} />}
                     </div>
@@ -56,7 +56,7 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> }) => {
                         <div className='px-5 pb-3.5'>
                             <p className='text-sm text-gray-200'>View and manage rescue posts on the map, sourced from a Facebook Messenger bot.</p>
                         </div>
-                        <Separator className='my-3 bg-gray-500 w-full' />
+                        <Separator className='w-full my-3 bg-gray-500' />
                         <ScrollArea
                             className='h-[calc(100%-130px)]'
                             id='scroll-area'>
