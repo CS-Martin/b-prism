@@ -32,6 +32,9 @@ jobs:
             - name: Build the Docker image
               run: docker-compose -f docker-compose.prod.yml build
 
+            - name: List Docker images
+              run: docker images
+
             - name: Tag the image
               run: docker tag haribon-microservices martin09123/haribon-microservices:latest
 

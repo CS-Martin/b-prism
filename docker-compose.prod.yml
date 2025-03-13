@@ -1,5 +1,6 @@
 services:
     microservices:
+        image: haribon-microservices
         build:
             context: .
             dockerfile: Dockerfile.prod
