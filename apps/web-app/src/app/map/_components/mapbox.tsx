@@ -17,6 +17,7 @@ import RenderDispensingPoint from './dispensing-point/render.dispensing-point';
 import { RenderRoadNetwork } from './road-network/render-road-network';
 import { CoordinatesType } from '@b-prism/types';
 import { useMapStore } from 'apps/web-app/src/stores/map-stores/mapbox.store';
+import { GenerateDirections } from './directions/generate-directions';
 
 export const MapboxContext = ({ session }: { session: Session | null }) => {
     const { mapRef, setMapRef } = useMapStore();
@@ -119,7 +120,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                     )}
 
                     <>
-                        {/* {selectedAction === 'findRoute' && <GenerateDirections damagedRoads={damagedRoads} />} */}
+                        {/* {selectedAction === 'findRoute' && <GenerateDirections />} */}
 
                         <RenderRoadNetwork visibility={visibility} />
 

@@ -19,18 +19,18 @@ class MapboxApiService {
         }
     }
 
-    public async getDirections(start: [number, number], destination: [number, number], damagedRoads: RoadNetworkDto[], profile?: 'driving' | 'walking' | 'cycling') {
+    public async getDirections(start: [number, number], destination: [number, number], damagedRoads: any, profile?: 'driving' | 'walking' | 'cycling') {
         try {
             // Extract coordinates from damaged roads and format them for the Mapbox API
             const coordinates = damagedRoads
-                .map((road) => {
+                .map((road: any) => {
                     // Parse the geometry if it's a string, otherwise use it directly
                     const geometry = typeof road.geometry === 'string' ? JSON.parse(road.geometry) : road.geometry;
                     // Return the coordinates from the geometry
                     return geometry.coordinates;
                 })
                 // Flatten the array of coordinates
-                .reduce((acc, val) => acc.concat(val), []);
+                .reduce((acc: any, val: any) => acc.concat(val), []);
 
             // Format coordinates for Mapbox API by converting them to 'point(lon lat)' format
             const excludedPoints = coordinates.map(([lon, lat]: [number, number]) => `point(${lon} ${lat})`).join(',');

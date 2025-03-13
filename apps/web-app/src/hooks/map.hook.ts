@@ -175,24 +175,21 @@ export const useGetDirections = () => {
     const [directions, setDirections] = useState<GeoJSON.Feature<GeoJSON.LineString>[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const getDirections = useCallback(
-        async (start: [number, number], destination: [number, number], damagedRoads: RoadNetworkDto[], profile?: 'driving' | 'walking' | 'cycling') => {
-            setIsLoading(true);
+    const getDirections = useCallback(async (start: [number, number], destination: [number, number], damagedRoads: any, profile?: 'driving' | 'walking' | 'cycling') => {
+        setIsLoading(true);
 
-            try {
-                const routes = await mapboxService.getDirections(start, destination, damagedRoads, profile);
+        try {
+            const routes = await mapboxService.getDirections(start, destination, damagedRoads, profile);
 
-                setDirections(routes);
-            } catch (error) {
-                console.error('Failed to fetch directions from Mapbox Direction API ');
+            setDirections(routes);
+        } catch (error) {
+            console.error('Failed to fetch directions from Mapbox Direction API ');
 
-                throw error;
-            } finally {
-                setIsLoading(false);
-            }
-        },
-        [],
-    );
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
 
     return { directions, getDirections, isLoading };
 };

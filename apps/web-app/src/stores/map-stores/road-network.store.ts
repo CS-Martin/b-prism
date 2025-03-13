@@ -86,9 +86,9 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
 
             const damagedRoadsGeoformat =
                 damagedRoads?.map((road: RoadNetworkDto, index: number) => ({
-                    id: index,
+                    id: index + Date.now(),
                     properties: {
-                        id: road.id + Date.now(),
+                        id: road.id,
                         is_damaged: road.is_damaged,
                         damage_probability: road.damage_probability,
                         ...road.properties,
