@@ -1,11 +1,10 @@
 import { RoadNetworkDto } from '@dto';
 import { create } from 'zustand';
 import { roadNetworkService } from '../../services/road-network.service';
-import React, { use, useMemo } from 'react';
+import React from 'react';
 import { MapRef } from 'react-map-gl';
 import { debounce, DebouncedFunc } from 'lodash';
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { useMapStore } from './mapbox.store';
 
 type RoadNetworkState = {
     damagedRoads: any;
@@ -132,7 +131,7 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
             const geoJsonFixedRoads =
                 fixedRoadsResponse.map((road: RoadNetworkDto, index: number) => ({
                     type: 'Feature',
-                    id: index + useRoadNetworkStore.getState().damagedRoads.length,
+                    id: index + 100,
                     geometry: road.geometry,
                     properties: {
                         id: road.id,
