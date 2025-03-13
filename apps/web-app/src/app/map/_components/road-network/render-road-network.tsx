@@ -17,8 +17,6 @@ export const RenderRoadNetwork = ({ visibility }: RenderRoadNetworkProps) => {
 
     const { fixedRoads, damagedRoads, fetchDamagedRoads, fetchFixedRoadsByBounds } = useRoadNetworkStore();
     const mapRef = useMapStore((state) => state.mapRef);
-    console.log('fixedRoads', fixedRoads);
-    console.log('damagedRoads', damagedRoads);
 
     useEffect(() => {
         if (mapRef?.current) {
@@ -31,7 +29,7 @@ export const RenderRoadNetwork = ({ visibility }: RenderRoadNetworkProps) => {
                 mapboxMap.off('moveend', () => fetchFixedRoadsByBounds(mapRef));
             };
         }
-    }, [fetchFixedRoadsByBounds, mapRef]);
+    }, [mapRef]);
 
     const [selectedRoadId, setSelectedRoadId] = useState<string | null>(null);
     const [isDamaged, setIsDamaged] = useState<boolean | null>(null);
@@ -132,7 +130,7 @@ export const RenderRoadNetwork = ({ visibility }: RenderRoadNetworkProps) => {
                 />
             </Source>
 
-            {/* {isDialogOpen &&
+            {isDialogOpen &&
                 session &&
                 selectedRoadId &&
                 (isDamaged ? (
@@ -145,7 +143,7 @@ export const RenderRoadNetwork = ({ visibility }: RenderRoadNetworkProps) => {
                         setIsDialogOpen={setIsDialogOpen}
                         roadId={selectedRoadId}
                     />
-                ))} */}
+                ))}
         </>
     );
 };

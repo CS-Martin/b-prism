@@ -10,6 +10,7 @@ import {
 } from '@b-prism/shadcn-ui/index';
 import { UserDto } from '@dto';
 import { useDestroyRoad } from 'apps/web-app/src/hooks/road-network.hook';
+import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 
@@ -20,7 +21,7 @@ interface DestroyRoadModalProps {
 
 export const DestroyRoadModal = ({ roadId, setIsDialogOpen }: DestroyRoadModalProps) => {
     const { data: session } = useSession();
-    const { destroyRoad } = useDestroyRoad();
+    const { destroyRoad } = useRoadNetworkStore();
 
     const user = session?.user;
     const requestAuthor = `${user?.given_name} ${user?.family_name}`;

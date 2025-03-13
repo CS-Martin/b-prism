@@ -3,8 +3,9 @@ import { create } from 'zustand';
 import { roadNetworkService } from '../../services/road-network.service';
 import React, { use, useMemo } from 'react';
 import { MapRef } from 'react-map-gl';
-import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { debounce, DebouncedFunc } from 'lodash';
+import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { useMapStore } from './mapbox.store';
 
 type RoadNetworkState = {
     damagedRoads: any;
@@ -15,6 +16,9 @@ type RoadNetworkState = {
     fetchDamagedRoads: () => Promise<void>;
     fetchFixedRoadsByBounds: DebouncedFunc<(mapRef: React.RefObject<MapRef>) => Promise<void>>;
 
+    destroyRoad: (roadId: string, author: string) => Promise<void>;
+    fixRoad: (roadId: string, author: string) => Promise<void>;
+
     isLoading: boolean;
 };
 
@@ -23,6 +27,57 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
     fixedRoads: [],
     prevBounds: null,
     isLoading: false,
+
+    destroyRoad: async (roadId: string, author: string) => {
+        set({ isLoading: true });
+        try {
+            await roadNetworkService.destroyRoad(roadId, author);
+
+            toast({
+                title: 'Success',
+                description: 'Road destroyed successfully',
+                variant: 'success',
+            });
+
+            await useRoadNetworkStore.getState().fetchDamagedRoads();
+        } catch (error) {
+            console.error('Error destroying road:', error);
+
+            toast({
+                title: 'Error',
+                description: 'An error occurred while destroying the road',
+                variant: 'destructive',
+            });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    fixRoad: async (roadId: string, author: string) => {
+        set({ isLoading: true });
+        try {
+            await roadNetworkService.fixRoad(roadId, author);
+
+            // Trigger refetch to update UI
+            await useRoadNetworkStore.getState().fetchDamagedRoads();
+
+            toast({
+                title: 'Success',
+                description: 'Road fixed successfully',
+                variant: 'success',
+            });
+        } catch (error) {
+            console.error('Error fixing road:', error);
+
+            toast({
+                title: 'Error',
+                description: 'An error occurred while fixing the road',
+                variant: 'destructive',
+            });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
 
     fetchDamagedRoads: async () => {
         set({ isLoading: true });

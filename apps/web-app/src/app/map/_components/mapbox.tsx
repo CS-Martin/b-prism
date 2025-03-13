@@ -1,11 +1,9 @@
 'use client';
 
-import { SelectedActionType } from '@b-prism/enums';
-import Map, { MapMouseEvent, MapRef } from 'react-map-gl';
+import Map, { MapMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import { useDisplayWarehouses } from 'apps/web-app/src/hooks/map.hook';
 import { useMapActionStore } from 'apps/web-app/src/stores/sidebar-map-action.store';
 import CreateWarehouseDialog from './warehouse/create-warehouse-dialog';
 import RenderWarehouse from './warehouse/render-warehouse';
@@ -13,17 +11,12 @@ import DeleteItem from './delete-item';
 import CreateDispensingPointDialog from './dispensing-point/create.dispensing-point-dialog';
 import ControlPanel from './control-panel';
 import RescuePostPanel from './rescue-post/rescue-post-panel';
-import FetchingIndicator from './fetching-indicator';
 import { Session } from 'next-auth';
-import { useDisplayDispensingPoints } from 'apps/web-app/src/hooks/dispensing-point.hook';
-import { GenerateDirections } from './directions/generate-directions';
 import { AppSidebar } from 'apps/web-app/src/components/sidebar';
 import RenderDispensingPoint from './dispensing-point/render.dispensing-point';
 import { RenderRoadNetwork } from './road-network/render-road-network';
 import { CoordinatesType } from '@b-prism/types';
 import { useMapStore } from 'apps/web-app/src/stores/map-stores/mapbox.store';
-import { useDispensingPointsStore } from 'apps/web-app/src/stores/map-stores/dispensing-point.store';
-import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 
 export const MapboxContext = ({ session }: { session: Session | null }) => {
     const { mapRef, setMapRef } = useMapStore();
