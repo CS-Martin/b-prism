@@ -20,6 +20,9 @@ jobs:
                   DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
               run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
+            - name: Check directory
+              run: ls -R
+
             - name: Build the Docker image
               run: docker-compose -f docker-compose.prod.yaml build
 
