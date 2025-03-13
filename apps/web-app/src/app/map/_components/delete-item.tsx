@@ -13,6 +13,8 @@ import {
 import { UserDto } from '@dto';
 import { useDeleteDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
 import { useDeleteWarehouse } from 'apps/web-app/src/hooks/map.hook';
+import { useDispensingPointsStore } from 'apps/web-app/src/stores/map-stores/dispensing-point.store';
+import { useWarehouseStore } from 'apps/web-app/src/stores/map-stores/warehouse.store';
 import { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
 
@@ -52,9 +54,11 @@ const DeleteItem = ({ item, onCancel, session }: DeleteItemProps) => {
         switch (item.type) {
             case 'warehouse':
                 await deleteWarehouse(item.id, userFullname, user.accessToken);
+                useWarehouseStore.getState().removeWarehouse(item.id);
                 break;
             case 'dispensing_point':
                 await deleteDispensingPoint(item.id, userFullname, user.accessToken);
+                useDispensingPointsStore.getState().removeDispensingPoint(item.id);
                 break;
             // To add: Evacuation point
             default:

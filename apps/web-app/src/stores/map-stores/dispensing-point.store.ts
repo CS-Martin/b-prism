@@ -8,6 +8,7 @@ interface DispensingPointsState {
     isLoading: boolean;
     fetchAllDispensingPoints: () => Promise<void>;
     addDispensingPoint: (newDispensingPoint: DispensingPointDto) => void;
+    removeDispensingPoint: (dispensingPointId: string) => void;
 }
 
 export const useDispensingPointsStore = create<DispensingPointsState>((set) => ({
@@ -74,6 +75,19 @@ export const useDispensingPointsStore = create<DispensingPointsState>((set) => (
                     },
                 },
             ];
+
+            return {
+                dispensingPointsGeoJson: {
+                    type: 'FeatureCollection',
+                    features: newDispensingPoints,
+                },
+            };
+        });
+    },
+
+    removeDispensingPoint: (dispensingPointId: string) => {
+        set((state) => {
+            const newDispensingPoints = state.dispensingPointsGeoJson.features.filter((dp) => dp.properties.id !== dispensingPointId);
 
             return {
                 dispensingPointsGeoJson: {

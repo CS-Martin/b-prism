@@ -9,6 +9,7 @@ type WarehouseState = {
     isLoading: boolean;
     fetchAllWarehouses: () => Promise<void>;
     addWarehouse: (newWarehouse: WarehouseDto) => void;
+    removeWarehouse: (warehouseId: string) => void;
 };
 
 export const useWarehouseStore = create<WarehouseState>((set) => ({
@@ -78,6 +79,19 @@ export const useWarehouseStore = create<WarehouseState>((set) => ({
                 warehouseGeoJson: {
                     ...state.warehouseGeoJson,
                     features: [...state.warehouseGeoJson.features, newFeature],
+                },
+            };
+        });
+    },
+
+    removeWarehouse: (warehouseId: string) => {
+        set((state) => {
+            const newFeatures = state.warehouseGeoJson.features.filter((feature) => feature.properties.id !== warehouseId);
+
+            return {
+                warehouseGeoJson: {
+                    ...state.warehouseGeoJson,
+                    features: newFeatures,
                 },
             };
         });

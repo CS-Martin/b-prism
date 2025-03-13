@@ -114,6 +114,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                             session={session}
                         />
                     )}
+
                     {selectedAction === 'createDispensingPoint' && (
                         <CreateDispensingPointDialog
                             isOpen={isOpen}
@@ -137,18 +138,19 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                             selectedAction={selectedAction}
                             session={session}
                         />
+
                         <RenderDispensingPoint
                             visibility={visibility}
                             selectedAction={selectedAction}
                             session={session}
                         />
                     </>
-                    {/* <ControlPanel
+                    <ControlPanel
                         visibility={visibility}
                         onVisibilityChange={(layer, isVisible) => setVisibility((prev) => ({ ...prev, [layer]: isVisible }))}
                     />
                     <RescuePostPanel mapRef={mapRef} />
-                    <FetchingIndicator isFetchingRoadNetwork={isFetchingRoadNetwork} /> */}
+                    <FetchingIndicator isFetchingRoadNetwork={isFetchingRoadNetwork} />
                 </Map>
             </div>
 
