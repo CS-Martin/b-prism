@@ -1,20 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { Input, Label } from '@b-prism/shadcn-ui/index';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRouter } from 'next/navigation';
-import { ResponseDto, UserDto } from '@dto';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
-import { useLoginUser } from 'apps/web-app/src/hooks/authentication.hook';
 import Image from 'next/image';
 import Link from 'next/link';
-import { set } from 'lodash';
 
 export default function LoginPage() {
-    const { loginUser, isLoading: isLoggingIn } = useLoginUser();
-
     const { toast } = useToast();
     const router = useRouter();
 

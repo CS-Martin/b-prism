@@ -14,8 +14,6 @@ export const GenerateDirections = () => {
     const { directions, getDirections, isLoading } = useGetDirections();
     const { damagedRoads } = useRoadNetworkStore();
 
-    console.log(damagedRoads);
-
     const [start, setStart] = useState<[number, number] | null>(null);
     const [destination, setDestination] = useState<[number, number] | null>(null);
 
@@ -50,7 +48,7 @@ export const GenerateDirections = () => {
     useEffect(() => {
         if (start && destination) {
             getDirections(start, destination, damagedRoads, 'driving')
-                .then(() => console.log('Directions:', directions))
+                .then(() => console.info('Directions:', directions))
                 .catch((err) => console.error('Error fetching directions:', err));
         }
     }, [start, destination, getDirections]);

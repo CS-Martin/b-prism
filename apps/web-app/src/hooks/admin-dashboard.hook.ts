@@ -13,7 +13,6 @@ export const useDisplayUsers = (accessToken: string | null) => {
             setIsLoading(true);
 
             const response: ResponseDto<UserDto[]> = await userService.fetchAllUsers(accessToken);
-            console.log('response', response);
 
             if (response.statusCode !== 201) {
                 throw new Error('Failed to fetch users');

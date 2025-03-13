@@ -47,8 +47,6 @@ export const RenderRoadNetwork = ({ visibility }: RenderRoadNetworkProps) => {
             const clickedRoad = road[0];
             const clickedRoadId = clickedRoad.properties?.id;
 
-            console.log(clickedRoad);
-
             setSelectedRoadId(clickedRoadId);
             setIsDamaged(clickedRoad.properties?.is_damaged ?? false);
             setIsDialogOpen(true);

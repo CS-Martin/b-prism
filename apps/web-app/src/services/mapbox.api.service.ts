@@ -49,14 +49,12 @@ class MapboxApiService {
             }
 
             if (!response.ok) {
-                console.log('?', response);
                 console.error('Failed to fetch directions from Mapbox Direction API  ');
 
                 throw new Error('Failed to fetch directions from Mapbox API.');
             }
 
             const data = await response.json();
-            console.log(data);
 
             if (data.code !== 'Ok') {
                 console.error('Failed to fetch directions from Mapbox Direction API  ');

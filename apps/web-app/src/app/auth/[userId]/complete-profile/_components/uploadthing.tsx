@@ -47,12 +47,12 @@ export default function UploadThing() {
     return (
         <div className='bg-[#18181A] w-[550px] rounded-lg  border-gray-600 border'>
             <div className='p-5 border-b'>
-                <p className='text-lg font-semibold mb-3'>Upload Image</p>
+                <p className='mb-3 text-lg font-semibold'>Upload Image</p>
                 <p className='text-gray-400'>Your image will be used to verify your identity that will give you access to contribute to the system.</p>
             </div>
             {/* Show preview if an image is selected */}
             <div className='p-5'>
-                <p className='text-gray-600 font-semibold mb-2'>Preview:</p>
+                <p className='mb-2 font-semibold text-gray-600'>Preview:</p>
                 {preview ? (
                     <div className=''>
                         <Image
@@ -76,8 +76,8 @@ export default function UploadThing() {
                 )}
 
                 <div className='mt-5'>
-                    <Label className='text-gray-500 font-semibold '>Upload Image</Label>
-                    <div className='border-2 border-gray-500 rounded-lg mt-2 border-dashed'>
+                    <Label className='font-semibold text-gray-500 '>Upload Image</Label>
+                    <div className='mt-2 border-2 border-gray-500 border-dashed rounded-lg'>
                         <UploadDropzone
                             endpoint='imageUploader'
                             disabled={isUploadZoneDisabled}
@@ -87,8 +87,6 @@ export default function UploadThing() {
                             onClientUploadComplete={(res) => {
                                 setIsUploadComplete(false);
                                 setIsUploadZoneDisabled(true);
-
-                                console.log('onClientUploadComplete', res);
 
                                 const user_id: string = res[0].serverData.uploadedBy!;
                                 const key: string = res[0].key;
@@ -102,7 +100,7 @@ export default function UploadThing() {
                                 });
                             }}
                             onUploadError={(error: Error) => {
-                                console.log(`Error! ${error.message}`);
+                                console.error(`Error! ${error.message}`);
 
                                 toast({
                                     title: 'Error!',
@@ -117,7 +115,7 @@ export default function UploadThing() {
                     </p>
                 </div>
             </div>
-            <div className='p-5 flex justify-end gap-2 border border-t'>
+            <div className='flex justify-end gap-2 p-5 border border-t'>
                 <Button
                     variant='ghost'
                     disabled={!isUploadComplete}>
@@ -125,7 +123,7 @@ export default function UploadThing() {
                 </Button>
                 <Button
                     disabled={isUploadComplete}
-                    className='px-5 bg-blue-500 hover:bg-blue-600 text-white'>
+                    className='px-5 text-white bg-blue-500 hover:bg-blue-600'>
                     <Link href={'/home'}>Complete</Link>
                 </Button>
             </div>

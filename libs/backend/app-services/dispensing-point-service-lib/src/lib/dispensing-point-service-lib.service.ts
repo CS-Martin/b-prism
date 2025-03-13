@@ -55,7 +55,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             return response;
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
             throw new BadRequestException(error);
         }
@@ -85,7 +85,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             return response;
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
             throw new BadRequestException(error);
         }
@@ -112,7 +112,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             await this.activityLogService.create(logData);
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
             throw new BadRequestException(error);
         }
@@ -131,7 +131,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             return response;
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
             throw new BadRequestException(error);
         }
@@ -151,7 +151,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             return response;
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
             throw new BadRequestException(error);
         }

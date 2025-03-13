@@ -39,7 +39,6 @@ interface DialogProps {
 }
 
 const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coordinates, session }) => {
-    console.log(session?.user);
     const { toast } = useToast();
     const { getAddress, address } = useGetAddress();
     const { createDispensingPoint } = useCreateDispensingPoint();
@@ -108,7 +107,6 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
             const newDispensingPoint: DispensingPointDto | undefined = await createDispensingPoint(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
 
             if (newDispensingPoint) {
-                console.log(newDispensingPoint, 'IS HERe');
                 useDispensingPointsStore.getState().addDispensingPoint(newDispensingPoint);
             }
 

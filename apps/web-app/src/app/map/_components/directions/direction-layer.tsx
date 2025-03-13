@@ -9,7 +9,6 @@ interface Directions extends Feature<LineString, GeoJsonProperties> {
 }
 
 export const DirectionLayer = ({ directions }: { directions: Directions[] }) => {
-    console.log('directions', directions);
     const { current: mapRef } = useMap();
     const popupRef = useRef<mapboxgl.Popup[]>([]);
 
