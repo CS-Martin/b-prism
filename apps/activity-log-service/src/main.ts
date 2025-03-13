@@ -12,14 +12,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
-    // Get the current environment (default to 'development' if not set)
     const isProduction = process.env.APP_ENV === 'production';
 
-    // Set CORS policy depending on the environment
     app.enableCors({
         origin: isProduction ? ['https://projectharibon.com', 'https://www.projectharibon.com'] : ['http://localhost:3000', 'http://localhost'], // Local development allowed origins
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
+        methods: ['GET', 'PUT'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+        credentials: true,
     });
 
     const config = new DocumentBuilder().setTitle('Activity Log Service').setDescription('Activity Log Service API').setVersion('1.0').build();
