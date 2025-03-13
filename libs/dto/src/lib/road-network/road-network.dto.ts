@@ -15,9 +15,9 @@ export class RoadNetworkDto {
     @ApiProperty({ type: RoadNetworkGeometryDto })
     geometry!: JSON;
 
-    @ApiProperty()
+    @ApiProperty({ required: true })
     is_damaged!: boolean;
 
-    @ApiProperty()
+    @ApiProperty({ required: true })
     damage_probability!: number;
 }

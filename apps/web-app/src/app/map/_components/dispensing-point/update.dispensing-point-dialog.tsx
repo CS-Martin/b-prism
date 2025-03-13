@@ -9,7 +9,6 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    Input,
     Label,
     Separator,
     Tabs,
@@ -18,13 +17,12 @@ import {
     TabsTrigger,
     Textarea,
 } from '@b-prism/shadcn-ui/index';
-import { UpdateDispensingPointDto, UserDto } from '@dto';
+import { UpdateDispensingPointDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 import { Type } from '@prisma/client';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useFindOneDispensingPoint, useUpdateDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
 import { Session } from 'next-auth';
-import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -41,13 +39,13 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
 
     const user = session?.user;
 
-    const { handleSubmit, control, reset, register } = useForm<UpdateDispensingPointDto>({
+    const { handleSubmit, reset, register } = useForm<UpdateDispensingPointDto>({
         defaultValues: {
             type: 'dispensing_point' as Type,
             name: '',
             description: '',
-            longitude: '',
-            latitude: '',
+            longitude: 0,
+            latitude: 0,
             capacity: 0,
             address: {
                 street: '',
@@ -61,7 +59,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
     });
 
     useEffect(() => {
-        if (dispensingPoint) {
+        if (dispensingPoint && isOpen) {
             const { id, ...dispensingPointWithoutId } = dispensingPoint;
             reset(dispensingPointWithoutId);
         }
@@ -134,7 +132,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
                                         <Textarea
                                             id='description'
                                             {...register('description')}
-                                            className='rounded-sm mt-1'
+                                            className='mt-1 rounded-sm'
                                             placeholder='Description'
                                             disabled={!session}
                                         />

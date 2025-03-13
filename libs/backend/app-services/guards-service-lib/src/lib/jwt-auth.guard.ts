@@ -25,8 +25,6 @@ export class AuthGuard implements CanActivate {
                 secret: process.env['JWT_SECRET'],
             });
 
-            console.log(payload);
-
             this.logger.log(`Token verified successfully for user: ${payload?.email || 'Unknown'}`);
 
             // 💡 We're assigning the payload to the request object here

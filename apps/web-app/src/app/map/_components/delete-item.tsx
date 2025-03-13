@@ -13,14 +13,14 @@ import {
 import { UserDto } from '@dto';
 import { useDeleteDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
 import { useDeleteWarehouse } from 'apps/web-app/src/hooks/map.hook';
+import { useDispensingPointsStore } from 'apps/web-app/src/stores/map-stores/dispensing-point.store';
+import { useWarehouseStore } from 'apps/web-app/src/stores/map-stores/warehouse.store';
 import { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
 
 interface DeleteItemProps {
     item: { type: string; id: string };
     onCancel: () => void;
-    fetchAllWarehouses: () => void;
-    fetchAllDispensingPoints: () => void;
     session?: Session | null;
 }
 
@@ -37,7 +37,7 @@ interface DeleteItemProps {
  *
  * @returns {JSX.Element} The rendered component.
  */
-const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoints, session }: DeleteItemProps) => {
+const DeleteItem = ({ item, onCancel, session }: DeleteItemProps) => {
     const { deleteWarehouse } = useDeleteWarehouse();
     const { deleteDispensingPoint } = useDeleteDispensingPoint();
 
@@ -54,18 +54,16 @@ const DeleteItem = ({ item, onCancel, fetchAllWarehouses, fetchAllDispensingPoin
         switch (item.type) {
             case 'warehouse':
                 await deleteWarehouse(item.id, userFullname, user.accessToken);
+                useWarehouseStore.getState().removeWarehouse(item.id);
                 break;
             case 'dispensing_point':
                 await deleteDispensingPoint(item.id, userFullname, user.accessToken);
+                useDispensingPointsStore.getState().removeDispensingPoint(item.id);
                 break;
             // To add: Evacuation point
             default:
                 break;
         }
-
-        // Trigger re-fetch of warehouses to update client
-        fetchAllWarehouses();
-        fetchAllDispensingPoints();
     };
 
     return (

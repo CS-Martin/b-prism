@@ -2,16 +2,24 @@ import { Layer, Source, useMap } from 'react-map-gl';
 import UpdateWarehouseDialog from './update.warehouse-dialog';
 import { useEffect, useState } from 'react';
 import { Session } from 'next-auth';
+import { useWarehouseStore } from 'apps/web-app/src/stores/map-stores/warehouse.store';
 
 interface RenderWarehouseProps {
-    geoJsonData: any;
     visibility: { warehouses: boolean };
     selectedAction: string | null;
     session?: Session | null;
 }
 
-const RenderWarehouse = ({ geoJsonData, visibility, selectedAction, session }: RenderWarehouseProps) => {
+const RenderWarehouse = ({ visibility, selectedAction, session }: RenderWarehouseProps) => {
     const { current: map } = useMap();
+
+    const { warehouseGeoJson, fetchAllWarehouses, isLoading } = useWarehouseStore();
+
+    useEffect(() => {
+        if (warehouseGeoJson.features.length === 0) {
+            fetchAllWarehouses();
+        }
+    }, []);
 
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState<boolean>(false);
     const [warehouseId, setWarehouseId] = useState<string>('');
@@ -78,7 +86,7 @@ const RenderWarehouse = ({ geoJsonData, visibility, selectedAction, session }: R
                 type='geojson'
                 data={{
                     type: 'FeatureCollection',
-                    features: geoJsonData.features.filter((feature: any) => feature.properties.type === 'warehouse'),
+                    features: warehouseGeoJson.features,
                 }}>
                 {/* Individual Points */}
                 <Layer
@@ -101,12 +109,14 @@ const RenderWarehouse = ({ geoJsonData, visibility, selectedAction, session }: R
                 />
             </Source>
 
-            <UpdateWarehouseDialog
-                warehouseId={warehouseId}
-                isOpen={isUpdateDialogOpen}
-                setIsOpen={setIsUpdateDialogOpen}
-                session={session}
-            />
+            {isUpdateDialogOpen && (
+                <UpdateWarehouseDialog
+                    warehouseId={warehouseId}
+                    isOpen={isUpdateDialogOpen}
+                    setIsOpen={setIsUpdateDialogOpen}
+                    session={session}
+                />
+            )}
         </>
     );
 };

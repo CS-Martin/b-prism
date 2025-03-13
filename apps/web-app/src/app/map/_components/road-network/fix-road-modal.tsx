@@ -10,20 +10,18 @@ import {
 } from '@b-prism/shadcn-ui/index';
 import { RoadNetworkDto, UserDto } from '@dto';
 import { useFixRoad } from 'apps/web-app/src/hooks/road-network.hook';
+import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 
 interface FixRoadModalProps {
     roadId: string | undefined;
     setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    fetchFixRoadByBounds: (forceFetched: boolean) => void;
-
-    UpdateFixedRoad: (roadId: string) => void;
 }
 
-export const FixRoadModal = ({ roadId, setIsDialogOpen, fetchFixRoadByBounds, UpdateFixedRoad }: FixRoadModalProps) => {
+export const FixRoadModal = ({ roadId, setIsDialogOpen }: FixRoadModalProps) => {
     const { data: session } = useSession();
-    const { fixRoad } = useFixRoad();
+    const { fixRoad } = useRoadNetworkStore();
 
     const user = session?.user;
     const requestAuthor = `${user?.given_name} ${user?.family_name}`;
@@ -32,10 +30,6 @@ export const FixRoadModal = ({ roadId, setIsDialogOpen, fetchFixRoadByBounds, Up
         if (roadId) {
             await fixRoad(roadId, requestAuthor);
             setIsDialogOpen(false);
-
-            // Doesn't work because if same in previous bound, it will not fetch
-            // Need to think of a new method to update UI
-            UpdateFixedRoad(roadId);
         }
     };
 
@@ -59,7 +53,7 @@ export const FixRoadModal = ({ roadId, setIsDialogOpen, fetchFixRoadByBounds, Up
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={handleCancel}>No, Keep it</AlertDialogCancel>
                     <AlertDialogAction
-                        className='bg-green-500 hover:bg-green-600 text-white'
+                        className='text-white bg-green-500 hover:bg-green-600'
                         onClick={handleRoadDestroy}>
                         Yes, repair it!
                     </AlertDialogAction>

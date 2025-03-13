@@ -11,32 +11,11 @@ class UserService {
 
     public async fetchAllUsers(accessToken: string | null): Promise<ResponseDto<UserDto[]>> {
         try {
-            console.log(this.API_BASE_URL, 'APIAPIAPIAPIAPIAPIAPIAPIAPI');
-            const response = await fetch(`${this.API_BASE_URL}/user/all`, {
+            const response = await fetch(`${this.API_BASE_URL}/v1/users`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
             });
-
-            if (!response.ok) {
-                const error = await response.json();
-
-                throw new BadRequestException(error.message);
-            }
-
-            return response.json();
-        } catch (error) {
-            console.error(error);
-
-            throw error;
-        }
-    }
-
-    public async fetchUserByEmail(email: string): Promise<ResponseDto<UserDto>> {
-        try {
-            const response = await fetch(`${this.API_BASE_URL}/user/${email}`);
-            console.log(this.API_BASE_URL, 'email');
-            console.log(response);
 
             if (!response.ok) {
                 const error = await response.json();

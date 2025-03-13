@@ -55,7 +55,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             return response;
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
             throw new BadRequestException(error);
         }
@@ -85,7 +85,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             return response;
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
             throw new BadRequestException(error);
         }
@@ -103,7 +103,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             const logData: CreateActivityLogDto = new CreateActivityLogDto();
 
-            logData.action = 'CREATE';
+            logData.action = 'DELETE';
             logData.description = `Deleted dispensing point ${dispensingPoint.name}.`;
             logData.resource = 'Dispensing Point';
             logData.resource_id = dispensingPoint.id;
@@ -112,7 +112,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             await this.activityLogService.create(logData);
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
             throw new BadRequestException(error);
         }
@@ -131,7 +131,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             return response;
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
             throw new BadRequestException(error);
         }
@@ -151,7 +151,7 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
 
             return response;
         } catch (error) {
-            console.log(error);
+            console.error(error);
 
             throw new BadRequestException(error);
         }
@@ -163,8 +163,8 @@ export class DispensingPointServiceLibService implements DispensingPointServiceA
         dispensingPointDto.id = dispensingPoint.id ?? '';
         dispensingPointDto.type = dispensingPoint.type ?? 'dispensing_point';
         dispensingPointDto.name = dispensingPoint.name ?? '';
-        dispensingPointDto.longitude = dispensingPoint.longitude ?? '';
-        dispensingPointDto.latitude = dispensingPoint.latitude ?? '';
+        dispensingPointDto.longitude = dispensingPoint.longitude;
+        dispensingPointDto.latitude = dispensingPoint.latitude;
         dispensingPointDto.description = dispensingPoint.description ?? '';
         dispensingPointDto.address = dispensingPoint.address as DispensingPointAddressDto;
         dispensingPointDto.capacity = dispensingPoint.capacity ?? null;

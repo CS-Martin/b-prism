@@ -1,7 +1,7 @@
 import { RoadNetworkDto } from '@dto';
 
 class MapboxApiService {
-    public async reverse_geocoding(longitude: string, latitude: string) {
+    public async reverse_geocoding(longitude: number, latitude: number) {
         try {
             const response = await fetch(
                 `https://api.mapbox.com/search/geocode/v6/reverse?longitude=${longitude}&latitude=${latitude}&access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
@@ -19,18 +19,18 @@ class MapboxApiService {
         }
     }
 
-    public async getDirections(start: [number, number], destination: [number, number], damagedRoads: RoadNetworkDto[], profile?: 'driving' | 'walking' | 'cycling') {
+    public async getDirections(start: [number, number], destination: [number, number], damagedRoads: any, profile?: 'driving' | 'walking' | 'cycling') {
         try {
             // Extract coordinates from damaged roads and format them for the Mapbox API
             const coordinates = damagedRoads
-                .map((road) => {
+                .map((road: any) => {
                     // Parse the geometry if it's a string, otherwise use it directly
                     const geometry = typeof road.geometry === 'string' ? JSON.parse(road.geometry) : road.geometry;
                     // Return the coordinates from the geometry
                     return geometry.coordinates;
                 })
                 // Flatten the array of coordinates
-                .reduce((acc, val) => acc.concat(val), []);
+                .reduce((acc: any, val: any) => acc.concat(val), []);
 
             // Format coordinates for Mapbox API by converting them to 'point(lon lat)' format
             const excludedPoints = coordinates.map(([lon, lat]: [number, number]) => `point(${lon} ${lat})`).join(',');
@@ -49,14 +49,12 @@ class MapboxApiService {
             }
 
             if (!response.ok) {
-                console.log('?', response);
                 console.error('Failed to fetch directions from Mapbox Direction API  ');
 
                 throw new Error('Failed to fetch directions from Mapbox API.');
             }
 
             const data = await response.json();
-            console.log(data);
 
             if (data.code !== 'Ok') {
                 console.error('Failed to fetch directions from Mapbox Direction API  ');

@@ -16,10 +16,10 @@ export class DispensingPointDto {
     description?: string | null;
 
     @ApiProperty()
-    longitude!: string;
+    longitude!: number;
 
     @ApiProperty()
-    latitude!: string;
+    latitude!: number;
 
     @ApiProperty()
     capacity?: number | null;

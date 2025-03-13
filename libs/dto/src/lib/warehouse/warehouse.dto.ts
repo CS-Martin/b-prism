@@ -17,10 +17,10 @@ export class WarehouseDto {
     description?: string;
 
     @ApiProperty()
-    longitude!: string;
+    longitude!: number;
 
     @ApiProperty()
-    latitude!: string;
+    latitude!: number;
 
     @ApiProperty()
     capacity?: number;

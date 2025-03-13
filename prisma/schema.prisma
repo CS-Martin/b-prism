@@ -45,8 +45,8 @@ model Warehouse {
   type              Type     @default(warehouse)
   name              String
   description       String?
-  longitude         String
-  latitude          String
+  longitude         Float
+  latitude          Float
   capacity          Int?
   cost_of_stockpile Int?
   family_food_packs Int?
@@ -63,8 +63,8 @@ model DispensingPoint {
   type        Type     @default(dispensing_point)
   name        String
   description String?
-  longitude   String
-  latitude    String
+  longitude   Float
+  latitude    Float
   capacity    Int?
   user_id     String?
   address     Json?
@@ -108,10 +108,10 @@ model Mailer {
 model RoadNetwork {
   id                 String  @id @default(auto()) @map("_id") @db.ObjectId
   type               String
-  is_damaged         Boolean @default(false)
   damage_probability Float
-  properties         Json
-  geometry           Json
+  is_damaged         Boolean
+  properties         Json?
+  geometry           Json?
 
   @@index([is_damaged])
 }

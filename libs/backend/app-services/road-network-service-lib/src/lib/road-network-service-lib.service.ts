@@ -15,6 +15,8 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
     ) {}
 
     async findAllDamagedRoads(): Promise<ResponseDto<RoadNetworkDto[]>> {
+        this.logger.log(`Fetching all damaged roads`);
+
         try {
             const damagedRoads = await this.roadNetworkMongodbService.findAllDamagedRoads();
 

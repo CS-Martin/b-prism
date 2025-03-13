@@ -6,7 +6,6 @@ import ActivityLog from './_components/activity-log';
 
 export default async function ActivityLogsPage() {
     const session = await getServerSession(options);
-    // console.log('HEY', session, 'HAAHAHHAHA');
 
     return <ActivityLog token={session?.user.accessToken} />;
 }

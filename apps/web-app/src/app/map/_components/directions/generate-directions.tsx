@@ -7,14 +7,12 @@ import { useMap } from 'react-map-gl';
 import { DirectionLayer } from './direction-layer';
 import { PromptGuide } from './prompt-guide';
 import { DirectionPanel } from './direction-stats-panel';
+import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 
-interface GenerateDirectionsProps {
-    damagedRoads: RoadNetworkDto[];
-}
-
-export const GenerateDirections = ({ damagedRoads }: GenerateDirectionsProps) => {
+export const GenerateDirections = () => {
     const { current: map } = useMap();
     const { directions, getDirections, isLoading } = useGetDirections();
+    const { damagedRoads } = useRoadNetworkStore();
 
     const [start, setStart] = useState<[number, number] | null>(null);
     const [destination, setDestination] = useState<[number, number] | null>(null);
@@ -50,7 +48,7 @@ export const GenerateDirections = ({ damagedRoads }: GenerateDirectionsProps) =>
     useEffect(() => {
         if (start && destination) {
             getDirections(start, destination, damagedRoads, 'driving')
-                .then(() => console.log('Directions:', directions))
+                .then(() => console.info('Directions:', directions))
                 .catch((err) => console.error('Error fetching directions:', err));
         }
     }, [start, destination, getDirections]);

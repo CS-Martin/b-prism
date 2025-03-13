@@ -17,7 +17,7 @@ import {
     TabsTrigger,
     Textarea,
 } from '@b-prism/shadcn-ui/index';
-import { CreateWarehouseDto, UserDto } from '@dto';
+import { CreateWarehouseDto, UserDto, WarehouseDto } from '@dto';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
@@ -26,25 +26,22 @@ import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { BadRequestException } from '@nestjs/common';
 import { Session } from 'next-auth';
-
-interface MarkerType {
-    longitude: string;
-    latitude: string;
-}
+import { CoordinatesType } from '@b-prism/types';
+import { useWarehouseStore } from 'apps/web-app/src/stores/map-stores/warehouse.store';
 
 interface DialogProps {
     isOpen: boolean;
+    coordinates: CoordinatesType;
     setIsOpen: (isOpen: boolean) => void;
-    marker: MarkerType;
-    fetchAllWarehouses: () => void;
     session?: Session | null;
 }
 
-const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllWarehouses, session }) => {
+const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coordinates, session }) => {
     const { toast } = useToast();
-
     const { createWarehouse } = useCreateWarehouse();
     const { getAddress, address } = useGetAddress();
+
+    const fetchAllWarehouses = useWarehouseStore((state) => state.fetchAllWarehouses);
 
     const user = session?.user;
 
@@ -59,8 +56,8 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
             type: 'warehouse',
             name: '',
             description: '',
-            longitude: marker.longitude,
-            latitude: marker.latitude,
+            longitude: coordinates.longitude,
+            latitude: coordinates.latitude,
             capacity: 0,
             cost_of_stockpile: 0,
             family_food_packs: 0,
@@ -90,13 +87,13 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
 
     // After opening the dialog, get the address
     useEffect(() => {
-        if (isOpen && marker.longitude && marker.latitude) {
-            getAddress(marker.longitude, marker.latitude);
+        if (isOpen && coordinates.longitude && coordinates.latitude) {
+            getAddress(coordinates.longitude, coordinates.latitude);
         }
-    }, [isOpen, marker]);
+    }, [isOpen, coordinates.longitude, coordinates.latitude]);
 
     useEffect(() => {
-        if (address) {
+        if (address && isOpen) {
             reset((prev) => ({
                 ...prev,
                 address,
@@ -104,12 +101,11 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
         }
     }, [address, reset]);
 
-    // Reset form values when the marker updates
+    // Reset form values when the coordinates update
     useEffect(() => {
-        reset({ longitude: marker.longitude, latitude: marker.latitude });
-    }, [marker, reset]);
+        reset({ longitude: coordinates.longitude, latitude: coordinates.latitude });
+    }, [coordinates, reset]);
 
-    // Form submission handler
     const onSubmit = async (data: CreateWarehouseDto) => {
         try {
             if (!user) {
@@ -118,17 +114,20 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
 
             const formattedData = {
                 ...data,
-                longitude: marker.longitude,
-                latitude: marker.latitude,
+                longitude: coordinates.longitude,
+                latitude: coordinates.latitude,
             };
 
             if (!formattedData.longitude || !formattedData.latitude || !formattedData.name) {
                 throw new Error('Warehouse name is required');
             }
 
-            await createWarehouse(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
+            const newWarehouse: WarehouseDto | undefined = await createWarehouse(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
 
-            fetchAllWarehouses();
+            if (newWarehouse) {
+                useWarehouseStore.getState().addWarehouse(newWarehouse);
+            }
+
             setIsOpen(false);
             reset();
         } catch (error) {
@@ -140,6 +139,8 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
             });
         }
     };
+
+    if (!isOpen) return;
 
     return (
         <Dialog
@@ -279,7 +280,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                             {/* description */}
                                             <p className='text-sm text-gray-500'>Please enter the details of the warehouse non-food items.</p>
 
-                                            <div className='flex mt-3 flex-row gap-4'>
+                                            <div className='flex flex-row gap-4 mt-3'>
                                                 <InputField
                                                     name='non_food_items.family_kits'
                                                     register={register}
@@ -301,7 +302,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                                                 />
                                             </div>
 
-                                            <div className='flex mt-3 flex-row gap-4'>
+                                            <div className='flex flex-row gap-4 mt-3'>
                                                 <InputField
                                                     name='non_food_items.hygiene_kits'
                                                     register={register}
@@ -340,7 +341,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marke
                             {/* Address Tab */}
                             <TabsContent
                                 value='address'
-                                className='w-full flex flex-col gap-4'>
+                                className='flex flex-col w-full gap-4'>
                                 <div>
                                     <DialogHeader>
                                         <DialogTitle>Warehouse Address</DialogTitle>

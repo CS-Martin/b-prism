@@ -51,15 +51,21 @@ export const useFindOneWarehouse = (id: string) => {
 export const useCreateWarehouse = () => {
     const { toast } = useToast();
 
-    const createWarehouse = async (data: CreateWarehouseDto, author: string, accessToken: string) => {
+    const createWarehouse = async (data: CreateWarehouseDto, author: string, accessToken: string): Promise<WarehouseDto | undefined> => {
         try {
-            await warehouseService.create(data, author, accessToken);
+            const warehouse: WarehouseDto = await warehouseService.create(data, author, accessToken);
+
+            if (!warehouse) {
+                throw new Error('Failed to create the warehouse');
+            }
 
             toast({
                 title: 'Success!',
                 description: `The warehouse "${data.name}" has been created successfully.`,
                 variant: 'success',
             });
+
+            return warehouse;
         } catch (error: any) {
             console.error('Error creating warehouse:', error);
 
@@ -138,7 +144,7 @@ export const useDeleteWarehouse = () => {
 export const useGetAddress = () => {
     const [address, setAddress] = useState<WarehouseAddressDto>({} as WarehouseAddressDto);
 
-    const getAddress = async (longitude: string, latitude: string) => {
+    const getAddress = async (longitude: number, latitude: number) => {
         const response = await mapboxService.reverse_geocoding(longitude, latitude);
         const data = await response?.json();
 
@@ -169,24 +175,21 @@ export const useGetDirections = () => {
     const [directions, setDirections] = useState<GeoJSON.Feature<GeoJSON.LineString>[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const getDirections = useCallback(
-        async (start: [number, number], destination: [number, number], damagedRoads: RoadNetworkDto[], profile?: 'driving' | 'walking' | 'cycling') => {
-            setIsLoading(true);
+    const getDirections = useCallback(async (start: [number, number], destination: [number, number], damagedRoads: any, profile?: 'driving' | 'walking' | 'cycling') => {
+        setIsLoading(true);
 
-            try {
-                const routes = await mapboxService.getDirections(start, destination, damagedRoads, profile);
+        try {
+            const routes = await mapboxService.getDirections(start, destination, damagedRoads, profile);
 
-                setDirections(routes);
-            } catch (error) {
-                console.error('Failed to fetch directions from Mapbox Direction API ');
+            setDirections(routes);
+        } catch (error) {
+            console.error('Failed to fetch directions from Mapbox Direction API ');
 
-                throw error;
-            } finally {
-                setIsLoading(false);
-            }
-        },
-        [],
-    );
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
 
     return { directions, getDirections, isLoading };
 };

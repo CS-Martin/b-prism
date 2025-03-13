@@ -19,50 +19,26 @@ import {
     TabsTrigger,
     Textarea,
 } from '@b-prism/shadcn-ui/index';
-import { CreateDispensingPointDto, UserDto } from '@dto';
+import { CoordinatesType } from '@b-prism/types';
+import { CreateDispensingPointDto, DispensingPointDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 import { Type } from '@prisma/client';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useCreateDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
 import { useGetAddress } from 'apps/web-app/src/hooks/map.hook';
+import { useDispensingPointsStore } from 'apps/web-app/src/stores/map-stores/dispensing-point.store';
 import { Session } from 'next-auth';
-import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-
-interface MarkerType {
-    longitude: string;
-    latitude: string;
-}
+import { useForm } from 'react-hook-form';
 
 interface DialogProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
-    marker: MarkerType;
-    fetchAllDispensingPoints: () => void;
+    coordinates: CoordinatesType;
     session?: Session | null;
 }
 
-const AddressField = ({ id, label, placeholder, control, fieldName }: { id: string; label: string; placeholder: string; control: any; fieldName: string }) => (
-    <div className='w-1/2'>
-        <Label htmlFor={id}>{label}</Label>
-        <Controller
-            name={fieldName}
-            control={control}
-            render={({ field }) => (
-                <Input
-                    {...field}
-                    id={id}
-                    className='rounded-sm mt-1'
-                    placeholder={placeholder}
-                />
-            )}
-        />
-    </div>
-);
-
-const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, marker, fetchAllDispensingPoints, session }) => {
-    console.log(session?.user);
+const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coordinates, session }) => {
     const { toast } = useToast();
     const { getAddress, address } = useGetAddress();
     const { createDispensingPoint } = useCreateDispensingPoint();
@@ -80,8 +56,8 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
             type: 'dispensing_point' as Type,
             name: '',
             description: '',
-            longitude: marker.longitude,
-            latitude: marker.latitude,
+            longitude: coordinates.longitude,
+            latitude: coordinates.latitude,
             capacity: 0,
             address: {
                 street: '',
@@ -96,45 +72,50 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
 
     // Fetch address on dialog open
     useEffect(() => {
-        if (isOpen && marker.longitude && marker.latitude) {
-            getAddress(marker.longitude, marker.latitude);
+        if (isOpen && coordinates.longitude && coordinates.latitude) {
+            getAddress(coordinates.longitude, coordinates.latitude);
         }
-    }, [isOpen, marker]);
+    }, [coordinates]);
 
-    // Update form fields when address or marker changes
+    // Update form fields when address or coordinates changes
     useEffect(() => {
         if (address) {
             reset((prev) => ({ ...prev, address }));
         }
-    }, [address, reset]);
+    }, [address]);
 
     useEffect(() => {
-        reset({ longitude: marker.longitude, latitude: marker.latitude });
-    }, [marker, reset]);
+        reset({ longitude: coordinates.longitude, latitude: coordinates.latitude });
+    }, [coordinates, reset]);
 
     const onSubmit = async (data: CreateDispensingPointDto) => {
         try {
             if (!user) {
-                throw new BadRequestException(`You don't have permission to create a dispensing points.`);
+                throw new BadRequestException(`You don't have permission to create a dispensing point.`);
             }
 
             const formattedData = {
                 ...data,
                 address,
-                user_id: session.user.id,
+                user_id: user.id,
             };
 
-            if (formattedData.name === '') {
+            if (!formattedData.name) {
                 throw new Error('Dispensing Point Name is required');
             }
 
-            await createDispensingPoint(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
-            fetchAllDispensingPoints();
+            const newDispensingPoint: DispensingPointDto | undefined = await createDispensingPoint(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
+
+            if (newDispensingPoint) {
+                useDispensingPointsStore.getState().addDispensingPoint(newDispensingPoint);
+            }
+
             setIsOpen(false);
+            reset();
         } catch (error) {
             console.error('Error creating dispensing point:', error);
             toast({
-                title: 'An error occured',
+                title: 'An error occurred!',
                 description: (error as Error).message,
                 variant: 'destructive',
             });
@@ -195,7 +176,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                                         <Textarea
                                             id='description'
                                             {...register('description')}
-                                            className='rounded-sm mt-1'
+                                            className='mt-1 rounded-sm'
                                             placeholder='Description'
                                             disabled={!session}
                                         />

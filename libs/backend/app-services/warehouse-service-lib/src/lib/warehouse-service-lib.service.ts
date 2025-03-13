@@ -167,8 +167,8 @@ export class WarehouseServiceLibService implements WarehouseServiceAbstractClass
         warehouseDto.type = warehouse.type ?? 'warehouse';
         warehouseDto.name = warehouse.name ?? '';
         warehouseDto.description = warehouse.description ?? '';
-        warehouseDto.longitude = warehouse.longitude ?? '';
-        warehouseDto.latitude = warehouse.latitude ?? '';
+        warehouseDto.longitude = warehouse.longitude;
+        warehouseDto.latitude = warehouse.latitude;
         warehouseDto.capacity = warehouse.capacity ?? 0;
         warehouseDto.cost_of_stockpile = warehouse.cost_of_stockpile ?? 0;
         warehouseDto.family_food_packs = warehouse.family_food_packs ?? 0;
