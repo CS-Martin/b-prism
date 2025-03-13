@@ -1,34 +1,6 @@
-import { ResponseDto, UserDto } from '@dto';
 import { useState } from 'react';
-import { userService } from '../services/user.service';
 import { authService } from '../services/authentication.service';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-
-export const useLoginUser = () => {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const loginUser = async (email: string) => {
-        setIsLoading(true);
-
-        try {
-            const response: ResponseDto<UserDto> = await userService.fetchUserByEmail(email);
-
-            if (response.statusCode !== 201) {
-                console.error('Authentication Hook: Failed to fetch user by email');
-
-                throw new Error('Authentication Hook: Failed to fetch user by email');
-            }
-
-            return response;
-        } catch (error) {
-            setIsLoading(false);
-
-            throw error;
-        }
-    };
-
-    return { loginUser, isLoading };
-};
 
 export const useVerifyEmailCode = () => {
     const { toast } = useToast();

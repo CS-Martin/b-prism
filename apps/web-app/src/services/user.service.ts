@@ -30,24 +30,6 @@ class UserService {
             throw error;
         }
     }
-
-    public async fetchUserByEmail(email: string): Promise<ResponseDto<UserDto>> {
-        try {
-            const response = await fetch(`${this.API_BASE_URL}/user/${email}`);
-
-            if (!response.ok) {
-                const error = await response.json();
-
-                throw new BadRequestException(error.message);
-            }
-
-            return response.json();
-        } catch (error) {
-            console.error(error);
-
-            throw error;
-        }
-    }
 }
 
 export const userService = new UserService();
