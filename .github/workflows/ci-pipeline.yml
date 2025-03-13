@@ -10,6 +10,10 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
+
+            - name: Install Docker Compose
+              run: sudo apt-get update && sudo apt-get install -y docker-compose
+
             - name: Login to Dockerhub
               env:
                   DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
