@@ -120,7 +120,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                     )}
 
                     <>
-                        {/* {selectedAction === 'findRoute' && <GenerateDirections />} */}
+                        {selectedAction === 'findRoute' && <GenerateDirections />}
 
                         <RenderRoadNetwork visibility={visibility} />
 

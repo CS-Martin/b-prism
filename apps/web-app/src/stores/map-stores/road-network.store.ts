@@ -109,9 +109,6 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
 
         const prevBounds = useRoadNetworkStore.getState().prevBounds;
         const fixedRoads = useRoadNetworkStore.getState().fixedRoads;
-        const damageRoad = useRoadNetworkStore.getState().damagedRoads;
-
-        console.log(damageRoad.length, ' ', fixedRoads.length);
 
         const bounds = mapRef.current.getBounds();
         if (!bounds) {
