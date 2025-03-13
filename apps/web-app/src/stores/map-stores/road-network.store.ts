@@ -88,7 +88,7 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
                 damagedRoads?.map((road: RoadNetworkDto, index: number) => ({
                     id: index,
                     properties: {
-                        id: road.id,
+                        id: road.id + Date.now(),
                         is_damaged: road.is_damaged,
                         damage_probability: road.damage_probability,
                         ...road.properties,
@@ -107,7 +107,11 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
     fetchFixedRoadsByBounds: debounce(async (mapRef: React.RefObject<MapRef>) => {
         if (!mapRef.current) return;
 
-        const { prevBounds, fixedRoads } = useRoadNetworkStore.getState();
+        const prevBounds = useRoadNetworkStore.getState().prevBounds;
+        const fixedRoads = useRoadNetworkStore.getState().fixedRoads;
+        const damageRoad = useRoadNetworkStore.getState().damagedRoads;
+
+        console.log(damageRoad.length, ' ', fixedRoads.length);
 
         const bounds = mapRef.current.getBounds();
         if (!bounds) {
@@ -131,7 +135,7 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
             const geoJsonFixedRoads =
                 fixedRoadsResponse.map((road: RoadNetworkDto, index: number) => ({
                     type: 'Feature',
-                    id: index + 100,
+                    id: index + Date.now(),
                     geometry: road.geometry,
                     properties: {
                         id: road.id,
