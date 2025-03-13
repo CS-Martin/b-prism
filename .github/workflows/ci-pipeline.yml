@@ -1,30 +1,26 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: [ "main" ]
+    push:
+        branches: ['main']
 
 jobs:
+    build:
+        runs-on: ubuntu-latest
 
-  build:
+        steps:
+            - uses: actions/checkout@v4
+            - name: Login to Dockerhub
+              env:
+                  DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+                  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+              run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
-    runs-on: ubuntu-latest
+            - name: Build the Docker image
+              run: docker-compose -f docker-compose.prod.yaml build
 
-    steps:
-    - uses: actions/checkout@v4
-    - name: Login to Dockerhub
-      env:
-        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      
-    - name: Build the Docker image
-      run: docker-compose -f docker-compose.prod.yaml build
+            - name: Tag the image
+              run: docker tag haribon-microservices martin09123/haribon-microservices:latest
 
-    - name: Tag the image
-      run: docker tag haribon-microservices martin09123/haribon-microservices:latest
-
-    - name: Push the image to Dockerhub
-      run: docker push martin09123/haribon-microservices:latest
-
-      
+            - name: Push the image to Dockerhub
+              run: docker push martin09123/haribon-microservices:latest
