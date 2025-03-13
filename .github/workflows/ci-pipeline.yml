@@ -16,7 +16,7 @@ jobs:
 
             - name: Install Docker Compose Plugin
               run: |
-                  apt-get update && apt-get install -y docker-compose-plugin
+                  sudo apt-get update && apt-get install -y docker-compose-plugin
 
             - name: Set up environment variables
               run: |
