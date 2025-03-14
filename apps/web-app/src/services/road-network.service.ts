@@ -1,4 +1,4 @@
-import { RoadNetworkDto } from '@dto';
+import { ResponseDto, RoadNetworkDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 
 class RoadNetworkService {
@@ -6,7 +6,7 @@ class RoadNetworkService {
 
     constructor() {
         // Change if production
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ROAD_NETWORK_SERVICE_API_PORT ?? ''}/${process.env.NEXT_PUBLIC_API_VERSION}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ROAD_NETWORK_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async findAllDamagedRoads(): Promise<RoadNetworkDto[]> {
@@ -38,6 +38,24 @@ class RoadNetworkService {
             }
 
             return (await response.json()).body;
+        } catch (error) {
+            console.error(error);
+
+            throw error;
+        }
+    }
+
+    public async findAll(): Promise<ResponseDto<RoadNetworkDto[]>> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/road-networks`);
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message);
+            }
+
+            return response.json();
         } catch (error) {
             console.error(error);
 
