@@ -5,17 +5,18 @@ class ActivityLogService {
     private API_BASE_URL: string;
 
     constructor() {
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ACTIVITY_LOG_SERVICE_API_PORT ?? ''}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ACTIVITY_LOG_SERVICE_API_PORT ?? ''}/${process.env.NEXT_PUBLIC_API_VERSION}`;
+        console.log(process.env.NEXT_PUBLIC_BASE_API_URL);
     }
 
-    public async create(data: CreateActivityLogDto): Promise<ActivityLogDto> {
+    public async create(createActivityLogDto: CreateActivityLogDto): Promise<ActivityLogDto> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/activity-log/create`, {
+            const response = await fetch(`${this.API_BASE_URL}/activity-logs`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(createActivityLogDto),
             });
 
             if (!response.ok) {
@@ -28,13 +29,13 @@ class ActivityLogService {
         } catch (error) {
             console.error(error);
 
-            throw new BadRequestException(`Failed to create activity log for ${data}`);
+            throw new BadRequestException(`Failed to create activity log for ${createActivityLogDto}`);
         }
     }
 
     public async findAllActivityLogs(token?: string): Promise<ResponseDto<ActivityLogDto[]>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/activity-log`, {
+            const response = await fetch(`${this.API_BASE_URL}/activity-logs`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
