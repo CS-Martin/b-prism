@@ -1,5 +1,4 @@
 import { CreateDispensingPointDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
-import { BadRequestException } from '@nestjs/common';
 
 class DispensingPointService {
     private API_BASE_URL: string;

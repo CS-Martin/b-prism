@@ -1,5 +1,4 @@
 import { CreateWarehouseDto, ResponseDto, UpdateWarehouseDto, WarehouseDto } from '@dto';
-import { BadRequestException } from '@nestjs/common';
 
 class WarehouseService {
     private API_BASE_URL: string;
