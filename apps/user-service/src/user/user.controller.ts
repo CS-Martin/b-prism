@@ -2,12 +2,13 @@ import { UserServiceLibService } from '@b-prism/user-service-lib';
 import { UserDto } from '@dto';
 import { ResponseDto } from '@dto';
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'libs/backend/app-services/guards-service-lib/src/lib/jwt-auth.guard';
 
 @ApiTags('User Endpoints')
 @ApiBearerAuth()
-@Controller('v1/users')
+@Controller(`${new ConfigService().get('API_VERSION')}/users`)
 @UseGuards(AuthGuard)
 export class UserController {
     constructor(private readonly userServiceLibService: UserServiceLibService) {}
