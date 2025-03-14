@@ -6,7 +6,7 @@ class UserService {
     private API_BASE_URL: string;
 
     constructor() {
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_API_VERSION}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_USER_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async fetchAllUsers(accessToken: string | null): Promise<ResponseDto<UserDto[]>> {
