@@ -1,6 +1,5 @@
-import { ResponseDto, RoadNetworkDto } from '@dto';
+import { RoadNetworkDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
 
 class RoadNetworkService {
     private API_BASE_URL;
