@@ -58,7 +58,7 @@ jobs:
               run: npx nx-cloud record -- nx format:check
 
             - name: Run Nx Affected (Important for Nx Caching)
-              run: npx nx affected --target=build --parallel=3 --configuration=production
+              run: npx nx affected --target=build --parallel=3 --configuration=production --base=production --head=HEAD
 
             - name: Build, Tag, and Push Docker image with Cache
               uses: docker/build-push-action@v4
