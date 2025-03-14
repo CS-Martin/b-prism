@@ -10,9 +10,9 @@ import { AuthGuard } from 'libs/backend/app-services/guards-service-lib/src/lib/
 export class ActivityLogController {
     constructor(private readonly activityLogServiceLibService: ActivityLogServiceLibService) {}
 
-    @Post('create')
-    create(@Body() data: CreateActivityLogDto) {
-        return this.activityLogServiceLibService.create(data);
+    @Post()
+    create(@Body() createActivityLogDto: CreateActivityLogDto) {
+        return this.activityLogServiceLibService.create(createActivityLogDto);
     }
 
     @Get()
