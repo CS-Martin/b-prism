@@ -8,6 +8,10 @@ RUN apk add --no-cache openssl
 # Set working directory
 WORKDIR /app
 
+# Set Nx Cloud Token as ARG
+ARG NX_CLOUD_ACCESS_TOKEN
+ENV NX_CLOUD_ACCESS_TOKEN=${NX_CLOUD_ACCESS_TOKEN}
+
 COPY package.json package-lock.json nx.json tsconfig* ./
 
 RUN npm ci
