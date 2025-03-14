@@ -5,7 +5,7 @@ import { ApiBody, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
 @ApiTags('Authentication Endpoints')
-@Controller(`${new ConfigService().get('API_VERSION')}/auth`)
+@Controller(`v1/auth`)
 export class AuthenticationController {
     constructor(private readonly authenticationService: AuthenticationServiceLibService) {}
 
@@ -17,11 +17,6 @@ export class AuthenticationController {
     @Post('login')
     verify(@Body() verifyUserDto: VerifyUserDto) {
         return this.authenticationService.validateUserLogin(verifyUserDto.email, verifyUserDto.password);
-    }
-
-    @Put('users/:id')
-    update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-        return this.authenticationService.update(id, updateUserDto);
     }
 
     @Put('users/:id/password')
@@ -37,7 +32,7 @@ export class AuthenticationController {
         return this.authenticationService.changePassword(id, changePasswordDto);
     }
 
-    @Post('users/reset-password')
+    @Put('users/reset-password')
     @ApiBody({
         schema: {
             type: 'object',
@@ -55,6 +50,11 @@ export class AuthenticationController {
     })
     resetPassword(@Body() payload: { email: string; resetPasswordDto: ResetPasswordDto }) {
         return this.authenticationService.resetPassword(payload.email, payload.resetPasswordDto);
+    }
+
+    @Put('users/:id')
+    update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+        return this.authenticationService.update(id, updateUserDto);
     }
 
     @Post('users/verify-email-code')

@@ -6,6 +6,7 @@ import { authService } from '../../../services/authentication.service';
 import { UserRole } from '@prisma/client';
 import { Input } from '@b-prism/shadcn-ui/index';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
+import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -31,18 +32,24 @@ export default function RegisterPage() {
 
         router.push('/auth/login');
         setIsLoading(false);
+
+        toast({
+            title: 'You have successfully registered!',
+            description: 'Please login to continue.',
+            variant: 'success',
+        });
     };
 
     return (
         <>
-            <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
+            <div className='flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8'>
                 <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
                     {/* <Image
                         alt="Your Company"
                         src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-                        className="mx-auto h-10 w-auto"
+                        className="w-auto h-10 mx-auto"
                     /> */}
-                    <h2 className='mt-10 text-center text-2xl/9 font-semibold tracking-tight'>Create an account</h2>
+                    <h2 className='mt-10 font-semibold tracking-tight text-center text-2xl/9'>Create an account</h2>
                 </div>
 
                 <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
@@ -55,7 +62,7 @@ export default function RegisterPage() {
                             <div>
                                 <label
                                     htmlFor='given_name'
-                                    className='block text-sm/6 font-medium'>
+                                    className='block font-medium text-sm/6'>
                                     Given Name
                                 </label>
                                 <div className='mt-2'>
@@ -78,7 +85,7 @@ export default function RegisterPage() {
                             <div>
                                 <label
                                     htmlFor='family_name'
-                                    className='block text-sm/6 font-medium'>
+                                    className='block font-medium text-sm/6'>
                                     Family Name
                                 </label>
                                 <div className='mt-2'>
@@ -103,7 +110,7 @@ export default function RegisterPage() {
                             <div>
                                 <label
                                     htmlFor='office'
-                                    className='block text-sm/6 font-medium'>
+                                    className='block font-medium text-sm/6'>
                                     Office
                                 </label>
                                 <div className='mt-2'>
@@ -126,7 +133,7 @@ export default function RegisterPage() {
                             <div>
                                 <label
                                     htmlFor='position'
-                                    className='block text-sm/6 font-medium'>
+                                    className='block font-medium text-sm/6'>
                                     Position
                                 </label>
                                 <div className='mt-2'>
@@ -150,7 +157,7 @@ export default function RegisterPage() {
                         <div>
                             <label
                                 htmlFor='email'
-                                className='block text-sm/6 font-medium'>
+                                className='block font-medium text-sm/6'>
                                 Email address
                             </label>
                             <div className='mt-2'>
@@ -175,7 +182,7 @@ export default function RegisterPage() {
                             <div className='flex items-center justify-between'>
                                 <label
                                     htmlFor='password'
-                                    className='block text-sm/6 font-medium'>
+                                    className='block font-medium text-sm/6'>
                                     Password
                                 </label>
                                 <div className='text-sm'>
@@ -216,7 +223,7 @@ export default function RegisterPage() {
                         </div>
                     </form>
 
-                    <p className='mt-10 text-center text-sm/6 text-gray-300'>
+                    <p className='mt-10 text-center text-gray-300 text-sm/6'>
                         Already have an account?{' '}
                         <a
                             href='/auth/login'

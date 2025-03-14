@@ -6,12 +6,12 @@ class AuthenticationService {
 
     constructor() {
         // Change if production
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_AUTH_SERVICE_API_PORT ?? ''}/${process.env.API_VERSION}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_AUTH_SERVICE_API_PORT ?? ''}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async create(user: CreateUserDto): Promise<UserDto> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/auth`, {
+            const response = await fetch(`${this.API_BASE_URL}/auth/users`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ class AuthenticationService {
 
     public async findById(id: string): Promise<UserDto> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/authentication/find/${id}`);
+            const response = await fetch(`${this.API_BASE_URL}/auth/users/${id}`);
 
             if (!response.ok) {
                 const error = await response.json();
@@ -106,7 +106,7 @@ class AuthenticationService {
 
     public async findByEmail(email: string): Promise<UserDto> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/authentication/find/email/${email}`);
+            const response = await fetch(`${this.API_BASE_URL}/auth/users/${email}`);
 
             if (!response.ok) {
                 const error = await response.json();
@@ -124,7 +124,7 @@ class AuthenticationService {
 
     public async resetPassword(email: string, resetPasswordDto: ResetPasswordDto): Promise<ResponseDto<UserDto>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/users/reset-password`, {
+            const response = await fetch(`${this.API_BASE_URL}/auth/users/reset-password`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

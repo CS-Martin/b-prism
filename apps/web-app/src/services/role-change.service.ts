@@ -4,12 +4,12 @@ class RoleChangeService {
     private API_BASE_URL: string;
 
     constructor() {
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_VERIFICATION_SERVICE_API_PORT ?? ''}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_VERIFICATION_SERVICE_API_PORT ?? ''}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async changeRole(verificationDto: VerificationDto, accessToken: string): Promise<void> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/verification/verify`, {
+            const response = await fetch(`${this.API_BASE_URL}/verifications/verify`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
