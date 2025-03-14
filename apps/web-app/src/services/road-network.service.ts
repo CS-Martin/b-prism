@@ -1,18 +1,17 @@
 import { ResponseDto, RoadNetworkDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
 
 class RoadNetworkService {
     private API_BASE_URL;
 
     constructor() {
         // Change if production
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ROAD_NETWORK_SERVICE_API_PORT ?? ''}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ROAD_NETWORK_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async findAllDamagedRoads(): Promise<RoadNetworkDto[]> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/road-network/damaged-roads/all`);
+            const response = await fetch(`${this.API_BASE_URL}/road-networks/damaged`);
 
             if (!response.ok) {
                 const error = await response.json();
@@ -30,7 +29,7 @@ class RoadNetworkService {
 
     public async findFixRoadByBounds(minLng: number, minLat: number, maxLng: number, maxLat: number): Promise<RoadNetworkDto[]> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/road-network/bounds/search?minLng=${minLng}&minLat=${minLat}&maxLng=${maxLng}&maxLat=${maxLat}`);
+            const response = await fetch(`${this.API_BASE_URL}/road-networks/bounds/search?minLng=${minLng}&minLat=${minLat}&maxLng=${maxLng}&maxLat=${maxLat}`);
 
             if (!response.ok) {
                 const error = await response.json();
@@ -48,7 +47,7 @@ class RoadNetworkService {
 
     public async findAll(): Promise<ResponseDto<RoadNetworkDto[]>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/road-network`);
+            const response = await fetch(`${this.API_BASE_URL}/road-networks`);
 
             if (!response.ok) {
                 const error = await response.json();
@@ -66,7 +65,7 @@ class RoadNetworkService {
 
     public async destroyRoad(roadId: string, author: string): Promise<void> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/road-network/destroy-road/${roadId}`, {
+            const response = await fetch(`${this.API_BASE_URL}/road-networks/${roadId}/destroy`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,7 +87,7 @@ class RoadNetworkService {
 
     public async fixRoad(roadId: string, author: string): Promise<void> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/road-network/fix-road/${roadId}`, {
+            const response = await fetch(`${this.API_BASE_URL}/road-networks/${roadId}/fix`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -6,12 +6,12 @@ class UserService {
     private API_BASE_URL: string;
 
     constructor() {
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_USER_SERVICE_API_PORT}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async fetchAllUsers(accessToken: string | null): Promise<ResponseDto<UserDto[]>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/v1/users`, {
+            const response = await fetch(`${this.API_BASE_URL}/users`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },

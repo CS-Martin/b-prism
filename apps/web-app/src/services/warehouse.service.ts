@@ -1,19 +1,18 @@
 import { CreateWarehouseDto, ResponseDto, UpdateWarehouseDto, WarehouseDto } from '@dto';
-import { BadRequestException } from '@nestjs/common';
 
 class WarehouseService {
     private API_BASE_URL: string;
 
     constructor() {
         // Change if production
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_WAREHOUSE_SERVICE_API_PORT ?? ''}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_WAREHOUSE_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async create(data: CreateWarehouseDto, author: string, accessToken: string): Promise<WarehouseDto> {
         const payload = { data, author };
 
         try {
-            const response = await fetch(`${this.API_BASE_URL}/warehouse/create`, {
+            const response = await fetch(`${this.API_BASE_URL}/warehouses`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -51,7 +50,7 @@ class WarehouseService {
         const payload = { id, data, author };
 
         try {
-            const response = await fetch(`${this.API_BASE_URL}/warehouse/update/${id}`, {
+            const response = await fetch(`${this.API_BASE_URL}/warehouses/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -87,7 +86,7 @@ class WarehouseService {
 
     public async delete(id: string, author: string, accessToken: string): Promise<void> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/warehouse/delete/${id}`, {
+            const response = await fetch(`${this.API_BASE_URL}/warehouses/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -121,7 +120,7 @@ class WarehouseService {
 
     public async fetchAllWarehouses(): Promise<ResponseDto<WarehouseDto[]>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/warehouse`);
+            const response = await fetch(`${this.API_BASE_URL}/warehouses`);
 
             if (!response.ok) {
                 let errorMessage = 'Failed to fetch all warehouse';
@@ -150,7 +149,7 @@ class WarehouseService {
 
     public async findOne(id: string): Promise<ResponseDto<WarehouseDto>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/warehouse/${id}`);
+            const response = await fetch(`${this.API_BASE_URL}/warehouses/${id}`);
 
             if (!response.ok) {
                 let errorMessage = 'Failed to find warehouse';

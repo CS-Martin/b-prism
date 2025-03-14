@@ -1,23 +1,34 @@
 import { RoadNetworkServiceLibService } from '@b-prism/road-network-service-lib';
 import { Body, Controller, Get, Param, Put, Query } from '@nestjs/common';
 import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('Road Network Endpoints')
-@Controller('road-network')
+@Controller(`${new ConfigService().get('API_VERSION')}/road-networks`)
 export class RoadNetworkController {
     constructor(private readonly roadNetworkServiceLibService: RoadNetworkServiceLibService) {}
+
+    @Get('damaged')
+    async findAllDamagedRoads() {
+        return this.roadNetworkServiceLibService.findAllDamagedRoads();
+    }
 
     @Get()
     findAll() {
         return this.roadNetworkServiceLibService.findAll();
     }
 
-    @Get(':id')
-    findById(@Param('id') id: string) {
-        return this.roadNetworkServiceLibService.findById(id);
+    @Get('bounds/search')
+    async findByBounds(@Query('minLng') minLng: string, @Query('minLat') minLat: string, @Query('maxLng') maxLng: string, @Query('maxLat') maxLat: string) {
+        const parsedMinLng = parseFloat(minLng);
+        const parsedMinLat = parseFloat(minLat);
+        const parsedMaxLng = parseFloat(maxLng);
+        const parsedMaxLat = parseFloat(maxLat);
+
+        return this.roadNetworkServiceLibService.findByBounds(parsedMinLng, parsedMinLat, parsedMaxLng, parsedMaxLat);
     }
 
-    @Put('destroy-road/:id')
+    @Put(':id/destroy')
     @ApiParam({
         name: 'id',
         type: String,
@@ -38,15 +49,14 @@ export class RoadNetworkController {
     })
     destroyRoad(@Param('id') id: string, @Body() payload: { author: string }) {
         const { author } = payload;
-
         return this.roadNetworkServiceLibService.destroyRoad(id, author);
     }
 
-    @Put('fix-road/:id')
+    @Put(':id/fix')
     @ApiParam({
         name: 'id',
         type: String,
-        description: 'The ID of the road to destroy',
+        description: 'The ID of the road to fix',
     })
     @ApiBody({
         schema: {
@@ -63,22 +73,11 @@ export class RoadNetworkController {
     })
     fixRoad(@Param('id') id: string, @Body() payload: { author: string }) {
         const { author } = payload;
-
         return this.roadNetworkServiceLibService.fixRoad(id, author);
     }
 
-    @Get('bounds/search')
-    async findByBounds(@Query('minLng') minLng: string, @Query('minLat') minLat: string, @Query('maxLng') maxLng: string, @Query('maxLat') maxLat: string) {
-        const parsedMinLng = parseFloat(minLng);
-        const parsedMinLat = parseFloat(minLat);
-        const parsedMaxLng = parseFloat(maxLng);
-        const parsedMaxLat = parseFloat(maxLat);
-
-        return this.roadNetworkServiceLibService.findByBounds(parsedMinLng, parsedMinLat, parsedMaxLng, parsedMaxLat);
-    }
-
-    @Get('damaged-roads/all')
-    async findAllDamagedRoads() {
-        return this.roadNetworkServiceLibService.findAllDamagedRoads();
+    @Get(':id')
+    findById(@Param('id') id: string) {
+        return this.roadNetworkServiceLibService.findById(id);
     }
 }
