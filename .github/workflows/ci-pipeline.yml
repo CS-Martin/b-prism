@@ -48,9 +48,6 @@ jobs:
                   echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
                   echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
 
-            - name: Debug Env Variables
-              run: printenv
-
             - name: Record Nx Cloud
               run: npx nx-cloud record -- nx format:check
 

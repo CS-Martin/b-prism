@@ -29,6 +29,8 @@ jobs:
                     --name haribon-microservices \
                     -p 3001-3009:3001-3009 \
                     --env-file .env \
+                    --memory="512m" \
+                    --cpus="0.5" \
                     martin09123/haribon-microservices:latest
 
             - name: Verify container is running
