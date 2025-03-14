@@ -6,7 +6,7 @@ class AuthenticationService {
 
     constructor() {
         // Change if production
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_AUTH_SERVICE_API_PORT ?? ''}/${process.env.NEXT_PUBLIC_API_VERSION}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_AUTH_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async create(user: CreateUserDto): Promise<UserDto> {
@@ -124,7 +124,7 @@ class AuthenticationService {
 
     public async resetPassword(email: string, resetPasswordDto: ResetPasswordDto): Promise<ResponseDto<UserDto>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/auth/users/reset-password`, {
+            const response = await fetch(`${this.API_BASE_URL}/users/reset-password`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -5,7 +5,7 @@ class DispensingPointService {
     private API_BASE_URL: string;
 
     constructor() {
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_DISPENSING_POINT_SERVICE_API_PORT ?? ''}/${process.env.NEXT_PUBLIC_API_VERSION}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_DISPENSING_POINT_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async create(data: CreateDispensingPointDto, author: string, accessToken: string): Promise<DispensingPointDto> {
@@ -155,7 +155,7 @@ class DispensingPointService {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-points/${id}`);
 
             if (!response.ok) {
-                let errorMessage = 'Failed to fetch one dispensing point';
+                let errorMessage = 'Failed to fetch one dispensing points';
 
                 try {
                     const errorData = await response.json();
