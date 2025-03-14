@@ -11,6 +11,9 @@ jobs:
         runs-on: self-hosted
 
         steps:
+            - name: Prune Docker (Free Up Space) # T2.Micro has limited disk space
+              run: sudo docker system prune -af --volumes
+
             - name: Pull latest docker image
               run: sudo docker pull martin09123/haribon-microservices:latest
 
