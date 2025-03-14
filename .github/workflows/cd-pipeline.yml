@@ -11,14 +11,17 @@ jobs:
         runs-on: self-hosted
 
         steps:
-            - name: Prune Docker (Free Up Space) # T2.Micro has limited disk space
+            - name: Stop running container (Gracefully)
+              run: sudo docker stop haribon-microservices || true
+
+            - name: Remove old docker container
+              run: sudo docker rm haribon-microservices || true
+
+            - name: Prune Docker (Cleanup Unused Resources)
               run: sudo docker system prune -af --volumes
 
             - name: Pull latest docker image
               run: sudo docker pull martin09123/haribon-microservices:latest
-
-            - name: Delete old docker container
-              run: sudo docker rm -f haribon-microservices || true
 
             - name: Run docker container
               run: |
