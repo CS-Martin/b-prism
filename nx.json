@@ -50,5 +50,5 @@
     ],
     "generators": { "@nx/next": { "application": { "style": "tailwind", "linter": "eslint" } }, "@nx/react": { "library": { "unitTestRunner": "vitest" } } },
     "targetDefaults": { "e2e-ci--**/*": { "dependsOn": ["^build"] } },
-    "nxCloudId": "67d3186e06e383ce7f444bd9"
+    "nxCloudId": "67d3ab40afea26bfaceaf1be"
 }
