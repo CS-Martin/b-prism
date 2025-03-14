@@ -120,10 +120,10 @@ class WarehouseService {
 
     public async fetchAllWarehouses(): Promise<ResponseDto<WarehouseDto[]>> {
         try {
-            const response = await fetch(`https://api.projectharibon.com/v1/warehouses`);
+            const response = await fetch(`${this.API_BASE_URL}/warehouses`);
 
             if (!response.ok) {
-                let errorMessage = 'Failed to fetch all warehouses';
+                let errorMessage = 'Failed to fetch all warehouse';
 
                 try {
                     const errorData = await response.json();
