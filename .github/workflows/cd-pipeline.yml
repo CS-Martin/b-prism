@@ -1,3 +1,12 @@
+# This CD Workflow is suspended for not
+# It will be re-enabled once we upgrade our EC2 instance
+
+# CD Annotation:
+# The self-hosted runner: ip-172-31-17-165 lost communication with the server.
+# Verify the machine is running and has a healthy network connection.
+# Anything in your workflow that terminates the runner process, starves it
+# for CPU/Memory, or blocks its network access can cause this error.
+
 name: Haribon CD Pipeline
 
 on:
@@ -18,7 +27,7 @@ jobs:
               run: sudo docker rm haribon-microservices || true
 
             - name: Prune Docker (Cleanup Unused Resources)
-              run: sudo docker system prune -af --volumes
+              run: sudo docker system prune -f
 
             - name: Pull latest docker image
               run: sudo docker pull martin09123/haribon-microservices:latest
@@ -29,7 +38,7 @@ jobs:
                     --name haribon-microservices \
                     -p 3001-3009:3001-3009 \
                     --env-file .env \
-                    --memory="512m" \
+                    --memory="400m" \
                     --cpus="0.5" \
                     martin09123/haribon-microservices:latest
 
