@@ -1,18 +1,17 @@
 import { CreateUserDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
-import axios from 'axios';
 
 class AuthenticationService {
     private API_BASE_URL: string;
 
     constructor() {
         // Change if production
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_AUTH_SERVICE_API_PORT ?? ''}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_AUTH_SERVICE_API_PORT ?? ''}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async create(user: CreateUserDto): Promise<UserDto> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/authentication/create`, {
+            const response = await fetch(`${this.API_BASE_URL}/auth/users`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -36,7 +35,7 @@ class AuthenticationService {
 
     public async update(id: string, user: UpdateUserDto): Promise<UserDto> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/authentication/update/${id}`, {
+            const response = await fetch(`${this.API_BASE_URL}/auth/users/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,9 +57,9 @@ class AuthenticationService {
         }
     }
 
-    public async verify(email: string, password: string): Promise<{ user: UserDto; accessToken: string; refreshToken: string }> {
+    public async login(email: string, password: string): Promise<{ user: UserDto; accessToken: string; refreshToken: string }> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/authentication/verify`, {
+            const response = await fetch(`${this.API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,7 +88,7 @@ class AuthenticationService {
 
     public async findById(id: string): Promise<UserDto> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/authentication/find/${id}`);
+            const response = await fetch(`${this.API_BASE_URL}/auth/users/${id}`);
 
             if (!response.ok) {
                 const error = await response.json();
@@ -107,7 +106,7 @@ class AuthenticationService {
 
     public async findByEmail(email: string): Promise<UserDto> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/authentication/find/email/${email}`);
+            const response = await fetch(`${this.API_BASE_URL}/auth/users/${email}`);
 
             if (!response.ok) {
                 const error = await response.json();
@@ -125,7 +124,7 @@ class AuthenticationService {
 
     public async resetPassword(email: string, resetPasswordDto: ResetPasswordDto): Promise<ResponseDto<UserDto>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/authentication/reset-password`, {
+            const response = await fetch(`${this.API_BASE_URL}/auth/users/reset-password`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -136,7 +135,7 @@ class AuthenticationService {
             if (!response.ok) {
                 const error = await response.json();
 
-                throw new BadRequestException(error.message || 'Failed to find user by email');
+                throw new BadRequestException(error.message || 'Failed to reset user password');
             }
 
             return await response.json();
@@ -149,7 +148,7 @@ class AuthenticationService {
 
     public async verifyEmailCode(email: string, code: string): Promise<ResponseDto<boolean>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/authentication/verify-email-code`, {
+            const response = await fetch(`${this.API_BASE_URL}/auth/users/verify-email-code`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -163,7 +162,7 @@ class AuthenticationService {
                 throw new BadRequestException(error.message || 'Failed to verify email code');
             }
 
-            return response.json();
+            return await response.json();
         } catch (error) {
             console.error('Authentication Service Error:', error);
 
@@ -173,7 +172,7 @@ class AuthenticationService {
 
     public async refreshAccessToken(refreshToken?: string): Promise<string | null> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/authentication/refresh-token`, {
+            const response = await fetch(`${this.API_BASE_URL}/auth/refresh-token`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

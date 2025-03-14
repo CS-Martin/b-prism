@@ -5,12 +5,12 @@ class RescuePostService {
     private API_BASE_URL: string;
 
     constructor() {
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_RESCUE_POST_SERVICE_API_PORT ?? ''}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_RESCUE_POST_SERVICE_API_PORT ?? ''}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async create(rescuePost: CreateRescuePostDto): Promise<RescuePostDto> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/rescue-post/create`, {
+            const response = await fetch(`${this.API_BASE_URL}/rescue-posts`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,7 +34,9 @@ class RescuePostService {
 
     public async findAll(): Promise<ResponseDto<RescuePostDto[]>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/rescue-post`);
+            const response = await fetch(`${this.API_BASE_URL}/rescue-posts`, {
+                method: 'GET',
+            });
 
             if (!response.ok) {
                 const error = await response.json();

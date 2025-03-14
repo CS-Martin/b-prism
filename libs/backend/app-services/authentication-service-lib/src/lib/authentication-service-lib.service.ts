@@ -179,6 +179,8 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
         const existingUser: UserDto = (await this.userServiceLibService.findByEmail(email)).body;
 
+        this.logger.log('Existing user', existingUser);
+
         try {
             const hashedPassword = await hashPassword(resetPasswordDto.password);
             const user: User = await this.authenticationMongodbService.resetPassword(existingUser.id, hashedPassword);
@@ -193,7 +195,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
             await this.activityLogLibService.create(logging_var);
 
-            const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
+            const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(200, this.convertToDto(user));
 
             return response;
         } catch (error) {

@@ -1,12 +1,13 @@
 import { VerificationDto } from '@dto';
 import { Controller, Patch, Body, UseGuards } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiTags } from '@nestjs/swagger';
 import { VerificationServiceLibService } from '@verification-service-lib';
 import { AuthGuard } from 'libs/backend/app-services/guards-service-lib/src/lib/jwt-auth.guard';
 
 @ApiTags('Verification Endpoints')
 @UseGuards(AuthGuard)
-@Controller('verification')
+@Controller(`${new ConfigService().get('API_VERSION')}/verifications`)
 export class VerificationController {
     constructor(private readonly verificationService: VerificationServiceLibService) {}
 

@@ -1,49 +1,16 @@
 import Image from 'next/image';
 import { Button } from '@b-prism/shadcn-ui/index';
 import { ArrowRight } from 'lucide-react';
+import { haribonFeatures } from 'apps/web-app/src/utils/constants';
 
 const FeaturesSection = () => {
-    const features = [
-        {
-            title: 'Messenger Bot for Rescue Requests',
-            subtitle: 'Real-time Communication',
-            description:
-                'Empowering individuals in need of rescue with a messenger bot. Users can report their location, which is automatically added to the system and displayed on the map for rescuers to act quickly.',
-            image: '/img/map-img.png',
-        },
-        {
-            title: 'Optimal Facility Location',
-            subtitle: 'Multi-modal Analysis',
-            description: 'Utilizes advanced algorithms to determine the best warehouse placements in the Bicol region, improving disaster response and resource distribution.',
-            image: '/img/map-img.png',
-        },
-        {
-            title: 'Typhoon Simulation',
-            subtitle: 'Disaster Preparedness',
-            description: 'Simulates typhoon scenarios to predict potential vulnerabilities in the network and ensures readiness for real-world disaster events.',
-            image: '/img/map-img.png',
-        },
-        {
-            title: 'Road Damage Network Simulation',
-            subtitle: 'Infrastructure Resilience',
-            description: 'Simulates road damage caused by natural disasters to analyze network disruptions and design efficient alternative routes for rescue and logistics.',
-            image: '/img/map-img.png',
-        },
-        {
-            title: 'Multi-Objective Optimization',
-            subtitle: 'Balanced Decision-Making',
-            description: 'Minimize delivery time, economic costs, and environmental impact while maximizing lives saved through a comprehensive optimization algorithm.',
-            image: '/img/map-img.png',
-        },
-    ];
-
     return (
         <section className='px-5 overflow-hidden text-white bg-black md:py-5 '>
             <div className='mx-auto overflow-hidden '>
                 <div
                     className='relative grid border-t features-grid border-t-zinc-800 features-vignette'
                     style={{ width: '100%' }}>
-                    {features.map((feature, index) => {
+                    {haribonFeatures.map((feature, index) => {
                         return (
                             <div
                                 key={index}

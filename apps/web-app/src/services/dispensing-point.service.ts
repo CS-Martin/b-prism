@@ -5,7 +5,7 @@ class DispensingPointService {
     private API_BASE_URL: string;
 
     constructor() {
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_DISPENSING_POINT_SERVICE_API_PORT ?? ''}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_DISPENSING_POINT_SERVICE_API_PORT ?? ''}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async create(data: CreateDispensingPointDto, author: string, accessToken: string): Promise<DispensingPointDto> {
@@ -15,7 +15,7 @@ class DispensingPointService {
         };
 
         try {
-            const response = await fetch(`${this.API_BASE_URL}/dispensing-point/create`, {
+            const response = await fetch(`${this.API_BASE_URL}/dispensing-points`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ class DispensingPointService {
         const payload = { id, data, author };
 
         try {
-            const response = await fetch(`${this.API_BASE_URL}/dispensing-point/update/${id}`, {
+            const response = await fetch(`${this.API_BASE_URL}/dispensing-points/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ class DispensingPointService {
 
     public async delete(id: string, author: string, accessToken: string): Promise<void> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/dispensing-point/delete/${id}`, {
+            const response = await fetch(`${this.API_BASE_URL}/dispensing-points/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ class DispensingPointService {
 
     public async fetchAllDispensingPoints(): Promise<ResponseDto<DispensingPointDto[]>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/dispensing-point`);
+            const response = await fetch(`${this.API_BASE_URL}/dispensing-points`);
 
             if (!response.ok) {
                 let errorMessage = 'Failed to fetch all dispensing points';
@@ -152,10 +152,10 @@ class DispensingPointService {
 
     public async findOne(id: string): Promise<ResponseDto<DispensingPointDto>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/dispensing-point/${id}`);
+            const response = await fetch(`${this.API_BASE_URL}/dispensing-points/${id}`);
 
             if (!response.ok) {
-                let errorMessage = 'Failed to fetch one dispensing points';
+                let errorMessage = 'Failed to fetch one dispensing point';
 
                 try {
                     const errorData = await response.json();

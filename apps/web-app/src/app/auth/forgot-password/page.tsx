@@ -11,6 +11,7 @@ import { MailerDto, ResponseDto, UserDto } from '@dto';
 import { PacmanLoader } from 'react-spinners';
 import { useResetPassword, useVerifyEmailCode } from 'apps/web-app/src/hooks/authentication.hook';
 import { useRouter } from 'next/navigation';
+import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 export default function ForgotPasswordPage() {
     const router = useRouter();
@@ -116,6 +117,12 @@ export default function ForgotPasswordPage() {
                 }
 
                 router.push('/auth/login');
+
+                toast({
+                    title: 'Success',
+                    description: 'You have successfully reset your password',
+                    variant: 'success',
+                });
             } catch (error) {
                 if (error instanceof Error) {
                     setError(error.message);
@@ -138,10 +145,10 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className='flex flex-col items-center justify-center min-h-screen  p-8'>
+        <div className='flex flex-col items-center justify-center min-h-screen p-8'>
             <div className='w-full max-w-[600px] bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6'>
                 {/* Progress Steps */}
-                <div className='flex justify-between items-start relative mb-6 '>
+                <div className='relative flex items-start justify-between mb-6 '>
                     {steps.map((step, index) => (
                         <div
                             key={index}
@@ -156,7 +163,7 @@ export default function ForgotPasswordPage() {
                             {/* Step Circle */}
                             <div
                                 className={`z-10 flex items-center justify-center w-11 h-11 rounded-full border-[5px] border-gray-800 ${index <= currentStep ? 'bg-green-500 ' : 'bg-white'}`}>
-                                {index < currentStep ? <span className='text-white text-lg font-bold'>✔</span> : <span className='text-gray-700 font-semibold'>{index + 1}</span>}
+                                {index < currentStep ? <span className='text-lg font-bold text-white'>✔</span> : <span className='font-semibold text-gray-700'>{index + 1}</span>}
                             </div>
 
                             {/* Step Labels */}
@@ -172,14 +179,14 @@ export default function ForgotPasswordPage() {
                 <div className='mb-4 min-h-fit max-h-[200px] transition-all duration-500'>{steps[currentStep].component}</div>
 
                 {/* Error Message */}
-                {error && <p className='text-red-500 text-sm mb-4'>{error}</p>}
+                {error && <p className='mb-4 text-sm text-red-500'>{error}</p>}
 
                 {/* Navigation Buttons */}
-                <div className='mt-6 flex flex-col items-center gap-y-2 justify-between'>
+                <div className='flex flex-col items-center justify-between mt-6 gap-y-2'>
                     <Button
                         type='submit'
                         onClick={handleNext}
-                        className='px-4 w-full py-2 rounded-lg text-white bg-blue-500 hover:bg-blue-400 disabled:opacity-50'
+                        className='w-full px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-400 disabled:opacity-50'
                         disabled={
                             isSendingCode ||
                             isVerifyingCode || // Disable while the request is in progress
@@ -205,7 +212,7 @@ export default function ForgotPasswordPage() {
                     <Button
                         variant='ghost'
                         onClick={handleBack}
-                        className='px-4 py-2 w-1/6 rounded-lg disabled:opacity-50 hover:bg-transparent'>
+                        className='w-1/6 px-4 py-2 rounded-lg disabled:opacity-50 hover:bg-transparent'>
                         <ArrowLeft />
                         Back
                     </Button>
