@@ -8,37 +8,17 @@ import { ConfigService } from '@nestjs/config';
 export class RoadNetworkController {
     constructor(private readonly roadNetworkServiceLibService: RoadNetworkServiceLibService) {}
 
+    @Get('damaged')
+    async findAllDamagedRoads() {
+        return this.roadNetworkServiceLibService.findAllDamagedRoads();
+    }
+
     @Get()
     findAll() {
         return this.roadNetworkServiceLibService.findAll();
     }
 
-    @Get(':id')
-    findById(@Param('id') id: string) {
-        return this.roadNetworkServiceLibService.findById(id);
-    }
-
-    @Get('search-by-bounds')
-    @ApiParam({
-        name: 'minLng',
-        type: String,
-        description: 'The minimum longitude of the bounding box',
-    })
-    @ApiParam({
-        name: 'minLat',
-        type: String,
-        description: 'The minimum latitude of the bounding box',
-    })
-    @ApiParam({
-        name: 'maxLng',
-        type: String,
-        description: 'The maximum longitude of the bounding box',
-    })
-    @ApiParam({
-        name: 'maxLat',
-        type: String,
-        description: 'The maximum latitude of the bounding box',
-    })
+    @Get('bounds/search')
     async findByBounds(@Query('minLng') minLng: string, @Query('minLat') minLat: string, @Query('maxLng') maxLng: string, @Query('maxLat') maxLat: string) {
         const parsedMinLng = parseFloat(minLng);
         const parsedMinLat = parseFloat(minLat);
@@ -46,11 +26,6 @@ export class RoadNetworkController {
         const parsedMaxLat = parseFloat(maxLat);
 
         return this.roadNetworkServiceLibService.findByBounds(parsedMinLng, parsedMinLat, parsedMaxLng, parsedMaxLat);
-    }
-
-    @Get('damaged')
-    async findAllDamagedRoads() {
-        return this.roadNetworkServiceLibService.findAllDamagedRoads();
     }
 
     @Put(':id/destroy')
@@ -99,5 +74,10 @@ export class RoadNetworkController {
     fixRoad(@Param('id') id: string, @Body() payload: { author: string }) {
         const { author } = payload;
         return this.roadNetworkServiceLibService.fixRoad(id, author);
+    }
+
+    @Get(':id')
+    findById(@Param('id') id: string) {
+        return this.roadNetworkServiceLibService.findById(id);
     }
 }

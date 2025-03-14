@@ -7,7 +7,7 @@ class RoadNetworkService {
 
     constructor() {
         // Change if production
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ROAD_NETWORK_SERVICE_API_PORT ?? ''}/${process.env.API_VERSION}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ROAD_NETWORK_SERVICE_API_PORT ?? ''}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async findAllDamagedRoads(): Promise<RoadNetworkDto[]> {
@@ -30,7 +30,7 @@ class RoadNetworkService {
 
     public async findFixRoadByBounds(minLng: number, minLat: number, maxLng: number, maxLat: number): Promise<RoadNetworkDto[]> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/road-network/search-by-bounds?minLng=${minLng}&minLat=${minLat}&maxLng=${maxLng}&maxLat=${maxLat}`);
+            const response = await fetch(`${this.API_BASE_URL}/road-networks/bounds/search?minLng=${minLng}&minLat=${minLat}&maxLng=${maxLng}&maxLat=${maxLat}`);
 
             if (!response.ok) {
                 const error = await response.json();
