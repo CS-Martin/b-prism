@@ -1,0 +1,32 @@
+name: Haribon CD Pipeline
+
+on:
+    workflow_run:
+        workflows: ['Haribon CI Pipeline']
+        types:
+            - completed
+
+jobs:
+    build:
+        runs-on: self-hosted
+
+        steps:
+            - name: Pull latest docker image
+              run: sudo docker pull martin09123/haribon-microservices:latest
+
+            - name: Delete old docker container
+              run: sudo docker rm -f haribon-microservices || true
+
+            - name: Run docker container
+              run: |
+                  sudo docker run -d \
+                    --name haribon-microservices \
+                    -p 3001-3009:3001-3009 \
+                    --env-file .env \
+                    martin09123/haribon-microservices:latest
+
+            - name: Verify container is running
+              run: sudo docker ps
+
+            - name: Check Docker logs
+              run: sudo docker logs haribon-microservices
