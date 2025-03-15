@@ -1,5 +1,5 @@
 import { LoginProvider } from '@b-prism/types';
-import { CreateUserDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
+import { CreateUserDto, PublicUserDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 
 class AuthenticationService {
@@ -10,7 +10,7 @@ class AuthenticationService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_AUTH_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
-    public async create(user: CreateUserDto): Promise<UserDto> {
+    public async create(user: CreateUserDto): Promise<PublicUserDto> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/auth/users`, {
                 method: 'POST',
@@ -124,7 +124,7 @@ class AuthenticationService {
 
     public async resetPassword(email: string, resetPasswordDto: ResetPasswordDto): Promise<ResponseDto<UserDto>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/users/reset-password`, {
+            const response = await fetch(`${this.API_BASE_URL}/auth/users/reset-password`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

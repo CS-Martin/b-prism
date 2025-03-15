@@ -38,7 +38,7 @@ export async function middleware(req: NextRequest) {
         const requestedUserId = completeProfileMatch[1];
 
         if (token?.id !== requestedUserId) {
-            console.log('Unauthorized profile access attempt:', {
+            console.info('Unauthorized profile access attempt:', {
                 requestedUserId,
                 actualUserId: token?.id,
             });
@@ -46,13 +46,13 @@ export async function middleware(req: NextRequest) {
         }
 
         if (token?.id_image_url) {
-            console.log('You have already submitted your ID, redirecting to home');
+            console.info('You have already submitted your ID, redirecting to home');
             return NextResponse.redirect(new URL('/home', req.url));
         }
     }
 
     if ((pathname === '/admin/dashboard' || pathname === '/admin/activity-logs') && token?.role !== 'admin') {
-        console.log('GRANTING ACCESS TO ADMIN', token?.role);
+        console.warn('Unauthorized access attempt to admin area by user with role:', token?.role);
 
         return NextResponse.redirect(new URL('/home', req.url));
     }

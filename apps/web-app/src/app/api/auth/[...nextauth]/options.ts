@@ -2,8 +2,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { authService } from '../../../../services/authentication.service';
 import { jwtDecode } from 'jwt-decode';
 import { NextAuthOptions } from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export const options: NextAuthOptions = {
     providers: [
@@ -27,8 +26,6 @@ export const options: NextAuthOptions = {
                 if (!credentials?.email || !credentials?.password) return null;
 
                 const response = await authService.login('credentials', credentials.email, credentials.password);
-
-                console.log(response);
 
                 if (!response || !response.user || !response.access_token) {
                     throw new Error('Invalid email or password.');
@@ -58,6 +55,7 @@ export const options: NextAuthOptions = {
                 token.email = user.email;
                 token.role = user.role;
                 token.access_token = user.access_token;
+                token.id_image_url = user.id_image_url;
 
                 console.log('HERE IS USER', user);
                 const decodedToken = jwtDecode<{ exp?: number }>(token.access_token!);
@@ -105,6 +103,7 @@ export const options: NextAuthOptions = {
                 family_name: token.family_name,
                 email: token.email,
                 role: token.role,
+                id_image_url: token.id_image_url,
                 access_token: token.access_token ?? '',
             };
 

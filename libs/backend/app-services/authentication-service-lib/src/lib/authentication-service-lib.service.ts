@@ -415,6 +415,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         userDto.office = user.office ?? '';
         userDto.position = user.position ?? '';
         userDto.role = user.role ?? UserRole.unverified;
+        userDto.id_image_url = user.id_image_url;
         userDto.refresh_token = user.refresh_token ?? '';
         userDto.created_at = user.created_at;
         userDto.updated_at = user.updated_at;

@@ -23,7 +23,6 @@ export class UserMongodbLibService {
 
     async findAll(): Promise<User[]> {
         const users: User[] = await this.prisma.user.findMany();
-        console.log(users);
 
         return users;
     }

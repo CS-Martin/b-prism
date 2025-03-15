@@ -40,7 +40,6 @@ export class UserServiceLibService implements UserServiceAbstractClass {
 
     async findById(id: string): Promise<ResponseDto<UserDto>> {
         this.logger.log('Finding user', id);
-        console.log('Finding userHAHAHAHA', id);
 
         const user: User | null = await this.userMongodbLibService.findById(id);
 
