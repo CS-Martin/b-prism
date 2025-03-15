@@ -1,4 +1,5 @@
-import { CreateUserDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
+import { LoginProvider } from '@b-prism/types';
+import { CreateUserDto, PublicUserDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 
 class AuthenticationService {
@@ -9,7 +10,7 @@ class AuthenticationService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_AUTH_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
-    public async create(user: CreateUserDto): Promise<UserDto> {
+    public async create(user: CreateUserDto): Promise<PublicUserDto> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/auth/users`, {
                 method: 'POST',
@@ -57,14 +58,14 @@ class AuthenticationService {
         }
     }
 
-    public async login(email: string, password: string): Promise<{ user: UserDto; accessToken: string; refreshToken: string }> {
+    public async login(provider: LoginProvider, email: string, password: string): Promise<{ user: UserDto; access_token: string }> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ provider, email, password }),
             });
 
             if (!response.ok) {
@@ -76,8 +77,7 @@ class AuthenticationService {
 
             return {
                 user: responseJson.body.user,
-                accessToken: responseJson.body.accessToken,
-                refreshToken: responseJson.body.refreshToken,
+                access_token: responseJson.body.access_token,
             };
         } catch (error) {
             console.error('Authentication Service Error:', error);
@@ -124,7 +124,7 @@ class AuthenticationService {
 
     public async resetPassword(email: string, resetPasswordDto: ResetPasswordDto): Promise<ResponseDto<UserDto>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/users/reset-password`, {
+            const response = await fetch(`${this.API_BASE_URL}/auth/users/reset-password`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -8,7 +8,7 @@ class WarehouseService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_WAREHOUSE_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
-    public async create(data: CreateWarehouseDto, author: string, accessToken: string): Promise<WarehouseDto> {
+    public async create(data: CreateWarehouseDto, author: string, access_token: string): Promise<WarehouseDto> {
         const payload = { data, author };
 
         try {
@@ -16,7 +16,7 @@ class WarehouseService {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${access_token}`,
                 },
                 body: JSON.stringify(payload),
             });
@@ -46,7 +46,7 @@ class WarehouseService {
         }
     }
 
-    public async update(id: string, data: UpdateWarehouseDto, author: string, accessToken: string): Promise<WarehouseDto> {
+    public async update(id: string, data: UpdateWarehouseDto, author: string, access_token: string): Promise<WarehouseDto> {
         const payload = { id, data, author };
 
         try {
@@ -54,7 +54,7 @@ class WarehouseService {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${access_token}`,
                 },
                 body: JSON.stringify(payload),
             });
@@ -84,14 +84,14 @@ class WarehouseService {
         }
     }
 
-    public async delete(id: string, author: string, accessToken: string): Promise<void> {
+    public async delete(id: string, author: string, access_token: string): Promise<void> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/warehouses/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Author': author,
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${access_token}`,
                 },
             });
 

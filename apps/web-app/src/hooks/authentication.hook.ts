@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { authService } from '../services/authentication.service';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 export const useVerifyEmailCode = () => {
     const { toast } = useToast();

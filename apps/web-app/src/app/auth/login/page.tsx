@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { getSession, signIn, useSession } from 'next-auth/react';
 import { Input, Label } from '@b-prism/shadcn-ui/index';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRouter } from 'next/navigation';
@@ -42,6 +42,14 @@ export default function LoginPage() {
             setIsLoading(false);
             return;
         } else {
+            const updatedSession = await getSession();
+
+            if (!updatedSession?.user?.id_image_url || updatedSession.user.id_image_url === '') {
+                // Redirect to complete profile page if id_image_url is missing
+                router.push(`/auth/${updatedSession?.user.id}/complete-profile`);
+                return;
+            }
+
             toast({
                 title: 'Success',
                 description: 'You have logged in successfully.',

@@ -75,7 +75,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
             user_id: user.id,
         };
 
-        await updateDispensingPoint(dispensingPointId, formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
+        await updateDispensingPoint(dispensingPointId, formattedData, `${user.given_name} ${user.family_name}`, user.access_token);
         setIsOpen(false);
     };
 

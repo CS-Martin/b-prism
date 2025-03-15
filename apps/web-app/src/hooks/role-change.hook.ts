@@ -6,7 +6,7 @@ import { VerificationDto } from '@dto';
 export const useRoleChange = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const roleChange = async (id: string, newRole: UserRole, accessToken: string) => {
+    const roleChange = async (id: string, newRole: UserRole, access_token: string) => {
         try {
             setIsLoading(true);
 
@@ -14,7 +14,7 @@ export const useRoleChange = () => {
                 userId: id,
                 role: newRole,
             };
-            await roleChangeService.changeRole(verificationDto, accessToken);
+            await roleChangeService.changeRole(verificationDto, access_token);
 
             return true;
         } catch (error) {

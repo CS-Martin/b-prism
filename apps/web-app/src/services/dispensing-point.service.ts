@@ -7,7 +7,7 @@ class DispensingPointService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_DISPENSING_POINT_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
-    public async create(data: CreateDispensingPointDto, author: string, accessToken: string): Promise<DispensingPointDto> {
+    public async create(data: CreateDispensingPointDto, author: string, access_token: string): Promise<DispensingPointDto> {
         const payload = {
             data,
             author,
@@ -18,7 +18,7 @@ class DispensingPointService {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${access_token}`,
                 },
                 body: JSON.stringify(payload),
             });
@@ -48,7 +48,7 @@ class DispensingPointService {
         }
     }
 
-    public async update(id: string, data: UpdateDispensingPointDto, author: string, accessToken: string): Promise<DispensingPointDto> {
+    public async update(id: string, data: UpdateDispensingPointDto, author: string, access_token: string): Promise<DispensingPointDto> {
         const payload = { id, data, author };
 
         try {
@@ -56,7 +56,7 @@ class DispensingPointService {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${access_token}`,
                 },
                 body: JSON.stringify(payload),
             });
@@ -86,14 +86,14 @@ class DispensingPointService {
         }
     }
 
-    public async delete(id: string, author: string, accessToken: string): Promise<void> {
+    public async delete(id: string, author: string, access_token: string): Promise<void> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/dispensing-points/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Author': author,
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${access_token}`,
                 },
             });
 

@@ -1,9 +1,13 @@
 import { UserRole } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import type { LoginProvider } from '@b-prism/types';
 
 export class UserDto {
     @ApiProperty()
     id!: string;
+
+    @ApiProperty()
+    provider!: LoginProvider;
 
     @ApiProperty()
     given_name!: string;
@@ -15,7 +19,7 @@ export class UserDto {
     email!: string;
 
     @ApiProperty()
-    password!: string;
+    password?: string;
 
     @ApiProperty()
     office?: string | null;
@@ -30,8 +34,11 @@ export class UserDto {
     id_image_url?: string | null;
 
     @ApiProperty()
-    createdAt!: Date;
+    refresh_token?: string | null;
 
     @ApiProperty()
-    updatedAt?: Date;
+    created_at!: Date;
+
+    @ApiProperty()
+    updated_at?: Date;
 }

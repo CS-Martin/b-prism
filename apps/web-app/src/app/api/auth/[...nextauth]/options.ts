@@ -2,9 +2,20 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { authService } from '../../../../services/authentication.service';
 import { jwtDecode } from 'jwt-decode';
 import { NextAuthOptions } from 'next-auth';
+import { useRouter } from 'next/navigation';
 
 export const options: NextAuthOptions = {
     providers: [
+        // GoogleProvider({
+        //     clientId: process.env.GOOGLE_CLIENT_ID || '',
+        //     clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+        //     async profile(profile) {
+        //         let user = await authService.signInWithGoogle(profile.email);
+
+        //         if (!user) {
+        //         }
+        //     },
+        // }),
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
@@ -14,9 +25,9 @@ export const options: NextAuthOptions = {
             async authorize(credentials) {
                 if (!credentials?.email || !credentials?.password) return null;
 
-                const response = await authService.login(credentials.email, credentials.password);
+                const response = await authService.login('credentials', credentials.email, credentials.password);
 
-                if (!response || !response.user || !response.accessToken) {
+                if (!response || !response.user || !response.access_token) {
                     throw new Error('Invalid email or password.');
                 }
 
@@ -29,8 +40,7 @@ export const options: NextAuthOptions = {
                     position: response.user.position ?? undefined,
                     role: response.user.role,
                     id_image_url: response.user.id_image_url ?? undefined,
-                    accessToken: response.accessToken,
-                    refreshToken: response.refreshToken,
+                    access_token: response.access_token,
                 };
             },
         }),
@@ -44,28 +54,25 @@ export const options: NextAuthOptions = {
                 token.family_name = user.family_name;
                 token.email = user.email;
                 token.role = user.role;
-                token.accessToken = user.accessToken;
-                token.refreshToken = user.refreshToken;
+                token.access_token = user.access_token;
+                token.id_image_url = user.id_image_url;
 
-                const decodedToken = jwtDecode<{ exp?: number }>(token.accessToken!);
+                console.log('HERE IS USER', user);
+                const decodedToken = jwtDecode<{ exp?: number }>(token.access_token!);
                 token.accessTokenExpires = decodedToken?.exp ? decodedToken.exp * 1000 : Date.now() + 1000 * 60 * 15;
             }
 
             // Check if the access token is still valid
             if (typeof token.accessTokenExpires === 'number' && Date.now() < token.accessTokenExpires) {
                 console.log('✅ Token is still valid until:', new Date(token.accessTokenExpires));
-                console.log('Access token:', token.accessToken);
                 return token;
             }
 
             console.log('🔄 Access token expired, refreshing token...');
 
             try {
-                // This only returns the new accessToken
-                const newAccessToken = await authService.refreshAccessToken(token.refreshToken);
-                console.log(newAccessToken);
-
-                console.log(newAccessToken);
+                // This only returns the new access_token
+                const newAccessToken = await authService.refreshAccessToken(token.refresh_token);
 
                 if (!newAccessToken) {
                     console.error('❌ Failed to refresh access token');
@@ -96,8 +103,8 @@ export const options: NextAuthOptions = {
                 family_name: token.family_name,
                 email: token.email,
                 role: token.role,
-                accessToken: token.accessToken ?? '',
-                refreshToken: token.refreshToken ?? '',
+                id_image_url: token.id_image_url,
+                access_token: token.access_token ?? '',
             };
 
             return session;
