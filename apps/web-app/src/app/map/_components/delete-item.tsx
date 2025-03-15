@@ -53,11 +53,11 @@ const DeleteItem = ({ item, onCancel, session }: DeleteItemProps) => {
     const handleDelete = async () => {
         switch (item.type) {
             case 'warehouse':
-                await deleteWarehouse(item.id, userFullname, user.accessToken);
+                await deleteWarehouse(item.id, userFullname, user.access_token);
                 useWarehouseStore.getState().removeWarehouse(item.id);
                 break;
             case 'dispensing_point':
-                await deleteDispensingPoint(item.id, userFullname, user.accessToken);
+                await deleteDispensingPoint(item.id, userFullname, user.access_token);
                 useDispensingPointsStore.getState().removeDispensingPoint(item.id);
                 break;
             // To add: Evacuation point

@@ -79,7 +79,7 @@ export const useFindOneDispensingPoint = (id: string) => {
 export const useCreateDispensingPoint = () => {
     const { toast } = useToast();
 
-    const createDispensingPoint = async (data: CreateDispensingPointDto, author: string, accessToken: string): Promise<DispensingPointDto | undefined> => {
+    const createDispensingPoint = async (data: CreateDispensingPointDto, author: string, access_token: string): Promise<DispensingPointDto | undefined> => {
         try {
             const newDispensingPoint: DispensingPointDto = await dispensingPointService.create(
                 {
@@ -87,7 +87,7 @@ export const useCreateDispensingPoint = () => {
                     capacity: Number(data.capacity),
                 },
                 author,
-                accessToken,
+                access_token,
             );
 
             toast({
@@ -116,9 +116,9 @@ export const useCreateDispensingPoint = () => {
 export const useUpdateDispensingPoint = () => {
     const { toast } = useToast();
 
-    const updateDispensingPoint = async (id: string, data: UpdateDispensingPointDto, author: string, accessToken: string) => {
+    const updateDispensingPoint = async (id: string, data: UpdateDispensingPointDto, author: string, access_token: string) => {
         try {
-            await dispensingPointService.update(id, data, author, accessToken);
+            await dispensingPointService.update(id, data, author, access_token);
 
             toast({
                 title: 'Success!',
@@ -144,9 +144,9 @@ export const useUpdateDispensingPoint = () => {
 export const useDeleteDispensingPoint = () => {
     const { toast } = useToast();
 
-    const deleteDispensingPoint = async (id: string, author: string, accessToken: string) => {
+    const deleteDispensingPoint = async (id: string, author: string, access_token: string) => {
         try {
-            await dispensingPointService.delete(id, author, accessToken);
+            await dispensingPointService.delete(id, author, access_token);
 
             toast({
                 title: 'Dispensing point deleted successfully!',

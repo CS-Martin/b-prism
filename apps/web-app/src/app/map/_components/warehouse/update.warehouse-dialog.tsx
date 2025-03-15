@@ -99,7 +99,7 @@ const UpdateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                 throw new Error('Warehouse name is required');
             }
 
-            await updateWarehouse(warehouseId, formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
+            await updateWarehouse(warehouseId, formattedData, `${user.given_name} ${user.family_name}`, user.access_token);
             setIsOpen(false);
         } catch (error) {
             if (error instanceof Error) {
@@ -248,7 +248,7 @@ const UpdateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                             {/* description */}
                                             <p className='text-sm text-gray-500'>Please enter the details of the warehouse non-food items.</p>
 
-                                            <div className='flex mt-3 flex-row gap-4'>
+                                            <div className='flex flex-row gap-4 mt-3'>
                                                 <InputField
                                                     name='non_food_items.family_kits'
                                                     register={register}
@@ -270,7 +270,7 @@ const UpdateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                                                 />
                                             </div>
 
-                                            <div className='flex mt-3 flex-row gap-4'>
+                                            <div className='flex flex-row gap-4 mt-3'>
                                                 <InputField
                                                     name='non_food_items.hygiene_kits'
                                                     register={register}
@@ -309,7 +309,7 @@ const UpdateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
                             {/* Address Tab */}
                             <TabsContent
                                 value='address'
-                                className='w-full flex flex-col gap-4'>
+                                className='flex flex-col w-full gap-4'>
                                 <div>
                                     <DialogHeader>
                                         <DialogTitle>Warehouse Address</DialogTitle>

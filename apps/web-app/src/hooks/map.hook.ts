@@ -51,9 +51,9 @@ export const useFindOneWarehouse = (id: string) => {
 export const useCreateWarehouse = () => {
     const { toast } = useToast();
 
-    const createWarehouse = async (data: CreateWarehouseDto, author: string, accessToken: string): Promise<WarehouseDto | undefined> => {
+    const createWarehouse = async (data: CreateWarehouseDto, author: string, access_token: string): Promise<WarehouseDto | undefined> => {
         try {
-            const warehouse: WarehouseDto = await warehouseService.create(data, author, accessToken);
+            const warehouse: WarehouseDto = await warehouseService.create(data, author, access_token);
 
             if (!warehouse) {
                 throw new Error('Failed to create the warehouse');
@@ -85,9 +85,9 @@ export const useCreateWarehouse = () => {
 export const useUpdateWarehouse = () => {
     const { toast } = useToast();
 
-    const updateWarehouse = async (id: string, data: UpdateWarehouseDto, author: string, accessToken: string) => {
+    const updateWarehouse = async (id: string, data: UpdateWarehouseDto, author: string, access_token: string) => {
         try {
-            await warehouseService.update(id, data, author, accessToken);
+            await warehouseService.update(id, data, author, access_token);
 
             toast({
                 title: 'Success!',
@@ -113,9 +113,9 @@ export const useUpdateWarehouse = () => {
 export const useDeleteWarehouse = () => {
     const { toast } = useToast();
 
-    const deleteWarehouse = async (id: string, author: string, accessToken: string) => {
+    const deleteWarehouse = async (id: string, author: string, access_token: string) => {
         try {
-            await warehouseService.delete(id, author, accessToken);
+            await warehouseService.delete(id, author, access_token);
 
             toast({
                 title: 'Warehouse deleted successfully!',

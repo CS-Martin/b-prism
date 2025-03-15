@@ -76,7 +76,7 @@ function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize:
 }
 
 export const DataTableContent = ({ session }: { session: Session | null }) => {
-    const { users, isLoading: isFetchingUser, fetchAllUsers } = useDisplayUsers(session?.user.accessToken ?? null);
+    const { users, isLoading: isFetchingUser, fetchAllUsers } = useDisplayUsers(session?.user.access_token ?? null);
     const { roleChange, isLoading: isChangingRole } = useRoleChange();
 
     useEffect(() => {
@@ -86,9 +86,9 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
     }, [session?.user]);
 
     const handleRoleChange = async (userId: string, newRole: UserRole) => {
-        if (!session?.user.accessToken) return;
+        if (!session?.user.access_token) return;
 
-        const success = await roleChange(userId, newRole, session?.user.accessToken);
+        const success = await roleChange(userId, newRole, session?.user.access_token);
 
         if (success) {
             fetchAllUsers();

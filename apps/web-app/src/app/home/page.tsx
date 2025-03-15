@@ -1,5 +1,3 @@
-'use client';
-
 import { SplineSection } from './_components/spline-section';
 import BenefitsSection from './_components/benefits-section';
 import QuoteCarouselSection from './_components/quote-section';
