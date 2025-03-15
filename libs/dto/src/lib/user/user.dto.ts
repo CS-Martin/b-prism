@@ -1,6 +1,6 @@
 import { UserRole } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { LoginProvider } from '@b-prism/types';
+import type { LoginProvider } from '@b-prism/types';
 
 export class UserDto {
     @ApiProperty()
