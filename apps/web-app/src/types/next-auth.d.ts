@@ -11,8 +11,8 @@ declare module 'next-auth' {
             position?: string;
             role?: string;
             id_image_url?: string;
-            accessToken: string;
-            refreshToken?: string;
+            access_token: string;
+            refresh_token?: string;
         } & DefaultSession['user'];
     }
 
@@ -25,8 +25,8 @@ declare module 'next-auth' {
         position?: string;
         role?: string;
         id_image_url?: string;
-        accessToken?: string;
-        refreshToken?: string;
+        access_token?: string;
+        refresh_token?: string;
     }
 }
 
@@ -40,7 +40,7 @@ declare module 'next-auth/jwt' {
         position?: string;
         role?: string;
         id_image_url?: string;
-        accessToken?: string;
-        refreshToken?: string;
+        access_token?: string;
+        refresh_token?: string;
     }
 }

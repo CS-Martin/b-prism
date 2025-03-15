@@ -84,7 +84,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
      * @returns A promise that resolves to the validated user.
      * @returns UnauthorizedException if email or password are incorrect.
      */
-    async validateUserLogin(email: string, password: string, provider: LoginProvider): Promise<ResponseDto<{ user: PublicUserDto; accessToken: string }>> {
+    async validateUserLogin(email: string, password: string, provider: LoginProvider): Promise<ResponseDto<{ user: PublicUserDto; access_token: string }>> {
         this.logger.log('Validating user login', email);
 
         try {
@@ -104,33 +104,33 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             }
 
             // Generate access token
-            const accessToken = await this.generateAccessToken({
+            const access_token = await this.generateAccessToken({
                 id: user.id,
                 email: user.email,
                 role: user.role,
             });
 
-            let refreshToken = user.refresh_token; // Default to existing token
+            let refresh_token = user.refresh_token; // Default to existing token
 
             // Check if refresh token is missing or expired (implement token expiration logic)
             const expired = !user.refresh_token || isRefreshTokenExpired(user.refresh_token);
 
             if (expired) {
                 // Generate new refresh token
-                refreshToken = await this.generateRefreshToken({
+                refresh_token = await this.generateRefreshToken({
                     id: user.id,
                     email: user.email,
                     role: user.role,
                 });
 
                 // Hash and store the refresh token in DB
-                const hashedRefreshToken = await hashPassword(refreshToken);
+                const hashedRefreshToken = await hashPassword(refresh_token);
                 const updatedUser = await this.userServiceLibService.updateRefreshToken(user.id, provider, hashedRefreshToken);
                 user = updatedUser.body;
             }
 
             // Return response (DO NOT send refresh token in body, use HttpOnly cookie instead)
-            return new ResponseDto<{ user: PublicUserDto; accessToken: string }>(201, { user: this.convertToPublicDto(user), accessToken });
+            return new ResponseDto<{ user: PublicUserDto; access_token: string }>(201, { user: this.convertToPublicDto(user), access_token });
         } catch (error) {
             this.logger.error('Error validating user', error);
 

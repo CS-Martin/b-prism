@@ -6,7 +6,7 @@ import { PublicUserDto } from 'libs/dto/src/lib/user/public/public.user.dto';
 export abstract class AuthenticationServiceAbstractClass {
     abstract create(createUserDto: CreateUserDto, provider: LoginProvider): Promise<ResponseDto<PublicUserDto>>;
 
-    abstract validateUserLogin(email: string, password: string, provider: LoginProvider): Promise<ResponseDto<{ user: PublicUserDto; accessToken: string }>>;
+    abstract validateUserLogin(email: string, password: string, provider: LoginProvider): Promise<ResponseDto<{ user: PublicUserDto; access_token: string }>>;
 
     abstract refreshToken(refreshToken: string): Promise<{ newAccessToken: string }>;
 
