@@ -94,7 +94,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
                 throw new NotFoundException(`User with email ${email} not found. Please try again.`);
             }
 
-            const user = existingUser.body;
+            let user = existingUser.body;
 
             // If logging in with credentials, validate password
             if (provider === 'credentials') {
@@ -125,7 +125,8 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
 
                 // Hash and store the refresh token in DB
                 const hashedRefreshToken = await hashPassword(refreshToken);
-                await this.userServiceLibService.updateRefreshToken(user.id, provider, hashedRefreshToken);
+                const updatedUser = await this.userServiceLibService.updateRefreshToken(user.id, provider, hashedRefreshToken);
+                user = updatedUser.body;
             }
 
             // Return response (DO NOT send refresh token in body, use HttpOnly cookie instead)

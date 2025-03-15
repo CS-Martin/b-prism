@@ -5,7 +5,6 @@ import { BadRequestException, Injectable, Logger, NotFoundException } from '@nes
 import { UserServiceAbstractClass } from './user-service.abstract.class';
 import { User, UserRole } from '@prisma/client';
 import { LoginProvider } from '@b-prism/types';
-import { PublicUserDto } from 'libs/dto/src/lib/user/public/public.user.dto';
 
 @Injectable()
 export class UserServiceLibService implements UserServiceAbstractClass {
@@ -83,6 +82,7 @@ export class UserServiceLibService implements UserServiceAbstractClass {
         userDto.position = user.position || '';
         userDto.role = user.role || UserRole.unverified;
         userDto.id_image_url = user.id_image_url || '';
+        userDto.refresh_token = user.refresh_token || '';
         userDto.created_at = user.created_at;
         userDto.updated_at = user.updated_at;
 
