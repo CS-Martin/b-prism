@@ -12,6 +12,7 @@ export class AuthenticationMongodbLibService {
         const user = await this.prisma.user.create({
             data: {
                 ...createUserDto,
+                password: createUserDto.password ?? '',
             },
         });
 

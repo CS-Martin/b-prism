@@ -1,10 +1,12 @@
+import { LoginProvider } from '@b-prism/types';
 import { CreateUserDto, ResponseDto, UserDto, UpdateUserDto, ChangePasswordDto, MailerDto, ResetPasswordDto } from '@dto';
 import { User } from '@prisma/client';
+import { PublicUserDto } from 'libs/dto/src/lib/user/public/public.user.dto';
 
 export abstract class AuthenticationServiceAbstractClass {
-    abstract create(createUserDto: CreateUserDto): Promise<ResponseDto<UserDto>>;
+    abstract create(createUserDto: CreateUserDto, provider: LoginProvider): Promise<ResponseDto<PublicUserDto>>;
 
-    abstract validateUserLogin(email: string, password: string): Promise<ResponseDto<{ user: UserDto; accessToken: string }>>;
+    abstract validateUserLogin(email: string, password: string, provider: LoginProvider): Promise<ResponseDto<{ user: PublicUserDto; accessToken: string }>>;
 
     abstract refreshToken(refreshToken: string): Promise<{ newAccessToken: string }>;
 
@@ -17,4 +19,6 @@ export abstract class AuthenticationServiceAbstractClass {
     abstract update(id: string, updateUserDto: UpdateUserDto): Promise<ResponseDto<UserDto>>;
 
     abstract convertToDto(user: User): UserDto;
+
+    abstract convertToPublicDto(userDto: User): PublicUserDto;
 }

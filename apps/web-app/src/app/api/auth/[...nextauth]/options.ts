@@ -2,9 +2,21 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { authService } from '../../../../services/authentication.service';
 import { jwtDecode } from 'jwt-decode';
 import { NextAuthOptions } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import { signIn } from 'next-auth/react';
 
 export const options: NextAuthOptions = {
     providers: [
+        // GoogleProvider({
+        //     clientId: process.env.GOOGLE_CLIENT_ID || '',
+        //     clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+        //     async profile(profile) {
+        //         let user = await authService.signInWithGoogle(profile.email);
+
+        //         if (!user) {
+        //         }
+        //     },
+        // }),
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
