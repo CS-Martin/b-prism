@@ -14,6 +14,7 @@ import { randomInt } from 'crypto';
 import { addMinutes } from 'date-fns';
 import { MailerMongodbLibService } from '@b-prism/mailer-mongodb-lib';
 import { JwtService } from '@nestjs/jwt';
+import { error } from 'console';
 
 @Injectable()
 export class AuthenticationServiceLibService implements AuthenticationServiceAbstractClass {
@@ -74,6 +75,20 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             }
 
             throw new BadRequestException('There was an issue creating your account. Please try again later.');
+        }
+    }
+
+    async findByEmailAndProvider(provider: LoginProvider, email: string): Promise<ResponseDto<boolean>> {
+        this.logger.log('Finding user by email and provider: ', email, provider);
+
+        try {
+            const isUserExisting: boolean = await this.userServiceLibService.findUserByEmailAndProvider(provider, email);
+
+            return new ResponseDto<boolean>(200, isUserExisting);
+        } catch (error) {
+            this.logger.error('Error finding user by email and provider: ', error);
+
+            throw new BadRequestException('Error finding user by email and provider: ', error);
         }
     }
 

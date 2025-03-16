@@ -68,6 +68,14 @@ export class UserServiceLibService implements UserServiceAbstractClass {
         return response;
     }
 
+    async findUserByEmailAndProvider(provider: LoginProvider, email: string): Promise<boolean> {
+        this.logger.log('Finding existing user: ', provider, email);
+
+        const user: User | null = await this.userMongodbLibService.findByEmailAndProvider(provider, email);
+
+        return user ? true : false;
+    }
+
     convertToDto(user: User): UserDto {
         const userDto: UserDto = new UserDto();
 

@@ -1,8 +1,8 @@
 import { AuthenticationServiceLibService } from '@b-prism/authentication-service-lib';
 import { ChangePasswordDto, CreateUserDto, ResetPasswordDto, UpdateUserDto, VerifyEmailCode, VerifyUserDto } from '@dto';
-import { Controller, Post, Body, Put, Param, Get } from '@nestjs/common';
+import { Controller, Post, Body, Put, Param, Get, Query } from '@nestjs/common';
 import { ApiBody, ApiTags, getSchemaPath } from '@nestjs/swagger';
-import { ConfigService } from '@nestjs/config';
+import { LoginProvider } from '@b-prism/types';
 
 @ApiTags('Authentication Endpoints')
 @Controller(`v1/auth`)
@@ -60,6 +60,11 @@ export class AuthenticationController {
     @Post('users/verify-email-code')
     verifyEmailCode(@Body() verifyEmailCode: VerifyEmailCode) {
         return this.authenticationService.verifyEmailCode(verifyEmailCode.email, verifyEmailCode.code);
+    }
+
+    @Get('users')
+    async findByEmailAndProvider(@Query('email') email: string, @Query('provider') provider: LoginProvider) {
+        return this.authenticationService.findByEmailAndProvider(provider, email);
     }
 
     @Post('refresh-token')

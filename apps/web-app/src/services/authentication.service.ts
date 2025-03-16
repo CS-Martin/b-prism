@@ -58,7 +58,7 @@ class AuthenticationService {
         }
     }
 
-    public async login(provider: LoginProvider, email: string, password: string): Promise<{ user: UserDto; access_token: string }> {
+    public async login(provider: LoginProvider, email: string, password?: string): Promise<{ user: UserDto; access_token: string }> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/auth/login`, {
                 method: 'POST',

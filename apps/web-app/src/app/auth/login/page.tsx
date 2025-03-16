@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { getSession, signIn, useSession } from 'next-auth/react';
-import { Input, Label } from '@b-prism/shadcn-ui/index';
+import { Button, Input, Label } from '@b-prism/shadcn-ui/index';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
@@ -77,6 +77,12 @@ export default function LoginPage() {
                     </Link>
                     <h2 className='font-semibold tracking-tight text-xl/10'>Sign in to Haribon</h2>
                 </div>
+
+                <Button
+                    className='mt-4'
+                    onClick={() => signIn('google')}>
+                    Sign in with Google
+                </Button>
 
                 <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-xs'>
                     <form

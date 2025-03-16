@@ -1,9 +1,14 @@
+'use client';
+
 import { SplineSection } from './_components/spline-section';
 import BenefitsSection from './_components/benefits-section';
 import QuoteCarouselSection from './_components/quote-section';
 import FeaturesSection from './_components/features-section';
+import { useSession } from 'next-auth/react';
 
 export default function Home() {
+    const { data: session, status } = useSession();
+    console.log(session);
     return (
         <div className='pt-20 bg-black'>
             <SplineSection />
