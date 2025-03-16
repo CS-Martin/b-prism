@@ -21,7 +21,7 @@ export const options: NextAuthOptions = {
             async authorize(credentials) {
                 if (!credentials?.email || !credentials?.password) return null;
 
-                const response = await authService.login('credentials', credentials.email, credentials.password);
+                const response = await authService.validateCredentialLogin('credentials', credentials.email, credentials.password);
 
                 if (!response || !response.user || !response.access_token) {
                     throw new Error('Invalid email or password.');
@@ -45,66 +45,53 @@ export const options: NextAuthOptions = {
         async signIn({ account, profile }) {
             if (account?.provider === 'google' && profile) {
                 if (!profile.email) {
-                    throw new Error('Google profile email is undefined.');
+                    return false;
                 }
 
-                // Check if the gmail user exists in the database
-                const isExistingUser = await authService.findByEmailAndProvider('google', profile.email);
+                try {
+                    const createUserDto: CreateUserDto = new CreateUserDto();
 
-                console.log(isExistingUser);
-                console.log(account, profile);
+                    createUserDto.provider = 'google';
+                    createUserDto.given_name = (profile as any).given_name;
+                    createUserDto.family_name = (profile as any).family_name;
+                    createUserDto.email = profile.email;
+                    createUserDto.role = 'unverified';
 
-                if (isExistingUser) return false;
+                    const { user, access_token } = await authService.validateGoogleLogin(createUserDto);
 
-                // Create the user
-                const createUserDto: CreateUserDto = new CreateUserDto();
+                    if (!user || !access_token) {
+                        throw new Error('Failed to validate Google login.');
+                    }
 
-                createUserDto.provider = 'google';
-                createUserDto.given_name = (profile as any).given_name;
-                createUserDto.family_name = (profile as any).family_name;
-                createUserDto.email = profile.email;
-                createUserDto.role = 'unverified';
-                createUserDto.created_at = new Date();
-                createUserDto.updated_at = new Date();
+                    (profile as any).id = user.id;
+                    (profile as any).role = user.role;
+                    (profile as any).access_token = access_token;
 
-                // try {
-                //     const response = await authService.create(createUserDto);
-                //     console.log(response);
-
-                //     if (!response) {
-                //         console.error('❌ Error creating user:', response);
-                //         return false;
-                //     }
-
-                //     // (profile as any).office = response.user.office;
-                //     // (profile as any).position = response.user.position;
-                //     // (profile as any).role = response.user.role;
-                //     // (profile as any).id_image_url = response.user.id_image_url;
-                //     // (profile as any).access_token = response.access_token;
-                //     // (profile as any).refresh_token = response.user.refresh_token;
-                // } catch (error) {
-                //     console.error('❌ Error creating user:', error);
-                //     return false;
-                // }
-
-                // return true;
+                    return true;
+                } catch (error) {
+                    console.error('Error signing in with Google:', error);
+                    return false;
+                }
             }
 
-            return false;
+            return true;
         },
         async jwt({ token, user, account, profile }) {
             if (account?.provider === 'google' && user) {
                 // Handle Google OAuth login
-                // console.log('🔑 Google OAuth account:', account);
-                // console.log('🔑 Google OAuth login:', user);
-                // console.log('🔑 Google OAuth profile:', profile);
-                token.id = user.id;
+                console.info('🔐 Google OAuth login:', user);
+                console.info('🔐 Google OAuth profile:', profile);
+
+                token.id = (profile as any).id;
                 token.given_name = (profile as any)?.given_name;
                 token.family_name = (profile as any)?.family_name;
                 token.email = user.email;
-                token.role = user.role;
+                token.role = (profile as any).role;
                 token.id_image_url = user.id_image_url;
-                token.access_token = user.access_token;
+                token.access_token = (profile as any).access_token;
+
+                const decodedToken = jwtDecode<{ exp?: number }>(token.access_token!);
+                token.accessTokenExpires = decodedToken?.exp ? decodedToken.exp * 1000 : Date.now() + 1000 * 60 * 15;
             } else if (user) {
                 token.id = user.id;
                 token.given_name = user.given_name;

@@ -11,12 +11,17 @@ export class AuthenticationController {
 
     @Post('users')
     create(@Body() createUserDto: CreateUserDto) {
-        return this.authenticationService.create(createUserDto);
+        return this.authenticationService.createCredentialAccount(createUserDto);
     }
 
-    @Post('login')
+    @Post('credentials')
     verify(@Body() verifyUserDto: VerifyUserDto) {
-        return this.authenticationService.validateUserLogin(verifyUserDto.email, verifyUserDto.password, verifyUserDto.provider);
+        return this.authenticationService.validateCredentialLogin(verifyUserDto.email, verifyUserDto.password, verifyUserDto.provider);
+    }
+
+    @Post('google')
+    createGoogleAccount(@Body() createUserDto: CreateUserDto) {
+        return this.authenticationService.validateGoogleLogin(createUserDto);
     }
 
     @Put('users/:id/password')
@@ -60,11 +65,6 @@ export class AuthenticationController {
     @Post('users/verify-email-code')
     verifyEmailCode(@Body() verifyEmailCode: VerifyEmailCode) {
         return this.authenticationService.verifyEmailCode(verifyEmailCode.email, verifyEmailCode.code);
-    }
-
-    @Get('users')
-    async findByEmailAndProvider(@Query('email') email: string, @Query('provider') provider: LoginProvider) {
-        return this.authenticationService.findByEmailAndProvider(provider, email);
     }
 
     @Post('refresh-token')

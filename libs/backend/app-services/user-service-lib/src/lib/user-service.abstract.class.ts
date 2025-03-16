@@ -7,7 +7,5 @@ export abstract class UserServiceAbstractClass {
 
     abstract findById(id: string): Promise<ResponseDto<UserDto>>;
 
-    abstract findByEmail(email: string): Promise<ResponseDto<UserDto>>;
-
-    abstract findUserByEmailAndProvider(provider: LoginProvider, email: string): Promise<boolean>;
+    abstract findByEmail(email: string): Promise<ResponseDto<UserDto | null>>;
 }

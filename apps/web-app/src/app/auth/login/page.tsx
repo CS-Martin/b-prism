@@ -20,28 +20,21 @@ export default function LoginPage() {
         password: '',
     });
 
-    const handleLoginUser = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = async (provider: 'credentials' | 'google', credentials?: { email: string; password: string }) => {
         setIsLoading(true);
-        event.preventDefault();
+        setError('');
 
-        const result = await signIn('credentials', {
-            email: data.email,
-            password: data.password,
-            redirect: false,
-        });
-
-        if (result?.error) {
-            setError(result.error);
-
-            toast({
-                title: 'Error',
-                description: result.error,
-                variant: 'destructive',
+        try {
+            const result = await signIn(provider, {
+                redirect: false,
+                ...(provider === 'credentials' && credentials),
             });
 
-            setIsLoading(false);
-            return;
-        } else {
+            if (result?.error) {
+                console.log('LOGIN ERROR: ', result.error);
+                throw new Error(result.error);
+            }
+
             const updatedSession = await getSession();
 
             if (!updatedSession?.user?.id_image_url || updatedSession.user.id_image_url === '') {
@@ -57,9 +50,29 @@ export default function LoginPage() {
             });
 
             setIsLoading(false);
-
             router.push('/home');
+        } catch (error) {
+            console.error('Login error:', error);
+            setError(error instanceof Error ? error.message : 'An unexpected error occurred.');
+            toast({
+                title: 'Error',
+                description: error instanceof Error ? error.message : 'An unexpected error occurred.',
+                variant: 'destructive',
+            });
+            setIsLoading(false);
+
+            // Stay on the login page and show the error
+            router.push('/auth/login');
         }
+    };
+
+    const handleLoginUser = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        await handleLogin('credentials', { email: data.email, password: data.password });
+    };
+
+    const handleGoogleLogin = async () => {
+        await handleLogin('google');
     };
 
     return (
@@ -80,7 +93,8 @@ export default function LoginPage() {
 
                 <Button
                     className='mt-4'
-                    onClick={() => signIn('google')}>
+                    onClick={handleGoogleLogin}
+                    disabled={isLoading}>
                     Sign in with Google
                 </Button>
 
@@ -102,7 +116,6 @@ export default function LoginPage() {
                                     type='email'
                                     required
                                     autoComplete='email'
-                                    className=''
                                     value={data.email}
                                     onChange={(e) =>
                                         setData({
