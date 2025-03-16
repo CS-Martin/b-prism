@@ -66,25 +66,3 @@ export const useResetPassword = () => {
 
     return { resetPassword, isLoading };
 };
-
-export const useFindByEmailAndProvider = () => {
-    const { toast } = useToast();
-
-    const findByEmailAndProvider = async (provider: LoginProvider, email: string) => {
-        const isUserExisting = await authService.findByEmailAndProvider(provider, email);
-
-        if (!isUserExisting) {
-            toast({
-                title: 'Account already exsists!',
-                description: 'Please try logging in with your email and password.',
-                variant: 'destructive',
-            });
-
-            return false;
-        }
-
-        return true;
-    };
-
-    return { findByEmailAndProvider };
-};

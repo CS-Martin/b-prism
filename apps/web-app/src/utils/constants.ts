@@ -36,3 +36,18 @@ export const haribonFeatures = [
         href: '/map',
     },
 ];
+
+export const quotes = [
+    {
+        text: 'We cannot stop natural disasters but we can arm ourselves with knowledge',
+        author: 'Petra Nemcova',
+    },
+    {
+        text: 'By failing to prepare, you are preparing to fail.',
+        author: 'Benjamin Franklin',
+    },
+    {
+        text: `Some people don't like change, but you need to embrace change if the alternative is disaster.`,
+        author: 'Blake Ross',
+    },
+];

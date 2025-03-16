@@ -6,6 +6,7 @@ import { ParticleBackground } from 'apps/web-app/src/components/particle-backgro
 import { LoginForm } from './_component/login-form';
 import { ParticleWrapper } from './_component/particle-wrapper';
 import { useEffect, useState } from 'react';
+import QuoteCarouselSection from '../../home/_components/quote-section';
 
 export default function LoginPage() {
     const [showParticle, setShowParticle] = useState(false);
@@ -15,7 +16,7 @@ export default function LoginPage() {
     }, []);
 
     return (
-        <div className='flex h-screen'>
+        <div className='flex h-screen bg-[#fefeff]'>
             {/* Left Section */}
             <div className='w-1/2 bg-[#111] rounded-2xl flex flex-col justify-between p-10 m-8 relative overflow-hidden border boder-zinc-800'>
                 {/* Particle Background */}
@@ -35,9 +36,9 @@ export default function LoginPage() {
                         <div className='text-lg font-bold leading-4 text-white l'>Project Haribon</div>
                     </Link>
                 </div>
-                <div className='relative z-10 mb-4 text-gray-400'>
-                    “This system helps deliver life-saving operations with unprecedented speed and accuracy.”
-                    <br /> - HARIBON Team
+                <div className='relative z-50 text-xl text-white'>
+                    In the face of disaster, we rise not by strength alone, <br /> but by our unwavering will to protect and uplift others. <br />
+                    <div className='mt-4 text-lg text-blue-400'>Join us. Be part of a movement that turns resilience into action.</div>
                 </div>
             </div>
 
