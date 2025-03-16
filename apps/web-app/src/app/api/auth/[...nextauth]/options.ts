@@ -3,6 +3,8 @@ import { authService } from '../../../../services/authentication.service';
 import { jwtDecode } from 'jwt-decode';
 import { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import { CreateUserDto } from '@dto';
+import { useFindByEmailAndProvider } from 'apps/web-app/src/hooks/authentication.hook';
 
 export const options: NextAuthOptions = {
     providers: [
@@ -47,22 +49,45 @@ export const options: NextAuthOptions = {
                 }
 
                 // Check if the gmail user exists in the database
-                // If not create it
+                const isExistingUser = await authService.findByEmailAndProvider('google', profile.email);
 
-                // This returns the user object if user is found
-                // const response = await authService.login('google', profile.email);
-                // console.log('🔑 Google OAuth login:', response);
+                console.log(isExistingUser);
+                console.log(account, profile);
 
-                // if (!response.user) return false;
+                if (isExistingUser) return false;
 
-                // (profile as any).office = response.user.office;
-                // (profile as any).position = response.user.position;
-                // (profile as any).role = response.user.role;
-                // (profile as any).id_image_url = response.user.id_image_url;
-                // (profile as any).access_token = response.access_token;
-                // (profile as any).refresh_token = response.user.refresh_token;
+                // Create the user
+                const createUserDto: CreateUserDto = new CreateUserDto();
 
-                return true;
+                createUserDto.provider = 'google';
+                createUserDto.given_name = (profile as any).given_name;
+                createUserDto.family_name = (profile as any).family_name;
+                createUserDto.email = profile.email;
+                createUserDto.role = 'unverified';
+                createUserDto.created_at = new Date();
+                createUserDto.updated_at = new Date();
+
+                // try {
+                //     const response = await authService.create(createUserDto);
+                //     console.log(response);
+
+                //     if (!response) {
+                //         console.error('❌ Error creating user:', response);
+                //         return false;
+                //     }
+
+                //     // (profile as any).office = response.user.office;
+                //     // (profile as any).position = response.user.position;
+                //     // (profile as any).role = response.user.role;
+                //     // (profile as any).id_image_url = response.user.id_image_url;
+                //     // (profile as any).access_token = response.access_token;
+                //     // (profile as any).refresh_token = response.user.refresh_token;
+                // } catch (error) {
+                //     console.error('❌ Error creating user:', error);
+                //     return false;
+                // }
+
+                // return true;
             }
 
             return false;

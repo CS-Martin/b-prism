@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { authService } from '../services/authentication.service';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import { find } from 'rxjs';
+import { LoginProvider } from '@b-prism/types';
 
 export const useVerifyEmailCode = () => {
     const { toast } = useToast();
@@ -63,4 +65,26 @@ export const useResetPassword = () => {
     };
 
     return { resetPassword, isLoading };
+};
+
+export const useFindByEmailAndProvider = () => {
+    const { toast } = useToast();
+
+    const findByEmailAndProvider = async (provider: LoginProvider, email: string) => {
+        const isUserExisting = await authService.findByEmailAndProvider(provider, email);
+
+        if (!isUserExisting) {
+            toast({
+                title: 'Account already exsists!',
+                description: 'Please try logging in with your email and password.',
+                variant: 'destructive',
+            });
+
+            return false;
+        }
+
+        return true;
+    };
+
+    return { findByEmailAndProvider };
 };

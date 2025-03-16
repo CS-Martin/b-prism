@@ -200,6 +200,24 @@ class AuthenticationService {
             throw error;
         }
     }
+
+    public async findByEmailAndProvider(provider: LoginProvider, email: string): Promise<boolean> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/auth/users?email=${email}&provider=${provider}`);
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message || 'Failed to find existing user');
+            }
+
+            return (await response.json()).body;
+        } catch (error) {
+            console.error('Authentication Service Error:', error);
+
+            throw error;
+        }
+    }
 }
 
 export const authService = new AuthenticationService();
