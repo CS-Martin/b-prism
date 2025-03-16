@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { signIn, getSession } from 'next-auth/react';
 import { Button, Input, Label } from '@b-prism/shadcn-ui/index';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
@@ -14,8 +14,6 @@ import { Eye, EyeOff } from 'lucide-react';
 
 export const LoginForm = () => {
     const { toast } = useToast();
-    const searchParams = useSearchParams();
-    const pathName = usePathname();
     const router = useRouter();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +21,7 @@ export const LoginForm = () => {
     const [error, setError] = useState('');
     const [showPasswordInput, setShowPasswordInput] = useState(false);
     const [formData, setFormData] = useState({
-        email: searchParams.get('email') || '',
+        email: 'email',
         password: '',
     });
 
