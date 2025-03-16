@@ -138,15 +138,8 @@ export const LoginForm = () => {
                             key='passwordInput'
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
+                            exit={{ opacity: 0, y: -40 }}
                             transition={{ duration: 0.3 }}>
-                            <div className='flex items-center justify-between mb-2'>
-                                <Label
-                                    htmlFor='password'
-                                    className='block text-sm font-medium text-white'>
-                                    Password
-                                </Label>
-                            </div>
                             <div className='relative mt-2'>
                                 <Input
                                     id='password'
@@ -168,7 +161,7 @@ export const LoginForm = () => {
                             </div>
                         </motion.div>
                     )}
-                    <div>
+                    <div className='transition-all duration-300 ease-in-out'>
                         <div>
                             <PrismButton
                                 type='submit'
