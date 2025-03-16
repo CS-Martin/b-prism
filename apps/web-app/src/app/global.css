@@ -1,2 +1,8 @@
 @import url('../../../../libs/shadcn-lib/src/global.css');
 @import url('styles/font.css');
+
+#particles-js {
+    width: 100%;
+    height: 100%;
+    background-color: #111111;
+}

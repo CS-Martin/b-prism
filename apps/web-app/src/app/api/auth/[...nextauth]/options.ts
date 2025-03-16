@@ -4,7 +4,6 @@ import { jwtDecode } from 'jwt-decode';
 import { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import { CreateUserDto } from '@dto';
-import { useFindByEmailAndProvider } from 'apps/web-app/src/hooks/authentication.hook';
 
 export const options: NextAuthOptions = {
     providers: [
@@ -49,13 +48,15 @@ export const options: NextAuthOptions = {
                 }
 
                 try {
-                    const createUserDto: CreateUserDto = new CreateUserDto();
-
-                    createUserDto.provider = 'google';
-                    createUserDto.given_name = (profile as any).given_name;
-                    createUserDto.family_name = (profile as any).family_name;
-                    createUserDto.email = profile.email;
-                    createUserDto.role = 'unverified';
+                    const createUserDto: CreateUserDto = {
+                        provider: 'google',
+                        given_name: (profile as any).given_name,
+                        family_name: (profile as any).family_name,
+                        email: profile.email,
+                        role: 'unverified',
+                        created_at: new Date(),
+                        updated_at: new Date(),
+                    };
 
                     const { user, access_token } = await authService.validateGoogleLogin(createUserDto);
 
