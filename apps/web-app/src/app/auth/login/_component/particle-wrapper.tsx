@@ -5,7 +5,7 @@ export const ParticleWrapper = () => {
         <div>
             <ParticleBackground
                 style={{ width: '100%', height: '100%' }}
-                className='absolute inset-0 z-0 pointer-events-none'
+                className='pointer-events-none '
             />
         </div>
     );

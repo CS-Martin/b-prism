@@ -11,13 +11,13 @@ const QuoteCarouselSection = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % quotes.length);
-        }, 7000);
+        }, 7000); // Change quote every 10s
 
         return () => clearInterval(interval);
     }, []);
 
     return (
-        <div className='z-50 text-white border-b border-b-zinc-800'>
+        <div className='z-50 flex items-center justify-center w-full h-48 text-white border-b border-b-zinc-800'>
             <AnimatePresence>
                 <motion.div
                     key={currentIndex}

@@ -16,13 +16,13 @@ export default function LoginPage() {
     }, []);
 
     return (
-        <div className='flex h-screen bg-[#fefeff]'>
+        <div className='flex flex-col md:flex-row w-screen h-screen bg-[#fefeff]'>
             {/* Left Section */}
-            <div className='w-1/2 bg-[#111] rounded-2xl flex flex-col justify-between p-10 m-8 relative overflow-hidden border boder-zinc-800'>
+            <div className='w-full md:w-1/2 text-center md:text-left bg-[#111] md:rounded-2xl flex flex-col justify-between p-6 md:p-10 md:m-8 relative overflow-hidden border border-zinc-800'>
                 {/* Particle Background */}
 
                 {/* Content */}
-                <div className='relative z-10 w-[50px]'>
+                <div className='relative z-10 flex items-center justify-center mb-6 md:justify-start'>
                     {showParticle && <ParticleWrapper />}
                     <Link
                         href={'/home'}
@@ -33,17 +33,20 @@ export default function LoginPage() {
                             height={40}
                             width={40}
                         />
-                        <div className='text-lg font-bold leading-4 text-white l'>Project Haribon</div>
+                        <div className='text-lg font-bold text-white'>Project Haribon</div>
                     </Link>
                 </div>
-                <div className='relative z-50 text-xl text-white'>
-                    In the face of disaster, we rise not by strength alone, <br /> but by our unwavering will to protect and uplift others. <br />
-                    <div className='mt-4 text-lg text-blue-400'>Join us. Be part of a movement that turns resilience into action.</div>
+                <div className='relative z-50 mt-6 text-white md:mt-0'>
+                    <div className='text-lg md:text-2xl'>
+                        In the face of disaster, we rise not by strength alone, <br /> but by our unwavering will to protect and uplift others. <br />
+                    </div>
+                    <div className='mt-4 text-sm text-blue-400 md:text-lg'>Join us. Be part of a movement that turns resilience into action.</div>
                 </div>
             </div>
 
-            <div className='flex items-center justify-center w-1/2 '>
-                <div className='w-full max-w-md p-10 rounded-2xl'>
+            {/* Right Section */}
+            <div className='flex items-center justify-center w-full p-6 md:w-1/2 md:p-0'>
+                <div className='w-full max-w-md p-6 md:p-10 rounded-2xl'>
                     <LoginForm />
                 </div>
             </div>
