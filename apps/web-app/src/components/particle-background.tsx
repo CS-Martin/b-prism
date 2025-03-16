@@ -1,66 +1,49 @@
-import { useEffect, useMemo, useState } from 'react';
+'use client';
+
+import { memo, useEffect, useMemo, useState, useCallback } from 'react';
 import Particles, { initParticlesEngine } from '@tsparticles/react';
 import { type Container, type ISourceOptions, MoveDirection, OutMode } from '@tsparticles/engine';
-// import { loadAll } from "@tsparticles/all"; // if you are going to use `loadAll`, install the "@tsparticles/all" package too.
-// import { loadFull } from "tsparticles"; // if you are going to use `loadFull`, install the "tsparticles" package too.
-import { loadSlim } from '@tsparticles/slim'; // if you are going to use `loadSlim`, install the "@tsparticles/slim" package too.
-// import { loadBasic } from "@tsparticles/basic"; // if you are going to use `loadBasic`, install the "@tsparticles/basic" package too.
+import { loadSlim } from '@tsparticles/slim';
 
-export const ParticleBackground = () => {
+interface ParticleBackgroundProps {
+    style?: React.CSSProperties;
+    className?: string;
+}
+
+export const ParticleBackground = memo(({ style, className }: ParticleBackgroundProps) => {
     const [init, setInit] = useState(false);
 
-    // this should be run only once per application lifetime
     useEffect(() => {
         initParticlesEngine(async (engine) => {
-            // you can initiate the tsParticles instance (engine) here, adding custom shapes or presets
-            // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-            // starting from v2 you can add only the features you need reducing the bundle size
-            //await loadAll(engine);
-            //await loadFull(engine);
             await loadSlim(engine);
-            //await loadBasic(engine);
         }).then(() => {
             setInit(true);
         });
     }, []);
 
-    const particlesLoaded = async (container?: Container): Promise<void> => {
-        console.log(container);
-    };
+    const particlesLoaded = useCallback(async (container?: Container): Promise<void> => {
+        console.log('Particles Loaded', container);
+    }, []); // Callback is stable and will not change on re-renders
 
-    const options: ISourceOptions = useMemo(
+    // Using useMemo to prevent re-creating options object
+    const options = useMemo<ISourceOptions>(
         () => ({
             background: {
-                color: {
-                    value: '#090909',
-                },
+                color: { value: 'transparent' },
             },
             fpsLimit: 120,
             interactivity: {
                 events: {
-                    onClick: {
-                        enable: true,
-                        mode: 'push',
-                    },
-                    onHover: {
-                        enable: true,
-                        mode: 'repulse',
-                    },
+                    onClick: { enable: true, mode: 'push' },
+                    onHover: { enable: true, mode: 'repulse' },
                 },
                 modes: {
-                    push: {
-                        quantity: 4,
-                    },
-                    repulse: {
-                        distance: 200,
-                        duration: 0.4,
-                    },
+                    push: { quantity: 4 },
+                    repulse: { distance: 200, duration: 0.4 },
                 },
             },
             particles: {
-                color: {
-                    value: '#ffffff',
-                },
+                color: { value: '#ffffff' },
                 links: {
                     color: '#ffffff',
                     distance: 150,
@@ -71,44 +54,37 @@ export const ParticleBackground = () => {
                 move: {
                     direction: MoveDirection.none,
                     enable: true,
-                    outModes: {
-                        default: OutMode.out,
-                    },
+                    outModes: { default: OutMode.out },
                     random: true,
                     speed: 3,
                     straight: false,
                 },
                 number: {
-                    density: {
-                        enable: true,
-                    },
+                    density: { enable: true, area: 800 },
                     value: 80,
                 },
-                opacity: {
-                    value: 0.4,
-                },
-                shape: {
-                    type: 'circle',
-                },
-                size: {
-                    value: { min: 1, max: 5 },
-                },
+                opacity: { value: 0.4 },
+                shape: { type: 'circle' },
+                size: { value: { min: 1, max: 5 } },
             },
             detectRetina: true,
         }),
         [],
     );
 
-    if (init) {
-        return (
+    if (!init) return null;
+
+    return (
+        <div
+            style={style}
+            className={className}>
             <Particles
                 id='tsparticles'
-                particlesLoaded={particlesLoaded}
                 options={options}
-                className=''
+                particlesLoaded={particlesLoaded}
             />
-        );
-    }
+        </div>
+    );
+});
 
-    return <></>;
-};
+ParticleBackground.displayName = 'ParticleBackground';

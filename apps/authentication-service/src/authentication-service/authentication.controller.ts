@@ -2,10 +2,10 @@ import { AuthenticationServiceLibService } from '@b-prism/authentication-service
 import { ChangePasswordDto, CreateUserDto, ResetPasswordDto, UpdateUserDto, VerifyEmailCode, VerifyUserDto } from '@dto';
 import { Controller, Post, Body, Put, Param, Get, Query } from '@nestjs/common';
 import { ApiBody, ApiTags, getSchemaPath } from '@nestjs/swagger';
-import { LoginProvider } from '@b-prism/types';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('Authentication Endpoints')
-@Controller(`v1/auth`)
+@Controller(`${new ConfigService().get('API_VERSION')}/auth`)
 export class AuthenticationController {
     constructor(private readonly authenticationService: AuthenticationServiceLibService) {}
 
@@ -22,6 +22,11 @@ export class AuthenticationController {
     @Post('google')
     createGoogleAccount(@Body() createUserDto: CreateUserDto) {
         return this.authenticationService.validateGoogleLogin(createUserDto);
+    }
+
+    @Get('users')
+    findUserByEmailWithoutThrowingError(@Query('email') email: string) {
+        return this.authenticationService.findUserEmailWithoutThrow(email);
     }
 
     @Put('users/:id/password')

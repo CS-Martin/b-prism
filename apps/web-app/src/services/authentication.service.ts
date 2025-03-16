@@ -230,9 +230,9 @@ class AuthenticationService {
         }
     }
 
-    public async findByEmailAndProvider(provider: LoginProvider, email: string): Promise<boolean> {
+    public async findUserByEmailWithoutThrow(email: string): Promise<UserDto> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/auth/users?email=${email}&provider=${provider}`);
+            const response = await fetch(`${this.API_BASE_URL}/auth/users?email=${email}`);
 
             if (!response.ok) {
                 const error = await response.json();

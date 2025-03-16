@@ -14,7 +14,6 @@ import { randomInt } from 'crypto';
 import { addMinutes } from 'date-fns';
 import { MailerMongodbLibService } from '@b-prism/mailer-mongodb-lib';
 import { JwtService } from '@nestjs/jwt';
-import { error } from 'console';
 
 @Injectable()
 export class AuthenticationServiceLibService implements AuthenticationServiceAbstractClass {
@@ -449,6 +448,20 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             secret: process.env['JWT_REFRESH_SECRET'],
             expiresIn: '10d',
         });
+    }
+
+    async findUserEmailWithoutThrow(email: string): Promise<ResponseDto<boolean>> {
+        this.logger.log('Finding user by email', email);
+
+        try {
+            const user: UserDto | null = (await this.userServiceLibService.findGmailUserByEmailWithoutThrow(email)).body;
+
+            return new ResponseDto<boolean>(200, user !== null);
+        } catch (error) {
+            this.logger.error('Error finding user by email', error);
+
+            return new ResponseDto<boolean>(404, false);
+        }
     }
 
     convertToDto(user: User): UserDto {

@@ -22,6 +22,8 @@ export abstract class AuthenticationServiceAbstractClass {
 
     abstract update(id: string, updateUserDto: UpdateUserDto): Promise<ResponseDto<UserDto>>;
 
+    abstract findUserEmailWithoutThrow(email: string): Promise<ResponseDto<boolean>>;
+
     abstract convertToDto(user: User): UserDto;
 
     abstract convertToPublicDto(userDto: User): PublicUserDto;
