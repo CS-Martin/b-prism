@@ -1,12 +1,10 @@
 'use client';
 
-import { RoadNetworkDto } from '@dto';
 import { useGetDirections } from 'apps/web-app/src/hooks/map.hook';
 import { useEffect, useState } from 'react';
 import { useMap } from 'react-map-gl';
 import { DirectionLayer } from './direction-layer';
 import { PromptGuide } from './prompt-guide';
-import { DirectionPanel } from './direction-stats-panel';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 
 export const GenerateDirections = () => {
@@ -65,10 +63,10 @@ export const GenerateDirections = () => {
                 start={start}
                 destination={destination}
             />
-            <DirectionPanel
+            {/* <DirectionPanel
                 start={start}
                 destination={destination}
-            />
+            /> */}
         </div>
     );
 };
