@@ -3,3 +3,4 @@ export * from './lib/warehouse-threshold.type';
 export * from './lib/button.type';
 export * from './lib/email.type';
 export * from './lib/coordinates.type';
+export * from './lib/provider.type';

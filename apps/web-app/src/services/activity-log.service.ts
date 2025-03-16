@@ -6,7 +6,6 @@ class ActivityLogService {
 
     constructor() {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ACTIVITY_LOG_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
-        console.log(process.env.NEXT_PUBLIC_BASE_API_URL);
     }
 
     public async create(createActivityLogDto: CreateActivityLogDto): Promise<ActivityLogDto> {
@@ -33,11 +32,11 @@ class ActivityLogService {
         }
     }
 
-    public async findAllActivityLogs(token?: string): Promise<ResponseDto<ActivityLogDto[]>> {
+    public async findAllActivityLogs(access_token?: string): Promise<ResponseDto<ActivityLogDto[]>> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/activity-logs`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${access_token}`,
                 },
             });
 
@@ -47,7 +46,7 @@ class ActivityLogService {
                 throw new BadRequestException(error.message);
             }
 
-            return response.json();
+            return await response.json();
         } catch (error) {
             console.error(error);
 

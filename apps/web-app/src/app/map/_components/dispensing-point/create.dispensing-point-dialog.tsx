@@ -104,7 +104,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
                 throw new Error('Dispensing Point Name is required');
             }
 
-            const newDispensingPoint: DispensingPointDto | undefined = await createDispensingPoint(formattedData, `${user.given_name} ${user.family_name}`, user.accessToken);
+            const newDispensingPoint: DispensingPointDto | undefined = await createDispensingPoint(formattedData, `${user.given_name} ${user.family_name}`, user.access_token);
 
             if (newDispensingPoint) {
                 useDispensingPointsStore.getState().addDispensingPoint(newDispensingPoint);

@@ -1,3 +1,4 @@
+import { LoginProvider } from '@b-prism/types';
 import { ResponseDto } from '@dto';
 import { UserDto } from '@dto';
 
@@ -6,5 +7,5 @@ export abstract class UserServiceAbstractClass {
 
     abstract findById(id: string): Promise<ResponseDto<UserDto>>;
 
-    abstract findByEmail(email: string): Promise<ResponseDto<UserDto>>;
+    abstract findByEmail(email: string): Promise<ResponseDto<UserDto | null>>;
 }

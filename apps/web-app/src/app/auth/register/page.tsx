@@ -13,6 +13,7 @@ export default function RegisterPage() {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [data, setData] = useState({
+        provider: 'credentials',
         given_name: '',
         family_name: '',
         email: '',
@@ -20,15 +21,18 @@ export default function RegisterPage() {
         office: '',
         position: '',
         role: UserRole.unverified,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        created_at: new Date(),
+        updated_at: new Date(),
     });
 
     const registerUser = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsLoading(true);
 
-        await authService.create(data);
+        await authService.create({
+            ...data,
+            provider: 'credentials',
+        });
 
         router.push('/auth/login');
         setIsLoading(false);

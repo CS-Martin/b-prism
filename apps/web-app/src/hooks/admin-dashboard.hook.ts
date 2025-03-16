@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ResponseDto, UserDto } from '@dto';
 import { userService } from '../services/user.service';
 
-export const useDisplayUsers = (accessToken: string | null) => {
+export const useDisplayUsers = (access_token: string | null) => {
     const [isLoading, setIsLoading] = useState(false);
     const [users, setUsers] = useState<UserDto[]>([]);
 
@@ -12,7 +12,7 @@ export const useDisplayUsers = (accessToken: string | null) => {
         try {
             setIsLoading(true);
 
-            const response: ResponseDto<UserDto[]> = await userService.fetchAllUsers(accessToken);
+            const response: ResponseDto<UserDto[]> = await userService.fetchAllUsers(access_token);
 
             if (response.statusCode !== 201) {
                 throw new Error('Failed to fetch users');

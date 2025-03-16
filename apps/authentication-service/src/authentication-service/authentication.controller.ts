@@ -1,22 +1,32 @@
 import { AuthenticationServiceLibService } from '@b-prism/authentication-service-lib';
 import { ChangePasswordDto, CreateUserDto, ResetPasswordDto, UpdateUserDto, VerifyEmailCode, VerifyUserDto } from '@dto';
-import { Controller, Post, Body, Put, Param, Get } from '@nestjs/common';
+import { Controller, Post, Body, Put, Param, Get, Query } from '@nestjs/common';
 import { ApiBody, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
 @ApiTags('Authentication Endpoints')
-@Controller(`v1/auth`)
+@Controller(`${new ConfigService().get('API_VERSION')}/auth`)
 export class AuthenticationController {
     constructor(private readonly authenticationService: AuthenticationServiceLibService) {}
 
     @Post('users')
     create(@Body() createUserDto: CreateUserDto) {
-        return this.authenticationService.create(createUserDto);
+        return this.authenticationService.createCredentialAccount(createUserDto);
     }
 
-    @Post('login')
+    @Post('credentials')
     verify(@Body() verifyUserDto: VerifyUserDto) {
-        return this.authenticationService.validateUserLogin(verifyUserDto.email, verifyUserDto.password);
+        return this.authenticationService.validateCredentialLogin(verifyUserDto.email, verifyUserDto.password, verifyUserDto.provider);
+    }
+
+    @Post('google')
+    createGoogleAccount(@Body() createUserDto: CreateUserDto) {
+        return this.authenticationService.validateGoogleLogin(createUserDto);
+    }
+
+    @Get('users')
+    findUserByEmailWithoutThrowingError(@Query('email') email: string) {
+        return this.authenticationService.findUserEmailWithoutThrow(email);
     }
 
     @Put('users/:id/password')
