@@ -132,35 +132,36 @@ export const LoginForm = () => {
                             </a>
                         </div>
                     </div>
-
-                    {showPasswordInput && (
-                        <motion.div
-                            key='passwordInput'
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -40 }}
-                            transition={{ duration: 0.3 }}>
-                            <div className='relative mt-2'>
-                                <Input
-                                    id='password'
-                                    name='password'
-                                    type={isPasswordVisible ? 'text' : 'password'}
-                                    required
-                                    placeholder='Password'
-                                    autoComplete='current-password'
-                                    value={formData.password}
-                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    className='w-full pr-10'
-                                />
-                                <button
-                                    type='button'
-                                    onClick={togglePasswordVisibility}
-                                    className='absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 hover:text-gray-700'>
-                                    {isPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
-                                </button>
-                            </div>
-                        </motion.div>
-                    )}
+                    <AnimatePresence mode='wait'>
+                        {showPasswordInput && (
+                            <motion.div
+                                key='passwordInput'
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -40 }}
+                                transition={{ duration: 0.3 }}>
+                                <div className='relative mt-2'>
+                                    <Input
+                                        id='password'
+                                        name='password'
+                                        type={isPasswordVisible ? 'text' : 'password'}
+                                        required
+                                        placeholder='Password'
+                                        autoComplete='current-password'
+                                        value={formData.password}
+                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                        className='w-full pr-10'
+                                    />
+                                    <button
+                                        type='button'
+                                        onClick={togglePasswordVisibility}
+                                        className='absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 hover:text-gray-700'>
+                                        {isPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                     <div className='transition-all duration-300 ease-in-out'>
                         <div>
                             <PrismButton
