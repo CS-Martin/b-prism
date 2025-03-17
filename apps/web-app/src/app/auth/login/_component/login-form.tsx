@@ -5,12 +5,13 @@ import { useState, useEffect } from 'react';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { signIn, getSession } from 'next-auth/react';
-import { Button, Input, Label } from '@b-prism/shadcn-ui/index';
+import { Button, Input } from '@b-prism/shadcn-ui/index';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
 import Image from 'next/image';
 import { authService } from '../../../../services/authentication.service';
 import { debounce } from 'lodash';
 import { Eye, EyeOff } from 'lucide-react';
+import { ThemeToggler } from 'apps/web-app/src/components/theme-toggler';
 
 export const LoginForm = () => {
     const { toast } = useToast();
@@ -106,8 +107,9 @@ export const LoginForm = () => {
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}>
-                <h2 className='text-2xl font-bold text-center'>Welcome back!</h2>
+                transition={{ duration: 0.3 }}
+                className=''>
+                <h2 className='text-2xl font-bold text-center '>Welcome back!</h2>
                 <p className='my-2 text-sm text-center text-gray-500'>Enter your email below to sign in with your account.</p>
 
                 <form
@@ -123,6 +125,7 @@ export const LoginForm = () => {
                             autoComplete='email'
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            className=''
                         />
                         <div className='flex justify-end'>
                             <a
@@ -179,7 +182,7 @@ export const LoginForm = () => {
                             <div className='flex-grow border-t border-gray-300'></div>
                         </div>
                         <Button
-                            className='w-full text-black bg-white border hover:bg-black/5'
+                            className='w-full text-black bg-white border hover:bg-slate-200'
                             onClick={handleGoogleLogin}
                             disabled={isLoading}>
                             <Image
