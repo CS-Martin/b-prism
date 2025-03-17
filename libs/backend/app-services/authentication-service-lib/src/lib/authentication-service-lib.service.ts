@@ -91,13 +91,14 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
     }
 
     async validateGoogleLogin(createUserDto: CreateUserDto): Promise<ResponseDto<{ user: PublicUserDto; access_token: string }>> {
-        this.logger.log('Validating user login', createUserDto.email);
+        this.logger.log('Validating user login', createUserDto);
 
         try {
             const existingUser: ResponseDto<UserDto | null> = await this.userServiceLibService.findGmailUserByEmailWithoutThrow(createUserDto.email);
+            console.log('existingUser', existingUser);
 
             // This means the user already exists in the database but not with google provider
-            if (existingUser.body?.provider !== 'google') {
+            if (existingUser.body !== null && existingUser.body?.provider !== 'google') {
                 throw new UnauthorizedException('User already exists with this email. Please login with your credentials email and password.');
             }
 
