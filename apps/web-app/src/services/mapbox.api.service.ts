@@ -19,6 +19,21 @@ class MapboxApiService {
         }
     }
 
+    public async search(search: string) {
+        try {
+            const response = await fetch(`https://api.mapbox.com/search/geocode/v6/forward?q=${search}&proximity=ip&access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`);
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch data from Mapbox Search API');
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error('Mapbox Search API Error: ', error);
+            throw error;
+        }
+    }
+
     public async getDirections(start: [number, number], destination: [number, number], damagedRoads: any, profile?: 'driving' | 'walking' | 'cycling') {
         try {
             // Extract coordinates from damaged roads and format them for the Mapbox API

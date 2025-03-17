@@ -287,6 +287,10 @@ div.mapboxgl-popup-content {
     border-radius: 500px;
 }
 
+div.mapboxgl-ctrl-geocoder {
+    width: 100%;
+}
+
 /* .spline-hero::before {
     content: '';
     position: absolute;
