@@ -22,7 +22,7 @@ export default function LoginPage() {
                 {/* Particle Background */}
 
                 {/* Content */}
-                <div className='relative z-10 flex items-center justify-center mb-6 md:justify-start'>
+                <div className='relative z-10 flex items-center justify-center md:mb-6 md:justify-start'>
                     <ParticleWrapper />
                     <Link
                         href={'/home'}
@@ -33,10 +33,10 @@ export default function LoginPage() {
                             height={40}
                             width={40}
                         />
-                        <div className='text-lg font-bold text-white'>Project Haribon</div>
+                        <div className='hidden text-lg font-bold text-white md:block'>Project Haribon</div>
                     </Link>
                 </div>
-                <div className='relative z-50 mt-6 text-white md:mt-0'>
+                <div className='relative z-50 hidden mt-6 text-white md:block md:mt-0'>
                     <div className='text-lg md:text-2xl'>
                         In the face of disaster, we rise not by strength alone, <br /> but by our unwavering will to protect and uplift others. <br />
                     </div>
@@ -45,8 +45,8 @@ export default function LoginPage() {
             </div>
 
             {/* Right Section */}
-            <div className='relative flex items-center justify-center w-full p-6 md:w-1/2 md:p-0'>
-                <div className='absolute top-10 right-10'>
+            <div className='relative flex items-center justify-center w-full md:w-1/2 md:p-6'>
+                <div className='absolute hidden md:block top-10 right-10'>
                     <ThemeToggler />
                 </div>
                 <div className='w-full max-w-md p-6 md:p-10 rounded-2xl'>
