@@ -15,7 +15,7 @@
         ],
         "sharedGlobals": []
     },
-    "nxCloud": { "accessToken": null },
+    "nxCloud": { "accessToken": "NWU5MjEyMDMtOGM4ZC00Yzc2LWJiODEtN2Q4YWYzNjM2YmM4fHJlYWQ=" },
     "plugins": [
         { "plugin": "@nx/next/plugin", "options": { "startTargetName": "start", "buildTargetName": "build", "devTargetName": "dev", "serveStaticTargetName": "serve-static" } },
         {
