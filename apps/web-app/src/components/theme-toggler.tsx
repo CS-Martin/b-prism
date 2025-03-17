@@ -15,10 +15,10 @@ export function ThemeToggler({ className }: ThemeTogglerProps) {
     const { setTheme } = useTheme();
 
     return (
-        <div className={`${className}`}>
+        <div className={`${className} `}>
             <DropdownMenu>
                 <DropdownMenuTrigger
-                    className='text-black bg-white border-none'
+                    className='text-black bg-white'
                     asChild>
                     <Button
                         variant='outline'

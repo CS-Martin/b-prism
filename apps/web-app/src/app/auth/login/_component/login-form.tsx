@@ -11,7 +11,6 @@ import Image from 'next/image';
 import { authService } from '../../../../services/authentication.service';
 import { debounce } from 'lodash';
 import { Eye, EyeOff } from 'lucide-react';
-import { ThemeToggler } from 'apps/web-app/src/components/theme-toggler';
 
 export const LoginForm = () => {
     const { toast } = useToast();
@@ -22,7 +21,7 @@ export const LoginForm = () => {
     const [error, setError] = useState('');
     const [showPasswordInput, setShowPasswordInput] = useState(false);
     const [formData, setFormData] = useState({
-        email: 'email',
+        email: '',
         password: '',
     });
 
