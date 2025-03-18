@@ -42,6 +42,17 @@ model User {
   updated_at    DateTime @updatedAt
 }
 
+model Role {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  description String?
+  permissions String[]
+  is_default  Boolean? @default(false)
+  created_by  String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
 model Warehouse {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   type              Type     @default(warehouse)

@@ -38,3 +38,7 @@ export * from './lib/mailer/mailer.dto';
 export * from './lib/road-network/road-network-property.dto';
 export * from './lib/road-network/road-network-geometry.dto';
 export * from './lib/road-network/road-network.dto';
+
+export * from './lib/role/role.dto';
+export * from './lib/role/update.role.dto';
+export * from './lib/role/create.role.dto';

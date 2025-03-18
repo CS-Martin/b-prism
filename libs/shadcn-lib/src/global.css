@@ -290,22 +290,3 @@ div.mapboxgl-popup-content {
 div.mapboxgl-ctrl-geocoder {
     width: 100%;
 }
-
-/* .spline-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle, transparent, rgba(0, 0, 0, 0.815));
-    pointer-events: none;
-} */
-
-/* .mouse_scroll {
-    display: absolute;
-    margin: 0 auto;
-    width: 24px;
-    height: 20;
-    bottom: 100px;
-} */
