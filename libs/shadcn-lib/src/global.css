@@ -290,3 +290,20 @@ div.mapboxgl-popup-content {
 div.mapboxgl-ctrl-geocoder {
     width: 100%;
 }
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #818181;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2f2f2f;
+    border-radius: 500px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(39, 39, 42);
+}

@@ -5,10 +5,10 @@ export const EMAIL_TEMPLATES = {
                 <style>
                     body { font-family: Arial, sans-serif; color: #333; line-height: 1.6; }
                     .container { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
-                    .code-box { 
-                        display: block; font-size: 28px; font-weight: bold; 
-                        text-align: center; 
-                        padding: 12px; border: 2px dashed 
+                    .code-box {
+                        display: block; font-size: 28px; font-weight: bold;
+                        text-align: center;
+                        padding: 12px; border: 2px dashed
                         margin: 20px auto; width: fit-content;
                         border-radius: 12px;
                     }
@@ -31,7 +31,7 @@ export const EMAIL_TEMPLATES = {
 
                     <hr>
                     <p class="footer">
-                        This is an automated email from HARIBON. Please do not reply.  
+                        This is an automated email from HARIBON. Please do not reply.
                         If you need help, visit our support center.
                     </p>
                 </div>
@@ -45,10 +45,10 @@ export const EMAIL_TEMPLATES = {
                 <style>
                     body { font-family: Arial, sans-serif; color: #333; }
                     .container { max-width: 600px; margin: auto; padding: 20px; }
-                    .button { 
-                        display: inline-block; padding: 14px 24px; 
-                        background-color: #007bff; color: white; 
-                        text-decoration: none; font-size: 16px; 
+                    .button {
+                        display: inline-block; padding: 14px 24px;
+                        background-color: #007bff; color: white;
+                        text-decoration: none; font-size: 16px;
                         border-radius: 5px; font-weight: bold;
                     }
                     .footer { margin-top: 20px; font-size: 12px; color: #666; }
@@ -65,7 +65,7 @@ export const EMAIL_TEMPLATES = {
                         <a href="${process.env['NEXTAUTH_URL']}" class="button">Reset Password</a>
                     </div>
 
-                    <p><strong>Security Notice:</strong> This reset link is valid for **only 30 minutes**. 
+                    <p><strong>Security Notice:</strong> This reset link is valid for **only 30 minutes**.
                     If you didn’t request this, please ignore this email, or contact our support immediately.</p>
 
                     <p>Best Regards, <br> <strong>The HARIBON Team</strong></p>
