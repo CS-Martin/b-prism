@@ -2,8 +2,9 @@
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@b-prism/shadcn-ui/index';
 import { ColumnDef, flexRender, getCoreRowModel, SortingState, useReactTable } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CreateRoleDatatableColumns } from './role-management-columns';
+import { useDisplayRoles } from 'apps/web-app/src/hooks/role.hook';
 
 interface RoleManagementDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -56,12 +57,29 @@ export function RoleManagementDataTable<TData, TValue>({ columns, data }: RoleMa
 }
 
 export const RoleManagementContent = () => {
+    const { roles, isLoading, error, displayRoles } = useDisplayRoles();
+
+    useEffect(() => {
+        displayRoles();
+    }, []);
+
+    if (isLoading) {
+        return <div className='p-5 mt-5 rounded-md prism-card-bg'>Loading...</div>;
+    }
+
+    if (error) {
+        return <div className='p-5 mt-5 rounded-md prism-card-bg'>Error: {error}</div>;
+    }
+
     const columns = CreateRoleDatatableColumns();
+
+    console.log(roles);
+
     return (
         <div className='p-5 mt-5 rounded-md prism-card-bg'>
             <RoleManagementDataTable
                 columns={columns}
-                data={[]}
+                data={roles}
             />
         </div>
     );

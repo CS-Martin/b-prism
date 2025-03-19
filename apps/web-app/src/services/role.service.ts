@@ -4,7 +4,7 @@ class RoleService {
     private API_BASE_URL: string;
 
     constructor() {
-        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_WAREHOUSE_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
+        this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ROLE_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
     public async create(createRoleDto: CreateRoleDto): Promise<ResponseDto<RoleDto>> {
@@ -64,7 +64,7 @@ class RoleService {
                 throw new Error(errorMessage);
             }
 
-            return (await response.json()).body;
+            return response.json();
         } catch (error: any) {
             console.error('Warehouse fetch error:', error);
 
@@ -76,3 +76,5 @@ class RoleService {
         }
     }
 }
+
+export const roleService = new RoleService();
