@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { CreateRoleDatatableColumns } from './role-management-columns';
 import { useDisplayRoles } from 'apps/web-app/src/hooks/role.hook';
 import { Plus, PlusCircle } from 'lucide-react';
+import Link from 'next/link';
 
 interface RoleManagementDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -78,12 +79,16 @@ export const RoleManagementContent = () => {
 
     return (
         <div className='p-5 mt-5 rounded-md prism-card-bg'>
-            <Button variant={'default'}>
-                <PlusCircle
-                    height={24}
-                    width={24}
-                />
-                Create New Role
+            <Button
+                variant={'default'}
+                asChild>
+                <Link href={'/admin/roles/create'}>
+                    <PlusCircle
+                        height={24}
+                        width={24}
+                    />
+                    Create New Role
+                </Link>
             </Button>
             <RoleManagementDataTable
                 columns={columns}
