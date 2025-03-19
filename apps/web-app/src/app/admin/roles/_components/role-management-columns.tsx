@@ -18,9 +18,9 @@ export const CreateRoleDatatableColumns = () => {
         },
         {
             accessorKey: 'created_at',
-            header: 'Create Date',
-            cell: ({ cell }) => {
-                const date = new Date(cell.getValue() as string);
+            header: 'Created Date',
+            cell: ({ row }) => {
+                const date = new Date(row.getValue('created_at') as string);
                 return date.toLocaleString('en-US', {
                     year: 'numeric',
                     month: 'long',

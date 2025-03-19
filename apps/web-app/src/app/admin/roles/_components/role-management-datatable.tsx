@@ -1,10 +1,11 @@
 'use client';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@b-prism/shadcn-ui/index';
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@b-prism/shadcn-ui/index';
 import { ColumnDef, flexRender, getCoreRowModel, SortingState, useReactTable } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import { CreateRoleDatatableColumns } from './role-management-columns';
 import { useDisplayRoles } from 'apps/web-app/src/hooks/role.hook';
+import { Plus, PlusCircle } from 'lucide-react';
 
 interface RoleManagementDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -77,6 +78,13 @@ export const RoleManagementContent = () => {
 
     return (
         <div className='p-5 mt-5 rounded-md prism-card-bg'>
+            <Button variant={'default'}>
+                <PlusCircle
+                    height={24}
+                    width={24}
+                />
+                Create New Role
+            </Button>
             <RoleManagementDataTable
                 columns={columns}
                 data={roles}
