@@ -42,7 +42,11 @@ const StepperHeader = ({ className }: StepperHeaderProps) => {
                         {/* Step Circle */}
                         <div
                             className={`w-8 h-8 rounded-full flex font-semibold items-center justify-center z-10 ${
-                                index === activeStep ? 'bg-blue-500  text-white' : index < activeStep ? 'bg-green-500 text-white' : 'border border-gray-300 text-gray-500'
+                                index === activeStep
+                                    ? 'bg-blue-500 transition-all animate-bounce duration-1000  text-white'
+                                    : index < activeStep
+                                      ? 'bg-green-500 text-white'
+                                      : 'border border-gray-300 text-gray-500'
                             }`}>
                             {index + 1}
                         </div>

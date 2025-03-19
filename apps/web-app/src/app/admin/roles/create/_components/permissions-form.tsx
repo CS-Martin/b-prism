@@ -1,5 +1,6 @@
 import { Label, Switch } from '@b-prism/shadcn-ui/index';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { motion } from 'framer-motion';
 
 export const ADMIN_PERMISSIONS = [
     {
@@ -54,69 +55,56 @@ export const MAP_PERMISSIONS = [
 
 export const RolePermissionsForm = () => {
     return (
-        <ScrollArea>
-            <form className='flex flex-col gap-5'>
-                <div className='p-5 border rounded-lg'>
-                    <div className='flex flex-col gap-5'>
-                        <Label className='font-semibold'>Administrator Permissions</Label>
-                        <div className='grid grid-cols-2 gap-6'>
-                            {ADMIN_PERMISSIONS[0].permissions.map((p) => {
-                                return (
-                                    <div
-                                        className='flex flex-row items-center gap-5 p-3 border-b'
-                                        key={p.label}>
-                                        <Switch />
-                                        <div className='flex flex-col'>
-                                            <p className='font-bold'>{p.label}</p>
-                                            <small className='text-[12px]'>{p.description}</small>
+        <motion.div
+            initial={{ opacity: 0 }} // Initial state (hidden and slightly to the right)
+            animate={{ opacity: 1 }} // Animate to visible and centered
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }} // Animation duration
+        >
+            <ScrollArea className='h-[calc(100vh-20rem)]'>
+                <form className='flex flex-col gap-5'>
+                    <div className='p-5 border rounded-lg'>
+                        <div className='flex flex-col gap-5'>
+                            <Label className='font-semibold'>Administrator Permissions</Label>
+                            <div className='grid grid-cols-2 gap-6'>
+                                {ADMIN_PERMISSIONS[0].permissions.map((p) => {
+                                    return (
+                                        <div
+                                            className='flex flex-row items-center gap-5 p-3 border-b'
+                                            key={p.label}>
+                                            <Switch className='data-[state=checked]:bg-blue-500' />
+                                            <div className='flex flex-col'>
+                                                <p className='font-bold'>{p.label}</p>
+                                                <small className='text-[12px]'>{p.description}</small>
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className='p-5 border rounded-lg'>
-                    <div className='flex flex-col gap-5'>
-                        <Label className='font-semibold'>Map Permissions</Label>
-                        <div className='grid grid-cols-2 gap-6'>
-                            {MAP_PERMISSIONS[0].permissions.map((p) => {
-                                return (
-                                    <div
-                                        className='flex flex-row items-center gap-5 p-3 border-b'
-                                        key={p.label}>
-                                        <Switch />
-                                        <div className='flex flex-col'>
-                                            <p className='font-bold'>{p.label}</p>
-                                            <small className='text-[12px]'>{p.description}</small>
+                    <div className='p-5 border rounded-lg'>
+                        <div className='flex flex-col gap-5'>
+                            <Label className='font-semibold'>Map Permissions</Label>
+                            <div className='grid grid-cols-2 gap-6'>
+                                {MAP_PERMISSIONS[0].permissions.map((p) => {
+                                    return (
+                                        <div
+                                            className='flex flex-row items-center gap-5 p-3 border-b'
+                                            key={p.label}>
+                                            <Switch className='data-[state=checked]:bg-blue-500' />
+                                            <div className='flex flex-col'>
+                                                <p className='font-bold'>{p.label}</p>
+                                                <small className='text-[12px]'>{p.description}</small>
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className='p-5 border rounded-lg'>
-                    <div className='flex flex-col gap-5'>
-                        <Label className='font-semibold'>Map Permissions</Label>
-                        <div className='grid grid-cols-2 gap-6'>
-                            {MAP_PERMISSIONS[0].permissions.map((p) => {
-                                return (
-                                    <div
-                                        className='flex flex-row items-center gap-5 p-3 border-b'
-                                        key={p.label}>
-                                        <Switch />
-                                        <div className='flex flex-col'>
-                                            <p className='font-bold'>{p.label}</p>
-                                            <small className='text-[12px]'>{p.description}</small>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </ScrollArea>
+                </form>
+            </ScrollArea>
+        </motion.div>
     );
 };
