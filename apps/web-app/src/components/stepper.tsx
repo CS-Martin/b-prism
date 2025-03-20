@@ -82,9 +82,11 @@ interface NextStepperButtonProps {
     name?: string;
     completeTitle?: string;
     variant?: 'link' | 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | null;
+    disabled?: boolean;
+    onClick?: () => void;
 }
 
-const NextStepperButton = ({ className, name, completeTitle, variant }: NextStepperButtonProps) => {
+const NextStepperButton = ({ className, name, completeTitle, variant, disabled, onClick }: NextStepperButtonProps) => {
     const { activeStep, setActiveStep, steps } = useStepper();
 
     const handleNext = () => {
@@ -93,12 +95,23 @@ const NextStepperButton = ({ className, name, completeTitle, variant }: NextStep
         }
     };
 
+    const handleButtonClick = () => {
+        if (activeStep === steps.length - 1 && onClick) {
+            // If it's the last step, trigger the submit action.
+            onClick();
+        } else {
+            // Otherwise, just proceed to the next step.
+            handleNext();
+        }
+    };
+
     return (
         <Button
-            onClick={handleNext}
-            disabled={activeStep === steps.length - 1}
+            type='submit'
+            onClick={handleButtonClick}
+            disabled={disabled || activeStep === steps.length}
             variant={variant}
-            className={`${className} px-4 py-2 rounded ${activeStep === steps.length - 1 ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}>
+            className={`${className} px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600`}>
             {activeStep === steps.length - 1 ? `${completeTitle}` || 'Finish' : `${name}` || 'Next'}
         </Button>
     );
@@ -121,9 +134,9 @@ const PreviousStepperButton = ({ className, variant }: PreviousStepperButtonProp
     return (
         <Button
             onClick={handleBack}
-            disabled={activeStep === steps.length - 1}
+            disabled={activeStep === steps.length}
             variant={variant}
-            className={`${className} px-4 py-2 rounded ${activeStep === steps.length - 1 ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-transparent'}`}>
+            className={`${className} px-4 py-2 rounded bg-transparent`}>
             Back
         </Button>
     );
