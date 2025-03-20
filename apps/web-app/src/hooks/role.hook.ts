@@ -34,6 +34,7 @@ export const useFetchRoleById = () => {
     const fetchRoleById = async (roleId: string) => {
         setIsLoading(true);
         setError(null);
+
         try {
             const response: RoleDto = await roleService.fetchRoleById(roleId);
             console.log(response);

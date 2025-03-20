@@ -17,13 +17,13 @@ export const EditRoleForm = ({ role }: EditRoleFormProps) => {
             setValue('name', role.name);
             setValue('description', role.description || '');
 
-            const adminPermissions = {};
+            const adminPermissions: { [key: string]: boolean } = {};
             ADMIN_PERMISSIONS[0].permissions.forEach((p) => {
                 adminPermissions[p.id] = role.permissions.includes(p.id);
             });
             setValue('adminPermissions', adminPermissions);
 
-            const mapPermissions = {};
+            const mapPermissions: { [key: string]: boolean } = {};
             MAP_PERMISSIONS[0].permissions.forEach((p) => {
                 mapPermissions[p.id] = role.permissions.includes(p.id);
             });

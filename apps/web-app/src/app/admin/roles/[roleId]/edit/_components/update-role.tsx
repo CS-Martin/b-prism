@@ -6,11 +6,14 @@ import { useFetchRoleById, useUpdateRole } from 'apps/web-app/src/hooks/role.hoo
 import { AnimatePresence, motion } from 'framer-motion';
 import { notFound, useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { EditRoleForm } from './edit-role-form';
 import { FormProvider, useForm } from 'react-hook-form';
-import { CreateRoleDto } from '@dto';
+import { CreateRoleDto, RoleDto } from '@dto';
 import { useSession } from 'next-auth/react';
+import { ReviewUpdateDetails } from './review-details';
+import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { isEqual } from 'lodash';
 
 export const UpdateRoleContent = () => {
     const router = useRouter();
@@ -20,11 +23,11 @@ export const UpdateRoleContent = () => {
     const { updateRole } = useUpdateRole();
     const methods = useForm<{ name: string; description: string; adminPermissions: Record<string, boolean>; mapPermissions: Record<string, any> }>();
     const { handleSubmit } = methods;
+    const { toast } = useToast();
+    const [originalRole, setOriginalRole] = useState<RoleDto | null>(null);
 
     useEffect(() => {
-        if (params.roleId) {
-            fetchRoleById(params.roleId);
-        }
+        fetchRoleById(params.roleId);
     }, [params.roleId]);
 
     if (isLoading) {
@@ -110,13 +113,8 @@ export const UpdateRoleContent = () => {
                                 <StepperContent>
                                     {(step) => (
                                         <AnimatePresence mode='wait'>
-                                            {step.title === 'Edit Role Information' && (
-                                                <div>
-                                                    haha
-                                                    <EditRoleForm role={role} />
-                                                </div>
-                                            )}
-                                            {step.title === 'Review Details' && <div></div>}
+                                            {step.title === 'Edit Role Information' && <EditRoleForm role={role} />}
+                                            {step.title === 'Review Details' && <ReviewUpdateDetails />}
                                         </AnimatePresence>
                                     )}
                                 </StepperContent>
