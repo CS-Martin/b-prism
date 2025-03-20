@@ -8,25 +8,25 @@ export const ADMIN_PERMISSIONS = [
         category: 'Admin Permissions',
         permissions: [
             {
-                id: 'ACTIVITY LOGS MANAGEMENT',
+                id: 'ACTIVITY_LOG_PERMISSION',
                 label: 'Access to activity logs',
                 description: 'This allows you to monitor the system',
                 value: false,
             },
             {
-                id: 'ACCOUNT CREATION',
+                id: 'ACCOUNT_CREATION',
                 label: 'Account Creation',
                 description: 'Allows creating user accounts and managing their roles',
                 value: false,
             },
             {
-                id: 'ROLE MANAGEMENT',
+                id: 'ROLE_PERMISSION',
                 label: 'Role Change',
                 description: 'Allows assigning roles and managing user privileges',
                 value: false,
             },
             {
-                id: 'NOTIFICATION MANAGEMENT',
+                id: 'NOTIFICATION_PERMISSION',
                 label: 'Receive Notifications',
                 description: 'Allows receiving notifications about system updates and changes',
                 value: false,
@@ -40,26 +40,26 @@ export const MAP_PERMISSIONS = [
         category: 'Map Permissions',
         permissions: [
             {
-                id: 'WAREHOUSE MANAGEMENT',
-                label: 'Warehouse Action',
+                id: 'WAREHOUSE_PERMISSION',
+                label: 'Warehouse Actions',
                 description: 'Allows creating, updating, and deleting warehouses',
                 value: false,
             },
             {
-                id: 'DISPENSING POINT MANAGEMENT',
-                label: 'Dispensing Point Action',
+                id: 'DISPENSING_POINT_PERMISSION',
+                label: 'Dispensing Point Actions',
                 description: 'Allows creating, updating, and deleting dispensing points',
                 value: false,
             },
             {
-                id: 'ROAD NETWORK MANAGEMENT',
-                label: 'Road Network Action',
+                id: 'ROAD_NETWORK_PERMISSION',
+                label: 'Road Network Actions',
                 description: 'Allows modifying the road network, including damage and repair actions',
                 value: false,
             },
             {
-                id: 'RESCUE POST MANAGEMENT',
-                label: 'Rescue Post Management',
+                id: 'RESCUE_POST_PERMISSION',
+                label: 'Rescue Post Actions',
                 description: 'Allows creating and managing rescue posts on the map',
                 value: false,
             },
@@ -67,23 +67,22 @@ export const MAP_PERMISSIONS = [
     },
 ];
 
-export const RolePermissionsForm = () => {
+export const RolePermissionsForm = ({ readOnly = false }) => {
     const { register, setValue, watch } = useFormContext();
     const adminPermissions = watch('adminPermissions');
     const mapPermissions = watch('mapPermissions');
 
-    const handlePermissionChange = (category: string, label: string, value: boolean) => {
-        const updatedPermissions = { ...watch(category), [label]: value };
+    const handlePermissionChange = (category: string, id: string, value: boolean) => {
+        const updatedPermissions = { ...watch(category), [id]: value };
         setValue(category, updatedPermissions);
     };
 
     return (
         <motion.div
-            initial={{ opacity: 0 }} // Initial state (hidden and slightly to the right)
-            animate={{ opacity: 1 }} // Animate to visible and centered
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }} // Animation duration
-        >
+            transition={{ duration: 0.5 }}>
             <ScrollArea className='h-[calc(100vh-20rem)]'>
                 <form className='flex flex-col gap-5'>
                     <div className='p-5 border rounded-lg'>
@@ -96,8 +95,9 @@ export const RolePermissionsForm = () => {
                                             className='flex flex-row items-center gap-5 p-3 border-b'
                                             key={p.label}>
                                             <Switch
-                                                checked={adminPermissions[p.label] || false}
-                                                onCheckedChange={(checked) => handlePermissionChange('adminPermissions', p.label, checked)}
+                                                checked={adminPermissions[p.id] || false}
+                                                onCheckedChange={(checked) => !readOnly && handlePermissionChange('adminPermissions', p.id, checked)}
+                                                disabled={readOnly}
                                                 className='data-[state=checked]:bg-blue-500'
                                             />
                                             <div className='flex flex-col'>
@@ -120,8 +120,9 @@ export const RolePermissionsForm = () => {
                                             className='flex flex-row items-center gap-5 p-3 border-b'
                                             key={p.label}>
                                             <Switch
-                                                checked={mapPermissions[p.label] || false}
-                                                onCheckedChange={(checked) => handlePermissionChange('mapPermissions', p.label, checked)}
+                                                checked={mapPermissions[p.id] || false}
+                                                onCheckedChange={(checked) => !readOnly && handlePermissionChange('mapPermissions', p.id, checked)}
+                                                disabled={readOnly}
                                                 className='data-[state=checked]:bg-blue-500'
                                             />
                                             <div className='flex flex-col'>

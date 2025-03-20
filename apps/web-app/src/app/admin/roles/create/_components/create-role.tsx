@@ -114,7 +114,12 @@ export const CreateRoleContent = () => {
                                                 </div>
                                             </div>
                                         )}
-                                        {step.title === 'Review Details' && <RoleReviewDetails />}
+                                        {step.title === 'Review Details' && (
+                                            <RoleReviewDetails
+                                                register={register}
+                                                errors={errors}
+                                            />
+                                        )}
                                     </AnimatePresence>
                                 )}
                             </StepperContent>

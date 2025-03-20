@@ -96,7 +96,7 @@ const NextStepperButton = ({ className, name, completeTitle, variant, disabled, 
     };
 
     const handleButtonClick = () => {
-        if (activeStep === steps.length - 1 && onClick) {
+        if (activeStep === steps.length && onClick) {
             // If it's the last step, trigger the submit action.
             onClick();
         } else {
