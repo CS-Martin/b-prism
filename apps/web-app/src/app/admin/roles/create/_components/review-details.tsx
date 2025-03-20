@@ -25,7 +25,7 @@ export const RoleReviewDetails = ({ register, errors }: RoleReviewDetailsProps) 
                 </div>
 
                 {/* Non-editable RolePermissionsForm */}
-                <div className='md:w-[70%]'>
+                <div className='md:w-[70%] md:h-[530px] md:overflow-y-auto'>
                     <RolePermissionsForm readOnly={true} />
                 </div>
             </div>

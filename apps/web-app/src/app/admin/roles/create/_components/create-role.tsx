@@ -98,12 +98,12 @@ export const CreateRoleContent = () => {
                             </div>
                             <div className='flex flex-col items-center justify-end gap-3 mb-4 md:mb-0 md:w-1/2 md:flex-row gap-x-3'>
                                 <PreviousStepperButton
-                                    className='w-full md:w-[10%]'
+                                    className='w-full md:w-[20%] lg:w-[15%]'
                                     variant={'outline'}
                                 />
                                 <NextStepperButton
                                     name='Continue'
-                                    className='w-full md:w-[17%]'
+                                    className='w-full md:w-[30%] lg:w-[20%]'
                                     completeTitle='Create Role'
                                     disabled={!isValid || isLoading}
                                     onClick={handleSubmit(onSubmit)}
@@ -134,19 +134,19 @@ export const CreateRoleContent = () => {
                                         </div>
                                     )}
                                     {step.title === 'Set Permissions' && (
-                                        <div className='relative border rounded-lg p-5 md:min-h-[calc(100vh-16.5rem)] md:max-h-[calc(100vh-100px)]'>
+                                        <div className='relative p-5 border rounded-lg'>
                                             <div className='pb-3 border-b'>
                                                 <h2 className='mb-4 text-xl font-bold'>Set Permissions</h2>
                                                 <Label>Modify what individuals on this role can do.</Label>
                                             </div>
                                             <div className='flex flex-col gap-4 md:flex-row'>
-                                                <div className='md:w-[30%] w-full h-full md:overflow-y-hidden'>
+                                                <div className='relative md:w-[30%] w-full h-full md:overflow-y-hidden'>
                                                     <RoleBasicInfoForm
                                                         register={register}
                                                         errors={errors}
                                                     />
                                                 </div>
-                                                <div className='w-full md:w-[70%] md:py-5 md:px-3 h-fit md:overflow-y-auto'>
+                                                <div className='relative w-full md:h-[530px] md:w-[70%] md:py-5 md:px-3 md:overflow-y-auto'>
                                                     <RolePermissionsForm />
                                                 </div>
                                             </div>
