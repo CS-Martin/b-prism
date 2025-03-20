@@ -8,6 +8,7 @@ export default function CreateRolePage() {
                 items={[
                     { label: 'Admin', href: '/' },
                     { label: 'Role Management', href: '/admin/roles' },
+                    { label: 'Create Role', href: '/admin/roles/create' },
                 ]}
             />
 

@@ -4,15 +4,13 @@ import { NextStepperButton, PreviousStepperButton, Stepper, StepperContent, Step
 import { RoleBasicInfoForm } from './basic-info-form';
 import { RolePermissionsForm } from './permissions-form';
 import { RoleReviewDetails } from './review-details';
-import { Label, ScrollArea } from '@b-prism/shadcn-ui/index';
+import { Label } from '@b-prism/shadcn-ui/index';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useCreateRole } from 'apps/web-app/src/hooks/role.hook';
 import { CreateRoleDto } from '@dto';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 export const CreateRoleContent = () => {
     const { data: session } = useSession();
