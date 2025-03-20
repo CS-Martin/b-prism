@@ -7,19 +7,19 @@ export const CreateRoleDatatableColumns = () => {
         {
             accessorKey: 'name',
             header: 'Role Name',
-            cell: ({ row }) => <div className='font-semibold text-gray-800'>{row.getValue('name')}</div>,
+            cell: ({ row }: { row: any }) => <div className='font-semibold text-gray-800'>{row.getValue('name')}</div>,
         },
         {
             accessorKey: 'description',
             header: 'Role Description',
-            cell: ({ row }) => <div className='text-gray-600'>{row.getValue('description')}</div>,
+            cell: ({ row }: { row: any }) => <div className='text-gray-600'>{row.getValue('description')}</div>,
         },
         {
             accessorKey: 'permissions',
             header: 'Permissions',
-            cell: ({ row }) => (
+            cell: ({ row }: { row: any }) => (
                 <div className='flex flex-wrap gap-2'>
-                    {row.getValue('permissions').map((permission, index) => (
+                    {row.getValue('permissions').map((permission: string, index: number) => (
                         <span
                             key={index}
                             className='px-2 py-1 text-sm text-blue-800 bg-blue-100 rounded-full'>
@@ -32,7 +32,7 @@ export const CreateRoleDatatableColumns = () => {
         {
             accessorKey: 'created_at',
             header: 'Created Date',
-            cell: ({ row }) => {
+            cell: ({ row }: { row: any }) => {
                 const date = new Date(row.getValue('created_at') as string);
                 return (
                     <div className='text-gray-600'>
@@ -51,7 +51,7 @@ export const CreateRoleDatatableColumns = () => {
         {
             accessorKey: 'actions',
             header: 'Actions',
-            cell: ({ row }) => {
+            cell: ({ row }: { row: any }) => {
                 const role = row.original;
 
                 return (
