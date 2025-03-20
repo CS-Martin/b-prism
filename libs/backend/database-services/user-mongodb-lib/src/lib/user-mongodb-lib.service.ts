@@ -46,4 +46,14 @@ export class UserMongodbLibService {
 
         return user;
     }
+
+    async findGmailUserByEmailAndProvider(email: string): Promise<User | null> {
+        const user: User | null = await this.prisma.user.findFirst({
+            where: {
+                email: email,
+            },
+        });
+
+        return user;
+    }
 }

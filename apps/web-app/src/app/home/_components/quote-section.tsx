@@ -1,23 +1,9 @@
 'use client';
 
+import { quotes } from 'apps/web-app/src/utils/constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-
-const quotes = [
-    {
-        text: 'We cannot stop natural disasters but we can arm ourselves with knowledge',
-        author: 'Petra Nemcova',
-    },
-    {
-        text: 'By failing to prepare, you are preparing to fail.',
-        author: 'Benjamin Franklin',
-    },
-    {
-        text: `Some people don't like change, but you need to embrace change if the alternative is disaster.`,
-        author: 'Blake Ross',
-    },
-];
 
 const QuoteCarouselSection = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,7 +17,7 @@ const QuoteCarouselSection = () => {
     }, []);
 
     return (
-        <div className='flex items-center justify-center w-full h-48 text-white border-b border-b-zinc-800'>
+        <div className='z-50 flex items-center justify-center w-full h-48 text-white border-b border-b-zinc-800'>
             <AnimatePresence>
                 <motion.div
                     key={currentIndex}
@@ -41,7 +27,7 @@ const QuoteCarouselSection = () => {
                     transition={{ duration: 0.8 }}
                     className='absolute px-4 text-center'>
                     <Image
-                        src={'icons/quote.svg'}
+                        src={'/icons/quote.svg'}
                         height={35}
                         width={35}
                         alt='quote.svg'

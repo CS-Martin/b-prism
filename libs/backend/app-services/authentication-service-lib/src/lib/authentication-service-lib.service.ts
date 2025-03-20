@@ -29,51 +29,107 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         private readonly jwtService: JwtService,
     ) {}
 
-    async create(createUserDto: CreateUserDto): Promise<ResponseDto<PublicUserDto>> {
-        this.logger.log('Creating user with provider:', createUserDto);
-        const logging_var: CreateActivityLogDto = new CreateActivityLogDto();
+    async createGoogleAccount(createUserDto: CreateUserDto): Promise<ResponseDto<UserDto>> {
+        this.logger.log('Creating google account', createUserDto);
 
         try {
-            if (!createUserDto.provider || (createUserDto.provider !== 'credentials' && createUserDto.provider !== 'google'))
-                throw new BadRequestException('Provider is required.');
-
-            if (createUserDto.provider === 'credentials') {
-                if (!createUserDto.password) {
-                    throw new BadRequestException('Password is required.');
-                }
-
-                // Hash password
-                createUserDto.password = await hashPassword(createUserDto.password);
-            } else if (createUserDto.provider === 'google') {
-                // Remove password field if it exists for Google users
-                delete createUserDto.password;
-            }
-
-            // Create user in the database
+            // Google doesn't provide password
             const user: User = await this.authenticationMongodbService.create(createUserDto);
 
-            // Log creation activity
+            const logging_var: CreateActivityLogDto = new CreateActivityLogDto();
+
             logging_var.action = 'CREATE';
-            logging_var.description = `A new user account was successfully created for ${user.given_name} ${user.family_name} using provider ${createUserDto.provider}`;
+            logging_var.description = `A new user account was successfully created for ${createUserDto.given_name} ${createUserDto.family_name}`;
+            logging_var.resource = 'Authentication';
+            logging_var.resource_id = user.id;
+            logging_var.author = `${createUserDto.given_name} ${createUserDto.family_name}`;
+
+            await this.activityLogLibService.create(logging_var);
+
+            const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
+
+            return response;
+        } catch (error) {
+            this.logger.error('Error creating user', error);
+
+            throw new BadRequestException('There was an issue creating your account. Please try again later.');
+        }
+    }
+
+    async createCredentialAccount(userData: CreateUserDto): Promise<ResponseDto<UserDto>> {
+        this.logger.log('Creating user', userData);
+
+        try {
+            // Hash password
+            if (!userData.password) {
+                throw new BadRequestException('Password is required.');
+            }
+
+            const hashedPassword = await hashPassword(userData.password);
+            userData.password = hashedPassword;
+
+            const user: User = await this.authenticationMongodbService.create(userData);
+
+            const logging_var: CreateActivityLogDto = new CreateActivityLogDto();
+
+            logging_var.action = 'CREATE';
+            logging_var.description = `A new user account was successfully created for ${user.given_name} ${user.family_name}`;
             logging_var.resource = 'Authentication';
             logging_var.resource_id = user.id;
             logging_var.author = `${user.given_name} ${user.family_name}`;
 
             await this.activityLogLibService.create(logging_var);
 
-            // Convert user to public DTO
-            const response: ResponseDto<PublicUserDto> = new ResponseDto<PublicUserDto>(201, this.convertToPublicDto(user));
+            const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
 
-            // Return the created user as a response
             return response;
         } catch (error) {
             this.logger.error('Error creating user', error);
 
-            if (error instanceof BadRequestException) {
+            throw new BadRequestException('There was an issue creating your account. Please try again later.');
+        }
+    }
+
+    async validateGoogleLogin(createUserDto: CreateUserDto): Promise<ResponseDto<{ user: PublicUserDto; access_token: string }>> {
+        this.logger.log('Validating user login', createUserDto);
+
+        try {
+            const existingUser: ResponseDto<UserDto | null> = await this.userServiceLibService.findGmailUserByEmailWithoutThrow(createUserDto.email);
+            console.log('existingUser', existingUser);
+
+            // This means the user already exists in the database but not with google provider
+            if (existingUser.body !== null && existingUser.body?.provider !== 'google') {
+                throw new UnauthorizedException('User already exists with this email. Please login with your credentials email and password.');
+            }
+
+            if (!existingUser.body) {
+                // Create google account if user doesn't exist
+                const user: ResponseDto<UserDto> = await this.createGoogleAccount(createUserDto);
+
+                const access_token = await this.generateAccessToken({
+                    id: user.body.id, // accessing id from user.body
+                    email: user.body.email,
+                    role: user.body.role,
+                });
+
+                return new ResponseDto<{ user: PublicUserDto; access_token: string }>(201, { user: this.convertToPublicDto(user.body), access_token });
+            } else {
+                const access_token = await this.generateAccessToken({
+                    id: existingUser.body.id,
+                    email: existingUser.body.email,
+                    role: existingUser.body.role,
+                });
+
+                return new ResponseDto<{ user: PublicUserDto; access_token: string }>(200, { user: this.convertToPublicDto(existingUser.body), access_token });
+            }
+        } catch (error) {
+            this.logger.error('Error validating user', error);
+
+            if (error instanceof UnauthorizedException || error instanceof NotFoundException) {
                 throw error;
             }
 
-            throw new BadRequestException('There was an issue creating your account. Please try again later.');
+            throw new BadRequestException('Invalid credentials or an error occurred. Please try again.');
         }
     }
 
@@ -84,11 +140,11 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
      * @returns A promise that resolves to the validated user.
      * @returns UnauthorizedException if email or password are incorrect.
      */
-    async validateUserLogin(email: string, password: string, provider: LoginProvider): Promise<ResponseDto<{ user: PublicUserDto; access_token: string }>> {
-        this.logger.log('Validating user login', email);
+    async validateCredentialLogin(email: string, password: string, provider: LoginProvider): Promise<ResponseDto<{ user: PublicUserDto; access_token: string }>> {
+        this.logger.log('Validating user credential login', email);
 
         try {
-            const existingUser: ResponseDto<UserDto> = await this.userServiceLibService.findByEmail(email);
+            const existingUser: ResponseDto<UserDto | null> = await this.userServiceLibService.findByEmail(email);
 
             if (!existingUser.body) {
                 throw new NotFoundException(`User with email ${email} not found. Please try again.`);
@@ -97,10 +153,8 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             let user = existingUser.body;
 
             // If logging in with credentials, validate password
-            if (provider === 'credentials') {
-                if (!user.password || !(await comparePassword(password, user.password))) {
-                    throw new UnauthorizedException('The password you entered is incorrect. Please try again.');
-                }
+            if (!user.password || !(await comparePassword(password, user.password))) {
+                throw new UnauthorizedException('The password you entered is incorrect. Please try again.');
             }
 
             // Generate access token
@@ -153,7 +207,11 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
     async sendVerificationCodeMail(email: string): Promise<ResponseDto<MailerDto>> {
         this.logger.log('Forgetting password for user', email);
 
-        const user: UserDto = (await this.userServiceLibService.findByEmail(email)).body;
+        const user: UserDto | null = (await this.userServiceLibService.findByEmail(email)).body;
+
+        if (!user) {
+            throw new NotFoundException(`User with email ${email} not found. Please try again.`);
+        }
 
         const code: string = randomInt(100000, 999999).toString();
         const expiresAt: Date = addMinutes(new Date(), 3);
@@ -209,7 +267,11 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             throw new BadRequestException(`Password doesn&apos;t match. Please try again. `);
         }
 
-        const existingUser: UserDto = (await this.userServiceLibService.findByEmail(email)).body;
+        const existingUser: UserDto | null = (await this.userServiceLibService.findByEmail(email)).body;
+
+        if (!existingUser) {
+            throw new NotFoundException(`User with email ${email} not found. Please try again.`);
+        }
 
         this.logger.log('Existing user', existingUser);
 
@@ -247,7 +309,11 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
     async verifyEmailCode(email: string, code: string): Promise<ResponseDto<boolean>> {
         this.logger.log('Verifying the code sent to user', email, code);
 
-        const user: UserDto = (await this.userServiceLibService.findByEmail(email)).body;
+        const user: UserDto | null = (await this.userServiceLibService.findByEmail(email)).body;
+
+        if (!user) {
+            throw new NotFoundException(`User with email ${email} not found. Please try again.`);
+        }
 
         try {
             const mailer: MailerDto | null = await this.mailerMongodbService.verifyEmailCode(user.id, code);
@@ -383,6 +449,20 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
             secret: process.env['JWT_REFRESH_SECRET'],
             expiresIn: '10d',
         });
+    }
+
+    async findUserEmailWithoutThrow(email: string): Promise<ResponseDto<boolean>> {
+        this.logger.log('Finding user by email', email);
+
+        try {
+            const user: UserDto | null = (await this.userServiceLibService.findGmailUserByEmailWithoutThrow(email)).body;
+
+            return new ResponseDto<boolean>(200, user !== null);
+        } catch (error) {
+            this.logger.error('Error finding user by email', error);
+
+            return new ResponseDto<boolean>(404, false);
+        }
     }
 
     convertToDto(user: User): UserDto {

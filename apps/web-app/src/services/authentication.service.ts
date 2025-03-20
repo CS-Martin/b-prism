@@ -1,6 +1,7 @@
 import { LoginProvider } from '@b-prism/types';
 import { CreateUserDto, PublicUserDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
+import { create } from 'zustand';
 
 class AuthenticationService {
     private API_BASE_URL: string;
@@ -58,9 +59,37 @@ class AuthenticationService {
         }
     }
 
-    public async login(provider: LoginProvider, email: string, password: string): Promise<{ user: UserDto; access_token: string }> {
+    public async validateGoogleLogin(createUserDto: CreateUserDto): Promise<{ user: PublicUserDto; access_token: string }> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/auth/login`, {
+            const response = await fetch(`${this.API_BASE_URL}/auth/google`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(createUserDto),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message);
+            }
+
+            const responseJson = await response.json();
+            return {
+                user: responseJson.body.user,
+                access_token: responseJson.body.access_token,
+            };
+        } catch (error) {
+            console.error('Authentication Service Error:', error);
+
+            throw error;
+        }
+    }
+
+    public async validateCredentialLogin(provider: LoginProvider, email: string, password?: string): Promise<{ user: UserDto; access_token: string }> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/auth/credentials`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -196,6 +225,24 @@ class AuthenticationService {
             return data.newAccessToken;
         } catch (error) {
             console.error('Error refreshing token:', error);
+
+            throw error;
+        }
+    }
+
+    public async findUserByEmailWithoutThrow(email: string): Promise<UserDto> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/auth/users?email=${email}`);
+
+            if (!response.ok) {
+                const error = await response.json();
+
+                throw new BadRequestException(error.message || 'Failed to find existing user');
+            }
+
+            return (await response.json()).body;
+        } catch (error) {
+            console.error('Authentication Service Error:', error);
 
             throw error;
         }

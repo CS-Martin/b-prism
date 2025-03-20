@@ -52,7 +52,7 @@ export class UserServiceLibService implements UserServiceAbstractClass {
         return response;
     }
 
-    async findByEmail(email: string): Promise<ResponseDto<UserDto>> {
+    async findByEmail(email: string): Promise<ResponseDto<UserDto | null>> {
         this.logger.log('Finding user', email);
 
         const user: User | null = await this.userMongodbLibService.findByEmail(email);
@@ -64,6 +64,16 @@ export class UserServiceLibService implements UserServiceAbstractClass {
         }
 
         const response: ResponseDto<UserDto> = new ResponseDto<UserDto>(201, this.convertToDto(user));
+
+        return response;
+    }
+
+    async findGmailUserByEmailWithoutThrow(email: string): Promise<ResponseDto<UserDto | null>> {
+        this.logger.log('Finding user', email);
+
+        const user: User | null = await this.userMongodbLibService.findGmailUserByEmailAndProvider(email);
+
+        const response: ResponseDto<UserDto | null> = new ResponseDto<UserDto | null>(200, user ? this.convertToDto(user) : null);
 
         return response;
     }
