@@ -89,17 +89,21 @@ export const CreateRoleContent = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}>
-                <div className='p-5 mt-5 rounded-md prism-card-bg md:h-[calc(100vh-100px)] overflow-y-hidden'>
+                <div className='p-5 relative mt-5 rounded-md prism-card-bg md:h-[calc(100vh-100px)] overflow-y-hidden'>
                     <h1 className='mb-4 text-xl font-semibold'>Create New Role</h1>
                     <Stepper steps={steps}>
-                        <div className='flex flex-row justify-between'>
-                            <div className='flex items-center w-1/2'>
+                        <div className='flex flex-col justify-between md:flex-row'>
+                            <div className='flex items-center w-full md:w-1/2'>
                                 <StepperHeader className='lg:w-[80%] md:w-[100%] py-5' />
                             </div>
-                            <div className='flex items-center justify-end w-1/2 gap-x-3'>
-                                <PreviousStepperButton variant={'outline'} />
+                            <div className='flex flex-col items-center justify-end gap-3 mb-4 md:mb-0 md:w-1/2 md:flex-row gap-x-3'>
+                                <PreviousStepperButton
+                                    className='w-full md:w-[10%]'
+                                    variant={'outline'}
+                                />
                                 <NextStepperButton
                                     name='Continue'
+                                    className='w-full md:w-[17%]'
                                     completeTitle='Create Role'
                                     disabled={!isValid || isLoading}
                                     onClick={handleSubmit(onSubmit)}
@@ -115,7 +119,7 @@ export const CreateRoleContent = () => {
                                                 <h2 className='mb-4 text-xl font-bold'>Basic Information</h2>
                                                 <Label>Please enter the basic information for the new role.</Label>
                                             </div>
-                                            <div className='w-1/2'>
+                                            <div className='w-full md:w-1/2'>
                                                 <motion.div
                                                     initial={{ opacity: 0 }}
                                                     animate={{ opacity: 1 }}
@@ -130,19 +134,19 @@ export const CreateRoleContent = () => {
                                         </div>
                                     )}
                                     {step.title === 'Set Permissions' && (
-                                        <div className='relative border rounded-lg p-5 min-h-[calc(100vh-16.5rem)] max-h-[calc(100vh-100px)]'>
+                                        <div className='relative border rounded-lg p-5 md:min-h-[calc(100vh-16.5rem)] md:max-h-[calc(100vh-100px)]'>
                                             <div className='pb-3 border-b'>
                                                 <h2 className='mb-4 text-xl font-bold'>Set Permissions</h2>
                                                 <Label>Modify what individuals on this role can do.</Label>
                                             </div>
-                                            <div className='flex gap-4 h-[calc(100vh-20rem)]'>
-                                                <div className='w-[30%] h-full overflow-y-hidden'>
+                                            <div className='flex flex-col gap-4 md:flex-row'>
+                                                <div className='md:w-[30%] w-full h-full md:overflow-y-hidden'>
                                                     <RoleBasicInfoForm
                                                         register={register}
                                                         errors={errors}
                                                     />
                                                 </div>
-                                                <div className='w-[70%] py-5 px-3 h-fit overflow-y-auto'>
+                                                <div className='w-full md:w-[70%] md:py-5 md:px-3 h-fit md:overflow-y-auto'>
                                                     <RolePermissionsForm />
                                                 </div>
                                             </div>

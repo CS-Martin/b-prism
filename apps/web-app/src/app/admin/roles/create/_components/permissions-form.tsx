@@ -83,16 +83,16 @@ export const RolePermissionsForm = ({ readOnly = false }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}>
-            <ScrollArea className='h-[calc(100vh-20rem)]'>
+            <ScrollArea>
                 <form className='flex flex-col gap-5'>
                     <div className='p-5 border rounded-lg'>
                         <div className='flex flex-col gap-5'>
                             <Label className='font-semibold'>Administrator Permissions</Label>
-                            <div className='grid grid-cols-2 gap-6'>
+                            <div className='grid gap-6 md:grid-cols-2'>
                                 {ADMIN_PERMISSIONS[0].permissions.map((p) => {
                                     return (
                                         <div
-                                            className='flex flex-row items-center gap-5 p-3 border-b'
+                                            className='flex flex-row-reverse items-center gap-5 border-b md:flex-row md:p-3 md:items-center'
                                             key={p.label}>
                                             <Switch
                                                 checked={adminPermissions[p.id] || false}
@@ -100,7 +100,7 @@ export const RolePermissionsForm = ({ readOnly = false }) => {
                                                 disabled={readOnly}
                                                 className='data-[state=checked]:bg-blue-500'
                                             />
-                                            <div className='flex flex-col'>
+                                            <div className='flex flex-col mb-3 mr-auto'>
                                                 <p className='font-bold'>{p.label}</p>
                                                 <small className='text-[12px]'>{p.description}</small>
                                             </div>
@@ -113,11 +113,11 @@ export const RolePermissionsForm = ({ readOnly = false }) => {
                     <div className='p-5 border rounded-lg'>
                         <div className='flex flex-col gap-5'>
                             <Label className='font-semibold'>Map Permissions</Label>
-                            <div className='grid grid-cols-2 gap-6'>
+                            <div className='grid gap-6 md:grid-cols-2'>
                                 {MAP_PERMISSIONS[0].permissions.map((p) => {
                                     return (
                                         <div
-                                            className='flex flex-row items-center gap-5 p-3 border-b'
+                                            className='flex flex-row-reverse items-center gap-5 border-b md:flex-row md:p-3 md:items-center'
                                             key={p.label}>
                                             <Switch
                                                 checked={mapPermissions[p.id] || false}
@@ -125,7 +125,7 @@ export const RolePermissionsForm = ({ readOnly = false }) => {
                                                 disabled={readOnly}
                                                 className='data-[state=checked]:bg-blue-500'
                                             />
-                                            <div className='flex flex-col'>
+                                            <div className='flex flex-col mb-3 mr-auto'>
                                                 <p className='font-bold'>{p.label}</p>
                                                 <small className='text-[12px]'>{p.description}</small>
                                             </div>

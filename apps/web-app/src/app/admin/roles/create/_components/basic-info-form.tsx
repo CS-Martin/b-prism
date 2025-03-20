@@ -93,7 +93,7 @@ export const RoleBasicInfoForm = ({ register, errors, readOnly }: RoleBasicInfoF
                     </div>
                 )}
 
-                <div>
+                <div className='mt-4'>
                     <Label>Apply roles to:</Label>
                     <Textarea
                         id='additional_info'

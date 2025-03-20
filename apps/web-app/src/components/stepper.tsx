@@ -38,7 +38,7 @@ const StepperHeader = ({ className }: StepperHeaderProps) => {
         <div className={`relative flex w-full items-center justify-between ${className}`}>
             {steps.map((step, index) => (
                 <React.Fragment key={step.title}>
-                    <div className='relative flex items-center w-full gap-2'>
+                    <div className='relative flex flex-col w-full gap-2 px-1 mb-auto md:px-0 md:items-center md:flex-row'>
                         {/* Step Circle */}
                         <div
                             className={`w-8 h-8 rounded-full flex font-semibold items-center justify-center z-10 ${
