@@ -20,7 +20,7 @@ export const RoleBasicInfoForm = ({ register, errors, readOnly }: RoleBasicInfoF
                     <Input
                         id='role_name'
                         type='text'
-                        className='mt-2 '
+                        className='mt-1'
                         {...register('name', { required: 'Role Name is required.' })}
                         readOnly={readOnly}
                     />
@@ -31,6 +31,7 @@ export const RoleBasicInfoForm = ({ register, errors, readOnly }: RoleBasicInfoF
                     <Label>Description</Label>
                     <Textarea
                         id='role_description'
+                        className='mt-1'
                         {...register('description', { required: 'Description is required.' })}
                         readOnly={readOnly}
                     />

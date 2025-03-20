@@ -96,7 +96,10 @@ const NextStepperButton = ({ className, name, completeTitle, variant, disabled, 
     };
 
     const handleButtonClick = () => {
-        if (activeStep === steps.length && onClick) {
+        console.debug('ACTIVE STEP', activeStep);
+        console.debug('STEPS LENGTH', steps.length);
+
+        if (activeStep === steps.length - 1 && onClick) {
             // If it's the last step, trigger the submit action.
             onClick();
         } else {
@@ -107,7 +110,7 @@ const NextStepperButton = ({ className, name, completeTitle, variant, disabled, 
 
     return (
         <Button
-            type='submit'
+            type={activeStep === steps.length - 1 ? 'submit' : 'button'}
             onClick={handleButtonClick}
             disabled={disabled || activeStep === steps.length}
             variant={variant}
@@ -144,9 +147,11 @@ const PreviousStepperButton = ({ className, variant }: PreviousStepperButtonProp
 
 const useStepper = () => {
     const context = useContext(StepperContext);
+
     if (!context) {
         throw new Error('useStepper must be used within a Stepper');
     }
+
     return context;
 };
 
