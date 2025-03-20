@@ -3,7 +3,7 @@ import { UpdateRoleContent } from './_components/update-role';
 
 export default function EditRolePage() {
     return (
-        <main>
+        <main className='px-3'>
             <Topbar
                 items={[
                     { label: 'Admin', href: '/' },

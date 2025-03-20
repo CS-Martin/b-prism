@@ -26,6 +26,29 @@ export const useDisplayRoles = () => {
     return { roles, isLoading, error, displayRoles };
 };
 
+export const useFetchRoleById = () => {
+    const [role, setRole] = useState<RoleDto>();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchRoleById = async (roleId: string) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response: RoleDto = await roleService.fetchRoleById(roleId);
+            console.log(response);
+
+            setRole(response);
+        } catch (error: any) {
+            setError(error.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return { role, isLoading, error, fetchRoleById };
+};
+
 export const useCreateRole = () => {
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -57,4 +80,37 @@ export const useCreateRole = () => {
     };
 
     return { isLoading, error, createRole };
+};
+
+export const useUpdateRole = () => {
+    const { toast } = useToast();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const updateRole = async (id: string, createRoleDto: CreateRoleDto, author: string) => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const response = await roleService.update(id, createRoleDto, author);
+
+            toast({
+                title: 'Role updated successfully!',
+                description: `You have successfully updated role ${createRoleDto.name}.`,
+                variant: 'success',
+            });
+        } catch (error: any) {
+            setError(error.message);
+
+            toast({
+                title: 'Error',
+                description: `Encountered an error: ${error}`,
+                variant: 'destructive',
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return { isLoading, error, updateRole };
 };

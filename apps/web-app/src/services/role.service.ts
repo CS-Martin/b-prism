@@ -1,4 +1,4 @@
-import { CreateRoleDto, ResponseDto, RoleDto } from '@dto';
+import { CreateRoleDto, ResponseDto, RoleDto, UpdateRoleDto } from '@dto';
 
 class RoleService {
     private API_BASE_URL: string;
@@ -33,6 +33,71 @@ class RoleService {
             return (await response.json()).body;
         } catch (error: any) {
             console.error('Warehouse creation error:', error);
+
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
+        }
+    }
+
+    public async update(id: string, updateRoleDto: UpdateRoleDto, author: string): Promise<ResponseDto<RoleDto>> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/roles/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Author': author,
+                },
+                body: JSON.stringify(updateRoleDto),
+            });
+
+            if (!response.ok) {
+                let errorMessage = 'Failed to update role';
+
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            return (await response.json()).body;
+        } catch (error: any) {
+            console.error('Warehouse creation error:', error);
+
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
+        }
+    }
+
+    public async fetchRoleById(roleId: string): Promise<RoleDto> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/roles/${roleId}`);
+
+            if (!response.ok) {
+                let errorMessage = 'Failed to fetch roles';
+
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            return response.json();
+        } catch (error: any) {
+            console.error('Warehouse fetch error:', error);
 
             if (error.name === 'TypeError') {
                 throw new Error('Network error: Please check your internet connection and try again.');

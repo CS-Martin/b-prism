@@ -69,8 +69,8 @@ export const MAP_PERMISSIONS = [
 
 export const RolePermissionsForm = ({ readOnly = false }) => {
     const { register, setValue, watch } = useFormContext();
-    const adminPermissions = watch('adminPermissions');
-    const mapPermissions = watch('mapPermissions');
+    const adminPermissions = watch('adminPermissions') || {};
+    const mapPermissions = watch('mapPermissions') || {};
 
     const handlePermissionChange = (category: string, id: string, value: boolean) => {
         const updatedPermissions = { ...watch(category), [id]: value };
