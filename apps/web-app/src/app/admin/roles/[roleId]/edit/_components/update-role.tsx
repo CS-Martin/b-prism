@@ -132,7 +132,7 @@ export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
                                                     role={role}
                                                 />
                                             )}
-                                            {step.title === 'Review Details' && <ReviewUpdateDetails />}
+                                            {step.title === 'Review Details' && <ReviewUpdateDetails session={session} />}
                                         </AnimatePresence>
                                     )}
                                 </StepperContent>

@@ -2,8 +2,13 @@ import { Label } from '@b-prism/shadcn-ui/index';
 import { RoleBasicInfoForm } from '../../../create/_components/basic-info-form';
 import { RolePermissionsForm } from '../../../create/_components/permissions-form';
 import { useFormContext } from 'react-hook-form';
+import { Session } from 'next-auth';
 
-export const ReviewUpdateDetails = () => {
+interface ReviewUpdateDetailsProps {
+    session: Session;
+}
+
+export const ReviewUpdateDetails = ({ session }: ReviewUpdateDetailsProps) => {
     const { register } = useFormContext<{ name: string; description: string; adminPermissions: any; mapPermissions: any }>();
 
     return (
@@ -19,6 +24,7 @@ export const ReviewUpdateDetails = () => {
                             register={register}
                             errors={{}}
                             readOnly={true}
+                            session={session}
                         />
                     </div>
                     <div className='relative w-full md:h-[530px] md:w-[70%] md:py-5 md:px-3 md:overflow-y-auto'>
