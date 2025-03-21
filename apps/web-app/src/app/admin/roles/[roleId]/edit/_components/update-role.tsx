@@ -16,18 +16,28 @@ import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { isEqual } from 'lodash';
 
 export const UpdateRoleContent = () => {
-    const router = useRouter();
     const { data: session } = useSession();
+    console.log('session', session);
+    const router = useRouter();
     const params = useParams<{ roleId: string }>();
     const { role, isLoading, error, fetchRoleById } = useFetchRoleById();
     const { updateRole } = useUpdateRole();
     const methods = useForm<{ name: string; description: string; adminPermissions: Record<string, boolean>; mapPermissions: Record<string, any> }>();
     const { handleSubmit } = methods;
     const { toast } = useToast();
-    const [originalRole, setOriginalRole] = useState<RoleDto | null>(null);
+
+    if (!session?.user || !session?.user.access_token) {
+        toast({
+            title: 'Session expired',
+            description: 'Please login again to continue.',
+            variant: 'destructive',
+        });
+
+        notFound();
+    }
 
     useEffect(() => {
-        fetchRoleById(params.roleId);
+        fetchRoleById(params.roleId, session?.user.access_token);
     }, [params.roleId]);
 
     if (isLoading) {
@@ -35,7 +45,13 @@ export const UpdateRoleContent = () => {
     }
 
     if (error) {
-        return <div>Erro</div>;
+        toast({
+            title: 'Error fetching role',
+            description: error,
+            variant: 'destructive',
+        });
+
+        return;
     }
 
     const steps = [

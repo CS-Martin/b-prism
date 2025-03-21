@@ -8,12 +8,12 @@ export const useDisplayRoles = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const displayRoles = async () => {
+    const displayRoles = async (token: string) => {
         setIsLoading(true);
         setError(null);
 
         try {
-            const response: ResponseDto<RoleDto[]> = await roleService.fetchAllRoles();
+            const response: ResponseDto<RoleDto[]> = await roleService.fetchAllRoles(token);
 
             setRoles(response.body);
         } catch (error: any) {
@@ -31,12 +31,12 @@ export const useFetchRoleById = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchRoleById = async (roleId: string) => {
+    const fetchRoleById = async (roleId: string, token: string | undefined) => {
         setIsLoading(true);
         setError(null);
 
         try {
-            const response: RoleDto = await roleService.fetchRoleById(roleId);
+            const response: RoleDto = await roleService.fetchRoleById(roleId, token);
             console.log(response);
 
             setRole(response);
@@ -55,12 +55,12 @@ export const useCreateRole = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const createRole = async (createRoleDto: CreateRoleDto) => {
+    const createRole = async (createRoleDto: CreateRoleDto, token: string) => {
         setIsLoading(true);
         setError(null);
 
         try {
-            const response = await roleService.create(createRoleDto);
+            const response = await roleService.create(createRoleDto, token);
 
             toast({
                 title: 'Role created successfully!',
@@ -88,12 +88,12 @@ export const useUpdateRole = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const updateRole = async (id: string, createRoleDto: CreateRoleDto, author: string) => {
+    const updateRole = async (id: string, createRoleDto: CreateRoleDto, author: string, token: string) => {
         setIsLoading(true);
         setError(null);
 
         try {
-            const response = await roleService.update(id, createRoleDto, author);
+            const response = await roleService.update(id, createRoleDto, author, token);
 
             toast({
                 title: 'Role updated successfully!',

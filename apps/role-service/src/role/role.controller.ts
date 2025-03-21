@@ -1,10 +1,12 @@
 import { RoleServiceLibService } from '@b-prism/role-service-lib';
 import { CreateRoleDto, UpdateRoleDto } from '@dto';
-import { Body, Controller, Delete, Get, Headers, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'libs/backend/app-services/guards-service-lib/src/lib/jwt-auth.guard';
 
 @ApiTags('Role Endpoints')
+@UseGuards(AuthGuard)
 @Controller(`${new ConfigService().get('API_VERSION')}/roles`)
 export class RoleController {
     constructor(private readonly roleServiceLibService: RoleServiceLibService) {}

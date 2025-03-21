@@ -7,6 +7,7 @@ import { CreateRoleDatatableColumns } from './role-management-columns';
 import { useDisplayRoles } from 'apps/web-app/src/hooks/role.hook';
 import { Plus, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
+import { Session } from 'next-auth';
 
 interface RoleManagementDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -58,12 +59,16 @@ export function RoleManagementDataTable<TData, TValue>({ columns, data }: RoleMa
     );
 }
 
-export const RoleManagementContent = () => {
+interface RoleManagementContentProps {
+    session: Session;
+}
+
+export const RoleManagementContent = ({ session }: RoleManagementContentProps) => {
     const { roles, isLoading, error, displayRoles } = useDisplayRoles();
 
     useEffect(() => {
-        displayRoles();
-    }, []);
+        displayRoles(session.user.access_token);
+    }, [session]);
 
     if (isLoading) {
         return <div className='p-5 mt-5 rounded-md prism-card-bg'>Loading...</div>;
@@ -74,8 +79,6 @@ export const RoleManagementContent = () => {
     }
 
     const columns = CreateRoleDatatableColumns();
-
-    console.log(roles);
 
     return (
         <div className='p-5 mt-5 rounded-md prism-card-bg'>

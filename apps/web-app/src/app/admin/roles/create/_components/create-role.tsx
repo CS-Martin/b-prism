@@ -11,9 +11,13 @@ import { useCreateRole } from 'apps/web-app/src/hooks/role.hook';
 import { CreateRoleDto } from '@dto';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { Session } from 'next-auth';
 
-export const CreateRoleContent = () => {
-    const { data: session } = useSession();
+interface CreateRoleContentProps {
+    session: Session;
+}
+
+export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
     const router = useRouter();
 
     const steps = [
@@ -74,7 +78,7 @@ export const CreateRoleContent = () => {
             }
         }
 
-        await createRole(createRoleDto);
+        await createRole(createRoleDto, session.user.access_token);
 
         if (!error) {
             router.push('/admin/roles');
@@ -126,6 +130,8 @@ export const CreateRoleContent = () => {
                                                     <RoleBasicInfoForm
                                                         register={register}
                                                         errors={errors}
+                                                        session={session}
+                                                        readOnly={false}
                                                     />
                                                 </motion.div>
                                             </div>
@@ -142,6 +148,7 @@ export const CreateRoleContent = () => {
                                                     <RoleBasicInfoForm
                                                         register={register}
                                                         errors={errors}
+                                                        session={session}
                                                     />
                                                 </div>
                                                 <div className='relative w-full md:h-[530px] md:w-[70%] md:py-5 md:px-3 md:overflow-y-auto'>
@@ -154,6 +161,7 @@ export const CreateRoleContent = () => {
                                         <RoleReviewDetails
                                             register={register}
                                             errors={errors}
+                                            session={session}
                                         />
                                     )}
                                 </AnimatePresence>
