@@ -12,6 +12,7 @@ import { CreateRoleDto } from '@dto';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Session } from 'next-auth';
+import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
 
 interface CreateRoleContentProps {
     session: Session;
@@ -19,6 +20,7 @@ interface CreateRoleContentProps {
 
 export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
     const router = useRouter();
+    const { isLoading, error, createRole } = useRoleStore();
 
     const steps = [
         {
@@ -52,7 +54,6 @@ export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
         control,
     } = methods;
 
-    const { isLoading, error, createRole } = useCreateRole();
     const onSubmit = async (data: { name: string; description: string; adminPermissions: Record<string, boolean>; mapPermissions: Record<string, any> }) => {
         const createRoleDto: CreateRoleDto = {
             name: data.name,
@@ -108,6 +109,7 @@ export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
                                     className='w-full md:w-[30%] lg:w-[20%]'
                                     completeTitle='Create Role'
                                     disabled={!isValid || isLoading}
+                                    isLoading={isLoading}
                                     onClick={handleSubmit(onSubmit)}
                                 />
                             </div>

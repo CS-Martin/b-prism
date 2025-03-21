@@ -2,6 +2,7 @@
 
 import { Button } from '@b-prism/shadcn-ui/index';
 import React, { createContext, useState, useContext } from 'react';
+import { PacmanLoader } from 'react-spinners';
 
 interface StepperContextProps {
     activeStep: number;
@@ -83,10 +84,11 @@ interface NextStepperButtonProps {
     completeTitle?: string;
     variant?: 'link' | 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | null;
     disabled?: boolean;
+    isLoading?: boolean;
     onClick?: () => void;
 }
 
-const NextStepperButton = ({ className, name, completeTitle, variant, disabled, onClick }: NextStepperButtonProps) => {
+const NextStepperButton = ({ className, name, completeTitle, variant, disabled, onClick, isLoading }: NextStepperButtonProps) => {
     const { activeStep, setActiveStep, steps } = useStepper();
 
     const handleNext = () => {
@@ -96,9 +98,6 @@ const NextStepperButton = ({ className, name, completeTitle, variant, disabled, 
     };
 
     const handleButtonClick = () => {
-        console.debug('ACTIVE STEP', activeStep);
-        console.debug('STEPS LENGTH', steps.length);
-
         if (activeStep === steps.length - 1 && onClick) {
             // If it's the last step, trigger the submit action.
             onClick();
@@ -115,7 +114,17 @@ const NextStepperButton = ({ className, name, completeTitle, variant, disabled, 
             disabled={disabled || activeStep === steps.length}
             variant={variant}
             className={`${className} px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600`}>
-            {activeStep === steps.length - 1 ? `${completeTitle}` || 'Finish' : `${name}` || 'Next'}
+            {isLoading ? (
+                <>
+                    <PacmanLoader
+                        className={`${isLoading ? 'pacman-loader-slide-in' : 'pacman-loader-slide-out'}`}
+                        color='white'
+                        size={10}
+                    />
+                </>
+            ) : (
+                <>{activeStep === steps.length - 1 ? `${completeTitle}` || 'Finish' : `${name}` || 'Next'}</>
+            )}
         </Button>
     );
 };

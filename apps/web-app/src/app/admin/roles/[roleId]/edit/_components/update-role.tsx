@@ -1,27 +1,26 @@
 'use client';
 
-import { Label } from '@b-prism/shadcn-ui/index';
 import { NextStepperButton, PreviousStepperButton, Stepper, StepperContent, StepperHeader } from 'apps/web-app/src/components/stepper';
-import { useFetchRoleById, useUpdateRole } from 'apps/web-app/src/hooks/role.hook';
+import { useUpdateRole } from 'apps/web-app/src/hooks/role.hook';
 import { AnimatePresence, motion } from 'framer-motion';
 import { notFound, useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { EditRoleForm } from './edit-role-form';
 import { FormProvider, useForm } from 'react-hook-form';
-import { CreateRoleDto, RoleDto } from '@dto';
-import { useSession } from 'next-auth/react';
+import { CreateRoleDto } from '@dto';
 import { ReviewUpdateDetails } from './review-details';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { isEqual } from 'lodash';
+import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
+import { Session } from 'next-auth';
 
-export const UpdateRoleContent = () => {
-    const { data: session } = useSession();
-    console.log('session', session);
+interface UpdateRoleContentProps {
+    session: Session;
+}
+export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
     const router = useRouter();
     const params = useParams<{ roleId: string }>();
-    const { role, isLoading, error, fetchRoleById } = useFetchRoleById();
-    const { updateRole } = useUpdateRole();
+    const { role, isLoading, error, fetchRoleById, updateRole } = useRoleStore();
     const methods = useForm<{ name: string; description: string; adminPermissions: Record<string, boolean>; mapPermissions: Record<string, any> }>();
     const { handleSubmit } = methods;
     const { toast } = useToast();
@@ -39,10 +38,6 @@ export const UpdateRoleContent = () => {
     useEffect(() => {
         fetchRoleById(params.roleId, session?.user.access_token);
     }, [params.roleId]);
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
 
     if (error) {
         toast({
@@ -97,6 +92,8 @@ export const UpdateRoleContent = () => {
         }
     };
 
+    console.log(isLoading);
+
     return (
         <>
             {role && (
@@ -122,6 +119,7 @@ export const UpdateRoleContent = () => {
                                             className='w-full md:w-[30%] lg:w-[20%]'
                                             completeTitle='Update Role'
                                             disabled={isLoading}
+                                            isLoading={isLoading}
                                             onClick={handleSubmit(onSubmit)}
                                         />
                                     </div>
