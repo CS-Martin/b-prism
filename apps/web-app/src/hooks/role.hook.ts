@@ -115,3 +115,36 @@ export const useUpdateRole = () => {
 
     return { isLoading, error, updateRole };
 };
+
+export const useDeleteRole = () => {
+    const { toast } = useToast();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const deleteRole = async (roleId: string, author: string, token: string) => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            await roleService.delete(roleId, author, token);
+
+            toast({
+                title: 'Role deleted successfully!',
+                description: `You have successfully deleted role ${roleId}.`,
+                variant: 'success',
+            });
+        } catch (error: any) {
+            setError(error.message);
+
+            toast({
+                title: 'Error',
+                description: `Encountered an error: ${error}`,
+                variant: 'destructive',
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return { isLoading, error, deleteRole };
+};

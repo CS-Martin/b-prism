@@ -1,8 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage, Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Label } from '@b-prism/shadcn-ui/index';
-import { EllipsisVertical } from 'lucide-react';
+import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { DeleteRoleDialog } from './delete-role-dialog';
+import { useState } from 'react';
+import { RoleDto } from '@dto';
 
-export const CreateRoleDatatableColumns = () => {
+export const CreateRoleDatatableColumns = (handleDeleteClick: (role: RoleDto) => void) => {
     return [
         {
             accessorKey: 'name',
@@ -14,7 +17,7 @@ export const CreateRoleDatatableColumns = () => {
                 return (
                     <div className='flex min-w-[200px] max-w-[350px] flex-col gap-1 whitespace-normal'>
                         <span className='font-semibold'>{name}</span>
-                        {description && <span className='text-sm text-gray-600 break-words'>{description}</span>}
+                        {description && <Label className='text-sm break-words'>{description}</Label>}
                     </div>
                 );
             },
@@ -25,12 +28,12 @@ export const CreateRoleDatatableColumns = () => {
             size: 5,
             cell: ({ row }: { row: any }) => {
                 const permissionLabels: Record<string, string> = {
-                    ACTIVITY_LOG_PERMISSION: 'Activity Log',
+                    ACTIVITY_LOG_PERMISSION: 'Activity Log Actions',
                     WAREHOUSE_PERMISSION: 'Warehouse Actions',
                     DISPENSING_POINT_PERMISSION: 'Dispensing Point Actions',
                     ROAD_NETWORK_PERMISSION: 'Road Network Actions',
                     ACCOUNT_CREATION: 'Account Creation',
-                    RESCUE_POST_PERMISSION: 'Rescue Post Management',
+                    RESCUE_POST_PERMISSION: 'Rescue Post Actions',
                     ROLE_PERMISSION: 'Role Management',
                     NOTIFICATION_PERMISSION: 'Notifications',
                 };
@@ -65,7 +68,7 @@ export const CreateRoleDatatableColumns = () => {
                             </Avatar>
                             <div className='flex flex-col ml-2'>
                                 <span className='font-semibold'>{`${created_by}`}</span>
-                                <Label className='text-xs'>{'Admin'}</Label>
+                                <Label className='text-xs'>{'Developer'}</Label>
                             </div>
                         </span>
                     </div>
@@ -115,11 +118,25 @@ export const CreateRoleDatatableColumns = () => {
                                 className='w-40'
                                 align='end'>
                                 <DropdownMenuItem
-                                    className='cursor-pointer hover:bg-gray-100'
+                                    className='py-2 cursor-pointer hover:bg-gray-100'
                                     asChild>
-                                    <Link href={`/admin/roles/${row.original.id}/edit`}>Edit</Link>
+                                    <Link href={`/admin/roles/${row.original.id}/edit`}>
+                                        <Pencil
+                                            height={16}
+                                            width={16}
+                                        />
+                                        Edit
+                                    </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className='cursor-pointer hover:bg-gray-100'>Delete</DropdownMenuItem>
+                                <DropdownMenuItem
+                                    className='py-2 text-red-500 cursor-pointer'
+                                    onClick={() => handleDeleteClick(role)}>
+                                    <Trash2
+                                        height={16}
+                                        width={16}
+                                    />{' '}
+                                    Delete
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

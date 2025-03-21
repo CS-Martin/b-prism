@@ -54,7 +54,7 @@ AlertDialogHeader.displayName = 'AlertDialogHeader';
 
 const AlertDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div
-        className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
+        className={cn('flex flex-col-reverse gap-3 sm:space-x-2', className)}
         {...props}
     />
 );
@@ -86,10 +86,11 @@ const AlertDialogAction = React.forwardRef<React.ElementRef<typeof AlertDialogPr
     ({ className, ...props }, ref) => (
         <AlertDialogPrimitive.Action
             ref={ref}
-            className={cn(buttonVariants(), className)}
+            className={cn(buttonVariants(), className, 'text-white bg-red-500 hover:bg-red-600')}
             {...props}
             style={{
                 borderRadius: '5px',
+                margin: '0px',
             }}
         />
     ),

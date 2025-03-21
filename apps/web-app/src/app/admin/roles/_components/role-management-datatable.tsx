@@ -24,6 +24,8 @@ import { Plus, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Session } from 'next-auth';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
+import { DeleteRoleDialog } from './delete-role-dialog';
+import { RoleDto } from '@dto';
 
 interface RoleManagementDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -142,6 +144,8 @@ interface RoleManagementContentProps {
 
 export const RoleManagementContent = ({ session }: RoleManagementContentProps) => {
     const { roles, isLoading, error, displayRoles } = useDisplayRoles();
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+    const [selectedRole, setSelectedRole] = useState<RoleDto | null>(null);
 
     useEffect(() => {
         displayRoles(session.user.access_token);
@@ -154,8 +158,12 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
     if (error) {
         return <div className='p-5 mt-5 rounded-md prism-card-bg'>Error: {error}</div>;
     }
+    const handleDeleteClick = async (role: RoleDto) => {
+        setIsDeleteDialogOpen(true);
+        setSelectedRole(role);
+    };
 
-    const columns = CreateRoleDatatableColumns();
+    const columns = CreateRoleDatatableColumns(handleDeleteClick);
 
     return (
         <div className='p-5 mt-5 rounded-md prism-card-bg h'>
@@ -183,6 +191,11 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
             <RoleManagementDataTable
                 columns={columns}
                 data={roles}
+            />
+            <DeleteRoleDialog
+                isOpen={isDeleteDialogOpen}
+                onClose={() => setIsDeleteDialogOpen(false)}
+                role={selectedRole}
             />
         </div>
     );
