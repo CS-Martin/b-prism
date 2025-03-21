@@ -126,7 +126,12 @@ export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
                                 <StepperContent>
                                     {(step) => (
                                         <AnimatePresence mode='wait'>
-                                            {step.title === 'Edit Role Information' && <EditRoleForm role={role} />}
+                                            {step.title === 'Edit Role Information' && (
+                                                <EditRoleForm
+                                                    session={session}
+                                                    role={role}
+                                                />
+                                            )}
                                             {step.title === 'Review Details' && <ReviewUpdateDetails />}
                                         </AnimatePresence>
                                     )}

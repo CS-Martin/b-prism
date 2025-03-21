@@ -2,14 +2,16 @@ import { Label } from '@b-prism/shadcn-ui/index';
 import { RoleBasicInfoForm } from '../../../create/_components/basic-info-form';
 import { ADMIN_PERMISSIONS, MAP_PERMISSIONS, RolePermissionsForm } from '../../../create/_components/permissions-form';
 import { RoleDto } from '@dto';
-import { useForm, useFormContext, FieldValues } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { useEffect } from 'react';
+import { Session } from 'next-auth';
 
 interface EditRoleFormProps {
     role: RoleDto;
+    session: Session;
 }
 
-export const EditRoleForm = ({ role }: EditRoleFormProps) => {
+export const EditRoleForm = ({ role, session }: EditRoleFormProps) => {
     const { register, setValue } = useFormContext<{ name: string; description: string; adminPermissions: any; mapPermissions: any }>();
 
     useEffect(() => {
@@ -43,6 +45,7 @@ export const EditRoleForm = ({ role }: EditRoleFormProps) => {
                         register={register}
                         errors={{}}
                         readOnly={false}
+                        session={session}
                     />
                 </div>
                 <div className='relative w-full md:h-[530px] md:w-[70%] md:py-5 md:px-3 md:overflow-y-auto'>
