@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@b-prism/shadcn-ui/index';
+import { Button, Label, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@b-prism/shadcn-ui/index';
 import { ColumnDef, flexRender, getCoreRowModel, SortingState, useReactTable } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import { CreateRoleDatatableColumns } from './role-management-columns';
@@ -8,6 +8,7 @@ import { useDisplayRoles } from 'apps/web-app/src/hooks/role.hook';
 import { Plus, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Session } from 'next-auth';
+import { PrismButton } from 'apps/web-app/src/components/prism-button';
 
 interface RoleManagementDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -38,7 +39,8 @@ export function RoleManagementDataTable<TData, TValue>({ columns, data }: RoleMa
                         table.getRowModel().rows.map((row) => (
                             <TableRow
                                 key={row.id}
-                                data-state={row.getIsSelected() && 'selected'}>
+                                data-state={row.getIsSelected() && 'selected'}
+                                className='cursor-pointer'>
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                                 ))}
@@ -68,7 +70,9 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
 
     useEffect(() => {
         displayRoles(session.user.access_token);
-    }, [session]);
+    }, []);
+
+    console.log(roles);
 
     if (isLoading) {
         return <div className='p-5 mt-5 rounded-md prism-card-bg'>Loading...</div>;
@@ -81,18 +85,28 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
     const columns = CreateRoleDatatableColumns();
 
     return (
-        <div className='p-5 mt-5 rounded-md prism-card-bg'>
-            <Button
-                variant={'default'}
-                asChild>
-                <Link href={'/admin/roles/create'}>
-                    <PlusCircle
-                        height={24}
-                        width={24}
+        <div className='p-5 mt-5 rounded-md prism-card-bg h'>
+            <div className='flex flex-row items-center justify-between pb-5 mb-5 border-b'>
+                <div>
+                    <h2 className='text-lg font-bold'>Role Management</h2>
+                    <Label>Manage your existing roles to control access and permissions within the application.</Label>
+                </div>
+                <div>
+                    <PrismButton
+                        type='button'
+                        label='Create New Role'
+                        isLoading={isLoading}
+                        icon={
+                            <PlusCircle
+                                height={24}
+                                width={24}
+                            />
+                        }
+                        link={'/admin/roles/create'}
+                        style='bg-blue-500 hover:bg-blue-600 flex text-white'
                     />
-                    Create New Role
-                </Link>
-            </Button>
+                </div>
+            </div>
             <RoleManagementDataTable
                 columns={columns}
                 data={roles}

@@ -1,4 +1,4 @@
-import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@b-prism/shadcn-ui/index';
+import { Avatar, AvatarFallback, AvatarImage, Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Label } from '@b-prism/shadcn-ui/index';
 import { EllipsisVertical } from 'lucide-react';
 import Link from 'next/link';
 
@@ -7,27 +7,70 @@ export const CreateRoleDatatableColumns = () => {
         {
             accessorKey: 'name',
             header: 'Role Name',
-            cell: ({ row }: { row: any }) => <div className='font-semibold text-gray-800'>{row.getValue('name')}</div>,
-        },
-        {
-            accessorKey: 'description',
-            header: 'Role Description',
-            cell: ({ row }: { row: any }) => <div className='text-gray-600'>{row.getValue('description')}</div>,
+            cell: ({ row }: { row: any }) => {
+                const name = row.getValue('name');
+                const description = row.original?.description || ''; // Safely access description
+
+                return (
+                    <div className='flex min-w-[200px] max-w-[350px] flex-col gap-1 whitespace-normal'>
+                        <span className='font-semibold'>{name}</span>
+                        {description && <span className='text-sm text-gray-600 break-words'>{description}</span>}
+                    </div>
+                );
+            },
         },
         {
             accessorKey: 'permissions',
-            header: 'Permissions',
-            cell: ({ row }: { row: any }) => (
-                <div className='flex flex-wrap gap-2'>
-                    {row.getValue('permissions').map((permission: string, index: number) => (
-                        <span
-                            key={index}
-                            className='px-2 py-1 text-sm text-blue-800 bg-blue-100 rounded-full'>
-                            {permission}
+            header: () => <div className='text-start'>Permissions</div>,
+            size: 5,
+            cell: ({ row }: { row: any }) => {
+                const permissionLabels: Record<string, string> = {
+                    ACTIVITY_LOG_PERMISSION: 'Activity Log',
+                    WAREHOUSE_PERMISSION: 'Warehouse Actions',
+                    DISPENSING_POINT_PERMISSION: 'Dispensing Point Actions',
+                    ROAD_NETWORK_PERMISSION: 'Road Network Actions',
+                    ACCOUNT_CREATION: 'Account Creation',
+                    RESCUE_POST_PERMISSION: 'Rescue Post Management',
+                    ROLE_PERMISSION: 'Role Management',
+                    NOTIFICATION_PERMISSION: 'Notifications',
+                };
+
+                return (
+                    <div className='flex flex-wrap items-center w-[300px] md:min-w-[350px] md:max-w-[600px] justify-start gap-2 text-center whitespace-normal'>
+                        {row.getValue('permissions').map((permission: string, index: number) => (
+                            <span
+                                key={index}
+                                className='px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full cursor-pointer'>
+                                {permissionLabels[permission]}
+                            </span>
+                        ))}
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: 'created_by',
+            header: 'Created by',
+            cell: ({ row }: { row: any }) => {
+                const created_by = row.getValue('created_by');
+
+                return (
+                    <div>
+                        <span className='flex flex-row items-center whitespace-normal min-w-[150px]'>
+                            <Avatar
+                                className='w-8 h-8'
+                                style={{ borderRadius: '500px' }}>
+                                <AvatarImage src='https://github.com/shadcn.png' />
+                                <AvatarFallback>{'GE'}</AvatarFallback>
+                            </Avatar>
+                            <div className='flex flex-col ml-2'>
+                                <span className='font-semibold'>{`${created_by}`}</span>
+                                <Label className='text-xs'>{'Admin'}</Label>
+                            </div>
                         </span>
-                    ))}
-                </div>
-            ),
+                    </div>
+                );
+            },
         },
         {
             accessorKey: 'created_at',
@@ -35,7 +78,7 @@ export const CreateRoleDatatableColumns = () => {
             cell: ({ row }: { row: any }) => {
                 const date = new Date(row.getValue('created_at') as string);
                 return (
-                    <div className='text-gray-600'>
+                    <Label className=' whitespace-normal min-w-[300px] '>
                         {date.toLocaleString('en-US', {
                             year: 'numeric',
                             month: 'long',
@@ -44,7 +87,7 @@ export const CreateRoleDatatableColumns = () => {
                             minute: 'numeric',
                             hour12: true,
                         })}
-                    </div>
+                    </Label>
                 );
             },
         },
@@ -55,7 +98,7 @@ export const CreateRoleDatatableColumns = () => {
                 const role = row.original;
 
                 return (
-                    <div className='flex justify-end'>
+                    <div className='flex justify-center'>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
@@ -68,7 +111,9 @@ export const CreateRoleDatatableColumns = () => {
                                     />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent className='w-40'>
+                            <DropdownMenuContent
+                                className='w-40'
+                                align='end'>
                                 <DropdownMenuItem
                                     className='cursor-pointer hover:bg-gray-100'
                                     asChild>

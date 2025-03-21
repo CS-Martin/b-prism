@@ -135,6 +135,7 @@ export class RoleServiceLibService {
         roleDto.description = role.description;
         roleDto.permissions = role.permissions;
         roleDto.is_default = role.is_default;
+        roleDto.created_by = role.created_by;
         roleDto.created_at = role.created_at;
         roleDto.updated_at = role.updated_at;
 

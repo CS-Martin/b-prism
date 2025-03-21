@@ -90,7 +90,7 @@ export const UpdateRoleContent = () => {
             }
         }
 
-        await updateRole(params.roleId, createRoleDto, session?.user.given_name + ' ' + session?.user.family_name);
+        await updateRole(params.roleId, createRoleDto, session?.user.given_name + ' ' + session?.user.family_name, session.user.access_token);
 
         if (!error) {
             router.push('/admin/roles');
