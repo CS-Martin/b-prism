@@ -1,7 +1,22 @@
 'use client';
 
-import { Button, Label, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@b-prism/shadcn-ui/index';
-import { ColumnDef, flexRender, getCoreRowModel, SortingState, useReactTable } from '@tanstack/react-table';
+import {
+    Button,
+    Label,
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@b-prism/shadcn-ui/index';
+import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, SortingState, useReactTable } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import { CreateRoleDatatableColumns } from './role-management-columns';
 import { useDisplayRoles } from 'apps/web-app/src/hooks/role.hook';
@@ -15,48 +30,108 @@ interface RoleManagementDataTableProps<TData, TValue> {
     data: TData[];
 }
 
+function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize: number; dataLength: number; table: ReturnType<typeof useReactTable<TData>> }) {
+    return (
+        <div className='absolute bottom-0 flex items-center justify-between w-full px-5 py-5 border rounded-lg prism-card-bg'>
+            <div className='flex items-center justify-between w-1/2'>
+                <Label className='font-normal '>
+                    Showing {table.getState().pagination.pageIndex * pageSize + 1} to {Math.min((table.getState().pagination.pageIndex + 1) * pageSize, dataLength)} out of{' '}
+                    {dataLength} results
+                </Label>
+            </div>
+            <Pagination className='justify-end w-1/2'>
+                <PaginationContent>
+                    <PaginationItem>
+                        <PaginationPrevious
+                            onClick={() => table.previousPage()}
+                            className={`rounded-sm cursor-pointer ${!table.getCanPreviousPage() ? 'opacity-50 pointer-events-none' : ''}`}
+                        />
+                    </PaginationItem>
+                    {Array.from({ length: Math.ceil(dataLength / pageSize) }, (_, index) => (
+                        <PaginationItem key={index}>
+                            <PaginationLink
+                                href='#'
+                                isActive={index === table.getState().pagination.pageIndex}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    table.setPageIndex(index);
+                                }}
+                                className={`cursor-pointer ${index === table.getState().pagination.pageIndex ? 'bg-blue-500 text-white' : ''}`}>
+                                {index + 1}
+                            </PaginationLink>
+                        </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                        <PaginationNext
+                            isActive={false}
+                            onClick={() => table.nextPage()}
+                            className={`rounded-sm cursor-pointer ${!table.getCanNextPage() ? 'opacity-50 pointer-events-none' : ''}`}
+                        />
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
+        </div>
+    );
+}
+
 export function RoleManagementDataTable<TData, TValue>({ columns, data }: RoleManagementDataTableProps<TData, TValue>) {
+    const pageSize = 5;
+
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        initialState: { pagination: { pageSize } }, // Apply page size here
     });
 
+    useEffect(() => {
+        table.setPageSize(pageSize);
+    }, [table, pageSize]);
+
     return (
-        <div className='border rounded-md'>
-            <Table>
-                <TableHeader>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return <TableHead key={header.id}>{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</TableHead>;
-                            })}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && 'selected'}
-                                className='cursor-pointer'>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+        <div className='relative overflow-hidden h-[calc(100vh-230px)]'>
+            <div className='h-[85%] overflow-y-auto border rounded-lg'>
+                <Table>
+                    <TableHeader className='sticky top-0 z-10 border shadow-2xl prism-card-bg'>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id}>{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</TableHead>
                                 ))}
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell
-                                colSpan={columns.length}
-                                className='h-24 text-center'>
-                                No results.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && 'selected'}
+                                    className='cursor-pointer'>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className='h-24 text-center'>
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+
+            <PaginationComponent<TData>
+                pageSize={pageSize}
+                dataLength={data.length}
+                table={table}
+            />
         </div>
     );
 }
@@ -71,8 +146,6 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
     useEffect(() => {
         displayRoles(session.user.access_token);
     }, []);
-
-    console.log(roles);
 
     if (isLoading) {
         return <div className='p-5 mt-5 rounded-md prism-card-bg'>Loading...</div>;
