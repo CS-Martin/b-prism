@@ -26,6 +26,7 @@ import { Session } from 'next-auth';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
 import { DeleteRoleDialog } from './delete-role-dialog';
 import { RoleDto } from '@dto';
+import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
 
 interface RoleManagementDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -143,7 +144,7 @@ interface RoleManagementContentProps {
 }
 
 export const RoleManagementContent = ({ session }: RoleManagementContentProps) => {
-    const { roles, isLoading, error, displayRoles } = useDisplayRoles();
+    const { roles, isLoading, error, displayRoles } = useRoleStore();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
     const [selectedRole, setSelectedRole] = useState<RoleDto | null>(null);
 
@@ -193,6 +194,7 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
                 data={roles}
             />
             <DeleteRoleDialog
+                session={session}
                 isOpen={isDeleteDialogOpen}
                 onClose={() => setIsDeleteDialogOpen(false)}
                 role={selectedRole}

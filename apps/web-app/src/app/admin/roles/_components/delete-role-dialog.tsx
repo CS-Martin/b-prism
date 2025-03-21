@@ -9,21 +9,29 @@ import {
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/components/ui/alert-dialog';
 import { RoleDto } from '@dto';
+import { useDeleteRole } from 'apps/web-app/src/hooks/role.hook';
+import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
 import { AlertTriangle, TriangleAlert } from 'lucide-react';
+import { Session } from 'next-auth';
+import React from 'react';
 
 interface DeleteRoleDialogProps {
+    session: Session;
     isOpen: boolean;
     onClose: () => void;
     role: RoleDto | null;
 }
 
-export const DeleteRoleDialog = ({ isOpen, onClose, role }: DeleteRoleDialogProps) => {
-    console.log(role);
-    const handleDelete = async () => {
-        console.log(`Deleting role with ID: ${role?.id}`);
+export const DeleteRoleDialog = ({ session, isOpen, onClose, role }: DeleteRoleDialogProps) => {
+    const { isLoading, deleteRole } = useRoleStore();
 
+    const handleDelete = async () => {
+        if (role) {
+            await deleteRole(role?.id, session.user.given_name + ' ' + session.user.family_name, session.user.access_token);
+        }
         onClose();
     };
+
     return (
         <AlertDialog open={isOpen}>
             <AlertDialogContent>
@@ -39,12 +47,20 @@ export const DeleteRoleDialog = ({ isOpen, onClose, role }: DeleteRoleDialogProp
                         {`Are you absolutely sure?`}
                     </AlertDialogTitle>
                     <AlertDialogDescription className='text-center'>
-                        This action cannot be undone. All details associated with ${role?.name} will be deleted.
+                        This action cannot be undone. All details associated with <b className='text-white'>{role?.name}</b> role will be deleted.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={onClose}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                    <AlertDialogCancel
+                        disabled={isLoading}
+                        onClick={onClose}>
+                        No, keep it.
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                        disabled={isLoading}
+                        onClick={handleDelete}>
+                        I understand, delete this role
+                    </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

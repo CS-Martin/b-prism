@@ -1,16 +1,129 @@
 import { create } from 'zustand';
 
-interface RoleState {
-    name: string;
-    description: string;
-    setRoleName: (name: string) => void;
-    setRoleDescription: (description: string) => void;
+import { CreateRoleDto, ResponseDto, RoleDto } from '@dto';
+import { roleService } from '../../services/role.service';
+import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
+
+interface RoleStore {
+    roles: RoleDto[];
+    role: RoleDto | null;
+    isLoading: boolean;
+    error: string | null;
+
+    // Actions
+    displayRoles: (token: string) => Promise<void>;
+    fetchRoleById: (roleId: string, token: string | undefined) => Promise<void>;
+    createRole: (createRoleDto: CreateRoleDto, token: string) => Promise<void>;
+    updateRole: (id: string, createRoleDto: CreateRoleDto, author: string, token: string) => Promise<void>;
+    deleteRole: (roleId: string, author: string, token: string) => Promise<void>;
 }
 
-export const useRoleStore = create<RoleState>((set) => ({
-    name: '',
-    description: '',
+export const useRoleStore = create<RoleStore>((set, get) => ({
+    roles: [],
+    role: null,
+    isLoading: false,
+    error: null,
 
-    setRoleName: (name) => set({ name }),
-    setRoleDescription: (description) => set({ description }),
+    displayRoles: async (token: string) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response: ResponseDto<RoleDto[]> = await roleService.fetchAllRoles(token);
+            set({ roles: response.body });
+        } catch (error: any) {
+            set({ error: error.message });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    fetchRoleById: async (roleId: string, token: string | undefined) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const response: RoleDto = await roleService.fetchRoleById(roleId, token);
+            set({ role: response });
+        } catch (error: any) {
+            set({ error: error.message });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    createRole: async (createRoleDto: CreateRoleDto, token: string) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            await roleService.create(createRoleDto, token);
+
+            toast({
+                title: 'Role created successfully!',
+                description: `You have successfully created role ${createRoleDto.name}.`,
+                variant: 'success',
+            });
+        } catch (error: any) {
+            set({ error: error.message });
+
+            toast({
+                title: 'Error',
+                description: `Encountered an error: ${error}`,
+                variant: 'destructive',
+            });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    updateRole: async (id: string, createRoleDto: CreateRoleDto, author: string, token: string) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            await roleService.update(id, createRoleDto, author, token);
+
+            toast({
+                title: 'Role updated successfully!',
+                description: `You have successfully updated role ${createRoleDto.name}.`,
+                variant: 'success',
+            });
+        } catch (error: any) {
+            set({ error: error.message });
+
+            toast({
+                title: 'Error',
+                description: `Encountered an error: ${error}`,
+                variant: 'destructive',
+            });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    // Delete a role
+    deleteRole: async (roleId: string, author: string, token: string) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            await roleService.delete(roleId, author, token);
+
+            toast({
+                title: 'Role deleted successfully!',
+                description: `You have successfully deleted role ${roleId}.`,
+                variant: 'success',
+            });
+
+            set((state) => ({
+                roles: state.roles.filter((role) => role.id !== roleId),
+            }));
+        } catch (error: any) {
+            set({ error: error.message });
+
+            toast({
+                title: 'Error',
+                description: `Encountered an error: ${error}`,
+                variant: 'destructive',
+            });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
 }));
