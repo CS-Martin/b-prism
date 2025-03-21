@@ -9,9 +9,8 @@ import {
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/components/ui/alert-dialog';
 import { RoleDto } from '@dto';
-import { useDeleteRole } from 'apps/web-app/src/hooks/role.hook';
 import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
-import { AlertTriangle, TriangleAlert } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { Session } from 'next-auth';
 import React from 'react';
 
@@ -27,7 +26,7 @@ export const DeleteRoleDialog = ({ session, isOpen, onClose, role }: DeleteRoleD
 
     const handleDelete = async () => {
         if (role) {
-            await deleteRole(role?.id, session.user.given_name + ' ' + session.user.family_name, session.user.access_token);
+            await deleteRole(role, session.user.given_name + ' ' + session.user.family_name, session.user.access_token);
         }
         onClose();
     };

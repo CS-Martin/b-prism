@@ -1,7 +1,6 @@
 'use client';
 
 import { NextStepperButton, PreviousStepperButton, Stepper, StepperContent, StepperHeader } from 'apps/web-app/src/components/stepper';
-import { useUpdateRole } from 'apps/web-app/src/hooks/role.hook';
 import { AnimatePresence, motion } from 'framer-motion';
 import { notFound, useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';

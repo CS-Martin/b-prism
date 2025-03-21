@@ -1,7 +1,6 @@
 'use client';
 
 import {
-    Button,
     Label,
     Pagination,
     PaginationContent,
@@ -16,12 +15,10 @@ import {
     TableHeader,
     TableRow,
 } from '@b-prism/shadcn-ui/index';
-import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, SortingState, useReactTable } from '@tanstack/react-table';
+import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import { CreateRoleDatatableColumns } from './role-management-columns';
-import { useDisplayRoles } from 'apps/web-app/src/hooks/role.hook';
-import { Plus, PlusCircle } from 'lucide-react';
-import Link from 'next/link';
+import { PlusCircle } from 'lucide-react';
 import { Session } from 'next-auth';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
 import { DeleteRoleDialog } from './delete-role-dialog';
@@ -151,10 +148,6 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
     useEffect(() => {
         displayRoles(session.user.access_token);
     }, []);
-
-    if (isLoading) {
-        return <div className='p-5 mt-5 rounded-md prism-card-bg'>Loading...</div>;
-    }
 
     if (error) {
         return <div className='p-5 mt-5 rounded-md prism-card-bg'>Error: {error}</div>;

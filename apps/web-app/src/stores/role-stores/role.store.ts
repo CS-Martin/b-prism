@@ -15,7 +15,7 @@ interface RoleStore {
     fetchRoleById: (roleId: string, token: string | undefined) => Promise<void>;
     createRole: (createRoleDto: CreateRoleDto, token: string) => Promise<void>;
     updateRole: (id: string, createRoleDto: CreateRoleDto, author: string, token: string) => Promise<void>;
-    deleteRole: (roleId: string, author: string, token: string) => Promise<void>;
+    deleteRole: (role: RoleDto, author: string, token: string) => Promise<void>;
 }
 
 export const useRoleStore = create<RoleStore>((set, get) => ({
@@ -99,20 +99,20 @@ export const useRoleStore = create<RoleStore>((set, get) => ({
     },
 
     // Delete a role
-    deleteRole: async (roleId: string, author: string, token: string) => {
+    deleteRole: async (role: RoleDto, author: string, token: string) => {
         set({ isLoading: true, error: null });
 
         try {
-            await roleService.delete(roleId, author, token);
+            await roleService.delete(role.id, author, token);
 
             toast({
                 title: 'Role deleted successfully!',
-                description: `You have successfully deleted role ${roleId}.`,
+                description: `You have successfully deleted role ${role.name}.`,
                 variant: 'success',
             });
 
             set((state) => ({
-                roles: state.roles.filter((role) => role.id !== roleId),
+                roles: state.roles.filter((r) => r.id !== role.id),
             }));
         } catch (error: any) {
             set({ error: error.message });
