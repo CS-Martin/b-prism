@@ -1,13 +1,15 @@
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { RoleBasicInfoForm } from './basic-info-form';
 import { RolePermissionsForm } from './permissions-form';
+import { Session } from 'next-auth';
 
 interface RoleReviewDetailsProps {
     register: UseFormRegister<{ name: string; description: string; adminPermissions: any; mapPermissions: any }>;
     errors: FieldErrors<{ name: string; description: string; adminPermissions: any; mapPermissions: any }>;
+    session: Session;
 }
 
-export const RoleReviewDetails = ({ register, errors }: RoleReviewDetailsProps) => {
+export const RoleReviewDetails = ({ register, errors, session }: RoleReviewDetailsProps) => {
     return (
         <div className='relative p-5 border rounded-lg'>
             <div className='pb-3 border-b'>
@@ -20,6 +22,7 @@ export const RoleReviewDetails = ({ register, errors }: RoleReviewDetailsProps) 
                     <RoleBasicInfoForm
                         register={register}
                         errors={errors}
+                        session={session}
                         readOnly={true}
                     />
                 </div>

@@ -9,7 +9,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@b-prism/shadcn-ui/index';
-import { ChevronDown, History, MonitorCog } from 'lucide-react';
+import { ChevronDown, History, MonitorCog, UserCog } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SidebarLinkItem } from './sidebar-link-item';
 
@@ -19,6 +19,12 @@ const adminLinks = [
         label: 'Admin Dashboard',
         icon: MonitorCog,
         href: '/admin/dashboard',
+    },
+    {
+        id: 'role-management',
+        label: 'Role Management',
+        icon: UserCog,
+        href: '/admin/roles',
     },
     {
         id: 'activity-logs',

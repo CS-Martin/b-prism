@@ -1,41 +1,51 @@
 'use client';
 
-import { Label } from '@b-prism/shadcn-ui/index';
 import { NextStepperButton, PreviousStepperButton, Stepper, StepperContent, StepperHeader } from 'apps/web-app/src/components/stepper';
-import { useFetchRoleById, useUpdateRole } from 'apps/web-app/src/hooks/role.hook';
 import { AnimatePresence, motion } from 'framer-motion';
 import { notFound, useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { EditRoleForm } from './edit-role-form';
 import { FormProvider, useForm } from 'react-hook-form';
-import { CreateRoleDto, RoleDto } from '@dto';
-import { useSession } from 'next-auth/react';
+import { CreateRoleDto } from '@dto';
 import { ReviewUpdateDetails } from './review-details';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { isEqual } from 'lodash';
+import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
+import { Session } from 'next-auth';
 
-export const UpdateRoleContent = () => {
+interface UpdateRoleContentProps {
+    session: Session;
+}
+export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
     const router = useRouter();
-    const { data: session } = useSession();
     const params = useParams<{ roleId: string }>();
-    const { role, isLoading, error, fetchRoleById } = useFetchRoleById();
-    const { updateRole } = useUpdateRole();
+    const { role, isLoading, error, fetchRoleById, updateRole } = useRoleStore();
     const methods = useForm<{ name: string; description: string; adminPermissions: Record<string, boolean>; mapPermissions: Record<string, any> }>();
     const { handleSubmit } = methods;
     const { toast } = useToast();
-    const [originalRole, setOriginalRole] = useState<RoleDto | null>(null);
 
-    useEffect(() => {
-        fetchRoleById(params.roleId);
-    }, [params.roleId]);
+    if (!session?.user || !session?.user.access_token) {
+        toast({
+            title: 'Session expired',
+            description: 'Please login again to continue.',
+            variant: 'destructive',
+        });
 
-    if (isLoading) {
-        return <div>Loading...</div>;
+        notFound();
     }
 
+    useEffect(() => {
+        fetchRoleById(params.roleId, session?.user.access_token);
+    }, [params.roleId]);
+
     if (error) {
-        return <div>Erro</div>;
+        toast({
+            title: 'Error fetching role',
+            description: error,
+            variant: 'destructive',
+        });
+
+        return;
     }
 
     const steps = [
@@ -74,12 +84,14 @@ export const UpdateRoleContent = () => {
             }
         }
 
-        await updateRole(params.roleId, createRoleDto, session?.user.given_name + ' ' + session?.user.family_name);
+        await updateRole(params.roleId, createRoleDto, session?.user.given_name + ' ' + session?.user.family_name, session.user.access_token);
 
         if (!error) {
             router.push('/admin/roles');
         }
     };
+
+    console.log(isLoading);
 
     return (
         <>
@@ -106,6 +118,7 @@ export const UpdateRoleContent = () => {
                                             className='w-full md:w-[30%] lg:w-[20%]'
                                             completeTitle='Update Role'
                                             disabled={isLoading}
+                                            isLoading={isLoading}
                                             onClick={handleSubmit(onSubmit)}
                                         />
                                     </div>
@@ -113,8 +126,13 @@ export const UpdateRoleContent = () => {
                                 <StepperContent>
                                     {(step) => (
                                         <AnimatePresence mode='wait'>
-                                            {step.title === 'Edit Role Information' && <EditRoleForm role={role} />}
-                                            {step.title === 'Review Details' && <ReviewUpdateDetails />}
+                                            {step.title === 'Edit Role Information' && (
+                                                <EditRoleForm
+                                                    session={session}
+                                                    role={role}
+                                                />
+                                            )}
+                                            {step.title === 'Review Details' && <ReviewUpdateDetails session={session} />}
                                         </AnimatePresence>
                                     )}
                                 </StepperContent>

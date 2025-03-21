@@ -7,12 +7,13 @@ class RoleService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ROLE_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
-    public async create(createRoleDto: CreateRoleDto): Promise<ResponseDto<RoleDto>> {
+    public async create(createRoleDto: CreateRoleDto, token: string): Promise<ResponseDto<RoleDto>> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/roles`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(createRoleDto),
             });
@@ -42,13 +43,14 @@ class RoleService {
         }
     }
 
-    public async update(id: string, updateRoleDto: UpdateRoleDto, author: string): Promise<ResponseDto<RoleDto>> {
+    public async update(id: string, updateRoleDto: UpdateRoleDto, author: string, token: string): Promise<ResponseDto<RoleDto>> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/roles/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Author': author,
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(updateRoleDto),
             });
@@ -78,9 +80,51 @@ class RoleService {
         }
     }
 
-    public async fetchRoleById(roleId: string): Promise<RoleDto> {
+    public async delete(id: string, author: string, token: string): Promise<ResponseDto<RoleDto>> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/roles/${roleId}`);
+            const response = await fetch(`${this.API_BASE_URL}/roles/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Author': author,
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                let errorMessage = 'Failed to delete role';
+
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            return (await response.json()).body;
+        } catch (error: any) {
+            console.error('Warehouse creation error:', error);
+
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
+        }
+    }
+
+    public async fetchRoleById(roleId: string, token: string | undefined): Promise<RoleDto> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/roles/${roleId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
             if (!response.ok) {
                 let errorMessage = 'Failed to fetch roles';
@@ -107,12 +151,13 @@ class RoleService {
         }
     }
 
-    public async fetchAllRoles(): Promise<ResponseDto<RoleDto[]>> {
+    public async fetchAllRoles(token: string): Promise<ResponseDto<RoleDto[]>> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/roles`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
             });
 

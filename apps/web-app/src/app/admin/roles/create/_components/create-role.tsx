@@ -7,14 +7,18 @@ import { RoleReviewDetails } from './review-details';
 import { Label } from '@b-prism/shadcn-ui/index';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useCreateRole } from 'apps/web-app/src/hooks/role.hook';
 import { CreateRoleDto } from '@dto';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { Session } from 'next-auth';
+import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
 
-export const CreateRoleContent = () => {
-    const { data: session } = useSession();
+interface CreateRoleContentProps {
+    session: Session;
+}
+
+export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
     const router = useRouter();
+    const { isLoading, error, createRole } = useRoleStore();
 
     const steps = [
         {
@@ -48,7 +52,6 @@ export const CreateRoleContent = () => {
         control,
     } = methods;
 
-    const { isLoading, error, createRole } = useCreateRole();
     const onSubmit = async (data: { name: string; description: string; adminPermissions: Record<string, boolean>; mapPermissions: Record<string, any> }) => {
         const createRoleDto: CreateRoleDto = {
             name: data.name,
@@ -74,7 +77,7 @@ export const CreateRoleContent = () => {
             }
         }
 
-        await createRole(createRoleDto);
+        await createRole(createRoleDto, session.user.access_token);
 
         if (!error) {
             router.push('/admin/roles');
@@ -104,6 +107,7 @@ export const CreateRoleContent = () => {
                                     className='w-full md:w-[30%] lg:w-[20%]'
                                     completeTitle='Create Role'
                                     disabled={!isValid || isLoading}
+                                    isLoading={isLoading}
                                     onClick={handleSubmit(onSubmit)}
                                 />
                             </div>
@@ -126,6 +130,8 @@ export const CreateRoleContent = () => {
                                                     <RoleBasicInfoForm
                                                         register={register}
                                                         errors={errors}
+                                                        session={session}
+                                                        readOnly={false}
                                                     />
                                                 </motion.div>
                                             </div>
@@ -142,6 +148,7 @@ export const CreateRoleContent = () => {
                                                     <RoleBasicInfoForm
                                                         register={register}
                                                         errors={errors}
+                                                        session={session}
                                                     />
                                                 </div>
                                                 <div className='relative w-full md:h-[530px] md:w-[70%] md:py-5 md:px-3 md:overflow-y-auto'>
@@ -154,6 +161,7 @@ export const CreateRoleContent = () => {
                                         <RoleReviewDetails
                                             register={register}
                                             errors={errors}
+                                            session={session}
                                         />
                                     )}
                                 </AnimatePresence>

@@ -3,7 +3,7 @@ import { UserDto } from '@dto';
 import { LucideIcon } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useMapActionStore } from '../../stores/sidebar-map-action.store';
-import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 interface SidebarActionItemProps {
     id: string;
@@ -15,7 +15,6 @@ interface SidebarActionItemProps {
 
 export const SidebarActionItem = ({ id, label, icon: Icon, toastTitle, toastDescription }: SidebarActionItemProps) => {
     const { data: session } = useSession();
-    const { toast } = useToast();
     const { selectedAction, setSelectedAction } = useMapActionStore();
     const user = (session?.user ?? {}) as Partial<UserDto>;
 
@@ -33,7 +32,7 @@ export const SidebarActionItem = ({ id, label, icon: Icon, toastTitle, toastDesc
 
     return (
         <SidebarMenuItem>
-            <SidebarMenuButton className='flex justify-between hover:bg-transparent'>
+            <div className='flex justify-between hover:bg-transparent'>
                 <Icon style={{ height: '18px', width: '18px' }} />
                 <span className='flex-1'>{label}</span>
 
@@ -43,7 +42,7 @@ export const SidebarActionItem = ({ id, label, icon: Icon, toastTitle, toastDesc
                     onCheckedChange={handleCheckedChange}
                     className='data-[state=checked]:bg-blue-500 '
                 />
-            </SidebarMenuButton>
+            </div>
         </SidebarMenuItem>
     );
 };

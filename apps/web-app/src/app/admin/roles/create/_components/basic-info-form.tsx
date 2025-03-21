@@ -1,17 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage, Input, Label, Separator, Textarea } from '@b-prism/shadcn-ui/index';
 import { CalendarDays, UserRound } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { FieldErrors, SubmitHandler, useForm, UseFormRegister } from 'react-hook-form';
+import { Session } from 'next-auth';
+import { FieldErrors, UseFormRegister } from 'react-hook-form';
 
 interface RoleBasicInfoFormProps {
     register: UseFormRegister<{ name: string; description: string; adminPermissions: any; mapPermissions: any }>;
     errors: FieldErrors<{ name: string; description: string; adminPermissions: any; mapPermissions: any }>;
     readOnly?: boolean;
+    session: Session;
 }
 
-export const RoleBasicInfoForm = ({ register, errors, readOnly }: RoleBasicInfoFormProps) => {
-    const { data: session } = useSession();
-
+export const RoleBasicInfoForm = ({ register, errors, readOnly, session }: RoleBasicInfoFormProps) => {
     return (
         <div className='mt-5'>
             <div className=''>
