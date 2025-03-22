@@ -1,6 +1,7 @@
 'use client';
 
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
+import { motion } from 'framer-motion';
 
 import {
     TableBody,
@@ -98,13 +99,25 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
     const columns = createColumns(handleRoleChange);
 
     return (
-        <div className='p-5 mt-5 rounded-md prism-card-bg'>
-            <DataTable
-                columns={columns}
-                data={users}
-                handleRoleChange={handleRoleChange}
-            />
-        </div>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}>
+            <div className='p-5 mt-5 rounded-md prism-card-bg'>
+                <div className='flex flex-row items-center justify-between pb-5 mb-5 border-b'>
+                    <div>
+                        <h2 className='text-lg font-bold'>User Management</h2>
+                        <Label>Manage your existing roles to control access and permissions within the application.</Label>
+                    </div>
+                </div>
+                <DataTable
+                    columns={columns}
+                    data={users}
+                    handleRoleChange={handleRoleChange}
+                />
+            </div>
+        </motion.div>
     );
 };
 
@@ -125,10 +138,10 @@ export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: Da
     });
 
     return (
-        <div className='relative'>
-            <div className='h-[calc(100vh-150px)]'>
-                <Table className='w-full'>
-                    <TableHeader>
+        <div className='relative overflow-hidden h-[calc(100vh-230px)]'>
+            <div className='h-[85%] overflow-y-auto border rounded-lg'>
+                <Table>
+                    <TableHeader className='sticky top-0 z-10 border shadow-2xl prism-card-bg'>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {

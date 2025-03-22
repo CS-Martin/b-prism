@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { CreateRoleDto, ResponseDto, RoleDto } from '@dto';
+import { CreateRoleDto, ResponseDto, RoleDto, UpdateRoleDto } from '@dto';
 import { roleService } from '../../services/role.service';
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
@@ -14,7 +14,7 @@ interface RoleStore {
     displayRoles: (token: string) => Promise<void>;
     fetchRoleById: (roleId: string, token: string | undefined) => Promise<void>;
     createRole: (createRoleDto: CreateRoleDto, token: string) => Promise<void>;
-    updateRole: (id: string, createRoleDto: CreateRoleDto, author: string, token: string) => Promise<void>;
+    updateRole: (id: string, updateRoleDto: UpdateRoleDto, author: string, token: string) => Promise<void>;
     deleteRole: (role: RoleDto, author: string, token: string) => Promise<void>;
 }
 
@@ -74,15 +74,15 @@ export const useRoleStore = create<RoleStore>((set, get) => ({
         }
     },
 
-    updateRole: async (id: string, createRoleDto: CreateRoleDto, author: string, token: string) => {
+    updateRole: async (id: string, updateRoleDto: UpdateRoleDto, author: string, token: string) => {
         set({ isLoading: true, error: null });
 
         try {
-            await roleService.update(id, createRoleDto, author, token);
+            await roleService.update(id, updateRoleDto, author, token);
 
             toast({
                 title: 'Role updated successfully!',
-                description: `You have successfully updated role ${createRoleDto.name}.`,
+                description: `You have successfully updated role ${updateRoleDto.name}.`,
                 variant: 'success',
             });
         } catch (error: any) {

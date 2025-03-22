@@ -85,11 +85,12 @@ export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
     };
 
     return (
-        <FormProvider {...methods}>
-            <motion.div
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}>
+            <FormProvider {...methods}>
                 <div className='p-5 relative mt-5 rounded-md prism-card-bg md:h-[calc(100vh-100px)] overflow-y-hidden'>
                     <h1 className='mb-4 text-xl font-semibold'>Create New Role</h1>
                     <Stepper steps={steps}>
@@ -169,7 +170,7 @@ export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
                         </StepperContent>
                     </Stepper>
                 </div>
-            </motion.div>
-        </FormProvider>
+            </FormProvider>
+        </motion.div>
     );
 };
