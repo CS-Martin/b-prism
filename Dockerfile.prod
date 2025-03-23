@@ -23,7 +23,7 @@ RUN npx prisma generate
 COPY . .
 
 # Disable Nx Daemon
-ENV NX_DAEMON=false
+# ENV NX_DAEMON=false
 
 RUN npm run build:all
 

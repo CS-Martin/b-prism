@@ -29,7 +29,7 @@ model User {
   password     String
   office       String?
   position     String?
-  role         String   @default("default")
+  role         String   @default("Default")
   id_image_url String?
   refresh_token String?
   created_at    DateTime @default(now())
