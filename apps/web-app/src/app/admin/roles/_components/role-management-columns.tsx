@@ -1,8 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage, Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Label } from '@b-prism/shadcn-ui/index';
 import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import { DeleteRoleDialog } from './delete-role-dialog';
-import { useState } from 'react';
 import { RoleDto } from '@dto';
 
 export const CreateRoleDatatableColumns = (handleDeleteClick: (role: RoleDto) => void) => {

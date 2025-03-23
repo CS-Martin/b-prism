@@ -22,14 +22,14 @@ import { UserRole } from '@b-prism/enums';
 import { useEffect, useState } from 'react';
 import { useDisplayUsers } from '@b-prism/web-app/admin-dashboard-hooks';
 import { createColumns } from './columns';
-import { AppSidebar } from 'apps/web-app/src/components/sidebar';
 import { useRoleChange } from 'apps/web-app/src/hooks/role-change.hook';
 import { Session } from 'next-auth';
+import { UserDto } from '@dto';
+import { ChangeRoleDialog } from './change-role-dialog';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    handleRoleChange: (userId: string, newRole: UserRole) => void;
 }
 
 function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize: number; dataLength: number; table: ReturnType<typeof useReactTable<TData>> }) {
@@ -78,7 +78,8 @@ function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize:
 
 export const DataTableContent = ({ session }: { session: Session | null }) => {
     const { users, isLoading: isFetchingUser, fetchAllUsers } = useDisplayUsers(session?.user.access_token ?? null);
-    const { roleChange, isLoading: isChangingRole } = useRoleChange();
+    const [isRoleChangeDialogOpen, setIsRoleChangeDialogOpen] = useState<boolean>(false);
+    const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
 
     useEffect(() => {
         if (session?.user) {
@@ -86,14 +87,9 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
         }
     }, [session?.user]);
 
-    const handleRoleChange = async (userId: string, newRole: UserRole) => {
-        if (!session?.user.access_token) return;
-
-        const success = await roleChange(userId, newRole, session?.user.access_token);
-
-        if (success) {
-            fetchAllUsers();
-        }
+    const handleRoleChange = async (user: UserDto) => {
+        setSelectedUser(user);
+        setIsRoleChangeDialogOpen(true);
     };
 
     const columns = createColumns(handleRoleChange);
@@ -114,14 +110,22 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
                 <DataTable
                     columns={columns}
                     data={users}
-                    handleRoleChange={handleRoleChange}
                 />
+
+                {isRoleChangeDialogOpen && (
+                    <ChangeRoleDialog
+                        session={session}
+                        isOpen={isRoleChangeDialogOpen}
+                        onClose={() => setIsRoleChangeDialogOpen(false)}
+                        user={selectedUser}
+                    />
+                )}
             </div>
         </motion.div>
     );
 };
 
-export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const pageSize = 10;
 

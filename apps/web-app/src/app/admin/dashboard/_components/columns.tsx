@@ -31,7 +31,7 @@ const customRole = (rowA: Row<Partial<UserDto>>, rowB: Row<Partial<UserDto>>) =>
     return aIndex - bIndex;
 };
 
-export const createColumns = (handleRoleChange: (userId: string, newRole: UserRole) => void): ColumnDef<Partial<UserDto>>[] => [
+export const createColumns = (handleRoleChange: (user: UserDto) => void): ColumnDef<Partial<UserDto>>[] => [
     {
         accessorKey: 'given_name',
         header: ({ column }) => {
@@ -72,11 +72,14 @@ export const createColumns = (handleRoleChange: (userId: string, newRole: UserRo
                 <Button
                     variant='ghost'
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    className='rounded-sm'>
+                    className='flex items-center justify-between rounded-sm'>
                     Role
                     <ArrowUpDown className='w-4 h-4 ml-2' />
                 </Button>
             );
+        },
+        cell: ({ row }: { row: any }) => {
+            return <div className='max-w-sm whitespace-normal'>{row.original.role}</div>;
         },
         sortingFn: customRole,
     },
@@ -161,7 +164,7 @@ export const createColumns = (handleRoleChange: (userId: string, newRole: UserRo
     {
         accessorKey: 'actions',
         header: '',
-        cell: ({ row }) => {
+        cell: ({ row }: { row: any }) => {
             const user = row.original;
 
             return (
@@ -181,28 +184,11 @@ export const createColumns = (handleRoleChange: (userId: string, newRole: UserRo
                         <DropdownMenuContent
                             className='w-32 rounded-sm'
                             align='end'>
-                            {Object.values(UserRole).map(
-                                (role) =>
-                                    user.role !== role && (
-                                        <DropdownMenuItem
-                                            className='cursor-pointer'
-                                            key={role}
-                                            onClick={() => handleRoleChange(user.id ?? '', role)}>
-                                            {(() => {
-                                                switch (role) {
-                                                    case UserRole.admin:
-                                                        return 'Make Admin';
-                                                    case UserRole.verified:
-                                                        return 'Verify User';
-                                                    case UserRole.unverified:
-                                                        return 'Unverify User';
-                                                    default:
-                                                        return null;
-                                                }
-                                            })()}
-                                        </DropdownMenuItem>
-                                    ),
-                            )}
+                            <DropdownMenuItem
+                                className='cursor-pointer'
+                                onClick={() => handleRoleChange(user)}>
+                                Assign Role
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

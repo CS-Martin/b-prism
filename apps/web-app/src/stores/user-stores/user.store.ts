@@ -8,7 +8,6 @@ interface UserStore {
     error: string | null;
 
     fetchAllUsers: (token: string) => Promise<void>;
-    updateRole: (id: string, updateUserDto: UpdateUserDto, token: string) => Promise<void>;
 }
 
 export const useUserStore = create<UserStore>((set, get) => ({
@@ -22,18 +21,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
         try {
             const users: UserDto[] = await userService.fetchAllUsers(token);
             set({ users: users });
-        } catch (error: any) {
-            set({ error: error.message });
-        } finally {
-            set({ isLoading: false });
-        }
-    },
-
-    updateRole: async (id: string, updateUserDto: UpdateUserDto, token: string) => {
-        set({ isLoading: true, error: null });
-
-        try {
-            await userService.update(id, updateUserDto, token);
         } catch (error: any) {
             set({ error: error.message });
         } finally {

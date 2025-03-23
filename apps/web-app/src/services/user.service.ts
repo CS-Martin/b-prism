@@ -1,6 +1,5 @@
 import { UpdateUserDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
-import { ResponseDto } from '@dto';
 
 class UserService {
     private API_BASE_URL: string;
@@ -31,15 +30,16 @@ class UserService {
         }
     }
 
-    public async update(id: string, updateUserDto: UpdateUserDto, token: string): Promise<void> {
+    public async update(id: string, newRole: string, author: string, token: string): Promise<void> {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/users`, {
+            const response = await fetch(`${this.API_BASE_URL}/users/${id}`, {
                 method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    'X-Author': author,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(updateUserDto),
+                body: JSON.stringify({ role: newRole }),
             });
 
             if (!response.ok) {

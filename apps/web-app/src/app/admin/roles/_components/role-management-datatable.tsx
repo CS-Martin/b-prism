@@ -154,8 +154,8 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
         return <div className='p-5 mt-5 rounded-md prism-card-bg'>Error: {error}</div>;
     }
     const handleDeleteClick = async (role: RoleDto) => {
-        setIsDeleteDialogOpen(true);
         setSelectedRole(role);
+        setIsDeleteDialogOpen(true);
     };
 
     const columns = CreateRoleDatatableColumns(handleDeleteClick);
