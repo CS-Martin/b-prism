@@ -1,16 +1,53 @@
+import { ActivityLogServiceLibService } from '@b-prism/activity-log-service-lib';
 import { UserMongodbLibService } from '@b-prism/user-mongodb-lib';
 import { UpdateUserDto, UserDto } from '@dto';
 import { ResponseDto } from '@dto';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { UserServiceAbstractClass } from './user-service.abstract.class';
-import { User, UserRole } from '@prisma/client';
+import { User } from '@prisma/client';
 import { LoginProvider } from '@b-prism/types';
 
 @Injectable()
 export class UserServiceLibService implements UserServiceAbstractClass {
     private readonly logger = new Logger(UserServiceLibService.name);
 
-    constructor(private readonly userMongodbLibService: UserMongodbLibService) {}
+    constructor(
+        private readonly userMongodbLibService: UserMongodbLibService,
+        private readonly activityLogService: ActivityLogServiceLibService,
+    ) {}
+
+    async updateUserRole(id: string, newRole: string, author: string): Promise<void> {
+        this.logger.log('Updating role of user: ', id);
+
+        if (!id) {
+            console.error('User ID must be provided.');
+            throw new BadRequestException('User ID must be provided.');
+        }
+
+        if (!newRole) {
+            console.error('New role must be provided.');
+            throw new BadRequestException('New role must be provided.');
+        }
+
+        try {
+            const existingUser = (await this.findById(id)).body;
+
+            await this.userMongodbLibService.updateUserRole(id, newRole);
+
+            await this.activityLogService.create({
+                action: 'UPDATE',
+                description: `${author} successfully updated user ${existingUser.given_name + ' ' + existingUser.family_name} to role ${newRole}.`,
+                resource: 'User',
+                resource_id: id,
+                author: author,
+                timestamp: new Date(),
+            });
+        } catch (error) {
+            this.logger.error('Error updating user', error);
+
+            throw new BadRequestException('Failed to update user.');
+        }
+    }
 
     async updateRefreshToken(id: string, provider: LoginProvider, hashedRefreshToken: string): Promise<ResponseDto<UserDto>> {
         this.logger.log('Refreshing token for user with id: ', id);
@@ -89,7 +126,7 @@ export class UserServiceLibService implements UserServiceAbstractClass {
         userDto.password = user.password || '';
         userDto.office = user.office || '';
         userDto.position = user.position || '';
-        userDto.role = user.role || UserRole.unverified;
+        userDto.role = user.role;
         userDto.id_image_url = user.id_image_url || '';
         userDto.refresh_token = user.refresh_token || '';
         userDto.created_at = user.created_at;

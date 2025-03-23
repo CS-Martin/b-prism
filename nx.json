@@ -15,12 +15,24 @@
         ],
         "sharedGlobals": []
     },
-    "nxCloud": { "accessToken": "${NX_CLOUD_ACCESS_TOKEN}" },
+    "nxCloud": {
+        "accessToken": "${NX_CLOUD_ACCESS_TOKEN}"
+    },
     "plugins": [
-        { "plugin": "@nx/next/plugin", "options": { "startTargetName": "start", "buildTargetName": "build", "devTargetName": "dev", "serveStaticTargetName": "serve-static" } },
+        {
+            "plugin": "@nx/next/plugin",
+            "options": {
+                "startTargetName": "start",
+                "buildTargetName": "build",
+                "devTargetName": "dev",
+                "serveStaticTargetName": "serve-static"
+            }
+        },
         {
             "plugin": "@nx/jest/plugin",
-            "options": { "targetName": "test" },
+            "options": {
+                "targetName": "test"
+            },
             "exclude": [
                 "apps/authentication-service-e2e/**/*",
                 "apps/verification-service-e2e/**/*",
@@ -33,8 +45,20 @@
                 "apps/map-service/road-network-service-e2e/**/*"
             ]
         },
-        { "plugin": "@nx/eslint/plugin", "options": { "targetName": "lint" } },
-        { "plugin": "@nx/webpack/plugin", "options": { "buildTargetName": "build", "serveTargetName": "serve", "previewTargetName": "preview" } },
+        {
+            "plugin": "@nx/eslint/plugin",
+            "options": {
+                "targetName": "lint"
+            }
+        },
+        {
+            "plugin": "@nx/webpack/plugin",
+            "options": {
+                "buildTargetName": "build",
+                "serveTargetName": "serve",
+                "previewTargetName": "preview"
+            }
+        },
         {
             "plugin": "@nx/vite/plugin",
             "options": {
@@ -46,9 +70,30 @@
                 "typecheckTargetName": "typecheck"
             }
         },
-        { "plugin": "@nx/playwright/plugin", "options": { "targetName": "e2e" } }
+        {
+            "plugin": "@nx/playwright/plugin",
+            "options": {
+                "targetName": "e2e"
+            }
+        }
     ],
-    "generators": { "@nx/next": { "application": { "style": "tailwind", "linter": "eslint" } }, "@nx/react": { "library": { "unitTestRunner": "vitest" } } },
-    "targetDefaults": { "e2e-ci--**/*": { "dependsOn": ["^build"] } },
+    "generators": {
+        "@nx/next": {
+            "application": {
+                "style": "tailwind",
+                "linter": "eslint"
+            }
+        },
+        "@nx/react": {
+            "library": {
+                "unitTestRunner": "vitest"
+            }
+        }
+    },
+    "targetDefaults": {
+        "e2e-ci--**/*": {
+            "dependsOn": ["^build"]
+        }
+    },
     "nxCloudId": "67d3ab40afea26bfaceaf1be"
 }

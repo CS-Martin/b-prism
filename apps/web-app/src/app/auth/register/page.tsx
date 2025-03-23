@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '../../../services/authentication.service';
-import { UserRole } from '@prisma/client';
 import { Input } from '@b-prism/shadcn-ui/index';
 import { PrismButton } from 'apps/web-app/src/components/prism-button';
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
@@ -20,7 +19,7 @@ export default function RegisterPage() {
         password: '',
         office: '',
         position: '',
-        role: UserRole.unverified,
+        role: '',
         created_at: new Date(),
         updated_at: new Date(),
     });

@@ -1,4 +1,3 @@
-import { UserRole } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import type { LoginProvider } from '@b-prism/types';
 
@@ -27,8 +26,8 @@ export class UserDto {
     @ApiProperty()
     position?: string | null;
 
-    @ApiProperty({ enum: UserRole })
-    role!: UserRole;
+    @ApiProperty()
+    role!: string;
 
     @ApiProperty()
     id_image_url?: string | null;

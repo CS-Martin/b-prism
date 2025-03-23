@@ -24,6 +24,7 @@ import { PrismButton } from 'apps/web-app/src/components/prism-button';
 import { DeleteRoleDialog } from './delete-role-dialog';
 import { RoleDto } from '@dto';
 import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
+import { motion } from 'framer-motion';
 
 interface RoleManagementDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -153,45 +154,51 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
         return <div className='p-5 mt-5 rounded-md prism-card-bg'>Error: {error}</div>;
     }
     const handleDeleteClick = async (role: RoleDto) => {
-        setIsDeleteDialogOpen(true);
         setSelectedRole(role);
+        setIsDeleteDialogOpen(true);
     };
 
     const columns = CreateRoleDatatableColumns(handleDeleteClick);
 
     return (
-        <div className='p-5 mt-5 rounded-md prism-card-bg h'>
-            <div className='flex flex-row items-center justify-between pb-5 mb-5 border-b'>
-                <div>
-                    <h2 className='text-lg font-bold'>Role Management</h2>
-                    <Label>Manage your existing roles to control access and permissions within the application.</Label>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}>
+            <div className='p-5 mt-5 rounded-md prism-card-bg h'>
+                <div className='flex flex-row items-center justify-between pb-5 mb-5 border-b'>
+                    <div>
+                        <h2 className='text-lg font-bold'>Role Management</h2>
+                        <Label>Manage your existing roles to control access and permissions within the application.</Label>
+                    </div>
+                    <div>
+                        <PrismButton
+                            type='button'
+                            label='Create New Role'
+                            isLoading={isLoading}
+                            icon={
+                                <PlusCircle
+                                    height={24}
+                                    width={24}
+                                />
+                            }
+                            link={'/admin/roles/create'}
+                            style='bg-blue-500 hover:bg-blue-600 flex text-white'
+                        />
+                    </div>
                 </div>
-                <div>
-                    <PrismButton
-                        type='button'
-                        label='Create New Role'
-                        isLoading={isLoading}
-                        icon={
-                            <PlusCircle
-                                height={24}
-                                width={24}
-                            />
-                        }
-                        link={'/admin/roles/create'}
-                        style='bg-blue-500 hover:bg-blue-600 flex text-white'
-                    />
-                </div>
+                <RoleManagementDataTable
+                    columns={columns}
+                    data={roles}
+                />
+                <DeleteRoleDialog
+                    session={session}
+                    isOpen={isDeleteDialogOpen}
+                    onClose={() => setIsDeleteDialogOpen(false)}
+                    role={selectedRole}
+                />
             </div>
-            <RoleManagementDataTable
-                columns={columns}
-                data={roles}
-            />
-            <DeleteRoleDialog
-                session={session}
-                isOpen={isDeleteDialogOpen}
-                onClose={() => setIsDeleteDialogOpen(false)}
-                role={selectedRole}
-            />
-        </div>
+        </motion.div>
     );
 };
