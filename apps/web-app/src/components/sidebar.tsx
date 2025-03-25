@@ -15,7 +15,7 @@ export function AppSidebar() {
 
     return (
         <Sidebar
-            variant='inset'
+            variant='sidebar'
             collapsible='icon'>
             <SidebarContent>
                 <SidebarHeaderComponent />
