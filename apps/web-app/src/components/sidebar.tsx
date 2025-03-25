@@ -7,13 +7,11 @@ import { SidebarGeneralLinks } from './sidebar-components/sidebar-general-links'
 import { SidebarAdminLinks } from './sidebar-components/sidebar-admin-links';
 import { SidebarMapActions } from './sidebar-components/sidebar-map-actions';
 import { SidebarFooterComponent } from './sidebar-components/sidebar-footer';
-import { Session } from 'next-auth';
 
-interface AppSirebarProps {
-    session: Session;
-}
-export function AppSidebar({ session }: AppSirebarProps) {
+export function AppSidebar() {
+    const { data: session } = useSession();
     const { state } = useSidebar();
+    const user = session?.user;
 
     return (
         <Sidebar
@@ -30,10 +28,10 @@ export function AppSidebar({ session }: AppSirebarProps) {
 
                 <hr className={`border-t ${state === 'collapsed' ? 'mx-[20%]' : 'mx-[5%]'}`} />
 
-                <SidebarMapActions />
+                {session && <SidebarMapActions session={session} />}
             </SidebarContent>
 
-            <SidebarFooterComponent user={session.user} />
+            <SidebarFooterComponent user={user} />
         </Sidebar>
     );
 }

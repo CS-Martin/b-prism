@@ -14,13 +14,7 @@ interface SidebarActionItemProps {
 }
 
 export const SidebarActionItem = ({ id, label, icon: Icon, toastTitle, toastDescription }: SidebarActionItemProps) => {
-    const { data: session } = useSession();
     const { selectedAction, setSelectedAction } = useMapActionStore();
-    const user = (session?.user ?? {}) as Partial<UserDto>;
-
-    if (user.role !== 'admin' && user.role !== 'verified') {
-        return null;
-    }
 
     const handleCheckedChange = () => {
         setSelectedAction(selectedAction === id ? null : id);

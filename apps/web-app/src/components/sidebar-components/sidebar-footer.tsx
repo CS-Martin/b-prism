@@ -23,7 +23,7 @@ interface SidebarFooterProps {
 
 export const SidebarFooterComponent = ({ user }: SidebarFooterProps) => {
     return (
-        <div className=' p-3'>
+        <div className='p-3 '>
             <div className='flex items-center justify-between p-5 border-2 border-gray-400 rounded-xl border-dashed group-data-[state=collapsed]:hidden'>
                 <span className='group-data-[state=expanded]:inline'>Dark Mode</span>
                 <ModeToggle />
@@ -34,8 +34,8 @@ export const SidebarFooterComponent = ({ user }: SidebarFooterProps) => {
                         <DropdownMenuTrigger asChild>
                             <SidebarMenuButton className='flex items-center h-auto group-data-[state=collapsed]:!p-0'>
                                 <Avatar style={{ borderRadius: '3px' }}>
-                                    <AvatarImage src='https://github.com/shadcn.png' />
-                                    <AvatarFallback>{user ? `${user?.given_name?.[0]}${user?.family_name?.[0]}` : 'GE'}</AvatarFallback>
+                                    <AvatarImage src='' />
+                                    <AvatarFallback className='rounded-md'>{user ? `${user?.given_name?.charAt(0)}${user?.family_name?.charAt(0)}` : 'GE'}</AvatarFallback>
                                 </Avatar>
                                 <span className='group-data-[state=collapsed]:hidden ml-2'>{`${user?.given_name || 'Guest'} ${user?.family_name || 'User'}`}</span>
                                 <ChevronUp className='ml-auto group-data-[state=collapsed]:hidden' />
@@ -53,7 +53,7 @@ export const SidebarFooterComponent = ({ user }: SidebarFooterProps) => {
                                     <>
                                         <Link
                                             href='/api/auth/signout'
-                                            className='w-full flex items-center space-x-2'>
+                                            className='flex items-center w-full space-x-2'>
                                             <LogOut />
                                             <span>Log out</span>
                                         </Link>
@@ -62,7 +62,7 @@ export const SidebarFooterComponent = ({ user }: SidebarFooterProps) => {
                                     <>
                                         <Link
                                             href='/auth/login'
-                                            className='w-full flex items-center space-x-2'>
+                                            className='flex items-center w-full space-x-2'>
                                             <LogIn />
                                             <span>Sign in</span>
                                         </Link>
