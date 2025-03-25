@@ -1,7 +1,6 @@
 # This CD Workflow is suspended for not
 # It will be re-enabled once we upgrade our EC2 instance
 
-# CD Annotation:
 # The self-hosted runner: ip-172-31-17-165 lost communication with the server.
 # Verify the machine is running and has a healthy network connection.
 # Anything in your workflow that terminates the runner process, starves it

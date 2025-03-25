@@ -10,6 +10,7 @@ declare module 'next-auth' {
             office?: string;
             position?: string;
             role?: string;
+            permissions: string[];
             id_image_url?: string;
             access_token: string;
             refresh_token?: string;
@@ -24,6 +25,7 @@ declare module 'next-auth' {
         office?: string;
         position?: string;
         role?: string;
+        permissions: string[];
         id_image_url?: string;
         access_token?: string;
         refresh_token?: string;
@@ -39,6 +41,7 @@ declare module 'next-auth/jwt' {
         office?: string;
         position?: string;
         role?: string;
+        permissions: string[];
         id_image_url?: string;
         access_token?: string;
         refresh_token?: string;

@@ -5,13 +5,14 @@ import { FixRoadModal } from './fix-road-modal';
 import { DestroyRoadModal } from './destroy-road-modal';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 import { useMapStore } from 'apps/web-app/src/stores/map-stores/mapbox.store';
+import { Session } from 'next-auth';
 
 interface RenderRoadNetworkProps {
     visibility: { roadNetwork: boolean };
+    session?: Session | null;
 }
 
-export const RenderRoadNetwork = ({ visibility }: RenderRoadNetworkProps) => {
-    const { data: session } = useSession();
+export const RenderRoadNetwork = ({ visibility, session }: RenderRoadNetworkProps) => {
     const { current: map } = useMap();
 
     const { fixedRoads, damagedRoads, fetchDamagedRoads, fetchFixedRoadsByBounds } = useRoadNetworkStore();
@@ -134,11 +135,13 @@ export const RenderRoadNetwork = ({ visibility }: RenderRoadNetworkProps) => {
                     <FixRoadModal
                         setIsDialogOpen={setIsDialogOpen}
                         roadId={selectedRoadId}
+                        session={session}
                     />
                 ) : (
                     <DestroyRoadModal
                         setIsDialogOpen={setIsDialogOpen}
                         roadId={selectedRoadId}
+                        session={session}
                     />
                 ))}
         </>

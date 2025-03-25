@@ -5,9 +5,9 @@
     "scripts": {
         "prepare": "husky install",
         "build": "npm run build:all",
-        "build:all": "concurrently \"npx nx run activity-log-service:build\" \"npx nx run authentication-service:build\" \"npx nx run warehouse-service:build\" \"npx nx run dispensing-point-service:build\" \"npx nx run road-network-service:build\" \"npx nx run rescue-post-service:build\" \"npx nx run user-service:build\" \"npx nx run verification-service:build\" \"npx nx run mailer-service:build\"",
-        "start:all:dev": "concurrently \"npx nx run activity-log-service:serve --configuration=development\" \"npx nx run authentication-service:serve --configuration=development\" \"npx nx run warehouse-service:serve --configuration=development\" \"npx nx run dispensing-point-service:serve --configuration=development\" \"npx nx run road-network-service:serve --configuration=development\" \"npx nx run rescue-post-service:serve --configuration=development\" \"npx nx run user-service:serve --configuration=development\" \"npx nx run verification-service:serve --configuration=development\" \"npx nx run mailer-service:serve --configuration=development\"",
-        "start:all:production": "concurrently \"npm run start:activity-log\" \"npm run start:mailer\" \"npm run start:authentication\" \"npm run start:warehouse\" \"npm run start:dispensing-point\" \"npm run start:road-network\" \"npm run start:rescue-post\" \"npm run start:user\" \"npm run start:verification\"",
+        "build:all": "concurrently \"npx nx run activity-log-service:build\" \"npx nx run role-service:build\" \"npx nx run authentication-service:build\" \"npx nx run warehouse-service:build\" \"npx nx run dispensing-point-service:build\" \"npx nx run road-network-service:build\" \"npx nx run rescue-post-service:build\" \"npx nx run user-service:build\" \"npx nx run verification-service:build\" \"npx nx run mailer-service:build\"",
+        "start:all:dev": "concurrently \"npx nx run activity-log-service:serve --configuration=development\" \"npx nx run role-service:serve --configuration=development\"  \"npx nx run authentication-service:serve --configuration=development\" \"npx nx run warehouse-service:serve --configuration=development\" \"npx nx run dispensing-point-service:serve --configuration=development\" \"npx nx run road-network-service:serve --configuration=development\" \"npx nx run rescue-post-service:serve --configuration=development\" \"npx nx run user-service:serve --configuration=development\" \"npx nx run verification-service:serve --configuration=development\" \"npx nx run mailer-service:serve --configuration=development\"",
+        "start:all:production": "concurrently \"npm run start:activity-log\" \"npm run start:mailer\" \"npm run start:role-service\" \"npm run start:authentication\" \"npm run start:warehouse\" \"npm run start:dispensing-point\" \"npm run start:road-network\" \"npm run start:rescue-post\" \"npm run start:user\" \"npm run start:verification\"",
         "start:activity-log": "node dist/apps/activity-log-service/main.js",
         "start:authentication": "node dist/apps/authentication-service/main.js",
         "start:warehouse": "node dist/apps/map-service/warehouse-service/main.js",
@@ -17,6 +17,7 @@
         "start:user": "node dist/apps/user-service/main.js",
         "start:verification": "node dist/apps/verification-service/main.js",
         "start:mailer": "node dist/apps/mailer-service/main.js",
+        "start:role": "node dist/apps/role-service/main.js",
         "vercel-build": "npx prisma db push && npx prisma generate && npx nx build web-app --prod"
     },
     "private": true,
@@ -49,6 +50,7 @@
         "@radix-ui/react-menubar": "^1.1.6",
         "@radix-ui/react-navigation-menu": "^1.2.1",
         "@radix-ui/react-scroll-area": "^1.2.1",
+        "@radix-ui/react-select": "^2.1.6",
         "@radix-ui/react-separator": "^1.1.0",
         "@radix-ui/react-slot": "^1.1.0",
         "@radix-ui/react-switch": "^1.1.1",

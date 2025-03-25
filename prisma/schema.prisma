@@ -8,12 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  admin
-  unverified
-  verified
-}
-
 enum Type {
   warehouse
   dispensing_point
@@ -35,11 +29,22 @@ model User {
   password     String
   office       String?
   position     String?
-  role         UserRole @default(unverified)
+  role         String   @default("Default")
   id_image_url String?
   refresh_token String?
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
+}
+
+model Role {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  description String?
+  permissions String[]
+  is_default  Boolean? @default(false)
+  created_by  String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 }
 
 model Warehouse {

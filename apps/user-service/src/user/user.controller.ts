@@ -1,9 +1,9 @@
 import { UserServiceLibService } from '@b-prism/user-service-lib';
-import { UserDto } from '@dto';
+import { UpdateUserDto, UserDto } from '@dto';
 import { ResponseDto } from '@dto';
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Put, Query, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiQuery, ApiSchema, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'libs/backend/app-services/guards-service-lib/src/lib/jwt-auth.guard';
 
 @ApiTags('User Endpoints')
@@ -21,5 +21,18 @@ export class UserController {
         } else {
             return this.userServiceLibService.findAll();
         }
+    }
+
+    @Put(':id')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                role: { type: 'string', example: 'admin' },
+            },
+        },
+    })
+    updateUserRole(@Param('id') id: string, @Body('role') role: string, @Headers('X-Author') author: string) {
+        return this.userServiceLibService.updateUserRole(id, role, author);
     }
 }

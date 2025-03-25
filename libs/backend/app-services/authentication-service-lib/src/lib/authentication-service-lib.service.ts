@@ -5,7 +5,7 @@ import { ChangePasswordDto, CreateActivityLogDto, CreateMailerDto, CreateUserDto
 import { AuthenticationServiceAbstractClass } from './authentication-service.abstract.class';
 import { comparePassword, hashPassword, isRefreshTokenExpired } from '@b-prism/lib-utils';
 import { UserServiceLibService } from '@b-prism/user-service-lib';
-import { Mailer, User, UserRole } from '@prisma/client';
+import { Mailer, User } from '@prisma/client';
 import { ActivityLogServiceLibService } from '@b-prism/activity-log-service-lib';
 import { MailerServiceLibService } from '@b-prism/mailer-service-lib';
 
@@ -476,7 +476,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         userDto.password = user.password ?? '';
         userDto.office = user.office ?? '';
         userDto.position = user.position ?? '';
-        userDto.role = user.role ?? UserRole.unverified;
+        userDto.role = user.role;
         userDto.id_image_url = user.id_image_url ?? '';
         userDto.created_at = user.created_at;
         userDto.updated_at = user.updated_at;
@@ -494,7 +494,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         userDto.email = user.email ?? '';
         userDto.office = user.office ?? '';
         userDto.position = user.position ?? '';
-        userDto.role = user.role ?? UserRole.unverified;
+        userDto.role = user.role;
         userDto.id_image_url = user.id_image_url;
         userDto.refresh_token = user.refresh_token ?? '';
         userDto.created_at = user.created_at;

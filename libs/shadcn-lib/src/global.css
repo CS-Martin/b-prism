@@ -8,7 +8,7 @@
 
 @layer base {
     :root {
-        --background: 0 0% 100%;
+        --background: 240 100% 99%;
         --foreground: 240 10% 3.9%;
         --card: 0 0% 100%;
         --card-foreground: 240 10% 3.9%;
@@ -29,11 +29,11 @@
         --ring: 240 5.9% 10%;
         --radius: 0.5rem !important;
 
-        --prism-card-bg: #fafafa;
+        --prism-card-bg: 0 0% 100%;
         --prism-card-border: rgb(228, 228, 231);
         --prism-card-hover: #f4f4f4;
 
-        --sidebar-background: 0 0% 98%;
+        --sidebar-background: 0 0% 100%;
         --sidebar-foreground: 240 5.3% 26.1%;
         --sidebar-primary: 240 5.9% 10%;
         --sidebar-primary-foreground: 0 0% 98%;
@@ -291,21 +291,19 @@ div.mapboxgl-ctrl-geocoder {
     width: 100%;
 }
 
-/* .spline-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle, transparent, rgba(0, 0, 0, 0.815));
-    pointer-events: none;
-} */
+::-webkit-scrollbar {
+    width: 8px;
+}
 
-/* .mouse_scroll {
-    display: absolute;
-    margin: 0 auto;
-    width: 24px;
-    height: 20;
-    bottom: 100px;
-} */
+::-webkit-scrollbar-track {
+    background-color: #818181;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2f2f2f;
+    border-radius: 500px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(39, 39, 42);
+}

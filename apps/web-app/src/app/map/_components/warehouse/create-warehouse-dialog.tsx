@@ -17,14 +17,13 @@ import {
     TabsTrigger,
     Textarea,
 } from '@b-prism/shadcn-ui/index';
-import { CreateWarehouseDto, UserDto, WarehouseDto } from '@dto';
-import { useSession } from 'next-auth/react';
+import { CreateWarehouseDto, WarehouseDto } from '@dto';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import { useCreateWarehouse, useGetAddress } from 'apps/web-app/src/hooks/map.hook';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { BadRequestException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import { Session } from 'next-auth';
 import { CoordinatesType } from '@b-prism/types';
 import { useWarehouseStore } from 'apps/web-app/src/stores/map-stores/warehouse.store';
@@ -40,8 +39,6 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coord
     const { toast } = useToast();
     const { createWarehouse } = useCreateWarehouse();
     const { getAddress, address } = useGetAddress();
-
-    const fetchAllWarehouses = useWarehouseStore((state) => state.fetchAllWarehouses);
 
     const user = session?.user;
 
@@ -108,8 +105,8 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coord
 
     const onSubmit = async (data: CreateWarehouseDto) => {
         try {
-            if (!user) {
-                throw new BadRequestException(`You don't have permission to create a warehouse.`);
+            if (!user || !user.permissions.includes('WAREHOUSE_PERMISSION')) {
+                throw new UnauthorizedException('Unauthorized');
             }
 
             const formattedData = {
@@ -130,17 +127,28 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coord
 
             setIsOpen(false);
             reset();
-        } catch (error) {
-            console.error('Error creating warehouse:', error);
+        } catch (error: unknown) {
+            console.error('Error updating warehouse:', error);
+
+            let errorMessage = 'An unexpected error occurred. Please try again.';
+
+            if (error instanceof UnauthorizedException) {
+                errorMessage = error.message;
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            } else if (typeof error === 'string') {
+                errorMessage = error;
+            }
+
             toast({
-                title: 'An error occured',
-                description: (error as Error).message,
+                title: 'Error',
+                description: errorMessage,
                 variant: 'destructive',
             });
         }
     };
 
-    if (!isOpen) return;
+    if (!isOpen) return null;
 
     return (
         <Dialog

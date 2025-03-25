@@ -31,6 +31,8 @@
             "@b-prism/rescue-post-service-lib": ["libs/backend/app-services/rescue-post-service-lib/src/index.ts"],
             "@b-prism/road-network-mongodb-lib": ["libs/backend/database-services/road-network-mongodb-lib/src/index.ts"],
             "@b-prism/road-network-service-lib": ["libs/backend/app-services/road-network-service-lib/src/index.ts"],
+            "@b-prism/role-mongodb-lib": ["libs/backend/database-services/role-mongodb-lib/src/index.ts"],
+            "@b-prism/role-service-lib": ["libs/backend/app-services/role-service-lib/src/index.ts"],
             "@b-prism/shadcn-lib": ["libs/shadcn-lib/src/index.ts"],
             "@b-prism/shadcn-lib/*": ["libs/shadcn-lib/src/*"],
             "@b-prism/shadcn-ui": ["libs/shadcn-ui/src/components"],

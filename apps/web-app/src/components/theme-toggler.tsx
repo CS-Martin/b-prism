@@ -17,9 +17,7 @@ export function ThemeToggler({ className }: ThemeTogglerProps) {
     return (
         <div className={`${className} `}>
             <DropdownMenu>
-                <DropdownMenuTrigger
-                    className='text-black bg-white'
-                    asChild>
+                <DropdownMenuTrigger asChild>
                     <Button
                         variant='outline'
                         size='icon'>

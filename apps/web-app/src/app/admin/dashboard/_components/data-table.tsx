@@ -1,6 +1,7 @@
 'use client';
 
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
+import { motion } from 'framer-motion';
 
 import {
     TableBody,
@@ -21,14 +22,14 @@ import { UserRole } from '@b-prism/enums';
 import { useEffect, useState } from 'react';
 import { useDisplayUsers } from '@b-prism/web-app/admin-dashboard-hooks';
 import { createColumns } from './columns';
-import { AppSidebar } from 'apps/web-app/src/components/sidebar';
 import { useRoleChange } from 'apps/web-app/src/hooks/role-change.hook';
 import { Session } from 'next-auth';
+import { UserDto } from '@dto';
+import { ChangeRoleDialog } from './change-role-dialog';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    handleRoleChange: (userId: string, newRole: UserRole) => void;
 }
 
 function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize: number; dataLength: number; table: ReturnType<typeof useReactTable<TData>> }) {
@@ -77,7 +78,8 @@ function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize:
 
 export const DataTableContent = ({ session }: { session: Session | null }) => {
     const { users, isLoading: isFetchingUser, fetchAllUsers } = useDisplayUsers(session?.user.access_token ?? null);
-    const { roleChange, isLoading: isChangingRole } = useRoleChange();
+    const [isRoleChangeDialogOpen, setIsRoleChangeDialogOpen] = useState<boolean>(false);
+    const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
 
     useEffect(() => {
         if (session?.user) {
@@ -85,30 +87,46 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
         }
     }, [session?.user]);
 
-    const handleRoleChange = async (userId: string, newRole: UserRole) => {
-        if (!session?.user.access_token) return;
-
-        const success = await roleChange(userId, newRole, session?.user.access_token);
-
-        if (success) {
-            fetchAllUsers();
-        }
+    const handleRoleChange = async (user: UserDto) => {
+        setSelectedUser(user);
+        setIsRoleChangeDialogOpen(true);
     };
 
     const columns = createColumns(handleRoleChange);
 
     return (
-        <div className='p-5 mt-5 rounded-md prism-card-bg'>
-            <DataTable
-                columns={columns}
-                data={users}
-                handleRoleChange={handleRoleChange}
-            />
-        </div>
+        <motion.div
+            className='px-3'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}>
+            <div className='p-5 border shadow-sm rounded-xl bg-sidebar'>
+                <div className='flex flex-row items-center justify-between pb-5 mb-5 border-b'>
+                    <div>
+                        <h2 className='text-lg font-bold'>User Management</h2>
+                        <Label>Manage your existing roles to control access and permissions within the application.</Label>
+                    </div>
+                </div>
+                <DataTable
+                    columns={columns}
+                    data={users}
+                />
+
+                {isRoleChangeDialogOpen && (
+                    <ChangeRoleDialog
+                        session={session}
+                        isOpen={isRoleChangeDialogOpen}
+                        onClose={() => setIsRoleChangeDialogOpen(false)}
+                        user={selectedUser}
+                    />
+                )}
+            </div>
+        </motion.div>
     );
 };
 
-export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const pageSize = 10;
 
@@ -125,10 +143,10 @@ export function DataTable<TData, TValue>({ columns, data, handleRoleChange }: Da
     });
 
     return (
-        <div className='relative'>
-            <div className='h-[calc(100vh-150px)]'>
-                <Table className='w-full'>
-                    <TableHeader>
+        <div className='relative overflow-hidden h-[calc(100vh-230px)]'>
+            <div className='h-[85%] overflow-y-auto border rounded-lg'>
+                <Table>
+                    <TableHeader className='sticky top-0 z-10 bg-slate-100'>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
