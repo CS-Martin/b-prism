@@ -26,9 +26,9 @@ export const ADMIN_PERMISSIONS = [
                 value: false,
             },
             {
-                id: 'NOTIFICATION_PERMISSION',
-                label: 'Receive Notifications',
-                description: 'Allows receiving notifications about system updates and changes',
+                id: 'USER_PERMISSION',
+                label: 'User Management',
+                description: 'Allows updating user information and managing user accounts',
                 value: false,
             },
         ],

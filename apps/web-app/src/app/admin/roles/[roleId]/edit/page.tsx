@@ -7,7 +7,7 @@ export default async function EditRolePage() {
     const session = await getServerSession(options);
 
     return (
-        <main className='px-3'>
+        <main>
             <Topbar
                 items={[
                     { label: 'Admin', href: '/' },
@@ -16,7 +16,7 @@ export default async function EditRolePage() {
                 ]}
             />
 
-            {session && session.user.role === 'admin' ? (
+            {session && session.user.permissions.includes('ROLE_PERMISSION') ? (
                 <UpdateRoleContent session={session} />
             ) : (
                 <div className='flex items-center justify-center h-screen'>

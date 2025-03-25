@@ -12,6 +12,7 @@ import { ReviewUpdateDetails } from './review-details';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
 import { Session } from 'next-auth';
+import { Label } from '@b-prism/shadcn-ui/index';
 
 interface UpdateRoleContentProps {
     session: Session;
@@ -97,11 +98,13 @@ export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
         <>
             {role && (
                 <motion.div
+                    className='px-5 h-fit'
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 1 }}
                     transition={{ duration: 0.5 }}>
-                    <div className='p-5 relative mt-5 rounded-md prism-card-bg md:h-[calc(100vh-100px)] overflow-y-hidden'>
-                        <h1 className='mb-4 text-xl font-semibold'>Create New Role</h1>
+                    <div className='p-5 relative rounded-md bg-sidebar border shadow-sm md:h-[calc(100vh-100px)]'>
+                        <h1 className='mb-2 text-xl font-semibold'>Edit Role</h1>
+                        <Label>Please fill in the details below to update the role.</Label>
                         <FormProvider {...methods}>
                             <Stepper steps={steps}>
                                 <div className='flex flex-col justify-between md:flex-row'>

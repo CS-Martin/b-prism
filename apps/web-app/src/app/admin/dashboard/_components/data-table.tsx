@@ -96,11 +96,12 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
 
     return (
         <motion.div
+            className='px-3'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}>
-            <div className='p-5 mt-5 rounded-md prism-card-bg'>
+            <div className='p-5 border shadow-sm rounded-xl bg-sidebar'>
                 <div className='flex flex-row items-center justify-between pb-5 mb-5 border-b'>
                     <div>
                         <h2 className='text-lg font-bold'>User Management</h2>
@@ -145,7 +146,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         <div className='relative overflow-hidden h-[calc(100vh-230px)]'>
             <div className='h-[85%] overflow-y-auto border rounded-lg'>
                 <Table>
-                    <TableHeader className='sticky top-0 z-10 border shadow-2xl prism-card-bg'>
+                    <TableHeader className='sticky top-0 z-10 bg-slate-100'>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {

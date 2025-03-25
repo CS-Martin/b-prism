@@ -15,7 +15,7 @@ export function AppSidebar() {
 
     return (
         <Sidebar
-            variant='floating'
+            variant='sidebar'
             collapsible='icon'>
             <SidebarContent>
                 <SidebarHeaderComponent />
@@ -28,7 +28,7 @@ export function AppSidebar() {
 
                 <hr className={`border-t ${state === 'collapsed' ? 'mx-[20%]' : 'mx-[5%]'}`} />
 
-                <SidebarMapActions />
+                {session && <SidebarMapActions session={session} />}
             </SidebarContent>
 
             <SidebarFooterComponent user={user} />

@@ -21,7 +21,7 @@ import {
 } from '@b-prism/shadcn-ui/index';
 import { CoordinatesType } from '@b-prism/types';
 import { CreateDispensingPointDto, DispensingPointDto } from '@dto';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { Type } from '@prisma/client';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useCreateDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
@@ -90,7 +90,7 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
 
     const onSubmit = async (data: CreateDispensingPointDto) => {
         try {
-            if (!user) {
+            if (!user || !user.permissions.includes('DISPENSING_POINT_PERMISSION')) {
                 throw new BadRequestException(`You don't have permission to create a dispensing point.`);
             }
 
@@ -112,11 +112,22 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
 
             setIsOpen(false);
             reset();
-        } catch (error) {
-            console.error('Error creating dispensing point:', error);
+        } catch (error: unknown) {
+            console.error('Error updating warehouse:', error);
+
+            let errorMessage = 'An unexpected error occurred. Please try again.';
+
+            if (error instanceof UnauthorizedException) {
+                errorMessage = error.message;
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            } else if (typeof error === 'string') {
+                errorMessage = error;
+            }
+
             toast({
-                title: 'An error occurred!',
-                description: (error as Error).message,
+                title: 'Error',
+                description: errorMessage,
                 variant: 'destructive',
             });
         }

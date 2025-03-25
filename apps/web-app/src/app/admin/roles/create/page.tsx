@@ -16,7 +16,7 @@ export default async function CreateRolePage() {
                 ]}
             />
 
-            {session && session.user ? (
+            {session && session.user.permissions.includes('ROLE_PERMISSION') ? (
                 <CreateRoleContent session={session} />
             ) : (
                 <div className='flex items-center justify-center h-screen'>

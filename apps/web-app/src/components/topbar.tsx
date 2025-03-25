@@ -1,5 +1,6 @@
 import { Separator, SidebarTrigger } from '@b-prism/shadcn-ui/index';
 import { Breadcrumbs } from './breadcrumbs';
+import { ThemeToggler } from './theme-toggler';
 
 interface TopBarProps {
     items: {
@@ -10,11 +11,16 @@ interface TopBarProps {
 
 const Topbar = ({ items }: TopBarProps) => {
     return (
-        <div className='flex items-center border-b border-white-200 p-4 mt-2 gap-4'>
-            <SidebarTrigger />
-            <Separator orientation='vertical' />
-            <div className='flex items-center gap-4'>
-                <Breadcrumbs items={items} />
+        <div className='flex flex-row items-center justify-between p-5'>
+            <div className='flex flex-row items-center gap-4'>
+                <SidebarTrigger />
+                <Separator orientation='vertical' />
+                <div className='flex items-center gap-4'>
+                    <Breadcrumbs items={items} />
+                </div>
+            </div>
+            <div>
+                <ThemeToggler />
             </div>
         </div>
     );

@@ -8,7 +8,7 @@
 
 @layer base {
     :root {
-        --background: 0 0% 100%;
+        --background: 240 100% 99%;
         --foreground: 240 10% 3.9%;
         --card: 0 0% 100%;
         --card-foreground: 240 10% 3.9%;
@@ -29,11 +29,11 @@
         --ring: 240 5.9% 10%;
         --radius: 0.5rem !important;
 
-        --prism-card-bg: #fafafa;
+        --prism-card-bg: 0 0% 100%;
         --prism-card-border: rgb(228, 228, 231);
         --prism-card-hover: #f4f4f4;
 
-        --sidebar-background: 0 0% 98%;
+        --sidebar-background: 0 0% 100%;
         --sidebar-foreground: 240 5.3% 26.1%;
         --sidebar-primary: 240 5.9% 10%;
         --sidebar-primary-foreground: 0 0% 98%;

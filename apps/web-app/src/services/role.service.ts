@@ -151,6 +151,41 @@ class RoleService {
         }
     }
 
+    public async fetchRoleByName(roleName: string | undefined, token: string | undefined): Promise<RoleDto> {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/roles/search?name=${roleName}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                let errorMessage = 'Failed to fetch roles';
+
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (jsonError) {
+                    console.error('Error parsing JSON response:', jsonError);
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            return (await response.json()).body;
+        } catch (error: any) {
+            console.error('Warehouse fetch error:', error);
+
+            if (error.name === 'TypeError') {
+                throw new Error('Network error: Please check your internet connection and try again.');
+            }
+
+            throw new Error(error.message || 'An unknown error occurred.');
+        }
+    }
+
     public async fetchAllRoles(token: string): Promise<ResponseDto<RoleDto[]>> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/roles`, {

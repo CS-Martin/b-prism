@@ -7,7 +7,7 @@ export default function SidebarWrapper({ children }: { children: React.ReactNode
     return (
         <div className='flex flex-1'>
             <AppSidebar />
-            <main className='w-full'>{children}</main>
+            <main className='w-full overflow-y-hidden'>{children}</main>
         </div>
     );
 }

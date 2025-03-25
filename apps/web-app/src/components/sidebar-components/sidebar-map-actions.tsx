@@ -12,6 +12,7 @@ import {
 import { motion } from 'framer-motion';
 import { ChevronDown, MapPinned, MapPinPlus, MapPinXInside, Route } from 'lucide-react';
 import { SidebarActionItem } from './sidebar-action-item';
+import { Session } from 'next-auth';
 
 export const mapActions = [
     {
@@ -44,8 +45,16 @@ export const mapActions = [
     },
 ];
 
-export const SidebarMapActions = () => {
+export const SidebarMapActions = ({ session }: { session?: Session }) => {
     const { state } = useSidebar();
+
+    if (
+        !session ||
+        !session.user.permissions.includes('WAREHOUSE_PERMISSION') ||
+        !session.user.permissions.includes('DISPENSING_POINT_PERMISSION') ||
+        !session.user.permissions.includes('ROAD_NETWORK_PERMISSION')
+    )
+        return null;
 
     return (
         <SidebarGroup>

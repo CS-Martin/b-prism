@@ -1,7 +1,6 @@
 import { withAuth } from 'next-auth/middleware';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
-import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 export default withAuth({
     callbacks: {
@@ -50,14 +49,20 @@ export async function middleware(req: NextRequest) {
         }
     }
 
-    if ((pathname === '/admin/dashboard' || pathname === '/admin/activity-logs' || pathname === '/admin/roles') && token?.role !== 'admin') {
+    if (pathname === '/admin/roles' && !token?.permissions.includes('ROLE_PERMISSION')) {
         console.warn('Unauthorized access attempt to admin area by user with role:', token?.role);
 
-        toast({
-            title: 'Unauthorized Access.',
-            description: `You don't have the permission to this feature. Please contact administrators for assistance.`,
-            variant: 'destructive',
-        });
+        return NextResponse.redirect(new URL('/home', req.url));
+    }
+
+    if (pathname === '/admin/dashboard' && !token?.permissions.includes('USER_PERMISSION')) {
+        console.warn('Unauthorized access attempt to admin area by user with role:', token?.role);
+
+        return NextResponse.redirect(new URL('/home', req.url));
+    }
+
+    if (pathname === '/admin/activity-logs' && !token?.permissions.includes('ACTIVITY_LOG_PERMISSION')) {
+        console.warn('Unauthorized access attempt to admin area by user with role:', token?.role);
 
         return NextResponse.redirect(new URL('/home', req.url));
     }

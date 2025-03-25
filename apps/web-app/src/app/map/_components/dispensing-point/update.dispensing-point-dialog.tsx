@@ -1,6 +1,7 @@
 // UpdateDispensingPointDialog component
 'use client';
 
+import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import {
     Button,
     Dialog,
@@ -18,7 +19,7 @@ import {
     Textarea,
 } from '@b-prism/shadcn-ui/index';
 import { UpdateDispensingPointDto } from '@dto';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { Type } from '@prisma/client';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useFindOneDispensingPoint, useUpdateDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
@@ -66,16 +67,36 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
     }, [dispensingPoint, reset]);
 
     const onSubmit = async (data: UpdateDispensingPointDto) => {
-        if (!user) {
-            throw new BadRequestException(`You don't have permission to edit a warehouse.`);
+        try {
+            if (!user || !user.permissions.includes('DISPENSING_POINT_PERMISSION')) {
+                throw new BadRequestException(`You don't have permission to edit a warehouse.`);
+            }
+
+            const formattedData = {
+                ...data,
+                user_id: user.id,
+            };
+
+            await updateDispensingPoint(dispensingPointId, formattedData, `${user.given_name} ${user.family_name}`, user.access_token);
+        } catch (error: unknown) {
+            console.error('Error updating warehouse:', error);
+
+            let errorMessage = 'An unexpected error occurred. Please try again.';
+
+            if (error instanceof UnauthorizedException) {
+                errorMessage = error.message;
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            } else if (typeof error === 'string') {
+                errorMessage = error;
+            }
+
+            toast({
+                title: 'Error',
+                description: errorMessage,
+                variant: 'destructive',
+            });
         }
-
-        const formattedData = {
-            ...data,
-            user_id: user.id,
-        };
-
-        await updateDispensingPoint(dispensingPointId, formattedData, `${user.given_name} ${user.family_name}`, user.access_token);
         setIsOpen(false);
     };
 

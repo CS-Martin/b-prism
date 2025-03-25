@@ -127,6 +127,26 @@ export class RoleServiceLibService {
         }
     }
 
+    async findByName(name: string): Promise<ResponseDto<RoleDto>> {
+        this.logger.log('Finding role with name: ', name);
+
+        try {
+            const role: Role | null = await this.roleMongodbService.findByName(name);
+
+            if (!role) {
+                throw new NotFoundException('Role not found.');
+            }
+
+            const response: ResponseDto<RoleDto> = new ResponseDto<RoleDto>(200, this.convertToRoleDto(role));
+
+            return response;
+        } catch (error) {
+            this.logger.error('Error finding role', error);
+
+            throw new BadRequestException(error);
+        }
+    }
+
     convertToRoleDto(role: Role): RoleDto {
         const roleDto: RoleDto = new RoleDto();
 

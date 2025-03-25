@@ -15,7 +15,7 @@ export default async function RoleManagementPage() {
                 ]}
             />
 
-            {session && session.user.role === 'admin' ? (
+            {session && session.user.permissions.includes('ROLE_PERMISSION') ? (
                 <RoleManagementContent session={session} />
             ) : (
                 <div className='flex items-center justify-center h-screen'>
