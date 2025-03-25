@@ -17,15 +17,13 @@ import {
     TabsTrigger,
     Textarea,
 } from '@b-prism/shadcn-ui/index';
-import { UpdateWarehouseDto, UserDto } from '@dto';
-import { useSession } from 'next-auth/react';
+import { UpdateWarehouseDto } from '@dto';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import { useFindOneWarehouse, useUpdateWarehouse } from 'apps/web-app/src/hooks/map.hook';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { error } from 'console';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { Session } from 'next-auth';
 
 interface DialogProps {
@@ -87,8 +85,8 @@ const UpdateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
     // Form submission handler
     const onSubmit = async (data: UpdateWarehouseDto) => {
         try {
-            if (!user) {
-                throw new BadRequestException(`You don't have permission to edit a warehouse.`);
+            if (!user || !user.permissions.includes('WAREHOUSE_PERMISSION')) {
+                throw new UnauthorizedException('You do not have permission to update warehouses.');
             }
 
             const formattedData = {
@@ -101,14 +99,24 @@ const UpdateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, wareh
 
             await updateWarehouse(warehouseId, formattedData, `${user.given_name} ${user.family_name}`, user.access_token);
             setIsOpen(false);
-        } catch (error) {
-            if (error instanceof Error) {
-                toast({
-                    title: 'An error occured',
-                    description: error.message,
-                    variant: 'destructive',
-                });
+        } catch (error: unknown) {
+            console.error('Error updating warehouse:', error);
+
+            let errorMessage = 'An unexpected error occurred. Please try again.';
+
+            if (error instanceof UnauthorizedException) {
+                errorMessage = error.message;
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            } else if (typeof error === 'string') {
+                errorMessage = error;
             }
+
+            toast({
+                title: 'Error',
+                description: errorMessage,
+                variant: 'destructive',
+            });
         }
     };
 
