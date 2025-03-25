@@ -7,7 +7,7 @@ export default async function EditRolePage() {
     const session = await getServerSession(options);
 
     return (
-        <main className='px-3'>
+        <main>
             <Topbar
                 items={[
                     { label: 'Admin', href: '/' },
