@@ -49,14 +49,19 @@ export async function middleware(req: NextRequest) {
         }
     }
 
-    // Check if user's permission array has ROLE_PERMISSION
     if (pathname === '/admin/roles' && !token?.permissions.includes('ROLE_PERMISSION')) {
         console.warn('Unauthorized access attempt to admin area by user with role:', token?.role);
 
         return NextResponse.redirect(new URL('/home', req.url));
     }
 
-    if ((pathname === '/admin/dashboard' || pathname === '/admin/activity-logs') && token?.role !== 'admin') {
+    if (pathname === '/admin/dashboard' && !token?.permissions.includes('USER_PERMISSION')) {
+        console.warn('Unauthorized access attempt to admin area by user with role:', token?.role);
+
+        return NextResponse.redirect(new URL('/home', req.url));
+    }
+
+    if (pathname === '/admin/activity-logs' && !token?.permissions.includes('ACTIVITY_LOG_PERMISSION')) {
         console.warn('Unauthorized access attempt to admin area by user with role:', token?.role);
 
         return NextResponse.redirect(new URL('/home', req.url));

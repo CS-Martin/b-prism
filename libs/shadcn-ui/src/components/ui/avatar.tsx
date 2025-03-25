@@ -23,14 +23,21 @@ const AvatarImage = React.forwardRef<React.ElementRef<typeof AvatarPrimitive.Ima
 );
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
+const colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500', 'bg-orange-500', 'bg-teal-500', 'bg-indigo-500'];
 const AvatarFallback = React.forwardRef<React.ElementRef<typeof AvatarPrimitive.Fallback>, React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>>(
-    ({ className, ...props }, ref) => (
-        <AvatarPrimitive.Fallback
-            ref={ref}
-            className={cn('flex h-full w-full items-center justify-center rounded-full bg-muted', className)}
-            {...props}
-        />
-    ),
+    ({ className, ...props }, ref) => {
+        const randomColor = React.useMemo(() => {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }, []); // Generates a color once per render
+
+        return (
+            <AvatarPrimitive.Fallback
+                ref={ref}
+                className={cn('flex h-full w-full items-center justify-center rounded-full', randomColor, className)}
+                {...props}
+            />
+        );
+    },
 );
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 

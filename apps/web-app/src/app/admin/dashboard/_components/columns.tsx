@@ -47,14 +47,18 @@ export const createColumns = (handleRoleChange: (user: UserDto) => void): Column
         },
 
         cell: ({ row }) => {
+            const user = row.original;
+
             return (
                 <div>
                     <span className='flex flex-row items-center whitespace-normal min-w-[150px]'>
                         <Avatar
-                            className='w-8 h-8'
+                            className='w-9 h-9'
                             style={{ borderRadius: '500px' }}>
-                            <AvatarImage src='https://github.com/shadcn.png' />
-                            <AvatarFallback>{'GE'}</AvatarFallback>
+                            <AvatarImage src='' />
+                            <AvatarFallback className='text-[12px]'>
+                                {user && user.given_name ? user.given_name.charAt(0) : 'G'} {user && user.family_name ? user.family_name.charAt(0) : 'E'}
+                            </AvatarFallback>
                         </Avatar>
                         <div className='flex flex-col ml-2'>
                             <span className='font-semibold'>{`${row.original.given_name + ' ' + row.original.family_name}`}</span>
