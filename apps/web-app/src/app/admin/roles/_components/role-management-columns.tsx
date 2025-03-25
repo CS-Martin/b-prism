@@ -62,7 +62,7 @@ export const CreateRoleDatatableColumns = (handleDeleteClick: (role: RoleDto) =>
                             <Avatar
                                 className='w-8 h-8'
                                 style={{ borderRadius: '500px' }}>
-                                <AvatarImage src='https://github.com/shadcn.png' />
+                                <AvatarImage src='' />
                                 <AvatarFallback>{'GE'}</AvatarFallback>
                             </Avatar>
                             <div className='flex flex-col ml-2'>
