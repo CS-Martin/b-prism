@@ -96,11 +96,12 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
 
     return (
         <motion.div
+            className='px-3'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}>
-            <div className='p-5 mt-5 rounded-md prism-card-bg'>
+            <div className='p-5 rounded-2xl prism-card-bg'>
                 <div className='flex flex-row items-center justify-between pb-5 mb-5 border-b'>
                     <div>
                         <h2 className='text-lg font-bold'>User Management</h2>
