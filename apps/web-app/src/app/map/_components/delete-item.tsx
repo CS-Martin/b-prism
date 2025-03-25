@@ -10,13 +10,12 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/components/ui/alert-dialog';
-import { UserDto } from '@dto';
+import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useDeleteDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
 import { useDeleteWarehouse } from 'apps/web-app/src/hooks/map.hook';
 import { useDispensingPointsStore } from 'apps/web-app/src/stores/map-stores/dispensing-point.store';
 import { useWarehouseStore } from 'apps/web-app/src/stores/map-stores/warehouse.store';
 import { Session } from 'next-auth';
-import { useSession } from 'next-auth/react';
 
 interface DeleteItemProps {
     item: { type: string; id: string };
@@ -53,14 +52,29 @@ const DeleteItem = ({ item, onCancel, session }: DeleteItemProps) => {
     const handleDelete = async () => {
         switch (item.type) {
             case 'warehouse':
-                await deleteWarehouse(item.id, userFullname, user.access_token);
-                useWarehouseStore.getState().removeWarehouse(item.id);
+                if (user.permissions.includes('WAREHOUSE_PERMISSION')) {
+                    await deleteWarehouse(item.id, userFullname, user.access_token);
+                    useWarehouseStore.getState().removeWarehouse(item.id);
+                } else {
+                    toast({
+                        title: 'Unauthorized',
+                        description: 'You do not have permission to delete warehouses.',
+                        variant: 'destructive',
+                    });
+                }
                 break;
             case 'dispensing_point':
-                await deleteDispensingPoint(item.id, userFullname, user.access_token);
-                useDispensingPointsStore.getState().removeDispensingPoint(item.id);
+                if (user.permissions.includes('DISPENSING_POINT_PERMISSION')) {
+                    await deleteDispensingPoint(item.id, userFullname, user.access_token);
+                    useDispensingPointsStore.getState().removeDispensingPoint(item.id);
+                } else {
+                    toast({
+                        title: 'Unauthorized',
+                        description: 'You do not have permission to delete dispensing points.',
+                        variant: 'destructive',
+                    });
+                }
                 break;
-            // To add: Evacuation point
             default:
                 break;
         }
