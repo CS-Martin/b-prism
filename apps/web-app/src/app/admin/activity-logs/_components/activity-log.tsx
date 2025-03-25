@@ -50,20 +50,13 @@ export default function ActivityLog({ token }: ActivityLogProps) {
     });
 
     return (
-        <div className='px-3 h-full w-full'>
-            <Topbar
-                items={[
-                    { label: 'Admin', href: '/' },
-                    { label: 'Activity Logs History', href: '/admin/activity-logs' },
-                ]}
-            />
-
-            <div className='prism-card-bg rounded-md py-6 w-full max-w-7xl mt-6'>
-                <div className='px-4 pb-4 flex flex-col md:flex-row items-center gap-4 border-b flex-nowrap'>
-                    <div className='relative flex flex-1 items-center min-w-0 w-full'>
+        <div className='w-full h-full '>
+            <div className='w-full py-6 mt-6 rounded-md prism-card-bg max-w-7xl'>
+                <div className='flex flex-col items-center gap-4 px-4 pb-4 border-b md:flex-row flex-nowrap'>
+                    <div className='relative flex items-center flex-1 w-full min-w-0'>
                         <Search
                             size={18}
-                            className='absolute left-3 text-gray-500'
+                            className='absolute text-gray-500 left-3'
                         />
                         <Input
                             type='text'
@@ -75,7 +68,7 @@ export default function ActivityLog({ token }: ActivityLogProps) {
                     </div>
                     <Menubar className='w-auto'>
                         <MenubarMenu>
-                            <MenubarTrigger className='cursor-pointer flex items-center gap-2 group'>
+                            <MenubarTrigger className='flex items-center gap-2 cursor-pointer group'>
                                 Filter by Action
                                 <ChevronDown
                                     size={16}
@@ -106,13 +99,13 @@ export default function ActivityLog({ token }: ActivityLogProps) {
                         filteredLogs.slice(0, visibleLogs).map((log, index) => (
                             <div
                                 key={index}
-                                className='relative flex items-start h-fit rounded-md'>
+                                className='relative flex items-start rounded-md h-fit'>
                                 <div className='relative flex flex-col items-center h-full py-2'>
                                     {ActionIcon(log.action)}
                                     {index > 0 && <div className='h-[60%] rounded-full w-[0.7px] bg-gray-500 absolute top-11'></div>}
                                 </div>
 
-                                <div className='flex flex-col md:flex-row w-full'>
+                                <div className='flex flex-col w-full md:flex-row'>
                                     <div className='ml-6 w-full md:text-center py-2 min-w-[80px] md:max-w-[200px]'>
                                         <p className='text-[#a1a1aa] text-xs md:text-sm'>{format(new Date(log.timestamp), 'hh:mm a')}</p>
                                     </div>
