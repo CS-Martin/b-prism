@@ -8,26 +8,26 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/index';
-import { RoadNetworkDto, UserDto } from '@dto';
-import { useFixRoad } from 'apps/web-app/src/hooks/road-network.hook';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
-import { useSession } from 'next-auth/react';
+import { Session } from 'next-auth';
 import React from 'react';
 
 interface FixRoadModalProps {
     roadId: string | undefined;
     setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    session: Session | null;
 }
 
-export const FixRoadModal = ({ roadId, setIsDialogOpen }: FixRoadModalProps) => {
-    const { data: session } = useSession();
+export const FixRoadModal = ({ roadId, setIsDialogOpen, session }: FixRoadModalProps) => {
     const { fixRoad } = useRoadNetworkStore();
+
+    if (!session) return;
 
     const user = session?.user;
     const requestAuthor = `${user?.given_name} ${user?.family_name}`;
 
     const handleRoadDestroy = async () => {
-        if (roadId) {
+        if (roadId && user?.permissions.includes('ROAD_NETWORK_PERMISSION')) {
             await fixRoad(roadId, requestAuthor);
             setIsDialogOpen(false);
         }

@@ -47,7 +47,6 @@ export const mapActions = [
 
 export const SidebarMapActions = ({ session }: { session?: Session }) => {
     const { state } = useSidebar();
-    console.log(session);
 
     if (
         !session ||

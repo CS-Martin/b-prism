@@ -8,26 +8,26 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/index';
-import { UserDto } from '@dto';
-import { useDestroyRoad } from 'apps/web-app/src/hooks/road-network.hook';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
-import { useSession } from 'next-auth/react';
+import { Session } from 'next-auth';
 import React from 'react';
 
 interface DestroyRoadModalProps {
     roadId: string | undefined;
     setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    session: Session | null;
 }
 
-export const DestroyRoadModal = ({ roadId, setIsDialogOpen }: DestroyRoadModalProps) => {
-    const { data: session } = useSession();
+export const DestroyRoadModal = ({ roadId, setIsDialogOpen, session }: DestroyRoadModalProps) => {
     const { destroyRoad } = useRoadNetworkStore();
+
+    if (!session) return;
 
     const user = session?.user;
     const requestAuthor = `${user?.given_name} ${user?.family_name}`;
 
     const handleRoadDestroy = async () => {
-        if (roadId) {
+        if (roadId && user?.permissions.includes('ROAD_NETWORK_PERMISSION')) {
             await destroyRoad(roadId, requestAuthor);
             setIsDialogOpen(false);
         }
