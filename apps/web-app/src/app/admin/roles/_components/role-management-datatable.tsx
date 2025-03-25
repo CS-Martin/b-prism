@@ -94,7 +94,7 @@ export function RoleManagementDataTable<TData, TValue>({ columns, data }: RoleMa
         <div className='relative overflow-hidden h-[calc(100vh-230px)]'>
             <div className='h-[85%] overflow-y-auto border rounded-lg'>
                 <Table>
-                    <TableHeader className='sticky top-0 z-10 border shadow-2xl prism-card-bg'>
+                    <TableHeader className='sticky top-0 z-10 bg-slate-100'>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
@@ -167,7 +167,7 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}>
-            <div className='p-5 rounded-2xl prism-card-bg'>
+            <div className='p-5 border shadow-sm rounded-xl bg-sidebar'>
                 <div className='flex flex-row items-center justify-between pb-5 mb-5 border-b'>
                     <div>
                         <h2 className='text-lg font-bold'>Role Management</h2>

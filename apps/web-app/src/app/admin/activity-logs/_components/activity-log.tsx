@@ -50,8 +50,8 @@ export default function ActivityLog({ token }: ActivityLogProps) {
     });
 
     return (
-        <div className='w-full h-full '>
-            <div className='w-full py-6 mt-6 rounded-md prism-card-bg max-w-7xl'>
+        <div className='w-full h-full px-5'>
+            <div className='w-full max-w-full px-3 py-5 border rounded-md shadow-sm bg-sidebar'>
                 <div className='flex flex-col items-center gap-4 px-4 pb-4 border-b md:flex-row flex-nowrap'>
                     <div className='relative flex items-center flex-1 w-full min-w-0'>
                         <Search
