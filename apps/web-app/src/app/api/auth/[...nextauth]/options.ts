@@ -3,7 +3,8 @@ import { authService } from '../../../../services/authentication.service';
 import { jwtDecode } from 'jwt-decode';
 import { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { CreateUserDto } from '@dto';
+import { CreateUserDto, RoleDto } from '@dto';
+import { roleService } from 'apps/web-app/src/services/role.service';
 
 export const options: NextAuthOptions = {
     providers: [
@@ -33,9 +34,10 @@ export const options: NextAuthOptions = {
                     email: response.user.email,
                     office: response.user.office ?? undefined,
                     position: response.user.position ?? undefined,
-                    role: response.user.role,
+                    role: response.user.role || 'default',
                     id_image_url: response.user.id_image_url ?? undefined,
                     access_token: response.access_token,
+                    permissions: [],
                 };
             },
         }),
@@ -53,7 +55,7 @@ export const options: NextAuthOptions = {
                         given_name: (profile as any).given_name,
                         family_name: (profile as any).family_name,
                         email: profile.email,
-                        role: 'unverified',
+                        role: 'default',
                         created_at: new Date(),
                         updated_at: new Date(),
                     };
@@ -79,17 +81,13 @@ export const options: NextAuthOptions = {
         },
         async jwt({ token, user, account, profile }) {
             if (account?.provider === 'google' && user) {
-                // Handle Google OAuth login
-                console.info('🔐 Google OAuth login:', user);
-                console.info('🔐 Google OAuth profile:', profile);
-
                 token.id = (profile as any).id;
                 token.given_name = (profile as any)?.given_name;
                 token.family_name = (profile as any)?.family_name;
                 token.email = user.email;
-                token.role = (profile as any).role;
+                token.role = (profile as any).role || 'default';
                 token.id_image_url = user.id_image_url;
-                token.access_token = (profile as any).access_token;
+                token.access_token = (profile as any).access_token || '';
 
                 const decodedToken = jwtDecode<{ exp?: number }>(token.access_token!);
                 token.accessTokenExpires = decodedToken?.exp ? decodedToken.exp * 1000 : Date.now() + 1000 * 60 * 15;
@@ -98,13 +96,23 @@ export const options: NextAuthOptions = {
                 token.given_name = user.given_name;
                 token.family_name = user.family_name;
                 token.email = user.email;
-                token.role = user.role;
+                token.role = user.role || 'default';
                 token.access_token = user.access_token;
                 token.refresh_token = user.refresh_token;
                 token.id_image_url = user.id_image_url;
 
                 const decodedToken = jwtDecode<{ exp?: number }>(token.access_token!);
                 token.accessTokenExpires = decodedToken?.exp ? decodedToken.exp * 1000 : Date.now() + 1000 * 60 * 15;
+            }
+
+            try {
+                const role: RoleDto = await roleService.fetchRoleByName(token.role, token.access_token);
+
+                token.permissions = role.permissions || [];
+            } catch (error) {
+                console.info('Error fetching permissions:', error);
+
+                token.permissions = [];
             }
 
             // Check if the access token is still valid
@@ -149,6 +157,7 @@ export const options: NextAuthOptions = {
                 role: token.role,
                 id_image_url: token.id_image_url,
                 access_token: token.access_token ?? '',
+                permissions: token.permissions,
             };
 
             return session;

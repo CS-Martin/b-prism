@@ -35,4 +35,10 @@ export class RoleMongodbLibService {
             where: { id: role.id },
         });
     }
+
+    async findByName(name: string): Promise<Role | null> {
+        return await this.prisma.role.findUnique({
+            where: { name },
+        });
+    }
 }
