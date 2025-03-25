@@ -34,6 +34,7 @@ export const CreateRoleDatatableColumns = (handleDeleteClick: (role: RoleDto) =>
                     RESCUE_POST_PERMISSION: 'Rescue Post Actions',
                     ROLE_PERMISSION: 'Role Management',
                     NOTIFICATION_PERMISSION: 'Notifications',
+                    USER_PERMISSION: 'User Management',
                 };
 
                 return (
