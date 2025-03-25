@@ -7,11 +7,13 @@ import { SidebarGeneralLinks } from './sidebar-components/sidebar-general-links'
 import { SidebarAdminLinks } from './sidebar-components/sidebar-admin-links';
 import { SidebarMapActions } from './sidebar-components/sidebar-map-actions';
 import { SidebarFooterComponent } from './sidebar-components/sidebar-footer';
+import { Session } from 'next-auth';
 
-export function AppSidebar() {
-    const { data: session } = useSession();
+interface AppSirebarProps {
+    session: Session;
+}
+export function AppSidebar({ session }: AppSirebarProps) {
     const { state } = useSidebar();
-    const user = session?.user;
 
     return (
         <Sidebar
@@ -31,7 +33,7 @@ export function AppSidebar() {
                 <SidebarMapActions />
             </SidebarContent>
 
-            <SidebarFooterComponent user={user} />
+            <SidebarFooterComponent user={session.user} />
         </Sidebar>
     );
 }
