@@ -19,12 +19,12 @@ import {
     Table,
 } from '@b-prism/shadcn-ui/index';
 import { useEffect, useState } from 'react';
-import { useDisplayUsers } from '@b-prism/web-app/admin-dashboard-hooks';
 import { createColumns } from './columns';
 import { Session } from 'next-auth';
 import { UserDto } from '@dto';
 import { ChangeRoleDialog } from './change-role-dialog';
 import { useProgress } from '@bprogress/next';
+import { useUserStore } from 'apps/web-app/src/stores/user-stores/user.store';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -33,7 +33,7 @@ interface DataTableProps<TData, TValue> {
 
 function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize: number; dataLength: number; table: ReturnType<typeof useReactTable<TData>> }) {
     return (
-        <div className='absolute bottom-0 flex items-center justify-between w-full py-5 border-t'>
+        <div className='absolute bottom-0 flex items-center justify-between w-full px-5 py-5 border rounded-lg prism-card-bg'>
             <div className='flex items-center justify-between w-1/2'>
                 <Label className='font-normal '>
                     Showing {table.getState().pagination.pageIndex * pageSize + 1} to {Math.min((table.getState().pagination.pageIndex + 1) * pageSize, dataLength)} out of{' '}
@@ -77,7 +77,7 @@ function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize:
 
 export const DataTableContent = ({ session }: { session: Session | null }) => {
     const { start: startLoad, stop: stopLoad } = useProgress();
-    const { users, isLoading, fetchAllUsers } = useDisplayUsers(session?.user.access_token ?? null);
+    const { users, isLoading, fetchAllUsers } = useUserStore();
     const [isRoleChangeDialogOpen, setIsRoleChangeDialogOpen] = useState<boolean>(false);
     const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
 
@@ -88,8 +88,8 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
     }
 
     useEffect(() => {
-        if (session?.user) {
-            fetchAllUsers();
+        if (session?.user && users.length === 0) {
+            fetchAllUsers(session.user.access_token);
         }
     }, [session?.user]);
 
