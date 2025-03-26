@@ -9,6 +9,7 @@ export const metadata = {
 
 // Add montserrat font
 import { Montserrat } from 'next/font/google';
+import { LoadingProgressProvider } from '../components/providers/bprogress-provider';
 
 const montserrat = Montserrat({
     subsets: ['latin'],
@@ -20,14 +21,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang='en'>
             <body className={`${montserrat.variable} font-sans`}>
                 <SessionComponentProvider>
-                    <ThemeProvider
-                        attribute='class'
-                        defaultTheme='dark'
-                        enableSystem
-                        disableTransitionOnChange>
-                        {children}
-                        <Toaster />
-                    </ThemeProvider>
+                    <LoadingProgressProvider>
+                        <ThemeProvider
+                            attribute='class'
+                            defaultTheme='dark'
+                            enableSystem
+                            disableTransitionOnChange>
+                            {children}
+                            <Toaster />
+                        </ThemeProvider>
+                    </LoadingProgressProvider>
                 </SessionComponentProvider>
             </body>
         </html>
