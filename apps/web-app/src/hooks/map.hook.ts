@@ -197,25 +197,35 @@ export const useDeleteWarehouse = () => {
  */
 
 export const useGetAddress = () => {
+    const { start, stop } = useProgress();
     const [address, setAddress] = useState<WarehouseAddressDto>({} as WarehouseAddressDto);
 
     const getAddress = async (longitude: number, latitude: number) => {
-        const response = await mapboxService.reverse_geocoding(longitude, latitude);
-        const data = await response?.json();
+        try {
+            start();
+            const response = await mapboxService.reverse_geocoding(longitude, latitude);
+            const data = await response?.json();
 
-        if (data.features && data.features.length > 0) {
-            const properties = data.features[0]?.properties.context || {};
+            if (data.features && data.features.length > 0) {
+                const properties = data.features[0]?.properties.context || {};
 
-            const street = properties.street?.name || '';
-            const post_code = properties.postcode?.name || '';
-            const locality = properties.locality?.name || '';
-            const place = properties.place?.name || '';
-            const region = properties.region?.name || '';
-            const country = properties.country?.name || '';
+                const street = properties.street?.name || '';
+                const post_code = properties.postcode?.name || '';
+                const locality = properties.locality?.name || '';
+                const place = properties.place?.name || '';
+                const region = properties.region?.name || '';
+                const country = properties.country?.name || '';
 
-            setAddress({ street, post_code, locality, place, region, country });
-        } else {
-            setAddress({} as WarehouseAddressDto);
+                setAddress({ street, post_code, locality, place, region, country });
+            } else {
+                setAddress({} as WarehouseAddressDto);
+            }
+        } catch (error) {
+            console.error('Error fetching address:', error);
+
+            throw new Error('Failed to fetch address');
+        } finally {
+            stop();
         }
     };
 
