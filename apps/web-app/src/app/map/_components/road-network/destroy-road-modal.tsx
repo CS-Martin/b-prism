@@ -8,9 +8,10 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/index';
+import { useProgress } from '@bprogress/next';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 import { Session } from 'next-auth';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface DestroyRoadModalProps {
     roadId: string | undefined;
@@ -19,7 +20,8 @@ interface DestroyRoadModalProps {
 }
 
 export const DestroyRoadModal = ({ roadId, setIsDialogOpen, session }: DestroyRoadModalProps) => {
-    const { destroyRoad } = useRoadNetworkStore();
+    const { start: startLoading, stop: stopLoading } = useProgress();
+    const { isLoading, destroyRoad } = useRoadNetworkStore();
 
     if (!session) return;
 
@@ -28,8 +30,10 @@ export const DestroyRoadModal = ({ roadId, setIsDialogOpen, session }: DestroyRo
 
     const handleRoadDestroy = async () => {
         if (roadId && user?.permissions.includes('ROAD_NETWORK_PERMISSION')) {
+            startLoading();
             await destroyRoad(roadId, requestAuthor);
             setIsDialogOpen(false);
+            stopLoading();
         }
     };
 
