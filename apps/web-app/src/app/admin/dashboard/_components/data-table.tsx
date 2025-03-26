@@ -152,7 +152,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         <div className='relative overflow-hidden h-[calc(100vh-230px)]'>
             <div className='h-[85%] overflow-y-auto border rounded-lg'>
                 <Table>
-                    <TableHeader className='sticky top-0 z-10 bg-slate-100'>
+                    <TableHeader className='sticky top-0 z-10 bg-sidebar'>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
