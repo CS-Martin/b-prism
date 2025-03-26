@@ -30,10 +30,8 @@ export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
 
     useEffect(() => {
         if (isLoading) {
-            console.log('IS LOADING!!');
             loadStart();
         } else {
-            console.log('LOADING STOPPED');
             loadStop();
         }
     }, [isLoading]);

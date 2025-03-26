@@ -25,6 +25,7 @@ import { DeleteRoleDialog } from './delete-role-dialog';
 import { RoleDto } from '@dto';
 import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
 import { motion } from 'framer-motion';
+import { useProgress } from '@bprogress/next';
 
 interface RoleManagementDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -94,7 +95,7 @@ export function RoleManagementDataTable<TData, TValue>({ columns, data }: RoleMa
         <div className='relative overflow-hidden h-[calc(100vh-230px)]'>
             <div className='h-[85%] overflow-y-auto border rounded-lg'>
                 <Table>
-                    <TableHeader className='sticky top-0 z-10 bg-slate-100'>
+                    <TableHeader className='sticky top-0 z-10 bg-sidebar'>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
@@ -142,12 +143,21 @@ interface RoleManagementContentProps {
 }
 
 export const RoleManagementContent = ({ session }: RoleManagementContentProps) => {
+    const { start: loadStart, stop: loadStop } = useProgress();
     const { roles, isLoading, error, displayRoles } = useRoleStore();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
     const [selectedRole, setSelectedRole] = useState<RoleDto | null>(null);
 
+    if (isLoading) {
+        loadStart();
+    } else {
+        loadStop();
+    }
+
     useEffect(() => {
-        displayRoles(session.user.access_token);
+        if (!roles || roles.length === 0) {
+            displayRoles(session.user.access_token);
+        }
     }, []);
 
     if (error) {

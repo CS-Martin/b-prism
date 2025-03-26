@@ -5,7 +5,6 @@ import { RoleDto } from '@dto';
 import { useFormContext } from 'react-hook-form';
 import { useEffect } from 'react';
 import { Session } from 'next-auth';
-import { useProgress } from '@bprogress/next';
 
 interface EditRoleFormProps {
     role: RoleDto;
@@ -13,7 +12,6 @@ interface EditRoleFormProps {
 }
 
 export const EditRoleForm = ({ role, session }: EditRoleFormProps) => {
-    const { start: loadStart, stop: loadStop } = useProgress();
     const { register, setValue } = useFormContext<{ name: string; description: string; adminPermissions: any; mapPermissions: any }>();
 
     useEffect(() => {
