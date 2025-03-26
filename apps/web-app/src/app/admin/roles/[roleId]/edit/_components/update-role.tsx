@@ -13,17 +13,30 @@ import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
 import { Session } from 'next-auth';
 import { Label } from '@b-prism/shadcn-ui/index';
+import { useProgress } from '@bprogress/next';
+import { UnauthorizedException } from '@nestjs/common';
 
 interface UpdateRoleContentProps {
     session: Session;
 }
 export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
+    const { start: loadStart, stop: loadStop } = useProgress();
     const router = useRouter();
     const params = useParams<{ roleId: string }>();
     const { role, isLoading, error, fetchRoleById, updateRole } = useRoleStore();
     const methods = useForm<{ name: string; description: string; adminPermissions: Record<string, boolean>; mapPermissions: Record<string, any> }>();
     const { handleSubmit } = methods;
     const { toast } = useToast();
+
+    useEffect(() => {
+        if (isLoading) {
+            console.log('IS LOADING!!');
+            loadStart();
+        } else {
+            console.log('LOADING STOPPED');
+            loadStop();
+        }
+    }, [isLoading]);
 
     if (!session?.user || !session?.user.access_token) {
         toast({
@@ -61,6 +74,7 @@ export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
     ];
 
     const onSubmit = async (data: { name: string; description: string; adminPermissions: Record<string, boolean>; mapPermissions: Record<string, any> }) => {
+        loadStart();
         const createRoleDto: CreateRoleDto = {
             name: data.name,
             description: data.description,
@@ -85,14 +99,34 @@ export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
             }
         }
 
-        await updateRole(params.roleId, createRoleDto, session?.user.given_name + ' ' + session?.user.family_name, session.user.access_token);
+        try {
+            await updateRole(params.roleId, createRoleDto, session?.user.given_name + ' ' + session?.user.family_name, session.user.access_token);
+        } catch (error: unknown) {
+            console.error('Error updating warehouse:', error);
+
+            let errorMessage = 'An unexpected error occurred. Please try again.';
+
+            if (error instanceof UnauthorizedException) {
+                errorMessage = error.message;
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            } else if (typeof error === 'string') {
+                errorMessage = error;
+            }
+
+            toast({
+                title: 'Error',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        } finally {
+            loadStop();
+        }
 
         if (!error) {
             router.push('/admin/roles');
         }
     };
-
-    console.log(isLoading);
 
     return (
         <>
