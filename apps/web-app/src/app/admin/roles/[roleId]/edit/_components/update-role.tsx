@@ -28,13 +28,11 @@ export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
     const { handleSubmit } = methods;
     const { toast } = useToast();
 
-    useEffect(() => {
-        if (isLoading) {
-            loadStart();
-        } else {
-            loadStop();
-        }
-    }, [isLoading]);
+    if (isLoading) {
+        loadStart();
+    } else {
+        loadStop();
+    }
 
     if (!session?.user || !session?.user.access_token) {
         toast({
@@ -72,7 +70,7 @@ export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
     ];
 
     const onSubmit = async (data: { name: string; description: string; adminPermissions: Record<string, boolean>; mapPermissions: Record<string, any> }) => {
-        loadStart();
+        // Check if data and role is equal
         const createRoleDto: CreateRoleDto = {
             name: data.name,
             description: data.description,
@@ -98,6 +96,7 @@ export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
         }
 
         try {
+            loadStart();
             await updateRole(params.roleId, createRoleDto, session?.user.given_name + ' ' + session?.user.family_name, session.user.access_token);
         } catch (error: unknown) {
             console.error('Error updating warehouse:', error);

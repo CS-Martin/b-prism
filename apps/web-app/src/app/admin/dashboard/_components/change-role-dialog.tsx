@@ -10,9 +10,9 @@ import {
 } from '@b-prism/shadcn-ui/components/ui/alert-dialog';
 import { Avatar, AvatarImage, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@b-prism/shadcn-ui/index';
 import { useChangeUserRole } from '@b-prism/web-app/admin-dashboard-hooks';
+import { useProgress } from '@bprogress/next';
 import { UserDto } from '@dto';
 import { AvatarFallback } from '@radix-ui/react-avatar';
-import { PrismButton } from 'apps/web-app/src/components/prism-button';
 import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
 import { UserPlusIcon, X } from 'lucide-react';
 import { Session } from 'next-auth';
@@ -27,14 +27,20 @@ interface ChangeRoleDialogProps {
 }
 
 export const ChangeRoleDialog = ({ session, isOpen, onClose, user }: ChangeRoleDialogProps) => {
-    const { isLoading, error, changeUserRole } = useChangeUserRole();
+    const { start: loadStart, stop: stopLoad } = useProgress();
+    const { isLoading: isChangingRole, error, changeUserRole } = useChangeUserRole();
     const { roles, displayRoles } = useRoleStore();
 
     const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
+    if (isChangingRole) {
+        loadStart();
+    } else {
+        stopLoad();
+    }
+
     useEffect(() => {
         if (!roles || roles.length === 0) {
-            console.log('No roles available');
             displayRoles(session?.user.access_token || '');
         }
     }, []);
@@ -104,18 +110,18 @@ export const ChangeRoleDialog = ({ session, isOpen, onClose, user }: ChangeRoleD
                 <AlertDialogFooter className='flex flex-col-reverse w-full md:flex-row'>
                     <AlertDialogCancel
                         className='mt-0 md:w-1/2'
-                        disabled={isLoading}
+                        disabled={isChangingRole}
                         onClick={onClose}>
                         No, keep it.
                     </AlertDialogCancel>
                     <AlertDialogAction
                         className='md:w-1/2'
-                        disabled={isLoading || selectedRole === null}
+                        disabled={isChangingRole || selectedRole === null}
                         onClick={() => handleRoleChange(user, selectedRole ?? '')}>
-                        {isLoading ? (
+                        {isChangingRole ? (
                             <>
                                 <PacmanLoader
-                                    className={`${isLoading ? 'pacman-loader-slide-in' : 'pacman-loader-slide-out'}`}
+                                    className={`${isChangingRole ? 'pacman-loader-slide-in' : 'pacman-loader-slide-out'}`}
                                     color='white'
                                     size={10}
                                 />

@@ -18,14 +18,13 @@ import {
     Label,
     Table,
 } from '@b-prism/shadcn-ui/index';
-import { UserRole } from '@b-prism/enums';
 import { useEffect, useState } from 'react';
 import { useDisplayUsers } from '@b-prism/web-app/admin-dashboard-hooks';
 import { createColumns } from './columns';
-import { useRoleChange } from 'apps/web-app/src/hooks/role-change.hook';
 import { Session } from 'next-auth';
 import { UserDto } from '@dto';
 import { ChangeRoleDialog } from './change-role-dialog';
+import { useProgress } from '@bprogress/next';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -77,9 +76,16 @@ function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize:
 }
 
 export const DataTableContent = ({ session }: { session: Session | null }) => {
-    const { users, isLoading: isFetchingUser, fetchAllUsers } = useDisplayUsers(session?.user.access_token ?? null);
+    const { start: startLoad, stop: stopLoad } = useProgress();
+    const { users, isLoading, fetchAllUsers } = useDisplayUsers(session?.user.access_token ?? null);
     const [isRoleChangeDialogOpen, setIsRoleChangeDialogOpen] = useState<boolean>(false);
     const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
+
+    if (isLoading) {
+        startLoad();
+    } else {
+        stopLoad();
+    }
 
     useEffect(() => {
         if (session?.user) {
@@ -96,7 +102,7 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
 
     return (
         <motion.div
-            className='px-3'
+            className='px-5'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

@@ -13,7 +13,7 @@ interface RoleBasicInfoFormProps {
 
 export const RoleBasicInfoForm = ({ register, errors, readOnly, session }: RoleBasicInfoFormProps) => {
     const { roles } = useRoleStore();
-    console.log(roles);
+
     return (
         <div className='mt-5'>
             <div className=''>
