@@ -11,8 +11,10 @@ import Image from 'next/image';
 import { authService } from '../../../../services/authentication.service';
 import { debounce } from 'lodash';
 import { Eye, EyeOff } from 'lucide-react';
+import { useProgress } from '@bprogress/next';
 
 export const LoginForm = () => {
+    const { start: loadStart, stop: loadStop } = useProgress();
     const { toast } = useToast();
     const router = useRouter();
 
@@ -25,6 +27,14 @@ export const LoginForm = () => {
         password: '',
     });
 
+    useEffect(() => {
+        if (isLoading) {
+            loadStart();
+        } else {
+            loadStop();
+        }
+    }, [isLoading, loadStart, loadStop]);
+
     // // Fetch user based on email in searchParams
     useEffect(() => {
         const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
@@ -32,10 +42,13 @@ export const LoginForm = () => {
         if (isValidEmail) {
             const handleDebouncedFetch = debounce(async () => {
                 try {
+                    loadStart();
                     const user = await authService.findUserByEmailWithoutThrow(formData.email);
                     setShowPasswordInput(Boolean(user));
                 } catch (err) {
                     console.error('Error fetching user:', err);
+                } finally {
+                    loadStop();
                 }
             }, 1000);
 
@@ -84,6 +97,7 @@ export const LoginForm = () => {
                 description: error instanceof Error ? error.message : 'An unexpected error occurred.',
                 variant: 'destructive',
             });
+        } finally {
             setIsLoading(false);
         }
     };
