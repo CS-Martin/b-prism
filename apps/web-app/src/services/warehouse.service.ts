@@ -147,7 +147,7 @@ class WarehouseService {
         }
     }
 
-    public async findOne(id: string): Promise<ResponseDto<WarehouseDto>> {
+    public async findOne(id: string): Promise<WarehouseDto> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/warehouses/${id}`);
 
@@ -164,7 +164,7 @@ class WarehouseService {
                 throw new Error(errorMessage);
             }
 
-            return response.json();
+            return (await response.json()).body;
         } catch (error: any) {
             console.error('Fetching warehouse error:', error);
 

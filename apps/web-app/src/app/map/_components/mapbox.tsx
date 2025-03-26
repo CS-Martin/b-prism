@@ -112,54 +112,54 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                     mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                     onClick={handleMapClick}
                     onLoad={() => setIsMapLoaded(true)}>
-                    {isMapLoaded && (
-                        <>
-                            {selectedAction === 'createWarehouse' && (
-                                <CreateWarehouseDialog
-                                    isOpen={isOpen}
-                                    setIsOpen={setIsOpen}
-                                    coordinates={coordinates}
-                                    session={session}
-                                />
-                            )}
-
-                            {selectedAction === 'createDispensingPoint' && (
-                                <CreateDispensingPointDialog
-                                    isOpen={isOpen}
-                                    setIsOpen={setIsOpen}
-                                    coordinates={coordinates}
-                                    session={session}
-                                />
-                            )}
-
-                            <>
-                                {selectedAction === 'findRoute' && <GenerateDirections />}
-
-                                <RenderRoadNetwork
-                                    visibility={visibility}
-                                    session={session}
-                                />
-
-                                <RenderWarehouse
-                                    visibility={visibility}
-                                    selectedAction={selectedAction}
-                                    session={session}
-                                />
-
-                                <RenderDispensingPoint
-                                    visibility={visibility}
-                                    selectedAction={selectedAction}
-                                    session={session}
-                                />
-                            </>
-                            <ControlPanel
-                                visibility={visibility}
-                                onVisibilityChange={(layer, isVisible) => setVisibility((prev) => ({ ...prev, [layer]: isVisible }))}
+                    <>
+                        {selectedAction === 'createWarehouse' && (
+                            <CreateWarehouseDialog
+                                isOpen={isOpen}
+                                setIsOpen={setIsOpen}
+                                coordinates={coordinates}
+                                session={session}
                             />
-                            <RescuePostPanel mapRef={mapRef} />
-                            <FetchingIndicator />
+                        )}
+
+                        {selectedAction === 'createDispensingPoint' && (
+                            <CreateDispensingPointDialog
+                                isOpen={isOpen}
+                                setIsOpen={setIsOpen}
+                                coordinates={coordinates}
+                                session={session}
+                            />
+                        )}
+
+                        <>
+                            {selectedAction === 'findRoute' && <GenerateDirections />}
+
+                            <RenderRoadNetwork
+                                visibility={visibility}
+                                session={session}
+                            />
+
+                            <RenderWarehouse
+                                visibility={visibility}
+                                selectedAction={selectedAction}
+                                session={session}
+                            />
+
+                            <RenderDispensingPoint
+                                visibility={visibility}
+                                selectedAction={selectedAction}
+                                session={session}
+                            />
                         </>
-                    )}
+                        <ControlPanel
+                            visibility={visibility}
+                            onVisibilityChange={(layer, isVisible) => setVisibility((prev) => ({ ...prev, [layer]: isVisible }))}
+                        />
+
+                        <RescuePostPanel mapRef={mapRef} />
+
+                        <FetchingIndicator />
+                    </>
                 </Map>
             </div>
 

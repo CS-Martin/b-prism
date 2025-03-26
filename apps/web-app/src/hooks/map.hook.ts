@@ -1,58 +1,97 @@
 import { useCallback, useEffect, useState } from 'react';
 import { CreateWarehouseDto, ResponseDto, RoadNetworkDto, UpdateWarehouseDto, WarehouseAddressDto, WarehouseDto } from '@dto';
 import { warehouseService } from '../services/warehouse.service';
-import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { toast, useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { mapboxService } from '../services/mapbox.api.service';
+import { useProgress } from '@bprogress/next';
 
 /**
  * @description Hooks for warehouses
  */
 
 export const useDisplayWarehouses = () => {
+    const { start, stop } = useProgress();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [warehouses, setWarehouses] = useState<WarehouseDto[]>([]);
 
     const fetchAllWarehouses = async () => {
-        const response: ResponseDto<WarehouseDto[]> = await warehouseService.fetchAllWarehouses();
+        try {
+            start();
+            setIsLoading(true);
 
-        if (response.statusCode !== 200) {
-            throw new Error('Failed to fetch warehouses');
+            const response: ResponseDto<WarehouseDto[]> = await warehouseService.fetchAllWarehouses();
+
+            if (response.statusCode !== 200) {
+                throw new Error('Failed to fetch warehouses');
+            }
+
+            setWarehouses(response.body);
+        } catch (error: any) {
+            console.error('Error creating warehouse:', error);
+
+            const errorMessage = error.message || 'Failed to create the warehouse. Please try again.';
+
+            toast({
+                title: 'Error!',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        } finally {
+            stop();
+            setIsLoading(false);
         }
-
-        setWarehouses(response.body);
     };
 
     useEffect(() => {
         fetchAllWarehouses();
     }, []);
 
-    return { warehouses, fetchAllWarehouses };
+    return { isLoading, warehouses, fetchAllWarehouses };
 };
 
 export const useFindOneWarehouse = (id: string) => {
+    const { start, stop } = useProgress();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [warehouse, setWarehouse] = useState<WarehouseDto>({} as WarehouseDto);
 
     const fetchOneWarehouse = async () => {
-        const response: ResponseDto<WarehouseDto> = await warehouseService.findOne(id);
+        try {
+            start();
+            setIsLoading(true);
+            const response: WarehouseDto = await warehouseService.findOne(id);
 
-        if (response.statusCode !== 200) {
-            throw new Error('Failed to fetch warehouse');
+            setWarehouse(response);
+        } catch (error: any) {
+            console.error('Error creating warehouse:', error);
+
+            const errorMessage = error.message || 'Failed to create the warehouse. Please try again.';
+
+            toast({
+                title: 'Error!',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        } finally {
+            stop();
+            setIsLoading(false);
         }
-
-        setWarehouse(response.body);
     };
 
     useEffect(() => {
         fetchOneWarehouse();
     }, [id]);
 
-    return { warehouse, fetchOneWarehouse };
+    return { isLoading, warehouse, fetchOneWarehouse };
 };
 
 export const useCreateWarehouse = () => {
-    const { toast } = useToast();
+    const { start, stop } = useProgress();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const createWarehouse = async (data: CreateWarehouseDto, author: string, access_token: string): Promise<WarehouseDto | undefined> => {
         try {
+            start();
+            setIsLoading(false);
             const warehouse: WarehouseDto = await warehouseService.create(data, author, access_token);
 
             if (!warehouse) {
@@ -76,17 +115,23 @@ export const useCreateWarehouse = () => {
                 description: errorMessage,
                 variant: 'destructive',
             });
+        } finally {
+            stop();
+            setIsLoading(false);
         }
     };
 
-    return { createWarehouse };
+    return { isLoading, createWarehouse };
 };
 
 export const useUpdateWarehouse = () => {
-    const { toast } = useToast();
+    const { start, stop } = useProgress();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const updateWarehouse = async (id: string, data: UpdateWarehouseDto, author: string, access_token: string) => {
         try {
+            start();
+            setIsLoading(true);
             await warehouseService.update(id, data, author, access_token);
 
             toast({
@@ -104,17 +149,24 @@ export const useUpdateWarehouse = () => {
                 description: errorMessage,
                 variant: 'destructive',
             });
+        } finally {
+            stop();
+            setIsLoading(false);
         }
     };
 
-    return { updateWarehouse };
+    return { isLoading, updateWarehouse };
 };
 
 export const useDeleteWarehouse = () => {
-    const { toast } = useToast();
+    const { start, stop } = useProgress();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const deleteWarehouse = async (id: string, author: string, access_token: string) => {
         try {
+            start();
+            setIsLoading(true);
+
             await warehouseService.delete(id, author, access_token);
 
             toast({
@@ -131,10 +183,13 @@ export const useDeleteWarehouse = () => {
                 description: errorMessage,
                 variant: 'destructive',
             });
+        } finally {
+            stop();
+            setIsLoading(false);
         }
     };
 
-    return { deleteWarehouse };
+    return { isLoading, deleteWarehouse };
 };
 
 /**
