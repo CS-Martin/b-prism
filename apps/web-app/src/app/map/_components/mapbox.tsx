@@ -18,12 +18,16 @@ import { RenderRoadNetwork } from './road-network/render-road-network';
 import { CoordinatesType } from '@b-prism/types';
 import { useMapStore } from 'apps/web-app/src/stores/map-stores/mapbox.store';
 import { GenerateDirections } from './directions/generate-directions';
+import { useProgress } from '@bprogress/next';
+import FetchingIndicator from './fetching-indicator';
 
 export const MapboxContext = ({ session }: { session: Session | null }) => {
+    const { start: startLoad, stop: stopLoad } = useProgress();
     const { mapRef, setMapRef } = useMapStore();
 
     const selectedAction = useMapActionStore((state) => state.selectedAction);
 
+    const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [coordinates, setCoordinates] = useState<CoordinatesType>({ longitude: 0, latitude: 0 });
     const [itemToDelete, setItemToDelete] = useState<{ type: string; id: string } | null>(null);
@@ -33,6 +37,12 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
         roadNetwork: true,
         route: true,
     });
+
+    if (!isMapLoaded) {
+        startLoad();
+    } else {
+        stopLoad();
+    }
 
     const handleMarkerClick = useCallback(
         (type: string | null, id: string | null) => {
@@ -100,51 +110,56 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                     initialViewState={{ longitude: 123.700163, latitude: 13.122066, zoom: 9.41, bearing: -38.4, pitch: 75 }}
                     style={{ position: 'absolute', width: '100%', height: '100%' }}
                     mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
-                    onClick={handleMapClick}>
-                    {selectedAction === 'createWarehouse' && (
-                        <CreateWarehouseDialog
-                            isOpen={isOpen}
-                            setIsOpen={setIsOpen}
-                            coordinates={coordinates}
-                            session={session}
-                        />
+                    onClick={handleMapClick}
+                    onLoad={() => setIsMapLoaded(true)}>
+                    {isMapLoaded && (
+                        <>
+                            {selectedAction === 'createWarehouse' && (
+                                <CreateWarehouseDialog
+                                    isOpen={isOpen}
+                                    setIsOpen={setIsOpen}
+                                    coordinates={coordinates}
+                                    session={session}
+                                />
+                            )}
+
+                            {selectedAction === 'createDispensingPoint' && (
+                                <CreateDispensingPointDialog
+                                    isOpen={isOpen}
+                                    setIsOpen={setIsOpen}
+                                    coordinates={coordinates}
+                                    session={session}
+                                />
+                            )}
+
+                            <>
+                                {selectedAction === 'findRoute' && <GenerateDirections />}
+
+                                <RenderRoadNetwork
+                                    visibility={visibility}
+                                    session={session}
+                                />
+
+                                <RenderWarehouse
+                                    visibility={visibility}
+                                    selectedAction={selectedAction}
+                                    session={session}
+                                />
+
+                                <RenderDispensingPoint
+                                    visibility={visibility}
+                                    selectedAction={selectedAction}
+                                    session={session}
+                                />
+                            </>
+                            <ControlPanel
+                                visibility={visibility}
+                                onVisibilityChange={(layer, isVisible) => setVisibility((prev) => ({ ...prev, [layer]: isVisible }))}
+                            />
+                            <RescuePostPanel mapRef={mapRef} />
+                            <FetchingIndicator />
+                        </>
                     )}
-
-                    {selectedAction === 'createDispensingPoint' && (
-                        <CreateDispensingPointDialog
-                            isOpen={isOpen}
-                            setIsOpen={setIsOpen}
-                            coordinates={coordinates}
-                            session={session}
-                        />
-                    )}
-
-                    <>
-                        {selectedAction === 'findRoute' && <GenerateDirections />}
-
-                        <RenderRoadNetwork
-                            visibility={visibility}
-                            session={session}
-                        />
-
-                        <RenderWarehouse
-                            visibility={visibility}
-                            selectedAction={selectedAction}
-                            session={session}
-                        />
-
-                        <RenderDispensingPoint
-                            visibility={visibility}
-                            selectedAction={selectedAction}
-                            session={session}
-                        />
-                    </>
-                    <ControlPanel
-                        visibility={visibility}
-                        onVisibilityChange={(layer, isVisible) => setVisibility((prev) => ({ ...prev, [layer]: isVisible }))}
-                    />
-                    <RescuePostPanel mapRef={mapRef} />
-                    {/* <FetchingIndicator isFetchingRoadNetwork={isFetchingRoadNetwork} /> */}
                 </Map>
             </div>
 
