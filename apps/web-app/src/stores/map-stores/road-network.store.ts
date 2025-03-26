@@ -5,6 +5,7 @@ import React from 'react';
 import { MapRef } from 'react-map-gl';
 import { debounce, DebouncedFunc } from 'lodash';
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { useProgress } from '@bprogress/next';
 
 type RoadNetworkState = {
     damagedRoads: any;

@@ -8,6 +8,7 @@ import ActivityCard from './activity-card';
 import { Input, Menubar, MenubarCheckboxItem, MenubarContent, MenubarMenu, MenubarTrigger } from '@b-prism/shadcn-ui/index';
 import { ChevronDown, Search } from 'lucide-react';
 import { useDisplayActivityLogs } from 'apps/web-app/src/hooks/activity-log.hook';
+import { useProgress } from '@bprogress/next';
 
 interface ActivityLogProps {
     token?: string;
@@ -16,10 +17,17 @@ interface ActivityLogProps {
 export default function ActivityLog({ token }: ActivityLogProps) {
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
+    const { start: loadStart, stop: loadStop } = useProgress();
     const { logs, isLoading } = useDisplayActivityLogs(token);
     const [visibleLogs, setVisibleLogs] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedActions, setSelectedActions] = useState<string[]>(['Create', 'Update', 'Delete']);
+
+    if (isLoading) {
+        loadStart();
+    } else {
+        loadStop();
+    }
 
     useEffect(() => {
         if (scrollAreaRef.current) {

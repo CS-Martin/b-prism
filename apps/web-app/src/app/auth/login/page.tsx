@@ -4,17 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { LoginForm } from './_component/login-form';
 import { ParticleWrapper } from './_component/particle-wrapper';
-import { useEffect, useState } from 'react';
-import { useTheme } from 'next-themes';
 import { ThemeToggler } from 'apps/web-app/src/components/theme-toggler';
 
 export default function LoginPage() {
-    const { setTheme } = useTheme();
-
-    useEffect(() => {
-        setTheme('dark');
-    }, []);
-
     return (
         <div className='flex flex-col w-screen h-screen md:flex-row'>
             {/* Left Section */}

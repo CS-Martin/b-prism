@@ -9,11 +9,11 @@ import {
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/components/ui/alert-dialog';
 import { Avatar, AvatarImage, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@b-prism/shadcn-ui/index';
-import { useChangeUserRole } from '@b-prism/web-app/admin-dashboard-hooks';
+import { useProgress } from '@bprogress/next';
 import { UserDto } from '@dto';
 import { AvatarFallback } from '@radix-ui/react-avatar';
-import { PrismButton } from 'apps/web-app/src/components/prism-button';
 import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
+import { useUserStore } from 'apps/web-app/src/stores/user-stores/user.store';
 import { UserPlusIcon, X } from 'lucide-react';
 import { Session } from 'next-auth';
 import { useEffect, useState } from 'react';
@@ -27,14 +27,20 @@ interface ChangeRoleDialogProps {
 }
 
 export const ChangeRoleDialog = ({ session, isOpen, onClose, user }: ChangeRoleDialogProps) => {
-    const { isLoading, error, changeUserRole } = useChangeUserRole();
+    const { start: loadStart, stop: stopLoad } = useProgress();
+    const { isLoading, changeUserRole } = useUserStore();
     const { roles, displayRoles } = useRoleStore();
 
     const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
+    if (isLoading) {
+        loadStart();
+    } else {
+        stopLoad();
+    }
+
     useEffect(() => {
         if (!roles || roles.length === 0) {
-            console.log('No roles available');
             displayRoles(session?.user.access_token || '');
         }
     }, []);

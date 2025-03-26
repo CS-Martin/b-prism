@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { CreateRoleDto, ResponseDto, RoleDto, UpdateRoleDto } from '@dto';
 import { roleService } from '../../services/role.service';
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { useProgress } from '@bprogress/next';
 
 interface RoleStore {
     roles: RoleDto[];

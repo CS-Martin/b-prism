@@ -11,12 +11,16 @@ import { CreateRoleDto } from '@dto';
 import { useRouter } from 'next/navigation';
 import { Session } from 'next-auth';
 import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
+import { useProgress } from '@bprogress/next';
+import { UnauthorizedException } from '@nestjs/common';
+import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 interface CreateRoleContentProps {
     session: Session;
 }
 
 export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
+    const { start: loadStart, stop: loadStop } = useProgress();
     const router = useRouter();
     const { isLoading, error, createRole } = useRoleStore();
 
@@ -53,6 +57,8 @@ export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
     } = methods;
 
     const onSubmit = async (data: { name: string; description: string; adminPermissions: Record<string, boolean>; mapPermissions: Record<string, any> }) => {
+        loadStart();
+
         const createRoleDto: CreateRoleDto = {
             name: data.name,
             description: data.description,
@@ -77,7 +83,29 @@ export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
             }
         }
 
-        await createRole(createRoleDto, session.user.access_token);
+        try {
+            await createRole(createRoleDto, session.user.access_token);
+        } catch (error: unknown) {
+            console.error('Error updating warehouse:', error);
+
+            let errorMessage = 'An unexpected error occurred. Please try again.';
+
+            if (error instanceof UnauthorizedException) {
+                errorMessage = error.message;
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            } else if (typeof error === 'string') {
+                errorMessage = error;
+            }
+
+            toast({
+                title: 'Error',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        } finally {
+            loadStop();
+        }
 
         if (!error) {
             router.push('/admin/roles');
@@ -86,12 +114,13 @@ export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
 
     return (
         <motion.div
+            className='px-5'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}>
             <FormProvider {...methods}>
-                <div className='p-5 relative mt-5 rounded-md prism-card-bg md:h-[calc(100vh-100px)] overflow-y-hidden'>
+                <div className='p-5 relative rounded-md prism-card-bg md:h-[calc(100vh-100px)] overflow-y-hidden'>
                     <h1 className='mb-4 text-xl font-semibold'>Create New Role</h1>
                     <Stepper steps={steps}>
                         <div className='flex flex-col justify-between md:flex-row'>

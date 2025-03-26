@@ -27,6 +27,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { Session } from 'next-auth';
 import { CoordinatesType } from '@b-prism/types';
 import { useWarehouseStore } from 'apps/web-app/src/stores/map-stores/warehouse.store';
+import { useProgress } from '@bprogress/next';
 
 interface DialogProps {
     isOpen: boolean;
@@ -36,9 +37,18 @@ interface DialogProps {
 }
 
 const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coordinates, session }) => {
+    const { start: startLoading, stop: stopLoading } = useProgress();
     const { toast } = useToast();
-    const { createWarehouse } = useCreateWarehouse();
+    const { isLoading, createWarehouse } = useCreateWarehouse();
     const { getAddress, address } = useGetAddress();
+
+    if (isLoading) {
+        console.log('LOADING!');
+        startLoading();
+    } else {
+        console.log('LOADING!');
+        stopLoading();
+    }
 
     const user = session?.user;
 
@@ -104,6 +114,7 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coord
     }, [coordinates, reset]);
 
     const onSubmit = async (data: CreateWarehouseDto) => {
+        startLoading();
         try {
             if (!user || !user.permissions.includes('WAREHOUSE_PERMISSION')) {
                 throw new UnauthorizedException('Unauthorized');
@@ -145,6 +156,8 @@ const CreateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, coord
                 description: errorMessage,
                 variant: 'destructive',
             });
+        } finally {
+            stopLoading();
         }
     };
 
