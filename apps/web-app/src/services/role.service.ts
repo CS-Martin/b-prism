@@ -43,7 +43,7 @@ class RoleService {
         }
     }
 
-    public async update(id: string, updateRoleDto: UpdateRoleDto, author: string, token: string): Promise<ResponseDto<RoleDto>> {
+    public async update(id: string, updateRoleDto: UpdateRoleDto, author: string, token: string): Promise<RoleDto> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/roles/${id}`, {
                 method: 'PUT',

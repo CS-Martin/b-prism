@@ -86,7 +86,13 @@ export const useRoleStore = create<RoleStore>((set, get) => ({
         set({ isLoading: true, error: null });
 
         try {
-            await roleService.update(id, updateRoleDto, author, token);
+            const updatedRole = await roleService.update(id, updateRoleDto, author, token);
+
+            set((state) => ({
+                roles: state.roles.map((role) => (role.id === updatedRole.id ? updatedRole : role)),
+                isLoading: false,
+                error: null,
+            }));
 
             toast({
                 title: 'Role updated successfully!',
@@ -106,7 +112,6 @@ export const useRoleStore = create<RoleStore>((set, get) => ({
         }
     },
 
-    // Delete a role
     deleteRole: async (role: RoleDto, author: string, token: string) => {
         set({ isLoading: true, error: null });
 
