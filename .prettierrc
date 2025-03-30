@@ -9,7 +9,7 @@
     "quoteProps": "as-needed",
     "trailingComma": "all",
     "singleAttributePerLine": true,
-    "htmlWhitespaceSensitivity": "css",
+    "htmlWhitespaceSensitivity": "ignore",
     "vueIndentScriptAndStyle": false,
     "proseWrap": "preserve",
     "insertPragma": false,
