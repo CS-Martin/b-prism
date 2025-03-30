@@ -15,6 +15,7 @@ import { useProgress } from '@bprogress/next';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { ErrorMessage } from 'apps/web-app/src/components/forms/error-message';
 
 const loginSchema = z.object({
     email: z.string().email('Invalid email address'),
@@ -166,6 +167,7 @@ export const LoginForm = () => {
                 description: message,
                 variant: 'destructive',
             });
+        } finally {
             setIsSubmittingLogin(false);
         }
     };
@@ -187,7 +189,6 @@ export const LoginForm = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
 
-    // Calculate combined loading state for buttons etc.
     const isLoading = isCheckingEmail || isSubmittingLogin || rhfIsSubmitting;
 
     return (
@@ -222,7 +223,7 @@ export const LoginForm = () => {
                         />
 
                         {/* Display email validation error */}
-                        {errors.email && <p className='mt-1 text-xs text-red-500'>{errors.email.message}</p>}
+                        {errors.email && <ErrorMessage message={errors.email.message} />}
 
                         <div className='flex justify-end'>
                             <a
@@ -266,7 +267,7 @@ export const LoginForm = () => {
                                     </button>
                                 </div>
 
-                                {errors.password && <p className='mt-1 text-xs text-red-500'>{errors.password.message}</p>}
+                                {errors.password && <ErrorMessage message={errors.password.message} />}
                             </motion.div>
                         )}
                     </AnimatePresence>
