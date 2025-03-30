@@ -167,6 +167,7 @@ export const LoginForm = () => {
                 description: message,
                 variant: 'destructive',
             });
+        } finally {
             setIsSubmittingLogin(false);
         }
     };
@@ -188,7 +189,6 @@ export const LoginForm = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
 
-    // Calculate combined loading state for buttons etc.
     const isLoading = isCheckingEmail || isSubmittingLogin || rhfIsSubmitting;
 
     return (
