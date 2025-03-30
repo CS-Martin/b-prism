@@ -55,7 +55,14 @@ export const useRoleStore = create<RoleStore>((set, get) => ({
         set({ isLoading: true, error: null });
 
         try {
-            await roleService.create(createRoleDto, token);
+            const newRole: RoleDto = await roleService.create(createRoleDto, token);
+
+            // Insert the created role into role[]
+            set((state) => ({
+                roles: [newRole, ...state.roles],
+                isLoading: false,
+                error: null,
+            }));
 
             toast({
                 title: 'Role created successfully!',

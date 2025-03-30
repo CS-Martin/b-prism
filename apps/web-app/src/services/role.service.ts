@@ -7,7 +7,7 @@ class RoleService {
         this.API_BASE_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}${process.env.NEXT_PUBLIC_ROLE_SERVICE_API_PORT}/${process.env.NEXT_PUBLIC_API_VERSION}`;
     }
 
-    public async create(createRoleDto: CreateRoleDto, token: string): Promise<ResponseDto<RoleDto>> {
+    public async create(createRoleDto: CreateRoleDto, token: string): Promise<RoleDto> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/roles`, {
                 method: 'POST',
