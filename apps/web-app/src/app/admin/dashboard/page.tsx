@@ -7,7 +7,7 @@ export default async function AdminDashboardPage() {
     const session = await getServerSession(options);
 
     return (
-        <div className='px-3'>
+        <div>
             <Topbar
                 items={[
                     { label: 'Admin', href: '/' },

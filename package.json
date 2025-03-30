@@ -7,7 +7,7 @@
         "build": "npm run build:all",
         "build:all": "concurrently \"npx nx run activity-log-service:build\" \"npx nx run role-service:build\" \"npx nx run authentication-service:build\" \"npx nx run warehouse-service:build\" \"npx nx run dispensing-point-service:build\" \"npx nx run road-network-service:build\" \"npx nx run rescue-post-service:build\" \"npx nx run user-service:build\" \"npx nx run verification-service:build\" \"npx nx run mailer-service:build\"",
         "start:all:dev": "concurrently \"npx nx run activity-log-service:serve --configuration=development\" \"npx nx run role-service:serve --configuration=development\"  \"npx nx run authentication-service:serve --configuration=development\" \"npx nx run warehouse-service:serve --configuration=development\" \"npx nx run dispensing-point-service:serve --configuration=development\" \"npx nx run road-network-service:serve --configuration=development\" \"npx nx run rescue-post-service:serve --configuration=development\" \"npx nx run user-service:serve --configuration=development\" \"npx nx run verification-service:serve --configuration=development\" \"npx nx run mailer-service:serve --configuration=development\"",
-        "start:all:production": "concurrently \"npm run start:activity-log\" \"npm run start:mailer\" \"npm run start:role-service\" \"npm run start:authentication\" \"npm run start:warehouse\" \"npm run start:dispensing-point\" \"npm run start:road-network\" \"npm run start:rescue-post\" \"npm run start:user\" \"npm run start:verification\"",
+        "start:all:production": "concurrently \"npm run start:activity-log\" \"npm run start:mailer\" \"npm run start:role\" \"npm run start:authentication\" \"npm run start:warehouse\" \"npm run start:dispensing-point\" \"npm run start:road-network\" \"npm run start:rescue-post\" \"npm run start:user\" \"npm run start:verification\"",
         "start:activity-log": "node dist/apps/activity-log-service/main.js",
         "start:authentication": "node dist/apps/authentication-service/main.js",
         "start:warehouse": "node dist/apps/map-service/warehouse-service/main.js",
@@ -23,7 +23,9 @@
     "private": true,
     "dependencies": {
         "@auth0/nextjs-auth0": "^3.5.0",
+        "@bprogress/next": "^3.2.10",
         "@grpc/proto-loader": "^0.7.13",
+        "@hookform/resolvers": "^4.1.3",
         "@mapbox/mapbox-gl-geocoder": "^5.0.3",
         "@motionone/utils": "^10.18.0",
         "@nestjs/common": "^11.0.1",
@@ -103,6 +105,7 @@
         "tailwind-merge": "^2.5.4",
         "tailwindcss-animate": "^1.0.7",
         "uploadthing": "^7.4.4",
+        "zod": "^3.24.2",
         "zustand": "^5.0.3"
     },
     "devDependencies": {

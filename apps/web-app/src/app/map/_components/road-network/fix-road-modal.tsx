@@ -8,6 +8,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/index';
+import { useProgress } from '@bprogress/next';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 import { Session } from 'next-auth';
 import React from 'react';
@@ -19,6 +20,7 @@ interface FixRoadModalProps {
 }
 
 export const FixRoadModal = ({ roadId, setIsDialogOpen, session }: FixRoadModalProps) => {
+    const { start: startLoading, stop: stopLoading } = useProgress();
     const { fixRoad } = useRoadNetworkStore();
 
     if (!session) return;
@@ -28,8 +30,10 @@ export const FixRoadModal = ({ roadId, setIsDialogOpen, session }: FixRoadModalP
 
     const handleRoadDestroy = async () => {
         if (roadId && user?.permissions.includes('ROAD_NETWORK_PERMISSION')) {
+            startLoading();
             await fixRoad(roadId, requestAuthor);
             setIsDialogOpen(false);
+            stopLoading();
         }
     };
 

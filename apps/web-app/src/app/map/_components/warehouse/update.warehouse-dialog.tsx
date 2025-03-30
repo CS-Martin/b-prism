@@ -25,6 +25,7 @@ import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { Session } from 'next-auth';
+import { useProgress } from '@bprogress/next';
 
 interface DialogProps {
     isOpen: boolean;
@@ -35,9 +36,16 @@ interface DialogProps {
 
 const UpdateWarehouseDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen, warehouseId, session }) => {
     const { toast } = useToast();
+    const { start: startLoading, stop: stopLoading } = useProgress();
+    const { isLoading: isUpdatingWarehouse, updateWarehouse } = useUpdateWarehouse();
+    const { isLoading: isFindingOneWarehouse, warehouse } = useFindOneWarehouse(warehouseId);
 
-    const { updateWarehouse } = useUpdateWarehouse();
-    const { warehouse } = useFindOneWarehouse(warehouseId);
+    if (isFindingOneWarehouse || isUpdatingWarehouse) {
+        console.log('Is loading');
+        startLoading();
+    } else {
+        stopLoading();
+    }
 
     const user = session?.user;
     const isDisabled = !session;

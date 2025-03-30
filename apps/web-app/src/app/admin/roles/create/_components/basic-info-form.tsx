@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage, Input, Label, Separator, Textarea } from '@b-prism/shadcn-ui/index';
+import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
 import { CalendarDays, UserRound } from 'lucide-react';
 import { Session } from 'next-auth';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
@@ -11,6 +12,8 @@ interface RoleBasicInfoFormProps {
 }
 
 export const RoleBasicInfoForm = ({ register, errors, readOnly, session }: RoleBasicInfoFormProps) => {
+    const { roles } = useRoleStore();
+
     return (
         <div className='mt-5'>
             <div className=''>
@@ -20,7 +23,10 @@ export const RoleBasicInfoForm = ({ register, errors, readOnly, session }: RoleB
                         id='role_name'
                         type='text'
                         className='mt-1'
-                        {...register('name', { required: 'Role Name is required.' })}
+                        {...register('name', {
+                            required: 'Role Name is required.',
+                            validate: (value) => (roles.some((role) => role.name.toLowerCase() === value.toLowerCase()) ? 'Role name already exists' : true),
+                        })}
                         readOnly={readOnly}
                     />
                     {errors.name && <p className='mt-1 text-sm text-red-500'>{errors.name.message}</p>}

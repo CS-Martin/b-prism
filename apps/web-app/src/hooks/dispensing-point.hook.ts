@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react';
-import { CreateDispensingPointDto, DispensingPointDto, RescuePostDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
-import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { CreateDispensingPointDto, DispensingPointDto, ResponseDto, UpdateDispensingPointDto } from '@dto';
+import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { dispensingPointService } from '../services/dispensing-point.service';
-import { rescuePostService } from '../services/rescue-post.service';
+import { useProgress } from '@bprogress/next';
 
 /**
  * @description Hooks for dispensing points
  */
 
 export const useDisplayDispensingPoints = () => {
-    const { toast } = useToast();
+    const { start, stop } = useProgress();
     const [dispensingPoints, setDispensingPoints] = useState<DispensingPointDto[]>([]);
 
     const fetchAllDispensingPoints = async () => {
         try {
+            start();
+
             const response: ResponseDto<DispensingPointDto[]> = await dispensingPointService.fetchAllDispensingPoints();
 
             if (response.statusCode !== 200) {
@@ -31,6 +33,8 @@ export const useDisplayDispensingPoints = () => {
                 description: errorMessage,
                 variant: 'destructive',
             });
+        } finally {
+            stop();
         }
     };
 
@@ -44,11 +48,12 @@ export const useDisplayDispensingPoints = () => {
 };
 
 export const useFindOneDispensingPoint = (id: string) => {
-    const { toast } = useToast();
+    const { start, stop } = useProgress();
     const [dispensingPoint, setDispensingPoint] = useState<DispensingPointDto>({} as DispensingPointDto);
 
     const fetchOneDispensingPoint = async () => {
         try {
+            start();
             const response: ResponseDto<DispensingPointDto> = await dispensingPointService.findOne(id);
 
             if (response.statusCode !== 200) {
@@ -66,6 +71,8 @@ export const useFindOneDispensingPoint = (id: string) => {
                 description: errorMessage,
                 variant: 'destructive',
             });
+        } finally {
+            stop();
         }
     };
 
@@ -77,10 +84,12 @@ export const useFindOneDispensingPoint = (id: string) => {
 };
 
 export const useCreateDispensingPoint = () => {
-    const { toast } = useToast();
+    const { start, stop } = useProgress();
 
     const createDispensingPoint = async (data: CreateDispensingPointDto, author: string, access_token: string): Promise<DispensingPointDto | undefined> => {
         try {
+            start();
+
             const newDispensingPoint: DispensingPointDto = await dispensingPointService.create(
                 {
                     ...data,
@@ -107,6 +116,8 @@ export const useCreateDispensingPoint = () => {
                 description: errorMessage,
                 variant: 'destructive',
             });
+        } finally {
+            stop();
         }
     };
 
@@ -114,10 +125,11 @@ export const useCreateDispensingPoint = () => {
 };
 
 export const useUpdateDispensingPoint = () => {
-    const { toast } = useToast();
+    const { start, stop } = useProgress();
 
     const updateDispensingPoint = async (id: string, data: UpdateDispensingPointDto, author: string, access_token: string) => {
         try {
+            start();
             await dispensingPointService.update(id, data, author, access_token);
 
             toast({
@@ -135,6 +147,8 @@ export const useUpdateDispensingPoint = () => {
                 description: errorMessage,
                 variant: 'destructive',
             });
+        } finally {
+            stop();
         }
     };
 
@@ -142,10 +156,13 @@ export const useUpdateDispensingPoint = () => {
 };
 
 export const useDeleteDispensingPoint = () => {
-    const { toast } = useToast();
+    const { start, stop } = useProgress();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const deleteDispensingPoint = async (id: string, author: string, access_token: string) => {
         try {
+            start();
+            setIsLoading(true);
             await dispensingPointService.delete(id, author, access_token);
 
             toast({
@@ -162,8 +179,11 @@ export const useDeleteDispensingPoint = () => {
                 description: errorMessage,
                 variant: 'destructive',
             });
+        } finally {
+            stop();
+            setIsLoading(false);
         }
     };
 
-    return { deleteDispensingPoint };
+    return { isLoading, deleteDispensingPoint };
 };

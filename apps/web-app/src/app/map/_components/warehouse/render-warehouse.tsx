@@ -3,6 +3,7 @@ import UpdateWarehouseDialog from './update.warehouse-dialog';
 import { useEffect, useState } from 'react';
 import { Session } from 'next-auth';
 import { useWarehouseStore } from 'apps/web-app/src/stores/map-stores/warehouse.store';
+import { useProgress } from '@bprogress/next';
 
 interface RenderWarehouseProps {
     visibility: { warehouses: boolean };
@@ -11,9 +12,16 @@ interface RenderWarehouseProps {
 }
 
 const RenderWarehouse = ({ visibility, selectedAction, session }: RenderWarehouseProps) => {
+    const { start: startLoading, stop: stopLoading } = useProgress();
     const { current: map } = useMap();
 
     const { warehouseGeoJson, fetchAllWarehouses, isLoading } = useWarehouseStore();
+
+    if (isLoading) {
+        startLoading();
+    } else {
+        stopLoading();
+    }
 
     useEffect(() => {
         if (warehouseGeoJson.features.length === 0) {
