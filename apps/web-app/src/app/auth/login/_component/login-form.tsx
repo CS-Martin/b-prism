@@ -267,7 +267,7 @@ export const LoginForm = () => {
                                     </button>
                                 </div>
 
-                                {errors.password && <p className='mt-1 text-xs text-red-500'>{errors.password.message}</p>}
+                                {errors.password && <ErrorMessage message={errors.password.message} />}
                             </motion.div>
                         )}
                     </AnimatePresence>
