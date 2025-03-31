@@ -1,9 +1,7 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { LoginForm } from './_component/login-form';
-import { ParticleWrapper } from './_component/particle-wrapper';
+import { ParticleWrapper } from '../../../components/providers/particle-wrapper';
 import { ThemeToggler } from 'apps/web-app/src/components/theme-toggler';
 
 export default function LoginPage() {

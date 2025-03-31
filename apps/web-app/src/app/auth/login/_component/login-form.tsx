@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { signIn, getSession } from 'next-auth/react';
@@ -12,57 +12,113 @@ import { authService } from '../../../../services/authentication.service';
 import { debounce } from 'lodash';
 import { Eye, EyeOff } from 'lucide-react';
 import { useProgress } from '@bprogress/next';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { ErrorMessage } from 'apps/web-app/src/components/forms/error-message';
+
+const loginSchema = z.object({
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters long'),
+});
+
+type LoginFormInputs = z.infer<typeof loginSchema>;
 
 export const LoginForm = () => {
     const { start: loadStart, stop: loadStop } = useProgress();
     const { toast } = useToast();
     const router = useRouter();
 
-    const [isLoading, setIsLoading] = useState(false);
+    // --- State Management ---
+
+    const [isCheckingEmail, setIsCheckingEmail] = useState(false);
+    const [isSubmittingLogin, setIsSubmittingLogin] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [error, setError] = useState('');
     const [showPasswordInput, setShowPasswordInput] = useState(false);
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
+
+    // --- React Hook Form ---
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors, isSubmitting: rhfIsSubmitting },
+        setError: setFormError,
+        trigger,
+    } = useForm({
+        resolver: zodResolver(loginSchema),
+        mode: 'onChange',
+        defaultValues: {
+            email: '',
+            password: '',
+        },
     });
 
+    const watchedEmail = watch('email');
+
+    // --- Effects ---
+
     useEffect(() => {
+        const isLoading = rhfIsSubmitting || isSubmittingLogin || isCheckingEmail;
+
         if (isLoading) {
             loadStart();
         } else {
             loadStop();
         }
-    }, [isLoading, loadStart, loadStop]);
 
-    // // Fetch user based on email in searchParams
-    useEffect(() => {
-        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+        // Cleanup function to stop loading
+        return () => loadStop();
+    }, [isSubmittingLogin, isCheckingEmail, loadStart, loadStop]);
 
-        if (isValidEmail) {
-            const handleDebouncedFetch = debounce(async () => {
-                try {
-                    loadStart();
-                    const user = await authService.findUserByEmailWithoutThrow(formData.email);
-                    setShowPasswordInput(Boolean(user));
-                } catch (err) {
-                    console.error('Error fetching user:', err);
-                } finally {
-                    loadStop();
+    // Use useCallback to memoize the debounced function
+    const checkEmailExistence = useCallback(
+        debounce(async (email: string) => {
+            setIsCheckingEmail(true);
+            try {
+                const user = await authService.findUserByEmailWithoutThrow(email);
+                console.log('User found:', user);
+                setShowPasswordInput(Boolean(user));
+                console.log('showPasswordInput:', showPasswordInput);
+                // If user exists, password becomes required (we can trigger validation or handle in submit)
+                if (user) {
+                    // Optionally trigger password validation if needed here
+                    // await trigger("password");
+                } else {
+                    // Clear potential API error if user not found after typing
+                    setFormError('email', {
+                        type: 'manual',
+                        message: 'Email not found. Please check your email address.',
+                    });
                 }
-            }, 1000);
+            } catch (err) {
+                console.error('Error fetching user:', err);
+                setShowPasswordInput(false);
+            } finally {
+                setIsCheckingEmail(false);
+            }
+        }, 1000),
+        [setFormError, trigger],
+    );
 
-            handleDebouncedFetch();
+    useEffect(() => {
+        const isValidEmailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(watchedEmail || '');
 
-            return () => handleDebouncedFetch.cancel();
+        if (isValidEmailFormat) {
+            checkEmailExistence(watchedEmail);
         } else {
-            setShowPasswordInput(false); // Hide password input if email is invalid
+            setShowPasswordInput(false);
+            checkEmailExistence.cancel();
         }
-    }, [formData.email]);
 
-    const handleLogin = async (provider: 'credentials' | 'google', credentials?: { email: string; password: string }) => {
-        setIsLoading(true);
-        setError('');
+        // Cleanup function for debounce cancellation
+        return () => checkEmailExistence.cancel();
+    }, [watchedEmail, checkEmailExistence]);
+
+    // --- Handlers ---
+
+    const handleLogin = async (provider: 'credentials' | 'google', credentials?: LoginFormInputs) => {
+        setIsSubmittingLogin(true); // Use specific loading state
 
         try {
             const result = await signIn(provider, {
@@ -71,14 +127,27 @@ export const LoginForm = () => {
             });
 
             if (result?.error) {
-                throw new Error(result.error);
+                // Handle specific NextAuth errors
+                let errorMessage = result.error;
+                if (result.error === 'CredentialsSignin') {
+                    errorMessage = 'Invalid email or password.';
+                    // Set error on the password field for better UX
+                    setFormError('password', { type: 'manual', message: errorMessage });
+                } else {
+                    // Set a general error maybe? Or just toast it.
+                    setFormError('root.serverError', { type: 'manual', message: errorMessage });
+                }
+                throw new Error(errorMessage); // Throw to be caught below for toast
             }
 
+            // Success path
             const updatedSession = await getSession();
 
+            // Check if profile completion is needed BEFORE showing success toast
             if (!updatedSession?.user?.id_image_url || updatedSession.user.id_image_url === '') {
+                setIsSubmittingLogin(false); // Stop loading before navigation
                 router.push(`/auth/${updatedSession?.user.id}/complete-profile`);
-                return;
+                return; // Exit early
             }
 
             toast({
@@ -87,24 +156,29 @@ export const LoginForm = () => {
                 variant: 'success',
             });
 
-            setIsLoading(false);
             router.push('/home');
         } catch (error) {
-            console.error('Login error:', error);
-            setError(error instanceof Error ? error.message : 'An unexpected error occurred.');
+            const message = error instanceof Error ? error.message : 'An unexpected error occurred.';
+
+            console.error('Login error:', message, error);
+
             toast({
-                title: 'Error',
-                description: error instanceof Error ? error.message : 'An unexpected error occurred.',
+                title: 'Login Failed',
+                description: message,
                 variant: 'destructive',
             });
         } finally {
-            setIsLoading(false);
+            setIsSubmittingLogin(false);
         }
     };
 
-    const handleLoginUser = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        await handleLogin('credentials', { email: formData.email, password: formData.password });
+    const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+        // Extra validation: If password input is shown, password should not be empty
+        if (showPasswordInput && !data.password) {
+            setFormError('password', { type: 'manual', message: 'Password is required.' });
+            return; // Stop submission
+        }
+        await handleLogin('credentials', data);
     };
 
     const handleGoogleLogin = async () => {
@@ -114,6 +188,8 @@ export const LoginForm = () => {
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
+
+    const isLoading = isCheckingEmail || isSubmittingLogin || rhfIsSubmitting;
 
     return (
         <AnimatePresence mode='wait'>
@@ -126,20 +202,29 @@ export const LoginForm = () => {
                 <p className='my-2 text-sm text-center text-gray-500'>Enter your email below to sign in with your account.</p>
 
                 <form
-                    onSubmit={handleLoginUser}
+                    onSubmit={handleSubmit(onSubmit)}
+                    noValidate
                     className='mt-5 space-y-6'>
                     <div className='w-full'>
                         <Input
                             id='email'
-                            name='email'
                             type='email'
                             placeholder='projectharibon@gmail.com'
                             required
                             autoComplete='email'
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            className=''
+                            {...register('email', {
+                                required: 'Email is required',
+                                pattern: {
+                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                    message: 'Invalid email address',
+                                },
+                            })}
+                            aria-invalid={errors.email ? 'true' : 'false'}
                         />
+
+                        {/* Display email validation error */}
+                        {errors.email && <ErrorMessage message={errors.email.message} />}
+
                         <div className='flex justify-end'>
                             <a
                                 href='/auth/forgot-password'
@@ -159,15 +244,21 @@ export const LoginForm = () => {
                                 <div className='relative mt-2'>
                                     <Input
                                         id='password'
-                                        name='password'
                                         type={isPasswordVisible ? 'text' : 'password'}
                                         required
                                         placeholder='Password'
                                         autoComplete='current-password'
-                                        value={formData.password}
-                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                        className='w-full pr-10'
+                                        {...register('password', {
+                                            required: 'Password is required',
+                                            minLength: {
+                                                value: 6,
+                                                message: 'Password must be at least 6 characters long',
+                                            },
+                                        })}
+                                        aria-invalid={errors.password ? 'true' : 'false'}
+                                        className={`w-full pr-10 ${errors.password ? 'border-red-500 focus:border-red-500' : ''}`}
                                     />
+
                                     <button
                                         type='button'
                                         onClick={togglePasswordVisibility}
@@ -175,9 +266,12 @@ export const LoginForm = () => {
                                         {isPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
                                     </button>
                                 </div>
+
+                                {errors.password && <ErrorMessage message={errors.password.message} />}
                             </motion.div>
                         )}
                     </AnimatePresence>
+
                     <div className='transition-all duration-300 ease-in-out'>
                         <div>
                             <PrismButton

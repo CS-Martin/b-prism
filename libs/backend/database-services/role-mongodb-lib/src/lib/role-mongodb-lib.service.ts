@@ -14,7 +14,11 @@ export class RoleMongodbLibService {
     }
 
     async findAll(): Promise<Role[]> {
-        return await this.prisma.role.findMany();
+        return await this.prisma.role.findMany({
+            orderBy: {
+                created_at: 'desc',
+            },
+        });
     }
 
     async findOne(id: string): Promise<Role | null> {
