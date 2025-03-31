@@ -38,13 +38,13 @@ export class RoleServiceLibService {
         }
     }
 
-    async update(id: string, updateRoleDto: UpdateRoleDto, author: string): Promise<ResponseDto<{ message: string }>> {
+    async update(id: string, updateRoleDto: UpdateRoleDto, author: string): Promise<ResponseDto<RoleDto>> {
         this.logger.log('Updating role record: ', updateRoleDto);
 
         try {
             const updatedRole: Role = await this.roleMongodbService.update(id, updateRoleDto);
 
-            const response: ResponseDto<{ message: string }> = new ResponseDto<{ message: string }>(204, { message: 'Role successfully updated.' });
+            const response: ResponseDto<RoleDto> = new ResponseDto<RoleDto>(204, this.convertToRoleDto(updatedRole));
 
             await this.activityLogService.create({
                 action: 'UPDATE',

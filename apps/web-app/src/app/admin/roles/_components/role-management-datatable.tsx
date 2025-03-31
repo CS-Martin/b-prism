@@ -148,6 +148,8 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
     const [selectedRole, setSelectedRole] = useState<RoleDto | null>(null);
 
+    console.log('roles', roles);
+
     if (isLoading) {
         loadStart();
     } else {
