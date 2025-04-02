@@ -6,13 +6,19 @@ import mapboxgl from 'mapbox-gl';
 import { MapRef } from 'react-map-gl';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { RescuePostCard } from './rescue-post-card';
-import { useDisplayRescuePosts } from 'apps/web-app/src/hooks/rescue-post.hook';
+import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
 
 const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> | null }) => {
     const { toast } = useToast();
     const [currentMarker, setCurrentMarker] = useState<any>(null);
     const [isExpanded, setIsExpanded] = useState(true);
-    const { rescuePosts } = useDisplayRescuePosts();
+    const { rescuePosts, isLoading, error, fetchAllRescuePosts } = useRescuePostStore();
+
+    useEffect(() => {
+        if (!rescuePosts || rescuePosts.length === 0) {
+            fetchAllRescuePosts();
+        }
+    }, []);
 
     useEffect(() => {
         document.getElementById('scroll-area')?.scrollIntoView({ behavior: 'smooth' });

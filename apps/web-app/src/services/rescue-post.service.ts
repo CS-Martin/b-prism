@@ -1,5 +1,5 @@
 import { CreateRescuePostDto, RescuePostDto, ResponseDto } from '@dto';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Body } from '@nestjs/common';
 
 class RescuePostService {
     private API_BASE_URL: string;
@@ -32,11 +32,13 @@ class RescuePostService {
         }
     }
 
-    public async findAll(): Promise<ResponseDto<RescuePostDto[]>> {
+    public async findAll(): Promise<RescuePostDto[]> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/rescue-posts`, {
                 method: 'GET',
             });
+
+            console.log(response);
 
             if (!response.ok) {
                 const error = await response.json();
@@ -44,7 +46,7 @@ class RescuePostService {
                 throw new BadRequestException(error.message);
             }
 
-            return response.json();
+            return (await response.json()).body;
         } catch (error) {
             console.error(error);
 

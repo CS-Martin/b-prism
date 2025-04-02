@@ -20,6 +20,7 @@ import { useMapStore } from 'apps/web-app/src/stores/map-stores/mapbox.store';
 import { GenerateDirections } from './directions/generate-directions';
 import { useProgress } from '@bprogress/next';
 import FetchingIndicator from './fetching-indicator';
+import { TyphoonLayer } from './typhoon-simulation/typhoon-layer';
 
 export const MapboxContext = ({ session }: { session: Session | null }) => {
     const { start: startLoad, stop: stopLoad } = useProgress();
@@ -99,6 +100,7 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
     return (
         <main>
             <div id='map'>
+                <div id='#step1'>TESTSETSETT</div>
                 <Map
                     ref={(ref) => {
                         if (ref && (!mapRef || mapRef.current !== ref)) {
@@ -150,6 +152,8 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                                 selectedAction={selectedAction}
                                 session={session}
                             />
+
+                            {/* <TyphoonLayer /> */}
                         </>
                         <ControlPanel
                             visibility={visibility}
