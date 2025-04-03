@@ -18,11 +18,11 @@ import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import { parseISO, format } from 'date-fns';
 
 const chartConfig = {
-    desktop: {
+    activeRequest: {
         label: 'Desktop',
         color: '#2563eb',
     },
-    mobile: {
+    rescued: {
         label: 'Mobile',
         color: '#60a5fa',
     },
@@ -38,16 +38,25 @@ export const Overview = () => {
     }, []);
 
     const chartData = useMemo(() => {
-        const monthCounts: Record<string, number> = {};
+        const monthCounts: Record<string, { activeRequest: number; rescued: number }> = {};
 
         rescuePosts.forEach((post) => {
             const month = format(post.created_at, 'MMMM');
-            monthCounts[month] = (monthCounts[month] || 0) + 1;
+            if (!monthCounts[month]) {
+                monthCounts[month] = { activeRequest: 0, rescued: 0 };
+            }
+
+            if (post.isRescued) {
+                monthCounts[month].rescued += 1;
+            } else {
+                monthCounts[month].activeRequest += 1;
+            }
         });
 
         return Object.keys(monthCounts).map((month) => ({
             month,
-            requests: monthCounts[month],
+            activeRequests: monthCounts[month].activeRequest,
+            rescued: monthCounts[month].rescued,
         }));
     }, [rescuePosts]);
 
@@ -99,9 +108,12 @@ export const Overview = () => {
                             <ChartLegend content={<ChartLegendContent />} />
 
                             <Bar
-                                dataKey='requests'
-                                fill='var(--color-mobile)'
-                                radius={4}
+                                dataKey='activeRequests'
+                                fill={chartConfig.activeRequest.color}
+                            />
+                            <Bar
+                                dataKey='rescued'
+                                fill={chartConfig.rescued.color}
                             />
                         </BarChart>
                     </ChartContainer>

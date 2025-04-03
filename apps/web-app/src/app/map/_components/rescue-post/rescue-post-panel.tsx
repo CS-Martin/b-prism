@@ -7,6 +7,7 @@ import { MapRef } from 'react-map-gl';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { RescuePostCard } from './rescue-post-card';
 import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
+import { RescuePostDto } from '@dto';
 
 const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> | null }) => {
     const { toast } = useToast();
@@ -24,11 +25,12 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> | null })
         document.getElementById('scroll-area')?.scrollIntoView({ behavior: 'smooth' });
     }, [rescuePosts]);
 
-    const handleLocateClick = (post: any) => {
+    console.log(rescuePosts);
+    const handleLocateClick = (post: RescuePostDto) => {
         if (!mapRef?.current) return;
 
         const mapboxMap = mapRef.current.getMap();
-        if (!post.latitude || !post.longitude) {
+        if (!post.location.latitude || !post.location.longitude) {
             toast({ title: `Error`, description: `No coordinates found for ${post.contact_persons[0]?.name || 'post'}` });
             return;
         }
@@ -38,9 +40,9 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> | null })
             description: `Please wait while we locate the post on the map.`,
         });
 
-        mapboxMap.flyTo({ center: [post.longitude, post.latitude], zoom: 14, essential: true });
+        mapboxMap.flyTo({ center: [post.location.longitude, post.location.latitude], zoom: 14, essential: true });
         currentMarker?.remove();
-        setCurrentMarker(new mapboxgl.Marker().setLngLat([post.longitude, post.latitude]).addTo(mapboxMap));
+        setCurrentMarker(new mapboxgl.Marker().setLngLat([post.location.longitude, post.location.latitude]).addTo(mapboxMap));
     };
 
     return (
