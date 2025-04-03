@@ -1,6 +1,7 @@
 import { RescuePostDto } from '@dto';
 import { create } from 'zustand';
 import { rescuePostService } from '../../services/rescue-post.service';
+import { useProgress } from '@bprogress/next';
 
 interface RescuePostStore {
     rescuePosts: RescuePostDto[];
@@ -20,7 +21,6 @@ export const useRescuePostStore = create<RescuePostStore>((set, get) => ({
 
         try {
             const rescuePosts: RescuePostDto[] = await rescuePostService.findAll();
-            console.log('Rescue Posts from stores:', rescuePosts);
 
             set({ rescuePosts: rescuePosts });
         } catch (error: any) {

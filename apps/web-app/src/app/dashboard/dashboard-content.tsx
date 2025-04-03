@@ -1,6 +1,6 @@
 'use client';
 
-import { Activity, AlertTriangle, ArrowDown, ArrowUp, Calendar, Clock, Filter, Home, LifeBuoy, MapPin, Package, Truck, Users, Warehouse, Waypoints } from 'lucide-react';
+import { AlertTriangle, Clock, LifeBuoy, Package, Truck, Users, Warehouse, Waypoints } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@b-prism/shadcn-ui/index';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@b-prism/shadcn-ui/index';
 import { Button } from '@b-prism/shadcn-ui/index';
@@ -8,7 +8,9 @@ import { Badge } from '@b-prism/shadcn-ui/index';
 import { Progress } from '@b-prism/shadcn-ui/index';
 import { useAnalyticalDashboardStore } from '../../stores/dashboard-stores/analytical-dashboard.store';
 import { StatisticCards } from './_components/statistic-cards';
-import { Overview } from './_components/overview';
+import React, { lazy, Suspense } from 'react';
+import { OverviewSkeleton } from './_components/skeleton';
+const Overview = lazy(() => import('./_components/overview'));
 
 export default function DashboardPage() {
     const { selectedRange: timeRange } = useAnalyticalDashboardStore();
@@ -31,7 +33,9 @@ export default function DashboardPage() {
                         <TabsContent
                             value='overview'
                             className='space-y-4'>
-                            <Overview />
+                            <Suspense fallback={<OverviewSkeleton />}>
+                                <Overview />
+                            </Suspense>
                             <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
                                 <Card>
                                     <CardHeader>

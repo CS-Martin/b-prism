@@ -1,6 +1,6 @@
-import { Collapsible, CollapsibleContent, CollapsibleTrigger, Label, ScrollArea, Separator } from '@b-prism/shadcn-ui/index';
-import { ChevronRight, Locate, MessageSquareMore, PanelRight, ShieldAlert } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { Label, ScrollArea, Separator } from '@b-prism/shadcn-ui/index';
+import { MessageSquareMore, PanelRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Draggable from 'react-draggable';
 import mapboxgl from 'mapbox-gl';
 import { MapRef } from 'react-map-gl';

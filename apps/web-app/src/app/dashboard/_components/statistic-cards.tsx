@@ -20,9 +20,9 @@ export const StatisticCards = ({ timeRange }: StatisticCardsProps) => {
         }
     }, []);
 
-    const totalAdults = rescuePosts.reduce((sum, post) => sum + (post.total_adults || 0), 0);
-    const totalChildren = rescuePosts.reduce((sum, post) => sum + (post.total_children || 0), 0);
-    const totalElderly = rescuePosts.reduce((sum, post) => sum + (post.total_elderly || 0), 0);
+    const totalAdults = rescuePosts.reduce((sum, post) => sum + (post.demographics?.total_adults || 0), 0);
+    const totalChildren = rescuePosts.reduce((sum, post) => sum + (post.demographics?.total_children || 0), 0);
+    const totalElderly = rescuePosts.reduce((sum, post) => sum + (post.demographics?.total_elderly || 0), 0);
 
     return (
         <>

@@ -12,10 +12,11 @@ import {
     ChartTooltipContent,
 } from '@b-prism/shadcn-ui/index';
 import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
-import { Activity, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
-import { parseISO, format } from 'date-fns';
+import { format } from 'date-fns';
+import { useProgress } from '@bprogress/next';
 
 const chartConfig = {
     activeRequests: {
@@ -29,6 +30,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export const Overview = () => {
+    const { start: startLoading, stop: stopLoading } = useProgress();
     const { rescuePosts, isLoading, error, fetchAllRescuePosts } = useRescuePostStore();
 
     useEffect(() => {
@@ -36,6 +38,14 @@ export const Overview = () => {
             fetchAllRescuePosts();
         }
     }, []);
+
+    useEffect(() => {
+        if (isLoading) {
+            startLoading();
+        } else {
+            stopLoading();
+        }
+    }, [isLoading]);
 
     const chartData = useMemo(() => {
         const monthCounts: Record<string, { activeRequests: number; rescued: number }> = {};
@@ -126,3 +136,5 @@ export const Overview = () => {
         </div>
     );
 };
+
+export default Overview;
