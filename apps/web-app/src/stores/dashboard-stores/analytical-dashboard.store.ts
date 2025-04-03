@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 
 type AnalyticalDashboardState = {
-    selectedRange: string | null;
-    setSelectedRange: (range: string | null) => void;
+    selectedRange: string;
+    setSelectedRange: (range: string) => void;
 };
 
 export const useAnalyticalDashboardStore = create<AnalyticalDashboardState>((set) => ({
-    selectedRange: null,
+    selectedRange: '24h',
     setSelectedRange: (range) => set({ selectedRange: range }),
 }));

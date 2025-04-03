@@ -7,19 +7,20 @@ import { Button } from '@b-prism/shadcn-ui/index';
 import { Badge } from '@b-prism/shadcn-ui/index';
 import { Progress } from '@b-prism/shadcn-ui/index';
 import { useAnalyticalDashboardStore } from '../../stores/dashboard-stores/analytical-dashboard.store';
-import { StatisticCards } from './_components/statistic-cards';
 import React, { lazy, Suspense } from 'react';
-import { OverviewSkeleton } from './_components/skeleton';
+import { OverviewSkeleton, StatisticCardsSkeleton } from './_components/skeleton';
+
+const StatisticCards = lazy(() => import('./_components/statistic-cards'));
 const Overview = lazy(() => import('./_components/overview'));
 
 export default function DashboardPage() {
-    const { selectedRange: timeRange } = useAnalyticalDashboardStore();
-
     return (
         <div className='flex flex-col w-full min-h-screen bg-muted/40'>
             <div className='flex flex-col'>
                 <main className='flex-1 p-4 space-y-4 md:p-6'>
-                    <StatisticCards timeRange={timeRange} />
+                    <Suspense fallback={<StatisticCardsSkeleton />}>
+                        <StatisticCards />
+                    </Suspense>
                     <Tabs
                         defaultValue='overview'
                         className='space-y-4'>
