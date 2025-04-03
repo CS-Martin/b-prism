@@ -1,36 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ContactPersonDto } from './contact-person.dto';
+import { DemographicsDto } from './demographics.dto';
+import { LocationDto } from './location.dto';
 
 export class RescuePostDto {
     @ApiProperty()
-    id!: string;
-
-    @ApiProperty()
-    longitude?: string | null;
-
-    @ApiProperty()
-    latitude?: string | null;
+    id?: string;
 
     @ApiProperty({ type: [ContactPersonDto] })
     contact_persons!: ContactPersonDto[];
 
-    @ApiProperty()
-    total_adults!: number;
+    @ApiProperty({ type: DemographicsDto })
+    demographics?: DemographicsDto | null;
 
-    @ApiProperty()
-    total_children!: number;
-
-    @ApiProperty()
-    total_elderly!: number;
+    @ApiProperty({ type: LocationDto })
+    location!: LocationDto;
 
     @ApiProperty()
     number_of_people_affected!: number;
 
     @ApiProperty()
-    address!: string | null;
-
-    @ApiProperty()
-    landmark!: string | null;
+    isRescued!: boolean;
 
     @ApiProperty()
     created_at!: Date;

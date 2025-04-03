@@ -3,7 +3,7 @@
 import Map, { MapMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useMapActionStore } from 'apps/web-app/src/stores/sidebar-map-action.store';
 import CreateWarehouseDialog from './warehouse/create-warehouse-dialog';
 import RenderWarehouse from './warehouse/render-warehouse';
@@ -23,11 +23,10 @@ import FetchingIndicator from './fetching-indicator';
 
 export const MapboxContext = ({ session }: { session: Session | null }) => {
     const { start: startLoad, stop: stopLoad } = useProgress();
-    const { mapRef, setMapRef } = useMapStore();
+    const { mapRef, setMapRef, isMapLoaded, setIsMapLoaded } = useMapStore();
 
     const selectedAction = useMapActionStore((state) => state.selectedAction);
 
-    const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [coordinates, setCoordinates] = useState<CoordinatesType>({ longitude: 0, latitude: 0 });
     const [itemToDelete, setItemToDelete] = useState<{ type: string; id: string } | null>(null);
@@ -55,8 +54,18 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
     );
 
     useEffect(() => {
-        if (mapRef?.current) {
+        if (mapRef?.current && isMapLoaded) {
             const mapboxMap = mapRef.current.getMap();
+
+            // --- Safer check: Ensure layers exist before attaching listeners ---
+            const checkAndAttach = (layerId: string, handler: (event: MapMouseEvent) => void) => {
+                if (mapboxMap.getLayer(layerId)) {
+                    console.log(`Attaching click listener to ${layerId}`);
+                    mapboxMap.on('click', layerId, handler);
+                } else {
+                    console.warn(`Layer ${layerId} not found when trying to attach listener in MapboxContext.`);
+                }
+            };
 
             const handleLayerClick = (event: MapMouseEvent) => {
                 const item = event.features;
@@ -73,15 +82,22 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                 }
             };
 
-            mapboxMap.on('click', 'warehouse_layer', handleLayerClick);
-            mapboxMap.on('click', 'dispensing_point_layer', handleLayerClick);
+            checkAndAttach('warehouse_layer', handleLayerClick);
+            checkAndAttach('dispensing_point_layer', handleLayerClick);
 
             return () => {
-                mapboxMap.off('click', 'warehouse_layer', handleLayerClick);
-                mapboxMap.off('click', 'dispensing_point_layer', handleLayerClick);
+                if (mapboxMap.getStyle()) {
+                    // Check if map still valid
+                    try {
+                        mapboxMap.off('click', 'warehouse_layer', handleLayerClick);
+                        mapboxMap.off('click', 'dispensing_point_layer', handleLayerClick);
+                    } catch (e) {
+                        console.warn('Error detaching listeners in MapboxContext', e);
+                    }
+                }
             };
         }
-    }, [handleMarkerClick]);
+    }, [mapRef, isMapLoaded, handleMarkerClick]);
 
     const handleMapClick = (event: MapMouseEvent) => {
         setCoordinates({
@@ -99,9 +115,11 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
     return (
         <main>
             <div id='map'>
+                <div id='#step1'>TESTSETSETT</div>
                 <Map
                     ref={(ref) => {
                         if (ref && (!mapRef || mapRef.current !== ref)) {
+                            console.log('MapboxContext: Setting mapRef in store');
                             setMapRef({ current: ref });
                         }
                     }}
@@ -150,6 +168,8 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                                 selectedAction={selectedAction}
                                 session={session}
                             />
+
+                            {/* <TyphoonLayer /> */}
                         </>
                         <ControlPanel
                             visibility={visibility}

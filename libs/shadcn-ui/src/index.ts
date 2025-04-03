@@ -33,3 +33,6 @@ export * from './components/ui/card';
 export * from './components/ui/alert';
 export * from './components/ui/menubar';
 export * from './components/ui/select';
+export * from './components/ui/badge';
+export * from './components/ui/progress';
+export * from './components/ui/chart';

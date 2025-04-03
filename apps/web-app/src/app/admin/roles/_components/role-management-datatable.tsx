@@ -148,8 +148,6 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
     const [selectedRole, setSelectedRole] = useState<RoleDto | null>(null);
 
-    console.log('roles', roles);
-
     if (isLoading) {
         loadStart();
     } else {
@@ -165,6 +163,7 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
     if (error) {
         return <div className='p-5 rounded-md prism-card-bg'>Error: {error}</div>;
     }
+
     const handleDeleteClick = async (role: RoleDto) => {
         setSelectedRole(role);
         setIsDeleteDialogOpen(true);
