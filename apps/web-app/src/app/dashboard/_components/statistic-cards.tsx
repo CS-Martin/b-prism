@@ -15,7 +15,9 @@ export const StatisticCards = () => {
                 <Card>
                     <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                         <CardTitle className='text-sm font-medium'>Warehouse Resources</CardTitle>
-                        <Warehouse className='w-4 h-4 text-yellow-500' />
+                        <div className='p-1.5 rounded-md bg-yellow-200'>
+                            <Warehouse className='w-4 h-4 text-yellow-500' />
+                        </div>
                     </CardHeader>
                     <CardContent>
                         <div className='text-2xl font-bold'>68%</div>
@@ -55,7 +57,9 @@ export const StatisticCards = () => {
                 <Card>
                     <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                         <CardTitle className='text-sm font-medium'>Damaged Roads</CardTitle>
-                        <Waypoints className='w-4 h-4 text-orange-500' />
+                        <div className='p-1.5 rounded-md bg-orange-200'>
+                            <Waypoints className='w-4 h-4 text-orange-500' />
+                        </div>
                     </CardHeader>
                     <CardContent>
                         <div className='text-2xl font-bold'>42</div>
@@ -103,7 +107,9 @@ export const StatisticCards = () => {
                 <Card>
                     <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                         <CardTitle className='text-sm font-medium'>Evacuation Centers</CardTitle>
-                        <Home className='w-4 h-4 text-blue-500' />
+                        <div className='p-1.5 rounded-md bg-blue-200'>
+                            <Home className='w-4 h-4 text-blue-500' />
+                        </div>
                     </CardHeader>
                     <CardContent>
                         <div className='text-2xl font-bold'>16</div>
