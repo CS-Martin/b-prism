@@ -18,12 +18,12 @@ import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import { parseISO, format } from 'date-fns';
 
 const chartConfig = {
-    activeRequest: {
-        label: 'Desktop',
+    activeRequests: {
+        label: 'Active Requests',
         color: '#2563eb',
     },
     rescued: {
-        label: 'Mobile',
+        label: 'Rescued',
         color: '#60a5fa',
     },
 } satisfies ChartConfig;
@@ -38,26 +38,29 @@ export const Overview = () => {
     }, []);
 
     const chartData = useMemo(() => {
-        const monthCounts: Record<string, { activeRequest: number; rescued: number }> = {};
+        const monthCounts: Record<string, { activeRequests: number; rescued: number }> = {};
 
         rescuePosts.forEach((post) => {
-            const month = format(post.created_at, 'MMMM');
+            const month = format(post.created_at, 'yyyy-MM'); // Directly format Date object
+
             if (!monthCounts[month]) {
-                monthCounts[month] = { activeRequest: 0, rescued: 0 };
+                monthCounts[month] = { activeRequests: 0, rescued: 0 };
             }
 
             if (post.isRescued) {
                 monthCounts[month].rescued += 1;
             } else {
-                monthCounts[month].activeRequest += 1;
+                monthCounts[month].activeRequests += 1;
             }
         });
 
-        return Object.keys(monthCounts).map((month) => ({
-            month,
-            activeRequests: monthCounts[month].activeRequest,
-            rescued: monthCounts[month].rescued,
-        }));
+        return Object.keys(monthCounts)
+            .sort()
+            .map((monthKey) => ({
+                month: format(new Date(`${monthKey}-01`), 'MMM'),
+                activeRequests: monthCounts[monthKey].activeRequests,
+                rescued: monthCounts[monthKey].rescued,
+            }));
     }, [rescuePosts]);
 
     return (
@@ -102,18 +105,19 @@ export const Overview = () => {
                                 tickLine={false}
                                 tickMargin={10}
                                 axisLine={false}
-                                tickFormatter={(value) => value.slice(0, 3)}
                             />
                             <ChartTooltip content={<ChartTooltipContent />} />
                             <ChartLegend content={<ChartLegendContent />} />
 
                             <Bar
                                 dataKey='activeRequests'
-                                fill={chartConfig.activeRequest.color}
+                                fill={chartConfig.activeRequests.color}
+                                radius={4}
                             />
                             <Bar
                                 dataKey='rescued'
                                 fill={chartConfig.rescued.color}
+                                radius={4}
                             />
                         </BarChart>
                     </ChartContainer>
