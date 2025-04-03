@@ -1,6 +1,5 @@
 import { Layer, Source, useMap } from 'react-map-gl';
 import { useEffect, useState, useRef } from 'react';
-import { useSession } from 'next-auth/react';
 import { FixRoadModal } from './fix-road-modal';
 import { DestroyRoadModal } from './destroy-road-modal';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
