@@ -85,7 +85,9 @@ export const Overview = () => {
                     <CardDescription>Concentration of people in need of rescue in the Bicol Region</CardDescription>
                 </CardHeader>
                 <CardContent className=''>
-                    <div className='h-[300px] rounded-md border bg-muted flex items-center justify-center'>{/* <RescueRequestHeatmap rescuePosts={rescuePosts ?? []} /> */}</div>
+                    <div className='h-[300px] rounded-md border bg-muted flex items-center justify-center'>
+                        <RescueRequestHeatmap rescuePosts={rescuePosts ?? []} />
+                    </div>
                 </CardContent>
             </Card>
 
