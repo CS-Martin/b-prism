@@ -159,7 +159,6 @@ const ActiveRequestCard = ({ selectedRange }: { selectedRange: string }) => {
     // --- Filtering Logic (Memoized for performance) ---
     // useMemo ensures filtering only happens when rescuePosts or selectedRange changes
     const filteredRescuePosts = useMemo(() => {
-        console.log('Filtering posts for range:', selectedRange);
         if (!rescuePosts) return []; // Handle case where rescuePosts is null/undefined initially
 
         return rescuePosts.filter((post) => {
@@ -209,16 +208,12 @@ const ActiveRequestCard = ({ selectedRange }: { selectedRange: string }) => {
         });
     }, [rescuePosts, selectedRange]); // Dependencies for filtering
 
-    console.log('Filtered Rescue Posts:', filteredRescuePosts);
     const currentFilteredCount = filteredRescuePosts.length; // Get the count of *filtered* posts
 
     // --- Percentage Change Calculation ---
     useEffect(() => {
-        console.log('Calculating Percentage Change. Current Count:', currentFilteredCount, 'Previous Count:', previousFilteredCount.current);
-
         // Don't calculate if the previous value isn't set yet (first render after mount or first valid calculation)
         if (previousFilteredCount.current === null) {
-            console.log('Initializing previous count.');
             previousFilteredCount.current = currentFilteredCount; // Initialize the ref
             setPercentageChange(0); // Set initial change to 0
             return;
@@ -264,8 +259,6 @@ const ActiveRequestCard = ({ selectedRange }: { selectedRange: string }) => {
             { totalAdults: 0, totalChildren: 0, totalElderly: 0 },
         );
     }, [filteredRescuePosts]); // Dependency: only the filtered list
-
-    console.log('Percentage Change State:', percentageChange);
 
     // --- Range Label Helper ---
     const getRangeLabel = (range: string) => {

@@ -38,8 +38,6 @@ class RescuePostService {
                 method: 'GET',
             });
 
-            console.log(response);
-
             if (!response.ok) {
                 const error = await response.json();
 
