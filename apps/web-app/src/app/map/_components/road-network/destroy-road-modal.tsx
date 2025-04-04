@@ -1,12 +1,12 @@
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
+    Button,
     Label,
     Select,
     SelectContent,
@@ -19,7 +19,8 @@ import { useProgress } from '@bprogress/next';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 import { GeoJSONFeature } from 'mapbox-gl';
 import { Session } from 'next-auth';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 
 interface DestroyRoadModalProps {
     road: GeoJSONFeature | null;
@@ -30,26 +31,25 @@ interface DestroyRoadModalProps {
 export const DestroyRoadModal = ({ road, setIsDialogOpen, session }: DestroyRoadModalProps) => {
     const { start: startLoading, stop: stopLoading } = useProgress();
     const { isLoading, destroyRoad } = useRoadNetworkStore();
-    const [description, setDescription] = useState<string | null>(null);
-    const [roadSeverity, setRoadSeverity] = useState<number | null>(null);
 
-    useEffect(() => {
-        if (road?.properties?.severity) {
-            setRoadSeverity(road.properties.severity);
-        }
-    }, [road]);
+    const { register, handleSubmit, setValue, watch } = useForm({
+        defaultValues: {
+            roadSeverity: road?.properties?.severity ?? 0,
+            description: '',
+        },
+    });
 
     if (!session) return;
 
     const user = session?.user;
     const requestAuthor = `${user?.given_name} ${user?.family_name}`;
 
-    const handleRoadDestroy = async () => {
+    const onSubmit = async (data: { roadSeverity: number; description: string }) => {
+        console.log('SUBMITTED');
         if (road && road.properties?.id && user?.permissions.includes('ROAD_NETWORK_PERMISSION')) {
             startLoading();
 
-            console.log(road.properties.id, roadSeverity, description, requestAuthor);
-            await destroyRoad(road.properties.id, roadSeverity, description, requestAuthor, user.access_token);
+            await destroyRoad(road.properties.id, data.roadSeverity, data.description, requestAuthor, user.access_token);
             setIsDialogOpen(false);
 
             stopLoading();
@@ -58,7 +58,6 @@ export const DestroyRoadModal = ({ road, setIsDialogOpen, session }: DestroyRoad
 
     const handleCancel = () => {
         road = null;
-        setDescription(null);
         setIsDialogOpen(false);
     };
 
@@ -75,60 +74,64 @@ export const DestroyRoadModal = ({ road, setIsDialogOpen, session }: DestroyRoad
                     </AlertDialogDescription>
                 </AlertDialogHeader>
 
-                {road && (
-                    <div className='flex flex-col gap-y-2'>
-                        <Label> Damage Severity</Label>
-                        <Select
-                            value={roadSeverity?.toString() ?? '0'}
-                            onValueChange={(value) => setRoadSeverity(Number(value))}>
-                            <SelectTrigger>
-                                <SelectValue placeholder='Select severity' />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem
-                                    value='0'
-                                    disabled>
-                                    Not Damaged
-                                </SelectItem>
-                                <SelectItem
-                                    value='1'
-                                    className='cursor-pointer text-yellow-500 *:hover:text-yellow-500'>
-                                    Slightly Damaged - passable but proceed with caution
-                                </SelectItem>
-                                <SelectItem
-                                    value='2'
-                                    className='text-orange-500 cursor-pointer *:hover:text-orange-500  '>
-                                    Moderately Damaged - passable but longer travel time
-                                </SelectItem>
-                                <SelectItem
-                                    value='3'
-                                    className='text-red-500 *:hover:text-red-500 cursor-pointer'>
-                                    Severely Damaged - not passable
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                )}
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    {road && (
+                        <div className='flex flex-col gap-y-2'>
+                            <Label> Damage Severity</Label>
+                            <Select
+                                {...register('roadSeverity', { valueAsNumber: true })}
+                                onValueChange={(value) => setValue('roadSeverity', Number(value))}
+                                value={watch('roadSeverity').toString()}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder='Select severity' />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem
+                                        value='0'
+                                        disabled>
+                                        Not Damaged
+                                    </SelectItem>
+                                    <SelectItem
+                                        value='1'
+                                        className='cursor-pointer text-yellow-500 *:hover:text-yellow-500'>
+                                        Slightly Damaged - passable but proceed with caution
+                                    </SelectItem>
+                                    <SelectItem
+                                        value='2'
+                                        className='text-orange-500 cursor-pointer *:hover:text-orange-500  '>
+                                        Moderately Damaged - passable but longer travel time
+                                    </SelectItem>
+                                    <SelectItem
+                                        value='3'
+                                        className='text-red-500 *:hover:text-red-500 cursor-pointer'>
+                                        Severely Damaged - not passable
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    )}
 
-                <div className='flex flex-col gap-y-2'>
-                    <Label>Damage Description</Label>
-                    <Textarea
-                        onChange={(event) => setDescription(event.target.value)}
-                        placeholder='This area is severely flooded.'
-                    />
-                </div>
-                <AlertDialogFooter className='flex flex-row'>
-                    <AlertDialogCancel
-                        className='w-1/2'
-                        onClick={handleCancel}>
-                        No, Keep it
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                        className='w-1/2 text-white bg-red-500 hover:bg-red-600'
-                        onClick={handleRoadDestroy}>
-                        Yes, damage it!
-                    </AlertDialogAction>
-                </AlertDialogFooter>
+                    <div className='flex flex-col gap-y-2'>
+                        <Label>Damage Description</Label>
+                        <Textarea
+                            {...(register('description'), { required: true })}
+                            placeholder='This area is severely flooded.'
+                        />
+                    </div>
+
+                    <AlertDialogFooter className='flex flex-row mt-4'>
+                        <AlertDialogCancel
+                            className='w-1/2'
+                            onClick={handleCancel}>
+                            No, Keep it
+                        </AlertDialogCancel>
+                        <Button
+                            className='w-1/2 text-white bg-red-500 hover:bg-red-600'
+                            type='submit'>
+                            Yes, damage it!
+                        </Button>
+                    </AlertDialogFooter>
+                </form>
             </AlertDialogContent>
         </AlertDialog>
     );
