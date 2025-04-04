@@ -1,5 +1,6 @@
+import { AuthGuard } from 'libs/backend/app-services/guards-service-lib/src/lib/jwt-auth.guard';
 import { RoadNetworkServiceLibService } from '@b-prism/road-network-service-lib';
-import { Body, Controller, Get, Param, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
@@ -13,11 +14,6 @@ export class RoadNetworkController {
         return this.roadNetworkServiceLibService.findAllDamagedRoads();
     }
 
-    @Get()
-    findAll() {
-        return this.roadNetworkServiceLibService.findAll();
-    }
-
     @Get('bounds/search')
     async findByBounds(@Query('minLng') minLng: string, @Query('minLat') minLat: string, @Query('maxLng') maxLng: string, @Query('maxLat') maxLat: string) {
         const parsedMinLng = parseFloat(minLng);
@@ -28,6 +24,7 @@ export class RoadNetworkController {
         return this.roadNetworkServiceLibService.findByBounds(parsedMinLng, parsedMinLat, parsedMaxLng, parsedMaxLat);
     }
 
+    @UseGuards(AuthGuard)
     @Put(':id/destroy')
     @ApiParam({
         name: 'id',
@@ -62,6 +59,7 @@ export class RoadNetworkController {
         return this.roadNetworkServiceLibService.destroyRoad(id, severity, description, author);
     }
 
+    @UseGuards(AuthGuard)
     @Put(':id/fix')
     @ApiParam({
         name: 'id',
@@ -84,10 +82,5 @@ export class RoadNetworkController {
     fixRoad(@Param('id') id: string, @Body() payload: { author: string }) {
         const { author } = payload;
         return this.roadNetworkServiceLibService.fixRoad(id, author);
-    }
-
-    @Get(':id')
-    findById(@Param('id') id: string) {
-        return this.roadNetworkServiceLibService.findById(id);
     }
 }
