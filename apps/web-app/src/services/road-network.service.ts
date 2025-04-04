@@ -63,14 +63,14 @@ class RoadNetworkService {
         }
     }
 
-    public async destroyRoad(roadId: string, author: string): Promise<void> {
+    public async destroyRoad(roadId: string, severity: number | null, description: string | null, author: string): Promise<void> {
         try {
             const response = await fetch(`${this.API_BASE_URL}/road-networks/${roadId}/destroy`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ author }),
+                body: JSON.stringify({ severity, description, author }),
             });
 
             if (!response.ok) {

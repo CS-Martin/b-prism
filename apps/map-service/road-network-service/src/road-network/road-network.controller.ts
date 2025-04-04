@@ -38,6 +38,16 @@ export class RoadNetworkController {
         schema: {
             type: 'object',
             properties: {
+                severity: {
+                    type: 'number',
+                    description: 'The severity level of damaged network.',
+                    example: '3 for severely damaged',
+                },
+                description: {
+                    type: 'string',
+                    description: 'The reason of damaging the road.',
+                    example: '',
+                },
                 author: {
                     type: 'string',
                     description: 'The name of the person or system performing the action',
@@ -47,7 +57,7 @@ export class RoadNetworkController {
             required: ['author'],
         },
     })
-    destroyRoad(@Param('id') id: string, @Body() payload: { author: string }) {
+    destroyRoad(@Param('id') id: string, @Body() payload: { severity: number; description: string; author: string }) {
         const { author } = payload;
         return this.roadNetworkServiceLibService.destroyRoad(id, author);
     }

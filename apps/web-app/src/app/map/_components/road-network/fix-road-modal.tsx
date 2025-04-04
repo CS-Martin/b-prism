@@ -10,16 +10,17 @@ import {
 } from '@b-prism/shadcn-ui/index';
 import { useProgress } from '@bprogress/next';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
+import { GeoJSONFeature } from 'mapbox-gl';
 import { Session } from 'next-auth';
 import React from 'react';
 
 interface FixRoadModalProps {
-    roadId: string | undefined;
+    road: GeoJSONFeature | null;
     setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
     session: Session | null;
 }
 
-export const FixRoadModal = ({ roadId, setIsDialogOpen, session }: FixRoadModalProps) => {
+export const FixRoadModal = ({ road, setIsDialogOpen, session }: FixRoadModalProps) => {
     const { start: startLoading, stop: stopLoading } = useProgress();
     const { fixRoad } = useRoadNetworkStore();
 
@@ -29,16 +30,16 @@ export const FixRoadModal = ({ roadId, setIsDialogOpen, session }: FixRoadModalP
     const requestAuthor = `${user?.given_name} ${user?.family_name}`;
 
     const handleRoadDestroy = async () => {
-        if (roadId && user?.permissions.includes('ROAD_NETWORK_PERMISSION')) {
+        if (road && road.properties?.id && user?.permissions.includes('ROAD_NETWORK_PERMISSION')) {
             startLoading();
-            await fixRoad(roadId, requestAuthor);
+            await fixRoad(road.properties.id, requestAuthor);
             setIsDialogOpen(false);
             stopLoading();
         }
     };
 
     const handleCancel = () => {
-        roadId = '';
+        road = null;
         setIsDialogOpen(false);
     };
 
