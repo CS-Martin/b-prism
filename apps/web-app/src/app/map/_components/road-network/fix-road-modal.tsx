@@ -33,7 +33,7 @@ export const FixRoadModal = ({ road, setIsDialogOpen, session }: FixRoadModalPro
         if (road && road.properties?.id && user?.permissions.includes('ROAD_NETWORK_PERMISSION')) {
             startLoading();
 
-            await fixRoad(road.properties.id, 0, null, requestAuthor);
+            await fixRoad(road.properties.id, 0, null, requestAuthor, user.access_token);
             setIsDialogOpen(false);
 
             stopLoading();

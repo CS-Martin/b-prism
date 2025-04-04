@@ -27,13 +27,15 @@ export class RoadNetworkMongodbLibService {
         });
     }
 
-    async fixRoad(roadId: string): Promise<void> {
+    async fixRoad(roadId: string, severity: number, description: string): Promise<void> {
         await this.prisma.roadNetwork.updateMany({
             where: {
                 AND: [{ id: roadId }, { is_damaged: true }],
             },
             data: {
                 is_damaged: false,
+                severity: severity,
+                description: description,
             },
         });
     }

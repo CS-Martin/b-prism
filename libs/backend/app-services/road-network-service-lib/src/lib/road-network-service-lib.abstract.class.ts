@@ -10,7 +10,7 @@ export abstract class RoadNetworkServiceAbstractClass {
 
     abstract destroyRoad(roadId: string, severity: number, description: string, author: string): Promise<void>;
 
-    abstract fixRoad(roadId: string, author: string): Promise<void>;
+    abstract fixRoad(roadId: string, severity: number, description: string, author: string): Promise<void>;
 
     abstract convertToDto(road: RoadNetwork): RoadNetworkDto;
 }

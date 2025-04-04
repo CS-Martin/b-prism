@@ -79,8 +79,8 @@ export class RoadNetworkController {
             required: ['author'],
         },
     })
-    fixRoad(@Param('id') id: string, @Body() payload: { author: string }) {
-        const { author } = payload;
-        return this.roadNetworkServiceLibService.fixRoad(id, author);
+    fixRoad(@Param('id') id: string, @Body() payload: { severity: number; description: string; author: string }) {
+        const { severity, description, author } = payload;
+        return this.roadNetworkServiceLibService.fixRoad(id, severity, description, author);
     }
 }

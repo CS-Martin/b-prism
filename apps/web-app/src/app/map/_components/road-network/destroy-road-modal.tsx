@@ -49,7 +49,7 @@ export const DestroyRoadModal = ({ road, setIsDialogOpen, session }: DestroyRoad
             startLoading();
 
             console.log(road.properties.id, roadSeverity, description, requestAuthor);
-            await destroyRoad(road.properties.id, roadSeverity, description, requestAuthor);
+            await destroyRoad(road.properties.id, roadSeverity, description, requestAuthor, user.access_token);
             setIsDialogOpen(false);
 
             stopLoading();
