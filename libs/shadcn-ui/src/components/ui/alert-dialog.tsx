@@ -86,7 +86,7 @@ const AlertDialogAction = React.forwardRef<React.ElementRef<typeof AlertDialogPr
     ({ className, ...props }, ref) => (
         <AlertDialogPrimitive.Action
             ref={ref}
-            className={cn(buttonVariants(), className, 'text-white bg-red-500 hover:bg-red-400')}
+            className={cn(buttonVariants(), className, '')}
             {...props}
             style={{
                 borderRadius: '5px',

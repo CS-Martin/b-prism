@@ -1,5 +1,5 @@
 import { RescuePostMongodbLibService } from '@b-prism/rescue-post-mongodb-lib';
-import { ContactPersonDto, RescuePostDto, ResponseDto } from '@dto';
+import { ContactPersonDto, DemographicsDto, LocationDto, RescuePostDto, ResponseDto } from '@dto';
 import { CreateRescuePostDto } from '@dto';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { RescuePost } from '@prisma/client';
@@ -14,9 +14,9 @@ export class RescuePostServiceLibService implements RescuePostServiceAbstractCla
         this.logger.log('Creating rescue post');
 
         try {
-            const rescue_post: RescuePost = await this.rescuePostMongodbLibService.create(createRescuePostDto);
+            const rescuePost: RescuePost = await this.rescuePostMongodbLibService.create(createRescuePostDto);
 
-            const response: ResponseDto<RescuePostDto> = new ResponseDto<RescuePostDto>(201, this.convertToDto(rescue_post));
+            const response: ResponseDto<RescuePostDto> = new ResponseDto<RescuePostDto>(201, this.convertToDto(rescuePost));
 
             return response;
         } catch (error) {
@@ -34,7 +34,7 @@ export class RescuePostServiceLibService implements RescuePostServiceAbstractCla
 
             const response: ResponseDto<RescuePostDto[]> = new ResponseDto<RescuePostDto[]>(
                 200,
-                rescue_posts.map((rescue_post) => this.convertToDto(rescue_post)),
+                rescue_posts.map((rescuePost) => this.convertToDto(rescuePost)),
             );
 
             return response;
@@ -46,21 +46,35 @@ export class RescuePostServiceLibService implements RescuePostServiceAbstractCla
     }
 
     convertToDto(rescuePost: RescuePost): RescuePostDto {
-        const rescue_post_dto: RescuePostDto = new RescuePostDto();
+        const rescuePostDto: RescuePostDto = new RescuePostDto();
 
-        rescue_post_dto.id = rescuePost.id ?? '';
-        rescue_post_dto.longitude = rescuePost.longitude ?? '';
-        rescue_post_dto.latitude = rescuePost.latitude ?? '';
-        rescue_post_dto.contact_persons = rescuePost.contact_persons as unknown as ContactPersonDto[];
-        rescue_post_dto.total_adults = rescuePost.total_adults ?? 0;
-        rescue_post_dto.total_children = rescuePost.total_children ?? 0;
-        rescue_post_dto.total_elderly = rescuePost.total_elderly ?? 0;
-        rescue_post_dto.number_of_people_affected = rescuePost.number_of_people_affected ?? 0;
-        rescue_post_dto.address = rescuePost.address ?? '';
-        rescue_post_dto.landmark = rescuePost.landmark ?? '';
-        rescue_post_dto.created_at = rescuePost.created_at;
-        rescue_post_dto.updated_at = rescuePost.updated_at;
+        rescuePostDto.id = rescuePost.id;
 
-        return rescue_post_dto;
+        rescuePostDto.contact_persons =
+            rescuePost.contact_persons.map((contactPerson) => {
+                const contactPersonDto: ContactPersonDto = new ContactPersonDto();
+                contactPersonDto.name = contactPerson.name;
+                contactPersonDto.contact = contactPerson.contact;
+                return contactPersonDto;
+            }) ?? [];
+
+        const demographicsDto: DemographicsDto = new DemographicsDto();
+        demographicsDto.total_adults = rescuePost.demographics?.total_adults ?? 0;
+        demographicsDto.total_children = rescuePost.demographics?.total_children ?? 0;
+        demographicsDto.total_elderly = rescuePost.demographics?.total_elderly ?? 0;
+        rescuePostDto.demographics = demographicsDto;
+
+        const locationDto: LocationDto = new LocationDto();
+        locationDto.address = rescuePost.location.address ?? '';
+        locationDto.latitude = rescuePost.location.latitude ?? null;
+        locationDto.longitude = rescuePost.location.longitude ?? null;
+        locationDto.landmark = rescuePost.location.landmark ?? '';
+        rescuePostDto.location = locationDto;
+
+        rescuePostDto.isRescued = rescuePost.isRescued ?? false;
+        rescuePostDto.created_at = rescuePost.created_at ?? new Date();
+        rescuePostDto.updated_at = rescuePost.updated_at ?? new Date();
+
+        return rescuePostDto;
     }
 }

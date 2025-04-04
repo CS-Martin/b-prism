@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
@@ -21,16 +21,16 @@ enum ActivityLogAction {
 }
 
 model User {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  provider     String
-  given_name   String
-  family_name  String
-  email        String   @unique
-  password     String
-  office       String?
-  position     String?
-  role         String   @default("Default")
-  id_image_url String?
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  provider      String
+  given_name    String
+  family_name   String
+  email         String   @unique
+  password      String
+  office        String?
+  position      String?
+  role          String   @default("Default")
+  id_image_url  String?
   refresh_token String?
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
@@ -79,29 +79,47 @@ model DispensingPoint {
   updated_at  DateTime @updatedAt
 }
 
-model RescuePost {
-  id                        String   @id @default(auto()) @map("_id") @db.ObjectId
-  longitude                 String?
-  latitude                  String?
-  contact_persons           Json[]
-  total_adults              Int
-  total_children            Int
-  total_elderly             Int
-  number_of_people_affected Int
-  address                   String?
-  landmark                  String?
-  created_at                DateTime @default(now())
-  updated_at                DateTime @updatedAt
+// ========== RESCUE POST ==================
+
+type RescuePostContactPerson {
+  name    String
+  contact String
 }
+
+type RescuePostDemographics {
+  total_adults   Int
+  total_children Int
+  total_elderly  Int
+}
+
+type RescuePostLocation {
+  address   String?
+  landmark  String?
+  longitude Float?
+  latitude  Float?
+}
+
+model RescuePost {
+  id                        String                    @id @default(auto()) @map("_id") @db.ObjectId
+  contact_persons           RescuePostContactPerson[]
+  demographics              RescuePostDemographics?
+  location                  RescuePostLocation
+  number_of_people_affected Int
+  isRescued                 Boolean                   @default(false)
+  created_at                DateTime                  @default(now())
+  updated_at                DateTime                  @updatedAt
+}
+
+// ========= ACTIVITY LOG ==================
 
 model ActivityLog {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  action      String // CREATE, UPDATE, DELETE, etc.
-  description String // Description of the activity
-  resource    String // Name of the resource (e.g., "User", "Warehouse")
-  resource_id String? // ID of the resource affected (nullable for non-resource actions like login/logout)
-  author      String // ID of the user who performed the action
-  timestamp   DateTime @default(now()) // Timestamp of when the activity occurred
+  action      String
+  description String
+  resource    String
+  resource_id String?
+  author      String
+  timestamp   DateTime @default(now())
 }
 
 model Mailer {
@@ -112,13 +130,16 @@ model Mailer {
   created_at DateTime @default(now())
 }
 
+// ======== ROAD NETWORK ================
+
 model RoadNetwork {
-  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
-  type               String
-  damage_probability Float
-  is_damaged         Boolean
-  properties         Json?
-  geometry           Json?
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  type        String
+  severity    Int
+  description String?
+  is_damaged  Boolean
+  properties  Json?
+  geometry    Json?
 
   @@index([is_damaged])
 }

@@ -12,9 +12,15 @@ const nextConfig = {
         svgr: false,
     },
     images: {
-        domains: ['utfs.io'],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'utfs.io',
+            },
+        ],
     },
     reactStrictMode: false,
+    transpilePackages: ['nextstepjs'],
 };
 
 const plugins = [

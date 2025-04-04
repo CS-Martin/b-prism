@@ -1,11 +1,11 @@
 import { Layer, Source, useMap } from 'react-map-gl';
 import { useEffect, useState, useRef } from 'react';
-import { useSession } from 'next-auth/react';
 import { FixRoadModal } from './fix-road-modal';
 import { DestroyRoadModal } from './destroy-road-modal';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 import { useMapStore } from 'apps/web-app/src/stores/map-stores/mapbox.store';
 import { Session } from 'next-auth';
+import { GeoJSONFeature } from 'mapbox-gl';
 
 interface RenderRoadNetworkProps {
     visibility: { roadNetwork: boolean };
@@ -31,7 +31,7 @@ export const RenderRoadNetwork = ({ visibility, session }: RenderRoadNetworkProp
         }
     }, [mapRef]);
 
-    const [selectedRoadId, setSelectedRoadId] = useState<string | null>(null);
+    const [selectedRoad, setSelectedRoad] = useState<GeoJSONFeature | null>(null);
     const [isDamaged, setIsDamaged] = useState<boolean | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -46,9 +46,8 @@ export const RenderRoadNetwork = ({ visibility, session }: RenderRoadNetworkProp
             if (!road || road.length === 0) return;
 
             const clickedRoad = road[0];
-            const clickedRoadId = clickedRoad.properties?.id;
 
-            setSelectedRoadId(clickedRoadId);
+            setSelectedRoad(clickedRoad);
             setIsDamaged(clickedRoad.properties?.is_damaged ?? false);
             setIsDialogOpen(true);
         };
@@ -91,7 +90,7 @@ export const RenderRoadNetwork = ({ visibility, session }: RenderRoadNetworkProp
             map.off('mousemove', 'road_layer', handleMouseMove);
             map.off('mouseleave', 'road_layer', handleMouseLeave);
         };
-    }, [map, selectedRoadId]);
+    }, [map, selectedRoad]);
 
     return (
         <>
@@ -114,9 +113,15 @@ export const RenderRoadNetwork = ({ visibility, session }: RenderRoadNetworkProp
                         ],
                         'line-color': [
                             'case',
+                            ['==', ['get', 'severity'], 1],
+                            'yellow', // Yellow
+                            ['==', ['get', 'severity'], 2],
+                            'orange', // Orange
+                            ['==', ['get', 'severity'], 3],
+                            'red', // Red
                             ['==', ['get', 'is_damaged'], true],
-                            'red', // Red for damaged roads
-                            'green', // Green for undamaged roads
+                            'red', // Fallback red for any damaged roads without severity
+                            'green', // Green for normal roads (not damaged)
                         ],
                         'line-opacity': [
                             'case',
@@ -130,17 +135,17 @@ export const RenderRoadNetwork = ({ visibility, session }: RenderRoadNetworkProp
 
             {isDialogOpen &&
                 session &&
-                selectedRoadId &&
+                selectedRoad &&
                 (isDamaged ? (
                     <FixRoadModal
                         setIsDialogOpen={setIsDialogOpen}
-                        roadId={selectedRoadId}
+                        road={selectedRoad}
                         session={session}
                     />
                 ) : (
                     <DestroyRoadModal
                         setIsDialogOpen={setIsDialogOpen}
-                        roadId={selectedRoadId}
+                        road={selectedRoad}
                         session={session}
                     />
                 ))}

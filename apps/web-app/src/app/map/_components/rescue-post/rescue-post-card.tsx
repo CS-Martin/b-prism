@@ -2,10 +2,11 @@ import { Label, Separator } from '@b-prism/shadcn-ui/index';
 import { Locate, ShieldAlert } from 'lucide-react';
 import { CollapsibleSection } from './collapsible-section';
 import { formatDistanceToNow } from 'date-fns';
+import { ContactPersonDto, RescuePostDto } from '@dto';
 
-export const RescuePostCard = ({ post, onLocate }: { post: any; onLocate: (post: any) => void }) => (
+export const RescuePostCard = ({ post, onLocate }: { post: RescuePostDto; onLocate: (post: any) => void }) => (
     <div className='bg-sidebar p-3 rounded-[5px]'>
-        <div className='flex justify-between items-center gap-2'>
+        <div className='flex items-center justify-between gap-2'>
             <span className='flex items-center gap-2'>
                 <ShieldAlert
                     size={22}
@@ -19,10 +20,10 @@ export const RescuePostCard = ({ post, onLocate }: { post: any; onLocate: (post:
                 <Locate size={18} />
             </button>
         </div>
-        <Separator className='my-4 bg-opacity-20 w-full' />
+        <Separator className='w-full my-4 bg-opacity-20' />
         <div className='flex flex-col gap-2'>
             <CollapsibleSection title='Contact Person/s'>
-                {post.contact_persons.map((contact: any, index: number) => (
+                {post.contact_persons.map((contact: ContactPersonDto, index: number) => (
                     <div
                         key={index}
                         className='flex flex-col gap-1'>
@@ -40,24 +41,24 @@ export const RescuePostCard = ({ post, onLocate }: { post: any; onLocate: (post:
             <CollapsibleSection title='Demographics'>
                 <Label>
                     <span className='font-semibold text-[#F4AA55]'>Adult: </span>
-                    {post.total_adults}
+                    {post.demographics?.total_adults}
                 </Label>
                 <Label>
                     <span className='font-semibold text-[#F4AA55]'>Child: </span>
-                    {post.total_children}
+                    {post.demographics?.total_children}
                 </Label>
                 <Label>
                     <span className='font-semibold text-[#F4AA55]'>Elderly: </span>
-                    {post.total_elderly}
+                    {post.demographics?.total_elderly}
                 </Label>
             </CollapsibleSection>
             <Label>
                 <span className='font-semibold text-[#F4AA55]'>Address: </span>
-                {post.address}
+                {post.location.address}
             </Label>
             <Label>
                 <span className='font-semibold text-[#F4AA55]'>Landmark: </span>
-                {post.landmark}
+                {post.location.landmark}
             </Label>
         </div>
     </div>

@@ -24,6 +24,8 @@ export * from './lib/dispensing-point/dispensing-point.address.dto';
 export * from './lib/rescue-post/rescue-post.dto';
 export * from './lib/rescue-post/create.rescue-post.dto';
 export * from './lib/rescue-post/contact-person.dto';
+export * from './lib/rescue-post/demographics.dto';
+export * from './lib/rescue-post/location.dto';
 
 export * from './lib/activity-log/activity-log.dto';
 export * from './lib/activity-log/create.activity-log.dto';
