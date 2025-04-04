@@ -7,6 +7,13 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
+    Label,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+    Textarea,
 } from '@b-prism/shadcn-ui/index';
 import { useProgress } from '@bprogress/next';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
@@ -58,6 +65,52 @@ export const FixRoadModal = ({ road, setIsDialogOpen, session }: FixRoadModalPro
                         to proceed?
                     </AlertDialogDescription>
                 </AlertDialogHeader>
+                {road && (
+                    <div className='flex flex-col gap-y-2'>
+                        <Label> Damage Severity</Label>
+                        <Select
+                            disabled
+                            value={road.properties?.severity.toString() ?? '0'}>
+                            <SelectTrigger>
+                                <SelectValue placeholder='Select severity' />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem
+                                    value='0'
+                                    disabled>
+                                    Not Damaged
+                                </SelectItem>
+                                <SelectItem
+                                    value='1'
+                                    className='cursor-pointer text-yellow-500 *:hover:text-yellow-500'>
+                                    Slightly Damaged - passable but proceed with caution
+                                </SelectItem>
+                                <SelectItem
+                                    value='2'
+                                    className='text-orange-500 cursor-pointer *:hover:text-orange-500  '>
+                                    Moderately Damaged - passable but longer travel time
+                                </SelectItem>
+                                <SelectItem
+                                    value='3'
+                                    className='text-red-500 *:hover:text-red-500 cursor-pointer'>
+                                    Severely Damaged - not passable
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                )}
+
+                {road?.properties?.description && (
+                    <div className='flex flex-col gap-y-2'>
+                        <Label>Damage Description</Label>
+                        <Textarea
+                            disabled
+                            readOnly={true}
+                            value={road.properties.description}
+                            placeholder='This area is severely flooded.'
+                        />
+                    </div>
+                )}
                 <AlertDialogFooter className='flex flex-row '>
                     <AlertDialogCancel
                         onClick={handleCancel}
