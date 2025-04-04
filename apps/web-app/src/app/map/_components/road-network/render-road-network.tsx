@@ -31,8 +31,6 @@ export const RenderRoadNetwork = ({ visibility, session }: RenderRoadNetworkProp
         }
     }, [mapRef]);
 
-    console.log(fixedRoads);
-
     const [selectedRoad, setSelectedRoad] = useState<GeoJSONFeature | null>(null);
     const [isDamaged, setIsDamaged] = useState<boolean | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -115,9 +113,15 @@ export const RenderRoadNetwork = ({ visibility, session }: RenderRoadNetworkProp
                         ],
                         'line-color': [
                             'case',
+                            ['==', ['get', 'severity'], 1],
+                            'yellow', // Yellow
+                            ['==', ['get', 'severity'], 2],
+                            'orange', // Orange
+                            ['==', ['get', 'severity'], 3],
+                            'red', // Red
                             ['==', ['get', 'is_damaged'], true],
-                            'red', // Red for damaged roads
-                            'green', // Green for undamaged roads
+                            'red', // Fallback red for any damaged roads without severity
+                            'green', // Green for normal roads (not damaged)
                         ],
                         'line-opacity': [
                             'case',

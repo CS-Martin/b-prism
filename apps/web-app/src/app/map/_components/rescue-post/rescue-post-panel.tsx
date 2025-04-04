@@ -25,7 +25,6 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> | null })
         document.getElementById('scroll-area')?.scrollIntoView({ behavior: 'smooth' });
     }, [rescuePosts]);
 
-    console.log(rescuePosts);
     const handleLocateClick = (post: RescuePostDto) => {
         if (!mapRef?.current) return;
 

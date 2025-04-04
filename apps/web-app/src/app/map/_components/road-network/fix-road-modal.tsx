@@ -24,6 +24,7 @@ export const FixRoadModal = ({ road, setIsDialogOpen, session }: FixRoadModalPro
     const { start: startLoading, stop: stopLoading } = useProgress();
     const { fixRoad } = useRoadNetworkStore();
 
+    console.log(road);
     if (!session) return;
 
     const user = session?.user;
