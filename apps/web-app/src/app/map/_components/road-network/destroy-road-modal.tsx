@@ -32,7 +32,13 @@ export const DestroyRoadModal = ({ road, setIsDialogOpen, session }: DestroyRoad
     const { start: startLoading, stop: stopLoading } = useProgress();
     const { isLoading, destroyRoad } = useRoadNetworkStore();
 
-    const { register, handleSubmit, setValue, watch } = useForm({
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: { errors },
+    } = useForm({
         defaultValues: {
             roadSeverity: road?.properties?.severity ?? 0,
             description: '',
@@ -79,7 +85,7 @@ export const DestroyRoadModal = ({ road, setIsDialogOpen, session }: DestroyRoad
                         <div className='flex flex-col gap-y-2'>
                             <Label> Damage Severity</Label>
                             <Select
-                                {...register('roadSeverity', { valueAsNumber: true })}
+                                {...register('roadSeverity', { valueAsNumber: true, required: true })}
                                 onValueChange={(value) => setValue('roadSeverity', Number(value))}
                                 value={watch('roadSeverity').toString()}>
                                 <SelectTrigger>
@@ -111,10 +117,10 @@ export const DestroyRoadModal = ({ road, setIsDialogOpen, session }: DestroyRoad
                         </div>
                     )}
 
-                    <div className='flex flex-col gap-y-2'>
+                    <div className='flex flex-col mt-3 gap-y-2'>
                         <Label>Damage Description</Label>
                         <Textarea
-                            {...(register('description'), { required: true })}
+                            {...register('description', { required: true, maxLength: 256 })}
                             placeholder='This area is severely flooded.'
                         />
                     </div>
