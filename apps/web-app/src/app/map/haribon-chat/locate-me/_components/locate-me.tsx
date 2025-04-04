@@ -26,7 +26,7 @@ export const LocateMe = () => {
     useEffect(() => {
         if (mapRef.current) return;
 
-        mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || '';
+        mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
         mapRef.current = new mapboxgl.Map({
             container: mapContainerRef.current ?? '',

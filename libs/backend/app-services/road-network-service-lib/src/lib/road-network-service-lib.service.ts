@@ -2,7 +2,7 @@ import { ActivityLogServiceLibService } from '@b-prism/activity-log-service-lib'
 import { RoadNetworkMongodbLibService } from '@b-prism/road-network-mongodb-lib';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { RoadNetworkServiceAbstractClass } from './road-network-service-lib.abstract.class';
-import { CreateActivityLogDto, ResponseDto, RoadNetworkDto, RoadNetworkPropertyDto } from '@dto';
+import { CreateActivityLogDto, ResponseDto, RoadNetworkDto } from '@dto';
 import { RoadNetwork } from '@prisma/client';
 
 @Injectable()
@@ -93,19 +93,25 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         }
     }
 
-    async destroyRoad(roadId: string, author: string): Promise<void> {
-        this.logger.log('Destroying road, ', roadId);
+    async destroyRoad(roadId: string, severity: number, description: string, author: string): Promise<void> {
+        this.logger.log('Destroying road, ', roadId, ' with severity, ', severity, ' and description, ', description);
 
         const road = (await this.findById(roadId)).body;
 
         try {
+            if (severity === 0 || !severity) {
+                this.logger.error(`Request denied. Severity level is not provided.`);
+
+                throw new BadRequestException(`Request denied. Severity level is not provided.`);
+            }
+
             if (road.is_damaged === true) {
                 this.logger.error(`Request denied. Road ${road} is already damaged.`);
 
                 throw new BadRequestException(`Request denied. Road network is already damaged. Please try again.`);
             }
 
-            await this.roadNetworkMongodbService.destroyRoad(roadId);
+            await this.roadNetworkMongodbService.destroyRoad(roadId, severity, description);
 
             const logData: CreateActivityLogDto = new CreateActivityLogDto();
 
@@ -124,19 +130,25 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         }
     }
 
-    async fixRoad(roadId: string, author: string): Promise<void> {
+    async fixRoad(roadId: string, severity: number, description: string, author: string): Promise<void> {
         this.logger.log('Fixing road with ID, ', roadId);
 
         const road = (await this.findById(roadId)).body;
 
         try {
+            if (severity !== 0 || severity) {
+                this.logger.error(`Request denied. Severity level is not provided.`);
+
+                throw new BadRequestException(`Request denied. Severity level is not provided.`);
+            }
+
             if (road.is_damaged === false) {
                 this.logger.error(`Request denied. Road ${road} is already fixed.`);
 
                 throw new BadRequestException(`Request denied. Road network is already fixed. Please try again.`);
             }
 
-            await this.roadNetworkMongodbService.fixRoad(roadId);
+            await this.roadNetworkMongodbService.fixRoad(roadId, severity, description);
 
             const logData: CreateActivityLogDto = new CreateActivityLogDto();
 
@@ -161,7 +173,9 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         roadDto.id = road.id;
         roadDto.type = road.type;
         roadDto.is_damaged = road.is_damaged;
-        roadDto.damage_probability = road.damage_probability;
+        roadDto.severity = road.severity;
+        roadDto.description = road.description ?? '';
+
         roadDto.properties = road.properties as unknown as JSON;
         roadDto.geometry = road.geometry as unknown as JSON;
 

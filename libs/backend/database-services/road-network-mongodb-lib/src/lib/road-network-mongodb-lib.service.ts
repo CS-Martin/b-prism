@@ -14,24 +14,28 @@ export class RoadNetworkMongodbLibService {
     // Use 'status' index when querying to filter the data you only need
     // instead of scanning the entire road network collection
 
-    async destroyRoad(roadId: string): Promise<void> {
+    async destroyRoad(roadId: string, severity: number, description: string): Promise<void> {
         await this.prisma.roadNetwork.updateMany({
             where: {
                 AND: [{ id: roadId }, { is_damaged: false }],
             },
             data: {
                 is_damaged: true,
+                severity: severity,
+                description: description,
             },
         });
     }
 
-    async fixRoad(roadId: string): Promise<void> {
+    async fixRoad(roadId: string, severity: number, description: string): Promise<void> {
         await this.prisma.roadNetwork.updateMany({
             where: {
                 AND: [{ id: roadId }, { is_damaged: true }],
             },
             data: {
                 is_damaged: false,
+                severity: severity,
+                description: description,
             },
         });
     }

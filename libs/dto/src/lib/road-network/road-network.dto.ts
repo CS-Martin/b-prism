@@ -19,5 +19,8 @@ export class RoadNetworkDto {
     is_damaged!: boolean;
 
     @ApiProperty({ required: true })
-    damage_probability!: number;
+    severity!: number;
+
+    @ApiProperty()
+    description?: string;
 }

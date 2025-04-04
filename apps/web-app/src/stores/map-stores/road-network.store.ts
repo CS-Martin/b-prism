@@ -6,6 +6,7 @@ import { MapRef } from 'react-map-gl';
 import { debounce, DebouncedFunc } from 'lodash';
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { useProgress } from '@bprogress/next';
+import { SERVER_DIRECTORY } from 'next/dist/shared/lib/constants';
 
 type RoadNetworkState = {
     damagedRoads: any;
@@ -16,8 +17,8 @@ type RoadNetworkState = {
     fetchDamagedRoads: () => Promise<void>;
     fetchFixedRoadsByBounds: DebouncedFunc<(mapRef: React.RefObject<MapRef>) => Promise<void>>;
 
-    destroyRoad: (roadId: string, author: string) => Promise<void>;
-    fixRoad: (roadId: string, author: string) => Promise<void>;
+    destroyRoad: (roadId: string, severity: number | null, description: string | null, author: string, token: string) => Promise<void>;
+    fixRoad: (roadId: string, severity: number | null, description: string | null, author: string, token: string) => Promise<void>;
 
     isLoading: boolean;
 };
@@ -28,10 +29,13 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
     prevBounds: null,
     isLoading: false,
 
-    destroyRoad: async (roadId: string, author: string) => {
+    destroyRoad: async (roadId: string, severity: number | null, description: string | null, author: string, token: string) => {
         set({ isLoading: true });
+
+        console.log('Destroying road with ID:', roadId);
+
         try {
-            await roadNetworkService.destroyRoad(roadId, author);
+            await roadNetworkService.destroyRoad(roadId, severity, description, author, token);
 
             toast({
                 title: 'Success',
@@ -53,10 +57,10 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
         }
     },
 
-    fixRoad: async (roadId: string, author: string) => {
+    fixRoad: async (roadId: string, severity: number | null, description: string | null, author: string, token: string) => {
         set({ isLoading: true });
         try {
-            await roadNetworkService.fixRoad(roadId, author);
+            await roadNetworkService.fixRoad(roadId, severity, description, author, token);
 
             // Trigger refetch to update UI
             await useRoadNetworkStore.getState().fetchDamagedRoads();
@@ -91,7 +95,8 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
                     properties: {
                         id: road.id,
                         is_damaged: road.is_damaged,
-                        damage_probability: road.damage_probability,
+                        description: road.description,
+                        severity: road.severity,
                         ...road.properties,
                     },
                     geometry: road.geometry,
@@ -138,7 +143,8 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
                     properties: {
                         id: road.id,
                         is_damaged: road.is_damaged,
-                        damage_probability: road.damage_probability,
+                        description: road.description,
+                        severity: road.severity,
                     },
                 })) ?? [];
 
