@@ -29,11 +29,13 @@ export const FixRoadModal = ({ road, setIsDialogOpen, session }: FixRoadModalPro
     const user = session?.user;
     const requestAuthor = `${user?.given_name} ${user?.family_name}`;
 
-    const handleRoadDestroy = async () => {
+    const handleRoadFix = async () => {
         if (road && road.properties?.id && user?.permissions.includes('ROAD_NETWORK_PERMISSION')) {
             startLoading();
-            await fixRoad(road.properties.id, requestAuthor);
+
+            await fixRoad(road.properties.id, 0, null, requestAuthor);
             setIsDialogOpen(false);
+
             stopLoading();
         }
     };
@@ -47,7 +49,7 @@ export const FixRoadModal = ({ road, setIsDialogOpen, session }: FixRoadModalPro
         <AlertDialog
             open={true}
             onOpenChange={setIsDialogOpen}>
-            <AlertDialogContent>
+            <AlertDialogContent className='max-w-xl'>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Confirm Road Repair</AlertDialogTitle>
                     <AlertDialogDescription>
@@ -55,11 +57,15 @@ export const FixRoadModal = ({ road, setIsDialogOpen, session }: FixRoadModalPro
                         to proceed?
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel onClick={handleCancel}>No, Keep it</AlertDialogCancel>
+                <AlertDialogFooter className='flex flex-row '>
+                    <AlertDialogCancel
+                        onClick={handleCancel}
+                        className='w-1/2'>
+                        No, Keep it
+                    </AlertDialogCancel>
                     <AlertDialogAction
-                        className='text-white bg-green-500 hover:bg-green-600'
-                        onClick={handleRoadDestroy}>
+                        className='w-1/2 text-white bg-green-500 hover:bg-green-600'
+                        onClick={handleRoadFix}>
                         Yes, repair it!
                     </AlertDialogAction>
                 </AlertDialogFooter>

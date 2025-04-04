@@ -93,19 +93,25 @@ export class RoadNetworkServiceLibService implements RoadNetworkServiceAbstractC
         }
     }
 
-    async destroyRoad(roadId: string, author: string): Promise<void> {
-        this.logger.log('Destroying road, ', roadId);
+    async destroyRoad(roadId: string, severity: number, description: string, author: string): Promise<void> {
+        this.logger.log('Destroying road, ', roadId, ' with severity, ', severity, ' and description, ', description);
 
         const road = (await this.findById(roadId)).body;
 
         try {
+            if (severity === 0 || !severity) {
+                this.logger.error(`Request denied. Severity level is not provided.`);
+
+                throw new BadRequestException(`Request denied. Severity level is not provided.`);
+            }
+
             if (road.is_damaged === true) {
                 this.logger.error(`Request denied. Road ${road} is already damaged.`);
 
                 throw new BadRequestException(`Request denied. Road network is already damaged. Please try again.`);
             }
 
-            await this.roadNetworkMongodbService.destroyRoad(roadId);
+            await this.roadNetworkMongodbService.destroyRoad(roadId, severity, description);
 
             const logData: CreateActivityLogDto = new CreateActivityLogDto();
 

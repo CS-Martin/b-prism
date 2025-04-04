@@ -18,7 +18,7 @@ type RoadNetworkState = {
     fetchFixedRoadsByBounds: DebouncedFunc<(mapRef: React.RefObject<MapRef>) => Promise<void>>;
 
     destroyRoad: (roadId: string, severity: number | null, description: string | null, author: string) => Promise<void>;
-    fixRoad: (roadId: string, author: string) => Promise<void>;
+    fixRoad: (roadId: string, severity: number | null, description: string | null, author: string) => Promise<void>;
 
     isLoading: boolean;
 };
@@ -57,10 +57,10 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
         }
     },
 
-    fixRoad: async (roadId: string, author: string) => {
+    fixRoad: async (roadId: string, severity: number | null, description: string | null, author: string) => {
         set({ isLoading: true });
         try {
-            await roadNetworkService.fixRoad(roadId, author);
+            await roadNetworkService.fixRoad(roadId, severity, description, author);
 
             // Trigger refetch to update UI
             await useRoadNetworkStore.getState().fetchDamagedRoads();

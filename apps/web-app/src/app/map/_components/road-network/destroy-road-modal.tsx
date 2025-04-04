@@ -48,6 +48,7 @@ export const DestroyRoadModal = ({ road, setIsDialogOpen, session }: DestroyRoad
         if (road && road.properties?.id && user?.permissions.includes('ROAD_NETWORK_PERMISSION')) {
             startLoading();
 
+            console.log(road.properties.id, roadSeverity, description, requestAuthor);
             await destroyRoad(road.properties.id, roadSeverity, description, requestAuthor);
             setIsDialogOpen(false);
 

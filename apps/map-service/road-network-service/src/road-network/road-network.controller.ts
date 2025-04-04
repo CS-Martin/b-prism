@@ -39,7 +39,7 @@ export class RoadNetworkController {
             type: 'object',
             properties: {
                 severity: {
-                    type: 'number',
+                    type: 'integer',
                     description: 'The severity level of damaged network.',
                     example: '3 for severely damaged',
                 },
@@ -58,8 +58,8 @@ export class RoadNetworkController {
         },
     })
     destroyRoad(@Param('id') id: string, @Body() payload: { severity: number; description: string; author: string }) {
-        const { author } = payload;
-        return this.roadNetworkServiceLibService.destroyRoad(id, author);
+        const { severity, description, author } = payload;
+        return this.roadNetworkServiceLibService.destroyRoad(id, severity, description, author);
     }
 
     @Put(':id/fix')
