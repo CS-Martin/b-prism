@@ -4,6 +4,8 @@ import { Badge } from '@b-prism/shadcn-ui/index';
 import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAnalyticalDashboardStore } from 'apps/web-app/src/stores/dashboard-stores/analytical-dashboard.store';
+import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
+import { RoadNetworkDto } from '@dto';
 
 export const StatisticCards = () => {
     const selectedRange = useAnalyticalDashboardStore((state) => state.selectedRange);
@@ -54,55 +56,7 @@ export const StatisticCards = () => {
                     </CardContent>
                 </Card>
 
-                <Card>
-                    <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
-                        <CardTitle className='text-sm font-medium'>Damaged Roads</CardTitle>
-                        <div className='p-1.5 rounded-md bg-orange-200'>
-                            <Waypoints className='w-4 h-4 text-orange-500' />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className='text-2xl font-bold'>42</div>
-                        <div className='text-xs text-muted-foreground'>
-                            <span className='inline-flex items-center text-red-500'>
-                                <ArrowUp className='w-3 h-3 mr-1' />
-                                +8
-                            </span>{' '}
-                            from last {selectedRange === '24h' ? 'day' : 'week'}
-                        </div>
-                        <div className='mt-3'>
-                            <div className='flex items-center justify-between mb-1 text-xs'>
-                                <span>Damage Probability</span>
-                            </div>
-                            <div className='grid grid-cols-3 gap-1'>
-                                <div className='flex flex-col items-center'>
-                                    <Badge
-                                        variant='destructive'
-                                        className='justify-center w-full'>
-                                        High
-                                    </Badge>
-                                    <span className='mt-1 text-xs'>18</span>
-                                </div>
-                                <div className='flex flex-col items-center'>
-                                    <Badge
-                                        variant='default'
-                                        className='justify-center w-full bg-orange-500'>
-                                        Medium
-                                    </Badge>
-                                    <span className='mt-1 text-xs'>15</span>
-                                </div>
-                                <div className='flex flex-col items-center'>
-                                    <Badge
-                                        variant='outline'
-                                        className='justify-center w-full'>
-                                        Low
-                                    </Badge>
-                                    <span className='mt-1 text-xs'>9</span>
-                                </div>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                <DamagedRoadsCard selectedRange={selectedRange} />
 
                 <Card>
                     <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
@@ -332,6 +286,88 @@ const ActiveRequestCard = ({ selectedRange }: { selectedRange: string }) => {
                                 Elderly
                             </Badge>
                             <span className='mt-1 text-xs'>{totalElderly}</span>
+                        </div>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+const DamagedRoadsCard = ({ selectedRange }: { selectedRange: string }) => {
+    const { damagedRoads, fetchDamagedRoads } = useRoadNetworkStore();
+
+    useEffect(() => {
+        if (!damagedRoads || damagedRoads.length === 0) {
+            fetchDamagedRoads();
+        }
+    }, []);
+
+    // Count all severely damaged roads in roads.properties.severity
+    const { totalDamagedRoads, slightly, moderately, severely } = useMemo(() => {
+        const severityCounts = {
+            slightly: 0,
+            moderately: 0,
+            severely: 0,
+            totalDamagedRoads: damagedRoads.length ?? 0,
+        };
+
+        damagedRoads.forEach((road: any) => {
+            const severity = road.properties?.severity;
+
+            if (severity === 1) severityCounts.slightly += 1;
+            else if (severity === 2) severityCounts.moderately += 1;
+            else if (severity === 3) severityCounts.severely += 1;
+        });
+
+        return severityCounts;
+    }, [damagedRoads]);
+
+    return (
+        <Card>
+            <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
+                <CardTitle className='text-sm font-medium'>Damaged Roads</CardTitle>
+                <div className='p-1.5 rounded-md bg-orange-200'>
+                    <Waypoints className='w-4 h-4 text-orange-500' />
+                </div>
+            </CardHeader>
+            <CardContent>
+                <div className='text-2xl font-bold'>{totalDamagedRoads}</div>
+                <div className='text-xs text-muted-foreground'>
+                    <span className='inline-flex items-center text-red-500'>
+                        <ArrowUp className='w-3 h-3 mr-1' />
+                        +8
+                    </span>{' '}
+                    from last {selectedRange === '24h' ? 'day' : 'week'}
+                </div>
+                <div className='mt-3'>
+                    <div className='flex items-center justify-between mb-1 text-xs'>
+                        <span>Damage Probability</span>
+                    </div>
+                    <div className='grid grid-cols-3 gap-1'>
+                        <div className='flex flex-col items-center'>
+                            <Badge
+                                variant='destructive'
+                                className='justify-center w-full'>
+                                High
+                            </Badge>
+                            <span className='mt-1 text-xs'>{severely}</span>
+                        </div>
+                        <div className='flex flex-col items-center'>
+                            <Badge
+                                variant='default'
+                                className='justify-center w-full bg-orange-500'>
+                                Medium
+                            </Badge>
+                            <span className='mt-1 text-xs'>{moderately}</span>
+                        </div>
+                        <div className='flex flex-col items-center'>
+                            <Badge
+                                variant='outline'
+                                className='justify-center w-full'>
+                                Low
+                            </Badge>
+                            <span className='mt-1 text-xs'>{slightly}</span>
                         </div>
                     </div>
                 </div>
