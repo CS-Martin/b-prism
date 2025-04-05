@@ -72,6 +72,7 @@ export class RescuePostServiceLibService implements RescuePostServiceAbstractCla
         rescuePostDto.location = locationDto;
 
         rescuePostDto.isRescued = rescuePost.isRescued ?? false;
+        rescuePostDto.number_of_people_affected = rescuePost.number_of_people_affected ?? 0;
         rescuePostDto.created_at = rescuePost.created_at ?? new Date();
         rescuePostDto.updated_at = rescuePost.updated_at ?? new Date();
 
