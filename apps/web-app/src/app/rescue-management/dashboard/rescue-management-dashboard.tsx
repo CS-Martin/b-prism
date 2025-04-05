@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AlertTriangle, CheckCircle2, ChevronDown, Download, Filter, LifeBuoy, MapPin, Phone, Search, SlidersHorizontal, Users } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@b-prism/shadcn-ui/index';
 import { Button } from '@b-prism/shadcn-ui/index';
@@ -13,137 +13,34 @@ import { Switch } from '@b-prism/shadcn-ui/index';
 import { Label } from '@b-prism/shadcn-ui/index';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@b-prism/shadcn-ui/index';
 import { RescueStatisticCards } from './_components/rescue-statistic-cards';
-
-// Mock data based on the provided structure
-const mockRescuePosts = [
-    {
-        _id: '67ee8d35c50e361e35205c85',
-        number_of_people_affected: 8,
-        isRescued: false,
-        created_at: new Date('2025-04-01T11:59:59.000Z'),
-        updated_at: new Date('2025-04-02T11:59:59.000Z'),
-        demographics: {
-            total_adults: 2,
-            total_children: 3,
-            total_elderly: 3,
-        },
-        contact_persons: [
-            {
-                name: 'Carlos Ramos',
-                contact: '+63 928 456 7890',
-            },
-        ],
-        location: {
-            longitude: 123.1842,
-            latitude: 13.1877,
-            address: 'Barangay 5, Naga City, Camarines Sur',
-            landmark: 'Near SM City Naga',
-        },
-    },
-    {
-        _id: '67ee8d35c50e361e35205c86',
-        number_of_people_affected: 5,
-        isRescued: true,
-        created_at: new Date('2025-04-01T10:30:00.000Z'),
-        updated_at: new Date('2025-04-02T09:15:00.000Z'),
-        demographics: {
-            total_adults: 2,
-            total_children: 2,
-            total_elderly: 1,
-        },
-        contact_persons: [
-            {
-                name: 'Maria Santos',
-                contact: '+63 917 123 4567',
-            },
-        ],
-        location: {
-            longitude: 123.7456,
-            latitude: 13.1456,
-            address: 'Barangay Concepcion Grande, Naga City',
-            landmark: 'Across from Naga City Hospital',
-        },
-    },
-    {
-        _id: '67ee8d35c50e361e35205c87',
-        number_of_people_affected: 12,
-        isRescued: false,
-        created_at: new Date('2025-04-02T08:45:00.000Z'),
-        updated_at: new Date('2025-04-02T14:20:00.000Z'),
-        demographics: {
-            total_adults: 5,
-            total_children: 4,
-            total_elderly: 3,
-        },
-        contact_persons: [
-            {
-                name: 'Juan Dela Cruz',
-                contact: '+63 939 876 5432',
-            },
-            {
-                name: 'Ana Reyes',
-                contact: '+63 927 654 3210',
-            },
-        ],
-        location: {
-            longitude: 123.2134,
-            latitude: 13.2567,
-            address: 'Barangay San Felipe, Naga City',
-            landmark: 'Behind Central School',
-        },
-    },
-    {
-        _id: '67ee8d35c50e361e35205c88',
-        number_of_people_affected: 3,
-        isRescued: false,
-        created_at: new Date('2025-04-02T12:10:00.000Z'),
-        updated_at: new Date('2025-04-02T15:45:00.000Z'),
-        demographics: {
-            total_adults: 2,
-            total_children: 1,
-            total_elderly: 0,
-        },
-        contact_persons: [
-            {
-                name: 'Elena Bautista',
-                contact: '+63 918 765 4321',
-            },
-        ],
-        location: {
-            longitude: 123.1945,
-            latitude: 13.1789,
-            address: 'Barangay Peñafrancia, Naga City',
-            landmark: 'Near Peñafrancia Basilica',
-        },
-    },
-    {
-        _id: '67ee8d35c50e361e35205c89',
-        number_of_people_affected: 7,
-        isRescued: false,
-        created_at: new Date('2025-04-02T13:25:00.000Z'),
-        updated_at: new Date('2025-04-02T16:30:00.000Z'),
-        demographics: {
-            total_adults: 3,
-            total_children: 2,
-            total_elderly: 2,
-        },
-        contact_persons: [
-            {
-                name: 'Roberto Mendoza',
-                contact: '+63 926 543 2109',
-            },
-        ],
-        location: {
-            longitude: 123.2056,
-            latitude: 13.1654,
-            address: 'Barangay Triangulo, Naga City',
-            landmark: 'Beside Triangulo Elementary School',
-        },
-    },
-];
+import { RescueRequestHeatmap } from '../../dashboard/_components/overview';
+import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
+import { useProgress } from '@bprogress/next';
 
 export default function RescuePostsDashboard() {
-    const [rescuePosts, setRescuePosts] = useState(mockRescuePosts);
+    const { start, stop } = useProgress();
+    const { rescuePosts, isLoading, fetchAllRescuePosts } = useRescuePostStore();
+
+    useEffect(() => {
+        if (isLoading) {
+            start();
+        } else {
+            stop();
+        }
+    }, [isLoading, start, stop]);
+
+    useEffect(() => {
+        if (!rescuePosts || rescuePosts.length === 0) {
+            fetchAllRescuePosts();
+        }
+
+        const interval = setInterval(() => {
+            fetchAllRescuePosts();
+        }, 30000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<'all' | 'rescued' | 'pending'>('all');
     const [selectedPost, setSelectedPost] = useState<any>(null);
@@ -154,7 +51,7 @@ export default function RescuePostsDashboard() {
     // Filter posts based on search query and status filter
     const filteredPosts = rescuePosts.filter((post) => {
         const matchesSearch =
-            post.location.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            post.location.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             post.contact_persons.some((person) => person.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
         const matchesStatus = filterStatus === 'all' || (filterStatus === 'rescued' && post.isRescued) || (filterStatus === 'pending' && !post.isRescued);
@@ -168,54 +65,17 @@ export default function RescuePostsDashboard() {
         setIsConfirmDialogOpen(true);
     };
 
-    // Confirm rescue status change
-    const confirmToggleRescueStatus = () => {
-        if (postToToggle) {
-            setRescuePosts((posts) => posts.map((post) => (post._id === postToToggle ? { ...post, isRescued: !post.isRescued, updated_at: new Date() } : post)));
-            setIsConfirmDialogOpen(false);
-            setPostToToggle(null);
-        }
-    };
-
     // View post details
     const viewPostDetails = (post: any) => {
         setSelectedPost(post);
         setIsDetailOpen(true);
     };
 
-    // Format date to readable string
-    const formatDate = (date: Date) => {
-        return new Intl.DateTimeFormat('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        }).format(date);
-    };
-
-    // Calculate time elapsed since creation
-    const getTimeElapsed = (date: Date) => {
-        const now = new Date();
-        const diffMs = now.getTime() - date.getTime();
-        const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
-
-        if (diffHrs < 1) {
-            const diffMins = Math.floor(diffMs / (1000 * 60));
-            return `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
-        } else if (diffHrs < 24) {
-            return `${diffHrs} hour${diffHrs !== 1 ? 's' : ''} ago`;
-        } else {
-            const diffDays = Math.floor(diffHrs / 24);
-            return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
-        }
-    };
-
     return (
         <div className='flex flex-col w-full min-h-screen bg-muted/40'>
             <div className='flex flex-col'>
                 <main className='flex-1 p-4 space-y-4 md:p-6'>
-                    <RescueStatisticCards />
+                    <RescueStatisticCards rescuePosts={rescuePosts} />
 
                     <Tabs
                         defaultValue='table'
@@ -293,7 +153,7 @@ export default function RescuePostsDashboard() {
                                                     </TableRow>
                                                 ) : (
                                                     filteredPosts.map((post) => (
-                                                        <TableRow key={post._id}>
+                                                        <TableRow key={post.id}>
                                                             <TableCell>
                                                                 <Badge
                                                                     variant={post.isRescued ? 'outline' : 'destructive'}
@@ -312,7 +172,9 @@ export default function RescuePostsDashboard() {
                                                                     <Users className='w-3 h-3 text-muted-foreground' />
                                                                     <span>{post.number_of_people_affected}</span>
                                                                     <span className='ml-1 text-xs text-muted-foreground'>
-                                                                        ({post.demographics.total_adults}A, {post.demographics.total_children}C, {post.demographics.total_elderly}E)
+                                                                        ({post.demographics?.total_adults}A, {post.demographics?.total_children}C,{' '}
+                                                                        {post.demographics?.total_elderly}
+                                                                        E)
                                                                     </span>
                                                                 </div>
                                                             </TableCell>
@@ -324,8 +186,8 @@ export default function RescuePostsDashboard() {
                                                             </TableCell>
                                                             <TableCell>
                                                                 <div className='flex flex-col'>
-                                                                    <span className='text-xs'>{formatDate(post.created_at)}</span>
-                                                                    <span className='text-xs text-muted-foreground'>{getTimeElapsed(post.created_at)}</span>
+                                                                    <span className='text-xs'>date</span>
+                                                                    <span className='text-xs text-muted-foreground'>timeElapsed</span>
                                                                 </div>
                                                             </TableCell>
                                                             <TableCell className='text-right'>
@@ -338,8 +200,7 @@ export default function RescuePostsDashboard() {
                                                                     </Button>
                                                                     <Button
                                                                         variant={post.isRescued ? 'outline' : 'default'}
-                                                                        size='sm'
-                                                                        onClick={() => handleToggleRescueStatus(post._id)}>
+                                                                        size='sm'>
                                                                         {post.isRescued ? 'Mark Pending' : 'Mark Rescued'}
                                                                     </Button>
                                                                 </div>
@@ -372,28 +233,18 @@ export default function RescuePostsDashboard() {
                                 </Card>
                             </div>
                         </TabsContent>
-
-                        <TabsContent
-                            value='map'
-                            className='space-y-4'>
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Rescue Posts Map</CardTitle>
-                                    <CardDescription>Geographical distribution of rescue requests</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className='h-[500px] rounded-md border bg-muted flex items-center justify-center'>
-                                        <div className='text-center'>
-                                            <MapPin className='w-12 h-12 mx-auto mb-2 text-muted-foreground' />
-                                            <p className='text-sm text-muted-foreground'>Interactive map showing rescue post locations</p>
-                                            <p className='mt-1 text-xs text-muted-foreground'>(Mapbox map would be integrated here)</p>
-                                            <p className='mt-1 text-xs text-muted-foreground'>Red pins: Pending rescues | Green pins: Completed rescues</p>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </TabsContent>
                     </Tabs>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Rescue Posts Map</CardTitle>
+                            <CardDescription>Geographical distribution of rescue requests</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className='h-[500px] rounded-md border bg-muted flex items-center justify-center'>
+                                <RescueRequestHeatmap rescuePosts={rescuePosts} />
+                            </div>
+                        </CardContent>
+                    </Card>
                 </main>
             </div>
 
@@ -473,13 +324,13 @@ export default function RescuePostsDashboard() {
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
                                     <h3 className='mb-1 font-semibold'>Created</h3>
-                                    <p className='text-sm'>{formatDate(selectedPost.created_at)}</p>
-                                    <p className='text-xs text-muted-foreground'>{getTimeElapsed(selectedPost.created_at)}</p>
+                                    <p className='text-sm'>date</p>
+                                    <p className='text-xs text-muted-foreground'>timeElapsed</p>
                                 </div>
                                 <div>
                                     <h3 className='mb-1 font-semibold'>Last Updated</h3>
-                                    <p className='text-sm'>{formatDate(selectedPost.updated_at)}</p>
-                                    <p className='text-xs text-muted-foreground'>{getTimeElapsed(selectedPost.updated_at)}</p>
+                                    <p className='text-sm'>date</p>
+                                    <p className='text-xs text-muted-foreground'>timeElapsed</p>
                                 </div>
                             </div>
 
@@ -524,7 +375,7 @@ export default function RescuePostsDashboard() {
                             onClick={() => setIsConfirmDialogOpen(false)}>
                             Cancel
                         </Button>
-                        <Button onClick={confirmToggleRescueStatus}>Confirm</Button>
+                        <Button>Confirm</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

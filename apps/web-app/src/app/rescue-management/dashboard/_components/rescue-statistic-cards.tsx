@@ -1,34 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@b-prism/shadcn-ui/index';
 import { useProgress } from '@bprogress/next';
+import { RescuePostDto } from '@dto';
 import { AnimatedCounter } from 'apps/web-app/src/components/animated-counter';
 import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
 import { AlertTriangle, CheckCircle2, Users } from 'lucide-react';
 import { useEffect } from 'react';
 
-export const RescueStatisticCards = () => {
-    const { start, stop } = useProgress();
-    const { rescuePosts, isLoading, fetchAllRescuePosts } = useRescuePostStore();
+interface RescueStatisticCardsProps {
+    rescuePosts: RescuePostDto[];
+}
 
-    useEffect(() => {
-        if (isLoading) {
-            start();
-        } else {
-            stop();
-        }
-    }, [isLoading, start, stop]);
-
-    useEffect(() => {
-        if (!rescuePosts || rescuePosts.length === 0) {
-            fetchAllRescuePosts();
-        }
-
-        const interval = setInterval(() => {
-            fetchAllRescuePosts();
-        }, 30000);
-
-        return () => clearInterval(interval);
-    }, []);
-
+export const RescueStatisticCards = ({ rescuePosts }: RescueStatisticCardsProps) => {
     const totalPosts = rescuePosts.length;
     const pendingRescues = rescuePosts.filter((post) => !post.isRescued).length;
     const rescued = rescuePosts.filter((post) => post.isRescued).length;
