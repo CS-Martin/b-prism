@@ -12,8 +12,8 @@ interface RescueStatisticCardsProps {
 
 export const RescueStatisticCards = ({ rescuePosts }: RescueStatisticCardsProps) => {
     const totalPosts = rescuePosts.length;
-    const pendingRescues = rescuePosts.filter((post) => !post.isRescued).length;
-    const rescued = rescuePosts.filter((post) => post.isRescued).length;
+    const pendingRescues = rescuePosts.filter((post) => post.status === 1).length;
+    const rescued = rescuePosts.filter((post) => post.status === 2).length;
     const peopleAffected = rescuePosts.reduce((sum, post) => sum + Number(post.number_of_people_affected), 0);
 
     return (

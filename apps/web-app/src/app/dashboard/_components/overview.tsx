@@ -61,7 +61,7 @@ export const Overview = () => {
                 monthCounts[month] = { activeRequests: 0, rescued: 0 };
             }
 
-            if (post.isRescued) {
+            if (post.status === 3) {
                 monthCounts[month].rescued += 1;
             } else {
                 monthCounts[month].activeRequests += 1;

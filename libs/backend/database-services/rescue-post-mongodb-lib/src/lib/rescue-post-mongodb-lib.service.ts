@@ -7,21 +7,36 @@ import { RescuePost } from '@prisma/client';
 export class RescuePostMongodbLibService {
     constructor(private readonly prisma: PrismaDbLibService) {}
 
-    async create(createRescuePostDto: CreateRescuePostDto): Promise<RescuePost> {
-        const result = await this.prisma.rescuePost.create({
-            data: {
-                ...createRescuePostDto,
-                contact_persons: createRescuePostDto.contact_persons as unknown as any[],
-            },
+    async findOne(id: string): Promise<RescuePost | null> {
+        const rescuePost: RescuePost | null = await this.prisma.rescuePost.findUnique({
+            where: { id },
         });
 
-        return result;
+        return rescuePost;
+    }
+
+    async updateStatusToPending(id: string): Promise<RescuePost> {
+        const rescuePost: RescuePost = await this.prisma.rescuePost.update({
+            where: { id },
+            data: { status: 1 },
+        });
+
+        return rescuePost;
+    }
+
+    async updateStatustoRescued(id: string): Promise<RescuePost> {
+        const rescuePost: RescuePost = await this.prisma.rescuePost.update({
+            where: { id },
+            data: { status: 2 },
+        });
+
+        return rescuePost;
     }
 
     async findAll(): Promise<RescuePost[]> {
-        const rescuePosts = await this.prisma.rescuePost.findMany({
+        const rescuePosts: RescuePost[] = await this.prisma.rescuePost.findMany({
             orderBy: {
-                created_at: 'asc',
+                created_at: 'desc',
             },
         });
 

@@ -9,11 +9,6 @@ import { ApiTags } from '@nestjs/swagger';
 export class RescuePostController {
     constructor(private readonly rescuePostServiceLibService: RescuePostServiceLibService) {}
 
-    @Post()
-    create(@Body() createRescuePostDto: CreateRescuePostDto) {
-        return this.rescuePostServiceLibService.create(createRescuePostDto);
-    }
-
     @Get()
     findAll() {
         return this.rescuePostServiceLibService.findAll();
