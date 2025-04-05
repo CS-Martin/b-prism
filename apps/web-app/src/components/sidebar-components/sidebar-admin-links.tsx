@@ -32,6 +32,12 @@ const adminLinks = [
         icon: History,
         href: '/admin/activity-logs',
     },
+    {
+        id: 'rescue-dashboard',
+        label: 'Rescue Dashboard',
+        icon: MonitorCog,
+        href: '/rescue-management/dashboard',
+    },
 ];
 
 export const SidebarAdminLinks = () => {
