@@ -2,10 +2,9 @@ import { Badge, Button } from '@b-prism/shadcn-ui/index';
 import { ContactPersonDto, LocationDto, RescuePostDto } from '@dto';
 import { Row } from '@tanstack/react-table';
 import { formatDistanceToNow } from 'date-fns';
-import { access } from 'fs';
 import { Users } from 'lucide-react';
 
-export const RescueManagementDatatableColumns = () => {
+export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost: RescuePostDto, status: 'rescued' | 'pending') => void) => {
     return [
         {
             accessorKey: 'status',
@@ -130,13 +129,15 @@ export const RescueManagementDatatableColumns = () => {
                         {r.status === 0 ? (
                             <Button
                                 size='sm'
-                                variant='destructive'>
+                                variant='destructive'
+                                onClick={() => handleUpdateStatus(r, 'pending')}>
                                 Dispatch Rescue Team
                             </Button>
                         ) : r.status === 1 ? (
                             <Button
                                 size='sm'
-                                variant='default'>
+                                variant='default'
+                                onClick={() => handleUpdateStatus(r, 'rescued')}>
                                 Mark Rescued
                             </Button>
                         ) : null}

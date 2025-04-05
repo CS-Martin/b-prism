@@ -16,11 +16,12 @@ import {
     TableRow,
 } from '@b-prism/shadcn-ui/index';
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { RescueManagementDatatableColumns } from './rescue-datatable-columns';
 import { motion } from 'framer-motion';
 import { RescuePostDto } from '@dto';
 import { Session } from 'next-auth';
+import { UpdateRescueStatusDialogue } from './update-rescue-status-dialogue';
 
 interface RescueManagementContentProps {
     rescuePosts: RescuePostDto[];
@@ -28,7 +29,21 @@ interface RescueManagementContentProps {
 }
 
 export const RescueManagementContent = ({ rescuePosts, session }: RescueManagementContentProps) => {
-    const columns = RescueManagementDatatableColumns();
+    // --- State Managements ---
+    const [status, setStatus] = useState<'rescued' | 'pending'>();
+    const [selectedRescuePost, setSelectedRescuePost] = useState<RescuePostDto | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+    // --- Handlers ---
+
+    const handleUpdateStatus = async (rescuePost: RescuePostDto, status: 'rescued' | 'pending') => {
+        console.log(rescuePost, status);
+        setStatus(status);
+        setSelectedRescuePost(rescuePost);
+        setIsDialogOpen(true);
+    };
+
+    const columns = RescueManagementDatatableColumns(handleUpdateStatus);
 
     return (
         <motion.div
@@ -48,6 +63,16 @@ export const RescueManagementContent = ({ rescuePosts, session }: RescueManageme
                     data={rescuePosts}
                 />
             </div>
+
+            {isDialogOpen && selectedRescuePost && (
+                <UpdateRescueStatusDialogue
+                    rescuePost={selectedRescuePost}
+                    isDialogOpen={isDialogOpen}
+                    status={status || 'pending'}
+                    onClose={() => setIsDialogOpen(false)}
+                    session={session}
+                />
+            )}
         </motion.div>
     );
 };
