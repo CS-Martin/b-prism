@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { AlertTriangle, CheckCircle2, ChevronDown, Download, Filter, LifeBuoy, MapPin, Phone, Search, SlidersHorizontal, Users } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@b-prism/shadcn-ui/index';
 import { Button } from '@b-prism/shadcn-ui/index';
@@ -12,12 +12,14 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Switch } from '@b-prism/shadcn-ui/index';
 import { Label } from '@b-prism/shadcn-ui/index';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@b-prism/shadcn-ui/index';
-import { RescueStatisticCards } from './_components/rescue-statistic-cards';
 import { RescueRequestHeatmap } from '../../dashboard/_components/overview';
 import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
 import { useProgress } from '@bprogress/next';
 import { RescueManagementContent } from './_components/rescue-datatable';
+import { RescueStatisticsCardsSkeleton } from './_components/skeletons';
 import { Session } from 'next-auth';
+
+const RescueStatisticCards = lazy(() => import('./_components/rescue-statistic-cards'));
 
 interface RescuePostsDashboardProps {
     session: Session | null;
@@ -55,7 +57,9 @@ export default function RescuePostsDashboard({ session }: RescuePostsDashboardPr
         <div className='flex flex-col w-full min-h-screen bg-muted/40'>
             <div className='flex flex-col'>
                 <main className='flex-1 p-4 space-y-4 md:p-6'>
-                    <RescueStatisticCards rescuePosts={rescuePosts} />
+                    <Suspense fallback={<RescueStatisticsCardsSkeleton />}>
+                        <RescueStatisticCards rescuePosts={rescuePosts} />
+                    </Suspense>
 
                     <Tabs
                         defaultValue='table'

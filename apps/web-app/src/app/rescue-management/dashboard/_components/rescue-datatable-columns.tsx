@@ -1,4 +1,4 @@
-import { Badge } from '@b-prism/shadcn-ui/index';
+import { Badge, Button } from '@b-prism/shadcn-ui/index';
 import { ContactPersonDto, LocationDto, RescuePostDto } from '@dto';
 import { Row } from '@tanstack/react-table';
 import { formatDistanceToNow } from 'date-fns';
@@ -109,6 +109,37 @@ export const RescueManagementDatatableColumns = () => {
                     <div className='flex flex-col'>
                         <span className='text-xs'>{formatted}</span>
                         <span className='text-xs text-muted-foreground'>{timeAgo}</span>
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: 'created_by',
+            header: '',
+            cell: ({ row }: { row: Row<RescuePostDto> }) => {
+                const r: RescuePostDto = row.original;
+
+                return (
+                    <div className='flex justify-end gap-2'>
+                        <Button
+                            variant='ghost'
+                            size='sm'
+                            className='text-blue-500'>
+                            View
+                        </Button>
+                        {r.status === 0 ? (
+                            <Button
+                                size='sm'
+                                variant='destructive'>
+                                Dispatch Rescue Team
+                            </Button>
+                        ) : r.status === 1 ? (
+                            <Button
+                                size='sm'
+                                variant='default'>
+                                Mark Rescued
+                            </Button>
+                        ) : null}
                     </div>
                 );
             },

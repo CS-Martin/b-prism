@@ -18,7 +18,7 @@ import {
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
 import { useEffect } from 'react';
 import { RescueManagementDatatableColumns } from './rescue-datatable-columns';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { RescuePostDto } from '@dto';
 import { Session } from 'next-auth';
 
@@ -58,7 +58,7 @@ interface RescueManagementDataTableProps<TData, TValue> {
 }
 
 export function RescueManagementDataTable<TData, TValue>({ columns, data }: RescueManagementDataTableProps<TData, TValue>) {
-    const pageSize = 5;
+    const pageSize = 7;
 
     const table = useReactTable({
         data,
@@ -86,23 +86,16 @@ export function RescueManagementDataTable<TData, TValue>({ columns, data }: Resc
                 </TableHeader>
                 <TableBody>
                     {table.getRowModel().rows?.length ? (
-                        <AnimatePresence initial={false}>
-                            {table.getRowModel().rows.map((row) => (
-                                <motion.tr
-                                    key={row.id}
-                                    layout
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: 10 }}
-                                    transition={{ duration: 0.3 }}
-                                    className='cursor-pointer'
-                                    data-state={row.getIsSelected() && 'selected'}>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                                    ))}
-                                </motion.tr>
-                            ))}
-                        </AnimatePresence>
+                        table.getRowModel().rows.map((row) => (
+                            <TableRow
+                                key={row.id}
+                                data-state={row.getIsSelected() && 'selected'}
+                                className='cursor-pointer'>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                                ))}
+                            </TableRow>
+                        ))
                     ) : (
                         <TableRow>
                             <TableCell

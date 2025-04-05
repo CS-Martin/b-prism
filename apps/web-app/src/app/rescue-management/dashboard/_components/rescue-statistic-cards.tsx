@@ -72,3 +72,5 @@ export const RescueStatisticCards = ({ rescuePosts }: RescueStatisticCardsProps)
         </div>
     );
 };
+
+export default RescueStatisticCards;

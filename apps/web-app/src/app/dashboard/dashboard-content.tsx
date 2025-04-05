@@ -6,7 +6,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@b-prism/shadcn-ui/ind
 import { Button } from '@b-prism/shadcn-ui/index';
 import { Badge } from '@b-prism/shadcn-ui/index';
 import { Progress } from '@b-prism/shadcn-ui/index';
-import { useAnalyticalDashboardStore } from '../../stores/dashboard-stores/analytical-dashboard.store';
 import React, { lazy, Suspense } from 'react';
 import { OverviewSkeleton, StatisticCardsSkeleton } from './_components/skeleton';
 
