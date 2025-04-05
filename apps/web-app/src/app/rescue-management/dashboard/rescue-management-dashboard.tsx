@@ -16,8 +16,14 @@ import { RescueStatisticCards } from './_components/rescue-statistic-cards';
 import { RescueRequestHeatmap } from '../../dashboard/_components/overview';
 import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
 import { useProgress } from '@bprogress/next';
+import { RescueManagementContent } from './_components/rescue-datatable';
+import { Session } from 'next-auth';
 
-export default function RescuePostsDashboard() {
+interface RescuePostsDashboardProps {
+    session: Session | null;
+}
+
+export default function RescuePostsDashboard({ session }: RescuePostsDashboardProps) {
     const { start, stop } = useProgress();
     const { rescuePosts, isLoading, fetchAllRescuePosts } = useRescuePostStore();
 
@@ -41,7 +47,9 @@ export default function RescuePostsDashboard() {
         return () => clearInterval(interval);
     }, []);
 
-    console.log('Rescue Posts:', rescuePosts);
+    if (!session) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className='flex flex-col w-full min-h-screen bg-muted/40'>
@@ -71,38 +79,10 @@ export default function RescuePostsDashboard() {
                                     </div>
                                 </div>
 
-                                <Card>
-                                    <CardContent className='p-0'>
-                                        <Table>
-                                            <TableHeader>
-                                                <TableRow>
-                                                    <TableHead className='w-[100px]'>Status</TableHead>
-                                                    <TableHead>Location</TableHead>
-                                                    <TableHead>People</TableHead>
-                                                    <TableHead>Contact</TableHead>
-                                                    <TableHead>Created</TableHead>
-                                                    <TableHead className='text-right'>Actions</TableHead>
-                                                </TableRow>
-                                            </TableHeader>
-                                        </Table>
-                                    </CardContent>
-                                    <CardFooter className='flex items-center justify-between p-4 border-t'>
-                                        <div className='flex items-center gap-2'>
-                                            <Button
-                                                variant='outline'
-                                                size='sm'
-                                                disabled>
-                                                Previous
-                                            </Button>
-                                            <Button
-                                                variant='outline'
-                                                size='sm'
-                                                disabled>
-                                                Next
-                                            </Button>
-                                        </div>
-                                    </CardFooter>
-                                </Card>
+                                <RescueManagementContent
+                                    rescuePosts={rescuePosts}
+                                    session={session}
+                                />
                             </div>
                         </TabsContent>
                     </Tabs>

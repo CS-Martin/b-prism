@@ -84,7 +84,7 @@ export function RoleManagementDataTable<TData, TValue>({ columns, data }: RoleMa
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        initialState: { pagination: { pageSize } }, // Apply page size here
+        initialState: { pagination: { pageSize } },
     });
 
     useEffect(() => {

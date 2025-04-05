@@ -3,7 +3,6 @@ import { ContactPersonDto, DemographicsDto, LocationDto, RescuePostDto, Response
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { RescuePost } from '@prisma/client';
 import { RescuePostServiceAbstractClass } from './rescue-psot-service-lib.abstract';
-import { activityLogService } from '../../../../../../apps/web-app/src/services/activity-log.service';
 import { ActivityLogServiceLibService } from '@b-prism/activity-log-service-lib';
 @Injectable()
 export class RescuePostServiceLibService implements RescuePostServiceAbstractClass {

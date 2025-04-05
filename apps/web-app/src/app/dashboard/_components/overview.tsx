@@ -145,7 +145,6 @@ export const RescueRequestHeatmap = ({ rescuePosts }: { rescuePosts: RescuePostD
             return;
         }
 
-        console.log('Heatmap: Initializing NEW local map instance...');
         mapRef.current = new mapboxgl.Map({
             container: mapContainerRef.current,
             accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
@@ -157,14 +156,13 @@ export const RescueRequestHeatmap = ({ rescuePosts }: { rescuePosts: RescuePostD
 
         const map = mapRef.current;
 
-        // Basic load handling for THIS map instance
-        map.on('load', () => {
-            console.log('Heatmap: Local map instance loaded.');
-        });
+        // // Basic load handling for THIS map instance
+        // map.on('load', () => {
+        //     console.log('Heatmap: Local map instance loaded.');
+        // });
 
         // Cleanup function: Remove map when component unmounts
         return () => {
-            console.log('Heatmap: Removing local map instance.');
             map.remove();
             mapRef.current = null;
         };
@@ -174,11 +172,11 @@ export const RescueRequestHeatmap = ({ rescuePosts }: { rescuePosts: RescuePostD
         const map = mapRef.current;
 
         if (!map || !map.isStyleLoaded()) {
-            console.log('Heatmap (Local): Map instance not ready or style not loaded yet.');
+            console.debug('Heatmap (Local): Map instance not ready or style not loaded yet.');
 
             const waitForLoad = () => {
                 if (map && map.isStyleLoaded()) {
-                    console.log('Heatmap (Local): Map loaded, attempting data update.');
+                    console.debug('Heatmap (Local): Map loaded, attempting data update.');
                     updateHeatmapData(map, rescuePosts); // Call data update function
                     map.off('load', waitForLoad); // Clean up listener
                 }
@@ -193,7 +191,7 @@ export const RescueRequestHeatmap = ({ rescuePosts }: { rescuePosts: RescuePostD
             return; // Initial return if map wasn't ready immediately
         }
 
-        console.log('Heatmap (Local): Map ready, updating heatmap data...');
+        console.debug('Heatmap (Local): Map ready, updating heatmap data...');
         const cleanup = updateHeatmapData(map, rescuePosts);
 
         return cleanup;

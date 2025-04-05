@@ -1,7 +1,11 @@
 import Topbar from 'apps/web-app/src/components/topbar';
 import RescueManagementDashboard from './rescue-management-dashboard';
+import { getServerSession } from 'next-auth';
+import { options } from '../../api/auth/[...nextauth]/options';
 
-export default function RescueManagementPage() {
+export default async function RescueManagementPage() {
+    const session = await getServerSession(options);
+
     return (
         <>
             <Topbar
@@ -11,7 +15,7 @@ export default function RescueManagementPage() {
                     { label: 'Dashboard', href: '/rescue-management/dashboard' },
                 ]}
             />
-            <RescueManagementDashboard />
+            <RescueManagementDashboard session={session} />
         </>
     );
 }

@@ -1,4 +1,3 @@
-import { CreateRescuePostDto } from '@dto';
 import { Injectable } from '@nestjs/common';
 import { PrismaDbLibService } from '@prisma-db-lib';
 import { RescuePost } from '@prisma/client';
