@@ -30,14 +30,13 @@ interface RescueManagementContentProps {
 
 export const RescueManagementContent = ({ rescuePosts, session }: RescueManagementContentProps) => {
     // --- State Managements ---
-    const [status, setStatus] = useState<'rescued' | 'pending'>();
+    const [status, setStatus] = useState<'unattended' | 'pending' | 'rescued' | null>(null);
     const [selectedRescuePost, setSelectedRescuePost] = useState<RescuePostDto | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
     // --- Handlers ---
 
-    const handleUpdateStatus = async (rescuePost: RescuePostDto, status: 'rescued' | 'pending') => {
-        console.log(rescuePost, status);
+    const handleUpdateStatus = async (rescuePost: RescuePostDto, status: 'unattended' | 'pending' | 'rescued' | null) => {
         setStatus(status);
         setSelectedRescuePost(rescuePost);
         setIsDialogOpen(true);
@@ -58,17 +57,19 @@ export const RescueManagementContent = ({ rescuePosts, session }: RescueManageme
                         <Label>Manage your existing roles to control access and permissions within the application.</Label>
                     </div>
                 </div>
-                <RescueManagementDataTable
-                    columns={columns}
-                    data={rescuePosts}
-                />
+                <div className='overflow-x-auto'>
+                    <RescueManagementDataTable
+                        columns={columns}
+                        data={rescuePosts}
+                    />
+                </div>
             </div>
 
             {isDialogOpen && selectedRescuePost && (
                 <UpdateRescueStatusDialogue
                     rescuePost={selectedRescuePost}
                     isDialogOpen={isDialogOpen}
-                    status={status || 'pending'}
+                    status={status || null}
                     onClose={() => setIsDialogOpen(false)}
                     session={session}
                 />

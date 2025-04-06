@@ -83,7 +83,7 @@ export class RescuePostServiceLibService implements RescuePostServiceAbstractCla
         await this.findOne(id);
 
         try {
-            await this.rescuePostMongodbLibService.updateStatustoRescued(id);
+            await this.rescuePostMongodbLibService.updateStatusToRescued(id);
 
             await this.activityLogService.create({
                 action: 'UPDATE',
@@ -97,6 +97,29 @@ export class RescuePostServiceLibService implements RescuePostServiceAbstractCla
             this.logger.error(`Error updating status to rescued for rescue post with id: ${id}`, error);
 
             throw new BadRequestException('Failed to update status to rescued');
+        }
+    }
+
+    async updateStatusToUnattended(id: string, author: string): Promise<void> {
+        this.logger.log(`Updating status to unattended for rescue post with id: ${id}`);
+
+        await this.findOne(id);
+
+        try {
+            await this.rescuePostMongodbLibService.updateStatusToUnattended(id);
+
+            await this.activityLogService.create({
+                action: 'UPDATE',
+                description: `Updated status to unattended for rescue post with id: ${id}`,
+                resource: 'RescuePost',
+                resource_id: id,
+                author: author,
+                timestamp: new Date(),
+            });
+        } catch (error) {
+            this.logger.error(`Error updating status to unattended for rescue post with id: ${id}`, error);
+
+            throw new BadRequestException('Failed to update status to unattended');
         }
     }
 

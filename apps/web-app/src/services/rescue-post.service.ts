@@ -28,14 +28,18 @@ class RescuePostService {
         }
     }
 
-    public async updateRescuePostStatus(id: string, status: 'rescued' | 'pending', author: string, token: string) {
+    public async updateRescuePostStatus(rescuePostId: string | undefined, status: 'unattended' | 'pending' | 'rescued' | null, author: string, token: string) {
         try {
-            const response = await fetch(`${this.API_BASE_URL}/rescue-posts/${id}/status`, {
+            const response = await fetch(`${this.API_BASE_URL}/rescue-posts/${rescuePostId}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
+                body: JSON.stringify({
+                    status,
+                    author,
+                }),
             });
 
             if (!response.ok) {
@@ -43,8 +47,6 @@ class RescuePostService {
 
                 throw new BadRequestException(error.message);
             }
-
-            return await response.json();
         } catch (error) {
             console.error(error);
 

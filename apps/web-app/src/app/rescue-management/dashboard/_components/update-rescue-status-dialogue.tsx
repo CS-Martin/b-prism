@@ -1,3 +1,4 @@
+import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -16,18 +17,44 @@ import {
     DialogTitle,
 } from '@b-prism/shadcn-ui/index';
 import { RescuePostDto } from '@dto';
+import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
 import { UserPlusIcon } from 'lucide-react';
 import { Session } from 'next-auth';
+import { PacmanLoader } from 'react-spinners';
 
 interface UpdateRescueStatusDialogueProps {
     rescuePost: RescuePostDto | null;
     isDialogOpen: boolean;
-    status: 'rescued' | 'pending';
+    status: 'unattended' | 'pending' | 'rescued' | null;
     session: Session | null;
     onClose: () => void;
 }
 
-export const UpdateRescueStatusDialogue = ({ isDialogOpen, onClose, status, session }: UpdateRescueStatusDialogueProps) => {
+export const UpdateRescueStatusDialogue = ({ rescuePost, isDialogOpen, onClose, status, session }: UpdateRescueStatusDialogueProps) => {
+    // --- Handlers ---
+    const { isLoading, error, updateRescePostStatus } = useRescuePostStore();
+
+    const handleRescueStatusUpdate = async (rescuePost: RescuePostDto | null) => {
+        if (rescuePost && session) {
+            const author: string = session.user.given_name + ' ' + session.user.family_name;
+            const token: string = session.user.access_token;
+
+            await updateRescePostStatus(rescuePost.id, status, author, token);
+        }
+
+        onClose();
+    };
+
+    // if (error) {
+    //     toast({
+    //         title: 'Error',
+    //         description: error,
+    //         variant: 'destructive',
+    //     });
+
+    //     return;
+    // }
+
     return (
         <AlertDialog open={isDialogOpen}>
             <AlertDialogContent className='sm:max-w-[425px]'>
@@ -43,11 +70,10 @@ export const UpdateRescueStatusDialogue = ({ isDialogOpen, onClose, status, sess
                         onClick={onClose}>
                         No, keep it.
                     </AlertDialogCancel>
-                    <AlertDialogAction>haha</AlertDialogAction>
-                    {/* <AlertDialogAction
+                    <AlertDialogAction
                         className='md:w-1/2'
-                        disabled={isLoading || selectedRole === null}
-                        onClick={() => handleRoleChange(user, selectedRole ?? '')}>
+                        disabled={isLoading || rescuePost === null}
+                        onClick={() => handleRescueStatusUpdate(rescuePost)}>
                         {isLoading ? (
                             <>
                                 <PacmanLoader
@@ -59,7 +85,7 @@ export const UpdateRescueStatusDialogue = ({ isDialogOpen, onClose, status, sess
                         ) : (
                             <span>Yes, change it.</span>
                         )}
-                    </AlertDialogAction> */}
+                    </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

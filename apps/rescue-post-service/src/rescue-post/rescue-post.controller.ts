@@ -16,11 +16,13 @@ export class RescuePostController {
 
     @UseGuards(AuthGuard)
     @Put(':id/status')
-    updateRescuePostStatus(@Param('id') id: string, @Body() body: { status: 'rescued' | 'pending'; author: string }) {
+    updateRescuePostStatus(@Param('id') id: string, @Body() body: { status: 'unattended' | 'pending' | 'rescued'; author: string }) {
         if (body.status === 'rescued') {
             return this.rescuePostServiceLibService.updateStatusToRescued(id, body.author);
         } else if (body.status === 'pending') {
             return this.rescuePostServiceLibService.updateStatusToPending(id, body.author);
+        } else if (body.status === 'unattended') {
+            return this.rescuePostServiceLibService.updateStatusToUnattended(id, body.author);
         }
     }
 }

@@ -23,10 +23,19 @@ export class RescuePostMongodbLibService {
         return rescuePost;
     }
 
-    async updateStatustoRescued(id: string): Promise<RescuePost> {
+    async updateStatusToRescued(id: string): Promise<RescuePost> {
         const rescuePost: RescuePost = await this.prisma.rescuePost.update({
             where: { id },
             data: { status: 2 },
+        });
+
+        return rescuePost;
+    }
+
+    async updateStatusToUnattended(id: string): Promise<RescuePost> {
+        const rescuePost: RescuePost = await this.prisma.rescuePost.update({
+            where: { id },
+            data: { status: 0 },
         });
 
         return rescuePost;

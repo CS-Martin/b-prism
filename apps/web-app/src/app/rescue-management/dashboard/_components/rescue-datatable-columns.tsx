@@ -4,7 +4,7 @@ import { Row } from '@tanstack/react-table';
 import { formatDistanceToNow } from 'date-fns';
 import { Users } from 'lucide-react';
 
-export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost: RescuePostDto, status: 'rescued' | 'pending') => void) => {
+export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost: RescuePostDto, status: 'rescued' | 'pending' | 'unattended' | null) => void) => {
     return [
         {
             accessorKey: 'status',
@@ -13,7 +13,7 @@ export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost
                 const status = row.getValue('status');
 
                 return (
-                    <div className='flex items-center'>
+                    <div className='min-w-[100px] flex items-center'>
                         <>
                             {(() => {
                                 switch (status) {
@@ -50,8 +50,8 @@ export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost
             cell: ({ row }: { row: Row<RescuePostDto> }) => {
                 const location: LocationDto = row.getValue('location');
                 return (
-                    <div className='flex flex-col'>
-                        <span className='font-medium truncate max-w-[300px]'>{location.address}</span>
+                    <div className='flex flex-col min-w-[200px] max-w-[250px] truncate'>
+                        <span className='font-medium truncate max-w-[250px]'>{location.address}</span>
                         <span className='text-xs text-muted-foreground truncate max-w-[200px]'>{location.landmark}</span>
                     </div>
                 );
@@ -64,7 +64,7 @@ export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost
                 const r: RescuePostDto = row.original;
 
                 return (
-                    <div className='flex items-center gap-1'>
+                    <div className='min-w-[160px] flex items-center gap-1'>
                         <Users className='w-3 h-3 text-muted-foreground' />
                         <span>{r.number_of_people_affected}</span>
                         <span className='ml-1 text-xs text-muted-foreground'>
@@ -80,7 +80,7 @@ export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost
             cell: ({ row }: { row: Row<RescuePostDto> }) => {
                 const contactPersons: ContactPersonDto[] = row.getValue('contact_persons');
                 return (
-                    <div className='flex flex-col'>
+                    <div className='min-w-[160px] flex flex-col'>
                         <span className='font-medium'>{contactPersons[0].name}</span>
                         <span className='text-xs text-muted-foreground'>{contactPersons[0].contact}</span>
                     </div>
@@ -105,7 +105,7 @@ export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost
                 const timeAgo = formatDistanceToNow(createdAt, { addSuffix: true });
 
                 return (
-                    <div className='flex flex-col'>
+                    <div className=' min-w-[180px] flex flex-col'>
                         <span className='text-xs'>{formatted}</span>
                         <span className='text-xs text-muted-foreground'>{timeAgo}</span>
                     </div>
@@ -119,17 +119,19 @@ export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost
                 const r: RescuePostDto = row.original;
 
                 return (
-                    <div className='flex justify-end gap-2'>
+                    <div className='min-w-[200px] flex justify-end gap-2'>
                         <Button
                             variant='ghost'
                             size='sm'
-                            className='text-blue-500'>
+                            className='w-40 text-blue-500'>
                             View
                         </Button>
+
                         {r.status === 0 ? (
                             <Button
                                 size='sm'
                                 variant='destructive'
+                                className='text-white bg-yellow-500 w-44 hover:bg-yellow-600'
                                 onClick={() => handleUpdateStatus(r, 'pending')}>
                                 Dispatch Rescue Team
                             </Button>
@@ -137,8 +139,17 @@ export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost
                             <Button
                                 size='sm'
                                 variant='default'
+                                className='text-white bg-green-500 w-44 hover:bg-green-600'
                                 onClick={() => handleUpdateStatus(r, 'rescued')}>
                                 Mark Rescued
+                            </Button>
+                        ) : r.status === 2 ? (
+                            <Button
+                                size='sm'
+                                variant='default'
+                                className='w-44'
+                                onClick={() => handleUpdateStatus(r, 'unattended')}>
+                                Mark Unattended
                             </Button>
                         ) : null}
                     </div>
