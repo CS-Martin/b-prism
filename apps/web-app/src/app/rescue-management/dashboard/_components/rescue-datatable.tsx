@@ -1,6 +1,14 @@
 import {
+    Button,
     Card,
     CardContent,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+    Input,
     Label,
     Pagination,
     PaginationContent,
@@ -22,6 +30,7 @@ import { motion } from 'framer-motion';
 import { RescuePostDto } from '@dto';
 import { Session } from 'next-auth';
 import { UpdateRescueStatusDialogue } from './update-rescue-status-dialogue';
+import { ChevronDown, Filter, Search, SlidersHorizontal } from 'lucide-react';
 
 interface RescueManagementContentProps {
     rescuePosts: RescuePostDto[];
@@ -31,8 +40,11 @@ interface RescueManagementContentProps {
 export const RescueManagementContent = ({ rescuePosts, session }: RescueManagementContentProps) => {
     // --- State Managements ---
     const [status, setStatus] = useState<'unattended' | 'pending' | 'rescued' | null>(null);
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [filterStatus, setFilterStatus] = useState<'unattended' | 'pending' | 'rescued' | 'all'>('all');
     const [selectedRescuePost, setSelectedRescuePost] = useState<RescuePostDto | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
     // --- Handlers ---
 
@@ -44,6 +56,20 @@ export const RescueManagementContent = ({ rescuePosts, session }: RescueManageme
 
     const columns = RescueManagementDatatableColumns(handleUpdateStatus);
 
+    const filteredRescuePosts = rescuePosts.filter((post) => {
+        const matchesStatus =
+            filterStatus === 'all' ||
+            (filterStatus === 'unattended' && post.status === 0) ||
+            (filterStatus === 'rescued' && post.status === 2) ||
+            (filterStatus === 'pending' && post.status === 1);
+
+        const matchesSearch =
+            post.location.address?.toLowerCase().includes(searchQuery.toLowerCase()) || post.contact_persons[0]?.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+        return matchesStatus && matchesSearch;
+    });
+
+    console.log(isDropdownOpen);
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -53,14 +79,51 @@ export const RescueManagementContent = ({ rescuePosts, session }: RescueManageme
             <div className='p-5 border shadow-sm rounded-xl bg-sidebar'>
                 <div className='flex flex-row items-center justify-between pb-5 mb-5 border-b'>
                     <div>
-                        <h2 className='text-lg font-bold'>Role Management</h2>
-                        <Label>Manage your existing roles to control access and permissions within the application.</Label>
+                        <h2 className='text-lg font-bold'>Rescue Posts Management</h2>
+                        <Label>Monitor and update the status of ongoing rescue operations.</Label>
                     </div>
                 </div>
-                <div className='overflow-x-auto'>
+                <div className=''>
+                    <div className='flex flex-row items-center justify-between gap-2 mb-3'>
+                        <div className='relative flex items-center gap-2 md:w-1/2'>
+                            <Search
+                                height={18}
+                                width={18}
+                                className='absolute left-3 text-muted-foreground'
+                            />
+                            <Input
+                                placeholder='Search by location or contact name...'
+                                className='pl-10'
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+                        <div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant='outline'
+                                        size='sm'
+                                        onClick={() => setIsDropdownOpen((prev) => !prev)}>
+                                        <Filter className='w-4 h-4 mr-2' />
+                                        Filter
+                                        <ChevronDown className={`w-4 h-4 ml-2 transition-all duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align='end'>
+                                    <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => setFilterStatus('all')}>All Rescue Posts</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setFilterStatus('unattended')}>Need Rescue</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setFilterStatus('pending')}>Pending Rescue</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setFilterStatus('rescued')}>Rescued</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    </div>
                     <RescueManagementDataTable
                         columns={columns}
-                        data={rescuePosts}
+                        data={filteredRescuePosts}
                     />
                 </div>
             </div>
