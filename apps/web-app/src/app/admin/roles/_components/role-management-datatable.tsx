@@ -173,7 +173,7 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
 
     return (
         <motion.div
-            className='px-5'
+            className='px-5 mt-3'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

@@ -11,7 +11,7 @@ export default async function AdminDashboardPage() {
             <Topbar
                 items={[
                     { label: 'Admin', href: '/' },
-                    { label: 'Admin Dashboard', href: '/admin/dashboard' },
+                    { label: 'User Management', href: '/admin/dashboard' },
                 ]}
             />
 

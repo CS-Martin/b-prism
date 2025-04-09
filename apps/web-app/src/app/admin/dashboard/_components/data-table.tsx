@@ -102,7 +102,7 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
 
     return (
         <motion.div
-            className='px-5'
+            className='px-5 mt-3'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -111,7 +111,7 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
                 <div className='flex flex-row items-center justify-between pb-5 mb-5 border-b'>
                     <div>
                         <h2 className='text-lg font-bold'>User Management</h2>
-                        <Label>Manage your existing roles to control access and permissions within the application.</Label>
+                        <Label>Manage user roles, access, and permissions.</Label>
                     </div>
                 </div>
                 <DataTable
