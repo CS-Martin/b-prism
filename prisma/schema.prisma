@@ -105,9 +105,16 @@ model RescuePost {
   demographics              RescuePostDemographics?
   location                  RescuePostLocation
   number_of_people_affected Int
-  isRescued                 Boolean                   @default(false)
-  created_at                DateTime                  @default(now())
-  updated_at                DateTime                  @updatedAt
+
+  /**
+   * 0 = rescue not started
+   * 1 = rescue pending
+   * 2 = rescue completed
+   */
+  status Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 // ========= ACTIVITY LOG ==================

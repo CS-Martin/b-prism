@@ -29,6 +29,10 @@ const chartConfig = {
     },
     rescued: {
         label: 'Rescued',
+        color: '#4ade80',
+    },
+    pending: {
+        label: 'Pending',
         color: '#60a5fa',
     },
 } satisfies ChartConfig;
@@ -52,18 +56,20 @@ export const Overview = () => {
     }, [isLoading]);
 
     const chartData = useMemo(() => {
-        const monthCounts: Record<string, { activeRequests: number; rescued: number }> = {};
+        const monthCounts: Record<string, { activeRequests: number; rescued: number; pending: number }> = {};
 
         rescuePosts.forEach((post) => {
-            const month = format(post.created_at, 'yyyy-MM'); // Directly format Date object
+            const month = format(post.created_at, 'yyyy-MM');
 
             if (!monthCounts[month]) {
-                monthCounts[month] = { activeRequests: 0, rescued: 0 };
+                monthCounts[month] = { activeRequests: 0, rescued: 0, pending: 0 };
             }
 
-            if (post.isRescued) {
+            if (post.status === 2) {
                 monthCounts[month].rescued += 1;
-            } else {
+            } else if (post.status === 1) {
+                monthCounts[month].pending += 1;
+            } else if (post.status === 0) {
                 monthCounts[month].activeRequests += 1;
             }
         });
@@ -74,6 +80,7 @@ export const Overview = () => {
                 month: format(new Date(`${monthKey}-01`), 'MMM'),
                 activeRequests: monthCounts[monthKey].activeRequests,
                 rescued: monthCounts[monthKey].rescued,
+                pending: monthCounts[monthKey].pending,
             }));
     }, [rescuePosts]);
 
@@ -119,6 +126,11 @@ export const Overview = () => {
                                 radius={4}
                             />
                             <Bar
+                                dataKey='pending'
+                                fill={chartConfig.pending.color}
+                                radius={4}
+                            />
+                            <Bar
                                 dataKey='rescued'
                                 fill={chartConfig.rescued.color}
                                 radius={4}
@@ -145,7 +157,6 @@ export const RescueRequestHeatmap = ({ rescuePosts }: { rescuePosts: RescuePostD
             return;
         }
 
-        console.log('Heatmap: Initializing NEW local map instance...');
         mapRef.current = new mapboxgl.Map({
             container: mapContainerRef.current,
             accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
@@ -157,14 +168,13 @@ export const RescueRequestHeatmap = ({ rescuePosts }: { rescuePosts: RescuePostD
 
         const map = mapRef.current;
 
-        // Basic load handling for THIS map instance
-        map.on('load', () => {
-            console.log('Heatmap: Local map instance loaded.');
-        });
+        // // Basic load handling for THIS map instance
+        // map.on('load', () => {
+        //     console.log('Heatmap: Local map instance loaded.');
+        // });
 
         // Cleanup function: Remove map when component unmounts
         return () => {
-            console.log('Heatmap: Removing local map instance.');
             map.remove();
             mapRef.current = null;
         };
@@ -174,11 +184,11 @@ export const RescueRequestHeatmap = ({ rescuePosts }: { rescuePosts: RescuePostD
         const map = mapRef.current;
 
         if (!map || !map.isStyleLoaded()) {
-            console.log('Heatmap (Local): Map instance not ready or style not loaded yet.');
+            console.debug('Heatmap (Local): Map instance not ready or style not loaded yet.');
 
             const waitForLoad = () => {
                 if (map && map.isStyleLoaded()) {
-                    console.log('Heatmap (Local): Map loaded, attempting data update.');
+                    console.debug('Heatmap (Local): Map loaded, attempting data update.');
                     updateHeatmapData(map, rescuePosts); // Call data update function
                     map.off('load', waitForLoad); // Clean up listener
                 }
@@ -193,7 +203,7 @@ export const RescueRequestHeatmap = ({ rescuePosts }: { rescuePosts: RescuePostD
             return; // Initial return if map wasn't ready immediately
         }
 
-        console.log('Heatmap (Local): Map ready, updating heatmap data...');
+        console.debug('Heatmap (Local): Map ready, updating heatmap data...');
         const cleanup = updateHeatmapData(map, rescuePosts);
 
         return cleanup;

@@ -1,9 +1,8 @@
 import { UserServiceLibService } from '@b-prism/user-service-lib';
-import { UpdateUserDto, UserDto } from '@dto';
-import { ResponseDto } from '@dto';
+import { ResponseDto, UserDto } from '@dto';
 import { Body, Controller, Get, Headers, Param, Put, Query, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiBearerAuth, ApiBody, ApiQuery, ApiSchema, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'libs/backend/app-services/guards-service-lib/src/lib/jwt-auth.guard';
 
 @ApiTags('User Endpoints')
