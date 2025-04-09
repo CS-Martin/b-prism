@@ -3,7 +3,7 @@ import { useProgress } from '@bprogress/next';
 import { RescuePostDto } from '@dto';
 import { AnimatedCounter } from 'apps/web-app/src/components/animated-counter';
 import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
-import { AlertTriangle, CheckCircle2, Users } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ShieldAlert, ShieldCheck, Users } from 'lucide-react';
 import { useEffect } from 'react';
 
 interface RescueStatisticCardsProps {
@@ -21,7 +21,9 @@ export const RescueStatisticCards = ({ rescuePosts }: RescueStatisticCardsProps)
             <Card>
                 <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                     <CardTitle className='text-sm font-medium'>Total Rescue Posts</CardTitle>
-                    <AlertTriangle className='w-4 h-4 text-muted-foreground' />
+                    <div className='p-1.5 bg-red-100 rounded'>
+                        <ShieldAlert className='w-4 h-4 text-red-500' />
+                    </div>
                 </CardHeader>
                 <CardContent>
                     <div className='text-2xl font-bold'>
@@ -34,7 +36,9 @@ export const RescueStatisticCards = ({ rescuePosts }: RescueStatisticCardsProps)
             <Card>
                 <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                     <CardTitle className='text-sm font-medium'>Pending Rescues</CardTitle>
-                    <AlertTriangle className='w-4 h-4 text-red-500' />
+                    <div className='p-1.5 bg-red-100 rounded'>
+                        <AlertTriangle className='w-4 h-4 text-red-500' />
+                    </div>
                 </CardHeader>
                 <CardContent>
                     <div className='text-2xl font-bold'>
@@ -47,7 +51,9 @@ export const RescueStatisticCards = ({ rescuePosts }: RescueStatisticCardsProps)
             <Card>
                 <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                     <CardTitle className='text-sm font-medium'>Rescued</CardTitle>
-                    <CheckCircle2 className='w-4 h-4 text-green-500' />
+                    <div className='p-1.5 bg-green-100 rounded'>
+                        <ShieldCheck className='w-4 h-4 text-green-500' />
+                    </div>
                 </CardHeader>
                 <CardContent>
                     <div className='text-2xl font-bold'>
@@ -60,7 +66,9 @@ export const RescueStatisticCards = ({ rescuePosts }: RescueStatisticCardsProps)
             <Card>
                 <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                     <CardTitle className='text-sm font-medium'>People Affected</CardTitle>
-                    <Users className='w-4 h-4 text-blue-500' />
+                    <div className='p-1.5 bg-blue-100 rounded'>
+                        <Users className='w-4 h-4 text-blue-500' />
+                    </div>
                 </CardHeader>
                 <CardContent>
                     <div className='text-2xl font-bold'>
