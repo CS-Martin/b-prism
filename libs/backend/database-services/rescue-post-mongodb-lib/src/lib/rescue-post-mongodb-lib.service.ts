@@ -17,7 +17,7 @@ export class RescuePostMongodbLibService {
     async updateStatusToPending(id: string): Promise<RescuePost> {
         const rescuePost: RescuePost = await this.prisma.rescuePost.update({
             where: { id },
-            data: { status: 1 },
+            data: { status: 1, updated_at: new Date() },
         });
 
         return rescuePost;
@@ -26,7 +26,7 @@ export class RescuePostMongodbLibService {
     async updateStatusToRescued(id: string): Promise<RescuePost> {
         const rescuePost: RescuePost = await this.prisma.rescuePost.update({
             where: { id },
-            data: { status: 2 },
+            data: { status: 2, updated_at: new Date() },
         });
 
         return rescuePost;
@@ -35,7 +35,7 @@ export class RescuePostMongodbLibService {
     async updateStatusToUnattended(id: string): Promise<RescuePost> {
         const rescuePost: RescuePost = await this.prisma.rescuePost.update({
             where: { id },
-            data: { status: 0 },
+            data: { status: 0, updated_at: new Date() },
         });
 
         return rescuePost;

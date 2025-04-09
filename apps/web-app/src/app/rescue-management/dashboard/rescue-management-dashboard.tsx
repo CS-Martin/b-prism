@@ -73,16 +73,6 @@ export default function RescuePostsDashboard({ session }: RescuePostsDashboardPr
                             value='table'
                             className='space-y-4'>
                             <div className='flex flex-col gap-4'>
-                                <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-                                    <div className='flex items-center w-full gap-2 md:w-1/2'>
-                                        <Search className='w-4 h-4 text-muted-foreground' />
-                                        <Input
-                                            placeholder='Search by location or contact name...'
-                                            className='h-9'
-                                        />
-                                    </div>
-                                </div>
-
                                 <RescueManagementContent
                                     rescuePosts={rescuePosts}
                                     session={session}

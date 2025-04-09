@@ -1,5 +1,5 @@
 import { Badge, Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Label, Switch } from '@b-prism/shadcn-ui/index';
-import { RescuePostDto } from '@dto';
+import { ContactPersonDto, RescuePostDto } from '@dto';
 import { customDateFormatter } from 'apps/web-app/src/utils/date-formatter';
 import { formatDistanceToNow, formatDistanceToNowStrict } from 'date-fns';
 import { MapPin, Phone } from 'lucide-react';
@@ -14,31 +14,56 @@ interface ViewRescueDetailsDialogProps {
 
 export const ViewRescueDetailsDialog = ({ selectedPost, isViewRescueDetailOpen, session, onClose }: ViewRescueDetailsDialogProps) => {
     return (
-        <Dialog open={isViewRescueDetailOpen}>
+        <Dialog
+            open={isViewRescueDetailOpen}
+            onOpenChange={onClose}>
             {selectedPost && (
                 <DialogContent className='sm:max-w-[600px]'>
-                    <DialogHeader>
-                        <DialogTitle className='flex items-center gap-2'>
-                            <MapPin className='w-5 h-5' />
+                    <DialogHeader className='flex flex-row items-center gap-2 '>
+                        <div className='p-2 bg-blue-200 rounded'>
+                            <MapPin className='w-6 h-6 text-blue-500' />
+                        </div>
+                        <DialogTitle className='flex flex-col justify-center gap-1'>
                             Rescue Post Details
+                            <Label className='font-normal'>View complete information about this rescue post.</Label>
                         </DialogTitle>
-                        <DialogDescription>Complete information about this rescue request</DialogDescription>
                     </DialogHeader>
 
                     <div className='grid gap-4 py-4'>
-                        <div className='flex items-center justify-between'>
+                        <div className='flex items-center gap-2'>
                             <h3 className='font-semibold'>Status</h3>
-                            {/* <Badge
-                                variant={selectedPost.isRescued ? 'outline' : 'destructive'}
-                                className={selectedPost.isRescued ? 'border-green-500 text-green-500' : ''}>
-                                {selectedPost.isRescued ? 'Rescued' : 'Pending Rescue'}
-                            </Badge> */}
+                            <>
+                                {(() => {
+                                    switch (selectedPost.status) {
+                                        case 0: // Need rescue
+                                            return <Badge variant='destructive'>Need rescue</Badge>;
+                                        case 1: // Pending
+                                            return (
+                                                <Badge
+                                                    variant='destructive'
+                                                    className='text-white bg-orange-500'>
+                                                    Pending
+                                                </Badge>
+                                            );
+                                        case 2: // Rescued
+                                            return (
+                                                <Badge
+                                                    variant='outline'
+                                                    className='text-green-500 border-green-500'>
+                                                    Rescued
+                                                </Badge>
+                                            );
+                                        default:
+                                            return null;
+                                    }
+                                })()}
+                            </>
                         </div>
 
                         <div className='grid grid-cols-2 gap-4'>
                             <div>
                                 <h3 className='mb-1 font-semibold'>Location</h3>
-                                <p className='text-sm'>{selectedPost.location.address}</p>
+                                <p className='text-sm '>{selectedPost.location.address}</p>
                                 <p className='mt-1 text-xs text-muted-foreground'>Landmark: {selectedPost.location.landmark}</p>
                                 <p className='mt-1 text-xs text-muted-foreground'>
                                     Coordinates: {selectedPost.location.latitude}, {selectedPost.location.longitude}
@@ -68,7 +93,7 @@ export const ViewRescueDetailsDialog = ({ selectedPost, isViewRescueDetailOpen, 
                         <div>
                             <h3 className='mb-1 font-semibold'>Contact Persons</h3>
                             <div className='space-y-2'>
-                                {selectedPost.contact_persons.map((person: any, index: number) => (
+                                {selectedPost.contact_persons.map((person: ContactPersonDto, index: number) => (
                                     <div
                                         key={index}
                                         className='flex items-center gap-2 p-2 rounded-md bg-muted'>
@@ -88,22 +113,13 @@ export const ViewRescueDetailsDialog = ({ selectedPost, isViewRescueDetailOpen, 
                             <div>
                                 <h3 className='mb-1 font-semibold'>Created</h3>
                                 <p className='text-sm'>{customDateFormatter(selectedPost.created_at)}</p>
-                                <p className='text-xs text-muted-foreground'>{formatDistanceToNow(selectedPost.created_at)} ago</p>
+                                <p className='text-xs text-muted-foreground'>{formatDistanceToNow(selectedPost.created_at, { addSuffix: true })}</p>
                             </div>
                             <div>
                                 <h3 className='mb-1 font-semibold'>Last Updated</h3>
                                 <p className='text-sm'>{customDateFormatter(selectedPost.updated_at)}</p>
-                                <p className='text-xs text-muted-foreground'>{formatDistanceToNow(selectedPost.updated_at)} ago</p>
+                                <p className='text-xs text-muted-foreground'>{formatDistanceToNow(selectedPost.updated_at, { addSuffix: true })}</p>
                             </div>
-                        </div>
-
-                        <div className='flex items-center mt-2 space-x-2'>
-                            {/* <Switch
-                                id='rescue-status'
-                                checked={selectedPost.isRescued}
-                                onCheckedChange={() => handleToggleRescueStatus(selectedPost._id)}
-                            />
-                            <Label htmlFor='rescue-status'>{selectedPost.isRescued ? 'Marked as Rescued' : 'Mark as Rescued'}</Label> */}
                         </div>
                     </div>
 
@@ -113,11 +129,6 @@ export const ViewRescueDetailsDialog = ({ selectedPost, isViewRescueDetailOpen, 
                             onClick={onClose}>
                             Close
                         </Button>
-                        {/* <Button
-                            variant={selectedPost.isRescued ? 'outline' : 'default'}
-                            onClick={() => handleToggleRescueStatus(selectedPost._id)}>
-                            {selectedPost.isRescued ? 'Mark as Pending' : 'Mark as Rescued'}
-                        </Button> */}
                     </DialogFooter>
                 </DialogContent>
             )}

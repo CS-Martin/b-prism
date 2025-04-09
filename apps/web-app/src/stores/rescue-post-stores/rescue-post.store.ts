@@ -38,10 +38,8 @@ export const useRescuePostStore = create<RescuePostStore>((set, get) => ({
 
             const st = status === 'unattended' ? 0 : status === 'pending' ? 1 : 2;
 
-            console.log('Updated Rescue Post:', st);
-
             set((state) => ({
-                rescuePosts: state.rescuePosts.map((rescuePost) => (rescuePost.id === rescuePostId ? { ...rescuePost, status: st } : rescuePost)),
+                rescuePosts: state.rescuePosts.map((rescuePost) => (rescuePost.id === rescuePostId ? { ...rescuePost, status: st, updated_at: new Date() } : rescuePost)),
                 isLoading: false,
                 error: null,
             }));

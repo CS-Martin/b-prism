@@ -92,7 +92,7 @@ export const RescueManagementContent = ({ rescuePosts, session }: RescueManageme
                     </div>
                 </div>
                 <div className=''>
-                    <div className='flex flex-row items-center justify-between gap-2 mb-3'>
+                    <div className='flex flex-row items-center gap-2 mb-3'>
                         <div className='relative flex items-center gap-2 md:w-1/2'>
                             <Search
                                 height={18}
