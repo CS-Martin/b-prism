@@ -29,6 +29,10 @@ const chartConfig = {
     },
     rescued: {
         label: 'Rescued',
+        color: '#4ade80',
+    },
+    pending: {
+        label: 'Pending',
         color: '#60a5fa',
     },
 } satisfies ChartConfig;
@@ -52,18 +56,20 @@ export const Overview = () => {
     }, [isLoading]);
 
     const chartData = useMemo(() => {
-        const monthCounts: Record<string, { activeRequests: number; rescued: number }> = {};
+        const monthCounts: Record<string, { activeRequests: number; rescued: number; pending: number }> = {};
 
         rescuePosts.forEach((post) => {
-            const month = format(post.created_at, 'yyyy-MM'); // Directly format Date object
+            const month = format(post.created_at, 'yyyy-MM');
 
             if (!monthCounts[month]) {
-                monthCounts[month] = { activeRequests: 0, rescued: 0 };
+                monthCounts[month] = { activeRequests: 0, rescued: 0, pending: 0 };
             }
 
-            if (post.status === 3) {
+            if (post.status === 2) {
                 monthCounts[month].rescued += 1;
-            } else {
+            } else if (post.status === 1) {
+                monthCounts[month].pending += 1;
+            } else if (post.status === 0) {
                 monthCounts[month].activeRequests += 1;
             }
         });
@@ -74,6 +80,7 @@ export const Overview = () => {
                 month: format(new Date(`${monthKey}-01`), 'MMM'),
                 activeRequests: monthCounts[monthKey].activeRequests,
                 rescued: monthCounts[monthKey].rescued,
+                pending: monthCounts[monthKey].pending,
             }));
     }, [rescuePosts]);
 
@@ -116,6 +123,11 @@ export const Overview = () => {
                             <Bar
                                 dataKey='activeRequests'
                                 fill={chartConfig.activeRequests.color}
+                                radius={4}
+                            />
+                            <Bar
+                                dataKey='pending'
+                                fill={chartConfig.pending.color}
                                 radius={4}
                             />
                             <Bar
