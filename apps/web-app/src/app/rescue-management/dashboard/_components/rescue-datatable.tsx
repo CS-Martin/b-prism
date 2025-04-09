@@ -29,8 +29,9 @@ import { RescueManagementDatatableColumns } from './rescue-datatable-columns';
 import { motion } from 'framer-motion';
 import { RescuePostDto } from '@dto';
 import { Session } from 'next-auth';
-import { UpdateRescueStatusDialogue } from './update-rescue-status-dialogue';
+import { UpdateRescueStatusDialog } from './update-rescue-status-dialog';
 import { ChevronDown, Filter, Search, SlidersHorizontal } from 'lucide-react';
+import { ViewRescueDetailsDialog } from './view-details-dialog';
 
 interface RescueManagementContentProps {
     rescuePosts: RescuePostDto[];
@@ -44,7 +45,7 @@ export const RescueManagementContent = ({ rescuePosts, session }: RescueManageme
     const [filterStatus, setFilterStatus] = useState<'unattended' | 'pending' | 'rescued' | 'all'>('all');
     const [selectedRescuePost, setSelectedRescuePost] = useState<RescuePostDto | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+    const [isViewDialogOpen, setIsViewDialogOpen] = useState<boolean>(false);
 
     // --- Handlers ---
 
@@ -54,7 +55,15 @@ export const RescueManagementContent = ({ rescuePosts, session }: RescueManageme
         setIsDialogOpen(true);
     };
 
-    const columns = RescueManagementDatatableColumns(handleUpdateStatus);
+    const handleViewDetails = (rescuePost: RescuePostDto) => {
+        // Handle view details logic here
+        setIsViewDialogOpen(true);
+        setSelectedRescuePost(rescuePost);
+    };
+
+    const columns = RescueManagementDatatableColumns({ handleUpdateStatus, handleViewDetails });
+
+    // --- Filter and Search Logic ---
 
     const filteredRescuePosts = rescuePosts.filter((post) => {
         const matchesStatus =
@@ -69,7 +78,6 @@ export const RescueManagementContent = ({ rescuePosts, session }: RescueManageme
         return matchesStatus && matchesSearch;
     });
 
-    console.log(isDropdownOpen);
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -103,11 +111,10 @@ export const RescueManagementContent = ({ rescuePosts, session }: RescueManageme
                                 <DropdownMenuTrigger asChild>
                                     <Button
                                         variant='outline'
-                                        size='sm'
-                                        onClick={() => setIsDropdownOpen((prev) => !prev)}>
+                                        size='sm'>
                                         <Filter className='w-4 h-4 mr-2' />
                                         Filter
-                                        <ChevronDown className={`w-4 h-4 ml-2 transition-all duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                                        <ChevronDown className={`w-4 h-4 ml-2 transition-all duration-300`} />
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align='end'>
@@ -129,12 +136,21 @@ export const RescueManagementContent = ({ rescuePosts, session }: RescueManageme
             </div>
 
             {isDialogOpen && selectedRescuePost && (
-                <UpdateRescueStatusDialogue
+                <UpdateRescueStatusDialog
                     rescuePost={selectedRescuePost}
                     isDialogOpen={isDialogOpen}
                     status={status || null}
                     onClose={() => setIsDialogOpen(false)}
                     session={session}
+                />
+            )}
+
+            {isViewDialogOpen && selectedRescuePost && (
+                <ViewRescueDetailsDialog
+                    selectedPost={selectedRescuePost}
+                    session={session}
+                    onClose={() => setIsViewDialogOpen(false)}
+                    isViewRescueDetailOpen={isViewDialogOpen}
                 />
             )}
         </motion.div>

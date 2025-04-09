@@ -1,10 +1,16 @@
 import { Badge, Button } from '@b-prism/shadcn-ui/index';
 import { ContactPersonDto, LocationDto, RescuePostDto } from '@dto';
 import { Row } from '@tanstack/react-table';
+import { customDateFormatter } from 'apps/web-app/src/utils/date-formatter';
 import { formatDistanceToNow } from 'date-fns';
 import { Users } from 'lucide-react';
 
-export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost: RescuePostDto, status: 'rescued' | 'pending' | 'unattended' | null) => void) => {
+interface RescueManagementDatatableColumnsProps {
+    handleUpdateStatus: (rescuePost: RescuePostDto, status: 'rescued' | 'pending' | 'unattended' | null) => void;
+    handleViewDetails: (rescuePost: RescuePostDto) => void;
+}
+
+export const RescueManagementDatatableColumns = ({ handleUpdateStatus, handleViewDetails }: RescueManagementDatatableColumnsProps) => {
     return [
         {
             accessorKey: 'status',
@@ -93,20 +99,11 @@ export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost
             cell: ({ row }: { row: Row<RescuePostDto> }) => {
                 const createdAt = new Date(row.getValue('created_at'));
 
-                const formatted = createdAt.toLocaleString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true,
-                });
-
                 const timeAgo = formatDistanceToNow(createdAt, { addSuffix: true });
 
                 return (
                     <div className=' min-w-[180px] flex flex-col'>
-                        <span className='text-xs'>{formatted}</span>
+                        <span className='text-xs'>{customDateFormatter(createdAt)}</span>
                         <span className='text-xs text-muted-foreground'>{timeAgo}</span>
                     </div>
                 );
@@ -123,7 +120,8 @@ export const RescueManagementDatatableColumns = (handleUpdateStatus: (rescuePost
                         <Button
                             variant='ghost'
                             size='sm'
-                            className='w-40 text-blue-500'>
+                            onClick={() => handleViewDetails(r)}
+                            className='w-20 text-blue-500'>
                             View
                         </Button>
 

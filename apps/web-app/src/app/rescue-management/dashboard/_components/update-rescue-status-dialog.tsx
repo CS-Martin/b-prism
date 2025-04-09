@@ -8,21 +8,13 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    Button,
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
 } from '@b-prism/shadcn-ui/index';
 import { RescuePostDto } from '@dto';
 import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
-import { UserPlusIcon } from 'lucide-react';
 import { Session } from 'next-auth';
 import { PacmanLoader } from 'react-spinners';
 
-interface UpdateRescueStatusDialogueProps {
+interface UpdateRescueStatusDialogProps {
     rescuePost: RescuePostDto | null;
     isDialogOpen: boolean;
     status: 'unattended' | 'pending' | 'rescued' | null;
@@ -30,7 +22,7 @@ interface UpdateRescueStatusDialogueProps {
     onClose: () => void;
 }
 
-export const UpdateRescueStatusDialogue = ({ rescuePost, isDialogOpen, onClose, status, session }: UpdateRescueStatusDialogueProps) => {
+export const UpdateRescueStatusDialog = ({ rescuePost, isDialogOpen, onClose, status, session }: UpdateRescueStatusDialogProps) => {
     // --- Handlers ---
     const { isLoading, error, updateRescePostStatus } = useRescuePostStore();
 
