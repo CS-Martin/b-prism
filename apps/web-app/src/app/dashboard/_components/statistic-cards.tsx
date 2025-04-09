@@ -117,7 +117,7 @@ const ActiveRequestCard = ({ selectedRange }: { selectedRange: string }) => {
 
         return rescuePosts.filter((post) => {
             // 1. Must be an active request
-            if (post.isRescued) {
+            if (post.status === 0) {
                 return false;
             }
 

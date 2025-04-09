@@ -20,7 +20,7 @@ export class RescuePostDto {
     number_of_people_affected!: number;
 
     @ApiProperty()
-    isRescued!: boolean;
+    status!: number;
 
     @ApiProperty()
     created_at!: Date;

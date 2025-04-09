@@ -20,6 +20,7 @@ import { useMapStore } from 'apps/web-app/src/stores/map-stores/mapbox.store';
 import { GenerateDirections } from './directions/generate-directions';
 import { useProgress } from '@bprogress/next';
 import FetchingIndicator from './fetching-indicator';
+import { TyphoonLayer } from './typhoon-simulation/typhoon-layer';
 
 export const MapboxContext = ({ session }: { session: Session | null }) => {
     const { start: startLoad, stop: stopLoad } = useProgress();
@@ -130,56 +131,58 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
                     mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                     onClick={handleMapClick}
                     onLoad={() => setIsMapLoaded(true)}>
-                    <>
-                        {selectedAction === 'createWarehouse' && (
-                            <CreateWarehouseDialog
-                                isOpen={isOpen}
-                                setIsOpen={setIsOpen}
-                                coordinates={coordinates}
-                                session={session}
-                            />
-                        )}
-
-                        {selectedAction === 'createDispensingPoint' && (
-                            <CreateDispensingPointDialog
-                                isOpen={isOpen}
-                                setIsOpen={setIsOpen}
-                                coordinates={coordinates}
-                                session={session}
-                            />
-                        )}
-
+                    {isMapLoaded && (
                         <>
-                            {selectedAction === 'findRoute' && <GenerateDirections />}
+                            {selectedAction === 'createWarehouse' && (
+                                <CreateWarehouseDialog
+                                    isOpen={isOpen}
+                                    setIsOpen={setIsOpen}
+                                    coordinates={coordinates}
+                                    session={session}
+                                />
+                            )}
 
-                            <RenderRoadNetwork
+                            {selectedAction === 'createDispensingPoint' && (
+                                <CreateDispensingPointDialog
+                                    isOpen={isOpen}
+                                    setIsOpen={setIsOpen}
+                                    coordinates={coordinates}
+                                    session={session}
+                                />
+                            )}
+
+                            <>
+                                {selectedAction === 'findRoute' && <GenerateDirections />}
+
+                                <RenderRoadNetwork
+                                    visibility={visibility}
+                                    session={session}
+                                />
+
+                                <RenderWarehouse
+                                    visibility={visibility}
+                                    selectedAction={selectedAction}
+                                    session={session}
+                                />
+
+                                <RenderDispensingPoint
+                                    visibility={visibility}
+                                    selectedAction={selectedAction}
+                                    session={session}
+                                />
+
+                                <TyphoonLayer />
+                            </>
+                            <ControlPanel
                                 visibility={visibility}
-                                session={session}
+                                onVisibilityChange={(layer, isVisible) => setVisibility((prev) => ({ ...prev, [layer]: isVisible }))}
                             />
 
-                            <RenderWarehouse
-                                visibility={visibility}
-                                selectedAction={selectedAction}
-                                session={session}
-                            />
+                            <RescuePostPanel mapRef={mapRef} />
 
-                            <RenderDispensingPoint
-                                visibility={visibility}
-                                selectedAction={selectedAction}
-                                session={session}
-                            />
-
-                            {/* <TyphoonLayer /> */}
+                            <FetchingIndicator />
                         </>
-                        <ControlPanel
-                            visibility={visibility}
-                            onVisibilityChange={(layer, isVisible) => setVisibility((prev) => ({ ...prev, [layer]: isVisible }))}
-                        />
-
-                        <RescuePostPanel mapRef={mapRef} />
-
-                        <FetchingIndicator />
-                    </>
+                    )}
                 </Map>
             </div>
 
