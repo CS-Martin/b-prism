@@ -10,7 +10,7 @@ interface SidebarLinkItemProps {
 
 export const SidebarLinkItem = ({ label, icon: Icon, href }: SidebarLinkItemProps) => {
     const pathname = usePathname();
-    const isActive = pathname.startsWith(href) || pathname.includes(href);
+    const isActive = pathname.startsWith(href);
 
     return (
         <SidebarMenuItem>

@@ -9,15 +9,15 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@b-prism/shadcn-ui/index';
-import { ChevronDown, History, MonitorCog, UserCog } from 'lucide-react';
+import { ChevronDown, Contact, History, MonitorCog, UserCog } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SidebarLinkItem } from './sidebar-link-item';
 
 const adminLinks = [
     {
         id: 'admin-dashboard',
-        label: 'Admin Dashboard',
-        icon: MonitorCog,
+        label: 'User Dashboard',
+        icon: Contact,
         href: '/admin/dashboard',
     },
     {
