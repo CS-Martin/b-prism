@@ -1,11 +1,14 @@
+'use client';
+
 import { getServerSession } from 'next-auth';
 import { options } from '../api/auth/[...nextauth]/options';
 import { MapboxContext } from './_components/mapbox';
 import { cookies } from 'next/headers';
 import { NextStep, NextStepProvider } from 'nextstepjs';
+import { useSession } from 'next-auth/react';
 
-export default async function MapPage() {
-    const session = await getServerSession(options);
+export default function MapPage() {
+    const { data: session } = useSession();
     // const cookie = await cookies();
 
     // Check if user first time login
