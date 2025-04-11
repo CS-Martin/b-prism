@@ -1,19 +1,27 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Progress } from '@b-prism/shadcn-ui/index';
+import { Card, CardContent, CardHeader, CardTitle, Progress } from '@b-prism/shadcn-ui/index';
 import { AlertTriangle, ArrowDown, ArrowUp, Home, Warehouse, Waypoints } from 'lucide-react';
 import { Badge } from '@b-prism/shadcn-ui/index';
-import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAnalyticalDashboardStore } from 'apps/web-app/src/stores/dashboard-stores/analytical-dashboard.store';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
-import { RoadNetworkDto } from '@dto';
+import { RescuePostDto } from '@dto';
 
-export const StatisticCards = () => {
+interface StatisticCardsProps {
+    isLoading: boolean;
+    rescuePosts: RescuePostDto[];
+}
+
+export const StatisticCards = ({ rescuePosts, isLoading }: StatisticCardsProps) => {
     const selectedRange = useAnalyticalDashboardStore((state) => state.selectedRange);
 
     return (
         <>
             <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-                <ActiveRequestCard selectedRange={selectedRange} />
+                <ActiveRequestCard
+                    selectedRange={selectedRange}
+                    rescuePosts={rescuePosts}
+                    isLoading={isLoading}
+                />
                 <Card>
                     <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                         <CardTitle className='text-sm font-medium'>Warehouse Resources</CardTitle>
@@ -94,21 +102,10 @@ export const StatisticCards = () => {
     );
 };
 
-const ActiveRequestCard = ({ selectedRange }: { selectedRange: string }) => {
-    const { rescuePosts, isLoading, error, fetchAllRescuePosts } = useRescuePostStore();
-
+const ActiveRequestCard = ({ selectedRange, rescuePosts, isLoading }: { selectedRange: string; rescuePosts: RescuePostDto[]; isLoading: boolean }) => {
     // --- State and Refs ---
     const previousFilteredCount = useRef<number | null>(null); // Ref to store the count from the *previous* render cycle
     const [percentageChange, setPercentageChange] = useState(0);
-
-    // --- Initial Data Fetch ---
-    useEffect(() => {
-        // Fetch only if posts haven't been loaded yet.
-        // Consider if you need to refetch periodically or based on other triggers.
-        if (!rescuePosts || rescuePosts.length === 0) {
-            fetchAllRescuePosts();
-        }
-    }, [fetchAllRescuePosts, rescuePosts]); // Added fetchAllRescuePosts to dependency array
 
     // --- Filtering Logic (Memoized for performance) ---
     // useMemo ensures filtering only happens when rescuePosts or selectedRange changes
@@ -117,7 +114,7 @@ const ActiveRequestCard = ({ selectedRange }: { selectedRange: string }) => {
 
         return rescuePosts.filter((post) => {
             // 1. Must be an active request
-            if (post.status === 0) {
+            if (post.status === 2) {
                 return false;
             }
 

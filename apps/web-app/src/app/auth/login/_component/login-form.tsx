@@ -122,8 +122,8 @@ export const LoginForm = () => {
 
         try {
             const result = await signIn(provider, {
-                redirect: false,
                 ...(provider === 'credentials' && credentials),
+                callbackUrl: '/dashboard',
             });
 
             if (result?.error) {
@@ -183,6 +183,8 @@ export const LoginForm = () => {
 
     const handleGoogleLogin = async () => {
         await handleLogin('google');
+
+        router.push('/dashboard');
     };
 
     const togglePasswordVisibility = () => {
