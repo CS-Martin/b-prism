@@ -49,15 +49,17 @@ export const DeleteRoleDialog = ({ session, isOpen, onClose, role }: DeleteRoleD
                         This action cannot be undone. All details associated with <b className='text-white'>{role?.name}</b> role will be deleted.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter>
+                <AlertDialogFooter className='flex flex-row'>
                     <AlertDialogCancel
+                        className='w-1/2'
                         disabled={isLoading}
                         onClick={onClose}>
                         No, keep it.
                     </AlertDialogCancel>
                     <AlertDialogAction
                         disabled={isLoading}
-                        onClick={handleDelete}>
+                        onClick={handleDelete}
+                        className='w-1/2 font-semibold text-white bg-red-500 rounded hover:bg-red-600 focus:ring-red-500 focus:ring-offset-red-200'>
                         I understand, delete this role
                     </AlertDialogAction>
                 </AlertDialogFooter>

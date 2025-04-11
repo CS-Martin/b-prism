@@ -32,6 +32,7 @@ import { Session } from 'next-auth';
 import { UpdateRescueStatusDialog } from './update-rescue-status-dialog';
 import { ChevronDown, Filter, Search, SlidersHorizontal } from 'lucide-react';
 import { ViewRescueDetailsDialog } from './view-details-dialog';
+import { PaginationComponent } from 'apps/web-app/src/components/pagination';
 
 interface RescueManagementContentProps {
     rescuePosts: RescuePostDto[];
@@ -179,89 +180,51 @@ export function RescueManagementDataTable<TData, TValue>({ columns, data }: Resc
 
     return (
         <div>
-            <Table>
-                <TableHeader className='sticky top-0 z-10'>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <TableHead key={header.id}>{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</TableHead>
-                            ))}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && 'selected'}
-                                className='cursor-pointer'>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+            <div className='grid grid-cols-1 overflow-x-auto'>
+                <Table>
+                    <TableHeader className='sticky top-0 z-10'>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead
+                                        style={{ width: header.getSize() !== 150 ? header.getSize() : undefined }}
+                                        key={header.id}>
+                                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                                    </TableHead>
                                 ))}
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell
-                                colSpan={columns.length}
-                                className='h-24 text-center'>
-                                No results.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && 'selected'}
+                                    className='cursor-pointer'>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className='h-24 text-center'>
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
 
             <PaginationComponent<TData>
                 pageSize={pageSize}
                 dataLength={data.length}
                 table={table}
             />
-        </div>
-    );
-}
-
-function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize: number; dataLength: number; table: ReturnType<typeof useReactTable<TData>> }) {
-    return (
-        <div className='flex flex-row items-center justify-between w-full p-5 mt-4 border rounded-lg'>
-            <div className='flex items-center justify-between w-1/2'>
-                <Label className='font-normal '>
-                    Showing {table.getState().pagination.pageIndex * pageSize + 1} to {Math.min((table.getState().pagination.pageIndex + 1) * pageSize, dataLength)} out of{' '}
-                    {dataLength} results
-                </Label>
-            </div>
-            <Pagination className='justify-end w-1/2'>
-                <PaginationContent>
-                    <PaginationItem>
-                        <PaginationPrevious
-                            onClick={() => table.previousPage()}
-                            className={`rounded-sm cursor-pointer ${!table.getCanPreviousPage() ? 'opacity-50 pointer-events-none' : ''}`}
-                        />
-                    </PaginationItem>
-                    {Array.from({ length: Math.ceil(dataLength / pageSize) }, (_, index) => (
-                        <PaginationItem key={index}>
-                            <PaginationLink
-                                href='#'
-                                isActive={index === table.getState().pagination.pageIndex}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    table.setPageIndex(index);
-                                }}
-                                className={`cursor-pointer ${index === table.getState().pagination.pageIndex ? 'bg-blue-500 text-white' : ''}`}>
-                                {index + 1}
-                            </PaginationLink>
-                        </PaginationItem>
-                    ))}
-                    <PaginationItem>
-                        <PaginationNext
-                            isActive={false}
-                            onClick={() => table.nextPage()}
-                            className={`rounded-sm cursor-pointer ${!table.getCanNextPage() ? 'opacity-50 pointer-events-none' : ''}`}
-                        />
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
         </div>
     );
 }

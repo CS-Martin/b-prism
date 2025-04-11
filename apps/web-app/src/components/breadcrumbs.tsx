@@ -11,7 +11,7 @@ interface BreadcrumbsProps {
 
 export const Breadcrumbs = ({ items, className }: BreadcrumbsProps) => {
     return (
-        <Breadcrumb className={className}>
+        <Breadcrumb className={`${className} hidden md:flex`}>
             <BreadcrumbList>
                 {items?.map((item, index) => (
                     <React.Fragment key={item.href || item.label}>

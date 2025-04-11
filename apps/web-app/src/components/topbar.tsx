@@ -36,7 +36,7 @@ const Topbar = ({ items }: TopBarProps) => {
                     <Select
                         defaultValue={timeRange}
                         onValueChange={setTimeRange}>
-                        <SelectTrigger className='w-[180px]'>
+                        <SelectTrigger className='w-[150px]'>
                             <SelectValue placeholder='Select time range' />
                         </SelectTrigger>
                         <SelectContent>
@@ -46,12 +46,6 @@ const Topbar = ({ items }: TopBarProps) => {
                             <SelectItem value='90d'>Last 90 days</SelectItem>
                         </SelectContent>
                     </Select>
-                    <Button
-                        variant='outline'
-                        size='sm'>
-                        <Filter className='w-4 h-4 mr-2' />
-                        Filters
-                    </Button>
                 </div>
                 <ThemeToggler />
             </div>

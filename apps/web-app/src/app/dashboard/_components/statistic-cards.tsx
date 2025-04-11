@@ -22,7 +22,8 @@ export const StatisticCards = ({ rescuePosts, isLoading }: StatisticCardsProps) 
                     rescuePosts={rescuePosts}
                     isLoading={isLoading}
                 />
-                <Card>
+
+                <Card className='bg-sidebar'>
                     <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                         <CardTitle className='text-sm font-medium'>Warehouse Resources</CardTitle>
                         <div className='p-1.5 rounded-md bg-yellow-200'>
@@ -66,7 +67,7 @@ export const StatisticCards = ({ rescuePosts, isLoading }: StatisticCardsProps) 
 
                 <DamagedRoadsCard selectedRange={selectedRange} />
 
-                <Card>
+                <Card className='bg-sidebar'>
                     <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                         <CardTitle className='text-sm font-medium'>Evacuation Centers</CardTitle>
                         <div className='p-1.5 rounded-md bg-blue-200'>
@@ -228,7 +229,7 @@ const ActiveRequestCard = ({ selectedRange, rescuePosts, isLoading }: { selected
     };
 
     return (
-        <Card>
+        <Card className='bg-sidebar'>
             <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0 '>
                 <CardTitle className='text-sm font-medium'>Active Rescue Requests</CardTitle>
                 <div className='p-1.5 rounded-md bg-red-200 '>
@@ -321,7 +322,7 @@ const DamagedRoadsCard = ({ selectedRange }: { selectedRange: string }) => {
     }, [damagedRoads]);
 
     return (
-        <Card>
+        <Card className='bg-sidebar'>
             <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                 <CardTitle className='text-sm font-medium'>Damaged Roads</CardTitle>
                 <div className='p-1.5 rounded-md bg-orange-200'>
