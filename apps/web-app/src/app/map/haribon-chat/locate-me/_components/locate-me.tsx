@@ -168,10 +168,10 @@ export const LocateMe = () => {
                     </div>
                 </div>
 
-                <div className='relative p-2 overflow-hidden bg-white rounded-lg shadow-xl'>
+                <div className='relative p-2 overflow-hidden text-black bg-white rounded-lg shadow-xl'>
                     <Button
                         onClick={handleLocateMe}
-                        className='w-1/2 font-normal bg-white hover:bg-blue-500 hover:text-white'>
+                        className='w-1/2 font-normal text-black bg-white hover:bg-blue-500 hover:text-white'>
                         <Locate
                             height={24}
                             width={24}
@@ -179,7 +179,7 @@ export const LocateMe = () => {
                         Locate me
                     </Button>
                     <Button
-                        className={`${isLocatingManually ? 'bg-blue-500 text-white' : 'bg-white'} w-1/2 hover:bg-blue-500 hover:text-white`}
+                        className={`${isLocatingManually ? 'bg-blue-500 text-white' : 'bg-white'} w-1/2 hover:bg-blue-500 text-black hover:text-white`}
                         onClick={handleLocateManually}>
                         <MapPin
                             height={24}
