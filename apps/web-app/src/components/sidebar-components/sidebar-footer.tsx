@@ -23,7 +23,7 @@ interface SidebarFooterProps {
 
 export const SidebarFooterComponent = ({ user }: SidebarFooterProps) => {
     return (
-        <div className='p-3 '>
+        <div className='group-data-[state=collapsed]:mx-auto p-2'>
             <div className='flex items-center justify-between p-5 border-2 border-gray-400 rounded-xl border-dashed group-data-[state=collapsed]:hidden'>
                 <span className='group-data-[state=expanded]:inline'>Dark Mode</span>
                 <ModeToggle />
@@ -33,8 +33,10 @@ export const SidebarFooterComponent = ({ user }: SidebarFooterProps) => {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <SidebarMenuButton className='flex items-center h-auto group-data-[state=collapsed]:!p-0'>
-                                <Avatar style={{ borderRadius: '3px' }}>
-                                    <AvatarImage src='' />
+                                <Avatar
+                                    style={{ borderRadius: '3px' }}
+                                    className='w-full'>
+                                    {/* <AvatarImage src='' /> */}
                                     <AvatarFallback className='rounded-md'>{user ? `${user?.given_name?.charAt(0)}${user?.family_name?.charAt(0)}` : 'GE'}</AvatarFallback>
                                 </Avatar>
                                 <span className='group-data-[state=collapsed]:hidden ml-2'>{`${user?.given_name || 'Guest'} ${user?.family_name || 'User'}`}</span>

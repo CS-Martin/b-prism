@@ -114,13 +114,13 @@ export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
 
     return (
         <motion.div
-            className='px-5'
+            className='px-5 mt-5'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}>
             <FormProvider {...methods}>
-                <div className='p-5 relative rounded-md prism-card-bg md:h-[calc(100vh-100px)] overflow-y-hidden'>
+                <div className='relative p-5 rounded-md prism-card-bg'>
                     <h1 className='mb-4 text-xl font-semibold'>Create New Role</h1>
                     <Stepper steps={steps}>
                         <div className='flex flex-col justify-between md:flex-row'>
@@ -181,7 +181,7 @@ export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
                                                         session={session}
                                                     />
                                                 </div>
-                                                <div className='relative w-full md:h-[530px] md:w-[70%] md:py-5 md:px-3 md:overflow-y-auto'>
+                                                <div className='relative w-full  md:w-[70%] md:py-5 md:px-3 '>
                                                     <RolePermissionsForm />
                                                 </div>
                                             </div>

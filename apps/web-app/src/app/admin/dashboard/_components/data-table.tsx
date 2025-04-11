@@ -3,21 +3,7 @@
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
 import { motion } from 'framer-motion';
 
-import {
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-    Label,
-    Table,
-} from '@b-prism/shadcn-ui/index';
+import { TableBody, TableCell, TableHead, TableHeader, TableRow, Label, Table } from '@b-prism/shadcn-ui/index';
 import { useEffect, useState } from 'react';
 import { createColumns } from './columns';
 import { Session } from 'next-auth';
@@ -25,54 +11,11 @@ import { UserDto } from '@dto';
 import { ChangeRoleDialog } from './change-role-dialog';
 import { useProgress } from '@bprogress/next';
 import { useUserStore } from 'apps/web-app/src/stores/user-stores/user.store';
+import { PaginationComponent } from 'apps/web-app/src/components/pagination';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-}
-
-function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize: number; dataLength: number; table: ReturnType<typeof useReactTable<TData>> }) {
-    return (
-        <div className='absolute bottom-0 flex items-center justify-between w-full px-5 py-5 border rounded-lg prism-card-bg'>
-            <div className='flex items-center justify-between w-1/2'>
-                <Label className='font-normal '>
-                    Showing {table.getState().pagination.pageIndex * pageSize + 1} to {Math.min((table.getState().pagination.pageIndex + 1) * pageSize, dataLength)} out of{' '}
-                    {dataLength} results
-                </Label>
-            </div>
-            <Pagination className='justify-end w-1/2'>
-                <PaginationContent>
-                    <PaginationItem>
-                        <PaginationPrevious
-                            onClick={() => table.previousPage()}
-                            className={`rounded-sm cursor-pointer ${!table.getCanPreviousPage() ? 'opacity-50 pointer-events-none' : ''}`}
-                        />
-                    </PaginationItem>
-                    {Array.from({ length: Math.ceil(dataLength / pageSize) }, (_, index) => (
-                        <PaginationItem key={index}>
-                            <PaginationLink
-                                href='#'
-                                isActive={index === table.getState().pagination.pageIndex}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    table.setPageIndex(index);
-                                }}
-                                className={`cursor-pointer ${index === table.getState().pagination.pageIndex ? 'bg-blue-500 text-white' : ''}`}>
-                                {index + 1}
-                            </PaginationLink>
-                        </PaginationItem>
-                    ))}
-                    <PaginationItem>
-                        <PaginationNext
-                            isActive={false}
-                            onClick={() => table.nextPage()}
-                            className={`rounded-sm cursor-pointer ${!table.getCanNextPage() ? 'opacity-50 pointer-events-none' : ''}`}
-                        />
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
-        </div>
-    );
 }
 
 export const DataTableContent = ({ session }: { session: Session | null }) => {
@@ -102,7 +45,7 @@ export const DataTableContent = ({ session }: { session: Session | null }) => {
 
     return (
         <motion.div
-            className='px-5 mt-3'
+            className='px-5 mt-5'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

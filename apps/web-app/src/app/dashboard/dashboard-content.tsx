@@ -6,20 +6,33 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@b-prism/shadcn-ui/ind
 import { Button } from '@b-prism/shadcn-ui/index';
 import { Badge } from '@b-prism/shadcn-ui/index';
 import { Progress } from '@b-prism/shadcn-ui/index';
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { OverviewSkeleton, StatisticCardsSkeleton } from './_components/skeleton';
+import { useRescuePostStore } from '../../stores/rescue-post-stores/rescue-post.store';
 
 const StatisticCards = lazy(() => import('./_components/statistic-cards'));
 const Overview = lazy(() => import('./_components/overview'));
 
 export default function DashboardPage() {
+    const { rescuePosts, isLoading, fetchAllRescuePosts } = useRescuePostStore();
+
+    useEffect(() => {
+        if (rescuePosts.length === 0 || !rescuePosts) {
+            fetchAllRescuePosts();
+        }
+    }, []);
+
     return (
-        <div className='flex flex-col w-full min-h-screen bg-muted/40'>
+        <div className='flex flex-col w-full min-h-screen'>
             <div className='flex flex-col'>
                 <main className='flex-1 p-4 space-y-4 md:p-6'>
                     <Suspense fallback={<StatisticCardsSkeleton />}>
-                        <StatisticCards />
+                        <StatisticCards
+                            rescuePosts={rescuePosts}
+                            isLoading={isLoading}
+                        />
                     </Suspense>
+
                     <Tabs
                         defaultValue='overview'
                         className='space-y-4'>
@@ -37,7 +50,7 @@ export default function DashboardPage() {
                                 <Overview />
                             </Suspense>
                             <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
-                                <Card>
+                                <Card className='bg-sidebar'>
                                     <CardHeader>
                                         <CardTitle>Recent Rescue Requests</CardTitle>
                                         <CardDescription>Latest incoming rescue requests</CardDescription>
@@ -79,7 +92,7 @@ export default function DashboardPage() {
                                     </CardFooter>
                                 </Card>
 
-                                <Card>
+                                <Card className='bg-sidebar'>
                                     <CardHeader>
                                         <CardTitle>Warehouse Distribution</CardTitle>
                                         <CardDescription>Resource allocation across warehouses</CardDescription>
@@ -109,7 +122,7 @@ export default function DashboardPage() {
                                     </CardFooter>
                                 </Card>
 
-                                <Card>
+                                <Card className='bg-sidebar'>
                                     <CardHeader>
                                         <CardTitle>Road Network Status</CardTitle>
                                         <CardDescription>Overview of damaged and accessible roads</CardDescription>
@@ -161,7 +174,7 @@ export default function DashboardPage() {
                         <TabsContent
                             value='rescue'
                             className='space-y-4'>
-                            <Card>
+                            <Card className='bg-sidebar'>
                                 <CardHeader>
                                     <CardTitle>Rescue Operations Dashboard</CardTitle>
                                     <CardDescription>Detailed view of rescue requests and demographic analysis</CardDescription>
@@ -263,7 +276,7 @@ export default function DashboardPage() {
                         <TabsContent
                             value='resources'
                             className='space-y-4'>
-                            <Card>
+                            <Card className='bg-sidebar'>
                                 <CardHeader>
                                     <CardTitle>Warehouse Resource Management</CardTitle>
                                     <CardDescription>Inventory and distribution of critical supplies</CardDescription>
@@ -370,7 +383,7 @@ export default function DashboardPage() {
                         <TabsContent
                             value='infrastructure'
                             className='space-y-4'>
-                            <Card>
+                            <Card className='bg-sidebar'>
                                 <CardHeader>
                                     <CardTitle>Road Network Status</CardTitle>
                                     <CardDescription>Detailed view of road conditions and accessibility</CardDescription>
@@ -485,7 +498,7 @@ export default function DashboardPage() {
                     </Tabs>
 
                     <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-7'>
-                        <Card className='lg:col-span-4'>
+                        <Card className='lg:col-span-4 bg-sidebar'>
                             <CardHeader>
                                 <CardTitle>Activity Timeline</CardTitle>
                                 <CardDescription>Recent system activities and rescue operations</CardDescription>
@@ -553,7 +566,7 @@ export default function DashboardPage() {
                             </CardFooter>
                         </Card>
 
-                        <Card className='lg:col-span-3'>
+                        <Card className='lg:col-span-3 bg-sidebar'>
                             <CardHeader>
                                 <CardTitle>System Notifications</CardTitle>
                                 <CardDescription>Important alerts and system updates</CardDescription>

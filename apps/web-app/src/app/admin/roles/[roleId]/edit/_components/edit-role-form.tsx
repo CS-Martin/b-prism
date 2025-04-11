@@ -40,7 +40,7 @@ export const EditRoleForm = ({ role, session }: EditRoleFormProps) => {
                 <Label>Modify what individuals on this role can do.</Label>
             </div>
             <div className='flex flex-col gap-4 md:flex-row'>
-                <div className='relative md:w-[30%] w-full h-full md:overflow-y-hidden'>
+                <div className='relative md:w-[30%] w-full h-full'>
                     <RoleBasicInfoForm
                         register={register}
                         errors={{}}
@@ -48,7 +48,7 @@ export const EditRoleForm = ({ role, session }: EditRoleFormProps) => {
                         session={session}
                     />
                 </div>
-                <div className='relative w-full md:h-[530px] md:w-[70%] md:py-5 md:px-3 md:overflow-y-auto'>
+                <div className='relative w-full md:w-[70%] md:py-5 md:px-3'>
                     <RolePermissionsForm />
                 </div>
             </div>

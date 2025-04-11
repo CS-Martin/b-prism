@@ -27,7 +27,7 @@ export const ReviewUpdateDetails = ({ session }: ReviewUpdateDetailsProps) => {
                             session={session}
                         />
                     </div>
-                    <div className='relative w-full md:h-[530px] md:w-[70%] md:py-5 md:px-3 md:overflow-y-auto'>
+                    <div className='relative w-full md:w-[70%] md:py-5 md:px-3'>
                         <RolePermissionsForm readOnly={true} />
                     </div>
                 </div>

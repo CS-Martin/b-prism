@@ -116,7 +116,6 @@ export const MapboxContext = ({ session }: { session: Session | null }) => {
     return (
         <main>
             <div id='map'>
-                <div id='#step1'>TESTSETSETT</div>
                 <Map
                     ref={(ref) => {
                         if (ref && (!mapRef || mapRef.current !== ref)) {

@@ -1,4 +1,4 @@
-import { Label, ScrollArea, Separator } from '@b-prism/shadcn-ui/index';
+import { Button, Label, ScrollArea, Separator } from '@b-prism/shadcn-ui/index';
 import { MessageSquareMore, PanelRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Draggable from 'react-draggable';
@@ -47,26 +47,34 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> | null })
     return (
         <Draggable
             handle='.drag-handle'
+            cancel='.no-drag'
             bounds='parent'>
             <div
-                className={`absolute top-[50px] drag-handle right-0 z-50 max-w-[350px] rounded-[10px] shadow-xl m-[20px] bg-black bg-opacity-45 ${isExpanded ? 'md:h-[720px]' : ''}`}>
-                <div className={`cursor-move flex items-center justify-between transition-all duration-300 ${isExpanded ? 'px-5 pt-3.5 mb-3' : 'p-3'}`}>
+                style={{ touchAction: 'none' }}
+                className={`absolute top-[50px] drag-handle right-0 z-50 max-w-[350px] rounded-[10px] shadow-xl m-[20px] bg-black bg-opacity-45 overflow-hidden ${
+                    isExpanded ? 'h-[70vh] md:h-[85vh]' : 'h-auto'
+                }`}>
+                {/* Header */}
+                <div className={`cursor-move flex items-center justify-between transition-all duration-500 ${isExpanded ? 'px-5 pt-3.5 mb-3' : 'p-3'}`}>
                     <Label className={`text-[16px] text-white font-semibold ${isExpanded ? '' : 'hidden'}`}>Rescue Posts</Label>
                     <div
-                        className='text-white cursor-pointer'
+                        className='p-0 text-white cursor-pointer pointer-events-auto no-drag'
                         onClick={() => setIsExpanded(!isExpanded)}>
                         {isExpanded ? <PanelRight size={18} /> : <MessageSquareMore size={18} />}
                     </div>
                 </div>
+
+                {/* Panel Body */}
                 {isExpanded && (
-                    <div className='h-full'>
+                    <div className='flex flex-col h-[calc(100%-50px)] pointer-events-auto no-drag'>
                         <div className='px-5 pb-3.5'>
                             <p className='text-sm text-gray-200'>View and manage rescue posts on the map, sourced from a Facebook Messenger bot.</p>
                         </div>
+
                         <Separator className='w-full my-3 bg-gray-500' />
-                        <ScrollArea
-                            className='h-[calc(100%-130px)]'
-                            id='scroll-area'>
+
+                        {/* Scrollable Area */}
+                        <div className='flex-1 overflow-y-auto'>
                             <div className='flex flex-col gap-3 p-3'>
                                 {rescuePosts.map((post) => (
                                     <RescuePostCard
@@ -76,7 +84,7 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> | null })
                                     />
                                 ))}
                             </div>
-                        </ScrollArea>
+                        </div>
                     </div>
                 )}
             </div>

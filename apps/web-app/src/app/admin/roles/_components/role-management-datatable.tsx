@@ -26,54 +26,11 @@ import { RoleDto } from '@dto';
 import { useRoleStore } from 'apps/web-app/src/stores/role-stores/role.store';
 import { motion } from 'framer-motion';
 import { useProgress } from '@bprogress/next';
+import { PaginationComponent } from 'apps/web-app/src/components/pagination';
 
 interface RoleManagementDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-}
-
-function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize: number; dataLength: number; table: ReturnType<typeof useReactTable<TData>> }) {
-    return (
-        <div className='absolute bottom-0 flex items-center justify-between w-full px-5 py-5 border rounded-lg prism-card-bg'>
-            <div className='flex items-center justify-between w-1/2'>
-                <Label className='font-normal '>
-                    Showing {table.getState().pagination.pageIndex * pageSize + 1} to {Math.min((table.getState().pagination.pageIndex + 1) * pageSize, dataLength)} out of{' '}
-                    {dataLength} results
-                </Label>
-            </div>
-            <Pagination className='justify-end w-1/2'>
-                <PaginationContent>
-                    <PaginationItem>
-                        <PaginationPrevious
-                            onClick={() => table.previousPage()}
-                            className={`rounded-sm cursor-pointer ${!table.getCanPreviousPage() ? 'opacity-50 pointer-events-none' : ''}`}
-                        />
-                    </PaginationItem>
-                    {Array.from({ length: Math.ceil(dataLength / pageSize) }, (_, index) => (
-                        <PaginationItem key={index}>
-                            <PaginationLink
-                                href='#'
-                                isActive={index === table.getState().pagination.pageIndex}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    table.setPageIndex(index);
-                                }}
-                                className={`cursor-pointer ${index === table.getState().pagination.pageIndex ? 'bg-blue-500 text-white' : ''}`}>
-                                {index + 1}
-                            </PaginationLink>
-                        </PaginationItem>
-                    ))}
-                    <PaginationItem>
-                        <PaginationNext
-                            isActive={false}
-                            onClick={() => table.nextPage()}
-                            className={`rounded-sm cursor-pointer ${!table.getCanNextPage() ? 'opacity-50 pointer-events-none' : ''}`}
-                        />
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
-        </div>
-    );
 }
 
 export function RoleManagementDataTable<TData, TValue>({ columns, data }: RoleManagementDataTableProps<TData, TValue>) {
@@ -92,8 +49,8 @@ export function RoleManagementDataTable<TData, TValue>({ columns, data }: RoleMa
     }, [table, pageSize]);
 
     return (
-        <div className='relative overflow-hidden h-[calc(100vh-230px)]'>
-            <div className='h-[85%] overflow-y-auto border rounded-lg'>
+        <div>
+            <div className='grid grid-cols-1 overflow-x-auto'>
                 <Table>
                     <TableHeader className='sticky top-0 z-10 bg-sidebar'>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -173,7 +130,7 @@ export const RoleManagementContent = ({ session }: RoleManagementContentProps) =
 
     return (
         <motion.div
-            className='px-5 mt-3'
+            className='px-5 mt-5'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

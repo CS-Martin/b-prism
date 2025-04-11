@@ -129,11 +129,11 @@ export const UpdateRoleContent = ({ session }: UpdateRoleContentProps) => {
         <>
             {role && (
                 <motion.div
-                    className='px-5 h-fit'
+                    className='px-5 mt-5'
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 1 }}
                     transition={{ duration: 0.5 }}>
-                    <div className='p-5 relative rounded-md bg-sidebar border shadow-sm md:h-[calc(100vh-100px)]'>
+                    <div className='relative p-5 border rounded-md shadow-sm bg-sidebar'>
                         <h1 className='mb-2 text-xl font-semibold'>Edit Role</h1>
                         <Label>Please fill in the details below to update the role.</Label>
                         <FormProvider {...methods}>

@@ -28,10 +28,8 @@ const FetchingIndicator: React.FC = () => {
 
     return (
         <div
-            className={`absolute transition-all duration-300 bottom-0 text-[12px] cursor-move z-10 p-1  flex flex-row items-center justify-between bg-sidebar ${state === 'collapsed' ? 'md:left-6 left-0 md:w-[calc(100%-22px)]' : 'lg:left-[19rem] w-[calc(100%-19rem)]'}`}>
+            className={`absolute bottom-0 text-[12px] cursor-move z-10 p-1 flex flex-row items-center justify-between bg-sidebar ${state === 'collapsed' ? 'md:left-6 left-0 md:w-[calc(100%-22px)]' : 'lg:left-[19rem] w-[100%] lg:w-[calc(100%-19rem)]'}`}>
             <div className='flex flex-row items-center gap-x-2'>
-                <Terminal className='w-4 h-4' />
-
                 <div className='flex flex-row items-center gap-x-2'>
                     {isFetchingWarehouses ? (
                         <>
