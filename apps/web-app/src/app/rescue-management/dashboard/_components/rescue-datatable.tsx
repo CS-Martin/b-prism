@@ -84,7 +84,7 @@ export const RescueManagementContent = ({ rescuePosts, session }: RescueManageme
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}>
-            <div className='p-5 border shadow-sm rounded-xl'>
+            <div className='p-5 border shadow-sm rounded-xl bg-sidebar'>
                 <div className='flex flex-row items-center justify-between pb-5 mb-5 border-b'>
                     <div>
                         <h2 className='text-lg font-bold'>Rescue Posts Management</h2>

@@ -18,7 +18,7 @@ export const RescueStatisticCards = ({ rescuePosts }: RescueStatisticCardsProps)
 
     return (
         <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-            <Card>
+            <Card className='bg-sidebar'>
                 <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                     <CardTitle className='text-sm font-medium'>Total Rescue Posts</CardTitle>
                     <div className='p-1.5 bg-red-100 rounded'>
@@ -33,7 +33,7 @@ export const RescueStatisticCards = ({ rescuePosts }: RescueStatisticCardsProps)
                 </CardContent>
             </Card>
 
-            <Card>
+            <Card className='bg-sidebar'>
                 <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                     <CardTitle className='text-sm font-medium'>Pending Rescues</CardTitle>
                     <div className='p-1.5 bg-red-100 rounded'>
@@ -48,7 +48,7 @@ export const RescueStatisticCards = ({ rescuePosts }: RescueStatisticCardsProps)
                 </CardContent>
             </Card>
 
-            <Card>
+            <Card className='bg-sidebar'>
                 <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                     <CardTitle className='text-sm font-medium'>Rescued</CardTitle>
                     <div className='p-1.5 bg-green-100 rounded'>
@@ -63,7 +63,7 @@ export const RescueStatisticCards = ({ rescuePosts }: RescueStatisticCardsProps)
                 </CardContent>
             </Card>
 
-            <Card>
+            <Card className='bg-sidebar'>
                 <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                     <CardTitle className='text-sm font-medium'>People Affected</CardTitle>
                     <div className='p-1.5 bg-blue-100 rounded'>

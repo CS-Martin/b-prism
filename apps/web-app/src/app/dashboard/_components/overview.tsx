@@ -86,7 +86,7 @@ export const Overview = () => {
 
     return (
         <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-7'>
-            <Card className='lg:col-span-4'>
+            <Card className='lg:col-span-4 bg-sidebar'>
                 <CardHeader>
                     <CardTitle>Rescue Request Heatmap</CardTitle>
                     <CardDescription>Concentration of people in need of rescue in the Bicol Region</CardDescription>
@@ -98,7 +98,7 @@ export const Overview = () => {
                 </CardContent>
             </Card>
 
-            <Card className='lg:col-span-3'>
+            <Card className='lg:col-span-3 bg-sidebar'>
                 <CardHeader>
                     <CardTitle>Rescue Request Trends</CardTitle>
                     <CardDescription>Number of rescue requests over time</CardDescription>
