@@ -22,6 +22,7 @@ export const StatisticCards = ({ rescuePosts, isLoading }: StatisticCardsProps) 
                     rescuePosts={rescuePosts}
                     isLoading={isLoading}
                 />
+
                 <Card className='bg-sidebar'>
                     <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
                         <CardTitle className='text-sm font-medium'>Warehouse Resources</CardTitle>
