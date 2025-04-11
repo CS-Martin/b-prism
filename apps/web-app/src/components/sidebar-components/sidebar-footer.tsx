@@ -35,7 +35,7 @@ export const SidebarFooterComponent = ({ user }: SidebarFooterProps) => {
                             <SidebarMenuButton className='flex items-center h-auto group-data-[state=collapsed]:!p-0'>
                                 <Avatar
                                     style={{ borderRadius: '3px' }}
-                                    className='w-full'>
+                                    className='group-data-[state=collapsed]:w-full'>
                                     {/* <AvatarImage src='' /> */}
                                     <AvatarFallback className='rounded-md'>{user ? `${user?.given_name?.charAt(0)}${user?.family_name?.charAt(0)}` : 'GE'}</AvatarFallback>
                                 </Avatar>
