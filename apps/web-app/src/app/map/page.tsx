@@ -1,20 +1,14 @@
-import { getServerSession } from 'next-auth';
-import { options } from '../api/auth/[...nextauth]/options';
-import { MapboxContext } from './_components/mapbox';
-import { cookies } from 'next/headers';
-import { NextStep, NextStepProvider } from 'nextstepjs';
+'use client';
 
-export default async function MapPage() {
-    const session = await getServerSession(options);
-    // const cookie = await cookies();
+import { useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 
-    // Check if user first time login
-    // If first time, start onboarding
-    // const firstMapVisit = cookie.get('firstMapVisit');
-    // if (!firstMapVisit) {
-    //     cookie.set('firstMapVisit', 'true', { path: '/', maxAge: 60 * 30 });
-    // } else {
-    // }
+const MapboxContext = dynamic(() => import('./_components/mapbox').then((mod) => mod.MapboxContext), {
+    ssr: false,
+});
+
+export default function MapPage() {
+    const { data: session } = useSession();
 
     return <MapboxContext session={session} />;
 }
