@@ -156,7 +156,7 @@ export const LoginForm = () => {
                 variant: 'success',
             });
 
-            router.push('/home');
+            router.push('/dashboard');
         } catch (error) {
             const message = error instanceof Error ? error.message : 'An unexpected error occurred.';
 
