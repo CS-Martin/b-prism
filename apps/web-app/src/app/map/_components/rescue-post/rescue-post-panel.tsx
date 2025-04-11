@@ -15,8 +15,6 @@ const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> | null })
     const [isExpanded, setIsExpanded] = useState(true);
     const { rescuePosts, isLoading, error, fetchAllRescuePosts } = useRescuePostStore();
 
-    console.log('HAHHA', isExpanded);
-
     useEffect(() => {
         if (!rescuePosts || rescuePosts.length === 0) {
             fetchAllRescuePosts();
