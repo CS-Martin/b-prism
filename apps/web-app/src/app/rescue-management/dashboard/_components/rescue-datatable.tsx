@@ -84,7 +84,7 @@ export const RescueManagementContent = ({ rescuePosts, session }: RescueManageme
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}>
-            <div className='p-5 border shadow-sm rounded-xl bg-sidebar'>
+            <div className='p-5 border shadow-sm rounded-xl'>
                 <div className='flex flex-row items-center justify-between pb-5 mb-5 border-b'>
                     <div>
                         <h2 className='text-lg font-bold'>Rescue Posts Management</h2>
@@ -179,39 +179,45 @@ export function RescueManagementDataTable<TData, TValue>({ columns, data }: Resc
 
     return (
         <div>
-            <Table>
-                <TableHeader className='sticky top-0 z-10'>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <TableHead key={header.id}>{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</TableHead>
-                            ))}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && 'selected'}
-                                className='cursor-pointer'>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+            <div className='grid grid-cols-1 overflow-x-auto'>
+                <Table>
+                    <TableHeader className='sticky top-0 z-10'>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead
+                                        style={{ width: header.getSize() !== 150 ? header.getSize() : undefined }}
+                                        key={header.id}>
+                                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                                    </TableHead>
                                 ))}
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell
-                                colSpan={columns.length}
-                                className='h-24 text-center'>
-                                No results.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && 'selected'}
+                                    className='cursor-pointer'>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className='h-24 text-center'>
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
 
             <PaginationComponent<TData>
                 pageSize={pageSize}
@@ -224,14 +230,14 @@ export function RescueManagementDataTable<TData, TValue>({ columns, data }: Resc
 
 function PaginationComponent<TData>({ pageSize, dataLength, table }: { pageSize: number; dataLength: number; table: ReturnType<typeof useReactTable<TData>> }) {
     return (
-        <div className='flex flex-row items-center justify-between w-full p-5 mt-4 border rounded-lg'>
-            <div className='flex items-center justify-between w-1/2'>
+        <div className='items-center w-full p-1.5 mt-4 border rounded-lg md:p-5 md:flex md:flex-row md:justify-between'>
+            <div className='items-center justify-between hidden w-1/2 md:flex'>
                 <Label className='font-normal '>
                     Showing {table.getState().pagination.pageIndex * pageSize + 1} to {Math.min((table.getState().pagination.pageIndex + 1) * pageSize, dataLength)} out of{' '}
                     {dataLength} results
                 </Label>
             </div>
-            <Pagination className='justify-end w-1/2'>
+            <Pagination className='md:justify-end md:w-1/2'>
                 <PaginationContent>
                     <PaginationItem>
                         <PaginationPrevious

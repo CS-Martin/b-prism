@@ -54,7 +54,7 @@ export default function RescuePostsDashboard({ session }: RescuePostsDashboardPr
     }
 
     return (
-        <div className='flex flex-col w-full min-h-screen'>
+        <div className='flex flex-col min-h-screen'>
             <div className='flex flex-col'>
                 <main className='flex-1 p-4 space-y-4 md:p-6'>
                     <Suspense fallback={<RescueStatisticsCardsSkeleton />}>
@@ -71,13 +71,11 @@ export default function RescuePostsDashboard({ session }: RescuePostsDashboardPr
 
                         <TabsContent
                             value='table'
-                            className='space-y-4'>
-                            <div className='flex flex-col gap-4'>
-                                <RescueManagementContent
-                                    rescuePosts={rescuePosts}
-                                    session={session}
-                                />
-                            </div>
+                            className=''>
+                            <RescueManagementContent
+                                rescuePosts={rescuePosts}
+                                session={session}
+                            />
                         </TabsContent>
                     </Tabs>
                     <Card className='bg-sidebar'>
