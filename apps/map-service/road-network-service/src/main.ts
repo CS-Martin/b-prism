@@ -10,7 +10,7 @@ async function bootstrap() {
 
     app.enableCors({
         origin: isProduction ? ['https://projectharibon.com', 'https://www.projectharibon.com'] : ['http://localhost:3000', 'http://localhost'], // Local development allowed origins
-        methods: ['GET', 'PUT', 'DELETE'],
+        methods: ['GET', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization', 'X-Author', 'Accept', 'Origin', 'X-Requested-With'],
         credentials: true,
     });
