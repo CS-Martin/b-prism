@@ -4,7 +4,7 @@ import { MapPin, Mail, Phone, Github, AlertTriangle, Package, Map, Facebook, Lin
 
 export const HaribonFooter = ({ className }: { className: string }) => {
     return (
-        <footer className={`border-t ${className}`}>
+        <footer className={` ${className}`}>
             <div className='container max-w-6xl pb-10 mx-auto pt-14'>
                 <div className='grid grid-cols-1 gap-8 py-4 md:grid-cols-4'>
                     <div className='space-y-3'>
@@ -13,12 +13,12 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                                 href={'/home'}
                                 className='flex items-center gap-3 font-bold'>
                                 <Image
-                                    src={'/logo/haribon-logo-blue.svg'}
+                                    src={'/logo/haribon-logo.svg'}
                                     height={40}
                                     width={40}
                                     alt='haribon logo'
                                 />
-                                <p className='font-bold leading-tight'>
+                                <p className='font-bold leading-tight text-sidebar'>
                                     PROJECT <br />
                                     HARIBON
                                 </p>
@@ -34,7 +34,7 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                             <li>
                                 <Link
                                     href='/hazard-assessment'
-                                    className='flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground'>
+                                    className='flex items-center gap-2 text-sm text-muted-foreground hover:underline'>
                                     <Map className='w-4 h-4' />
                                     <span>Hazard Assessment</span>
                                 </Link>
@@ -42,7 +42,7 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                             <li>
                                 <Link
                                     href='/rescue-requests'
-                                    className='flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground'>
+                                    className='flex items-center gap-2 text-sm text-muted-foreground hover:underline'>
                                     <AlertTriangle className='w-4 h-4' />
                                     <span>Rescue Requests</span>
                                 </Link>
@@ -50,7 +50,7 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                             <li>
                                 <Link
                                     href='/route-optimization'
-                                    className='flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground'>
+                                    className='flex items-center gap-2 text-sm text-muted-foreground hover:underline'>
                                     <Map className='w-4 h-4' />
                                     <span>Route Optimization</span>
                                 </Link>
@@ -58,7 +58,7 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                             <li>
                                 <Link
                                     href='/warehouse-management'
-                                    className='flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground'>
+                                    className='flex items-center gap-2 text-sm text-muted-foreground hover:underline'>
                                     <Package className='w-4 h-4' />
                                     <span>Warehouse Management</span>
                                 </Link>
@@ -72,7 +72,7 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                             <li>
                                 <Link
                                     href='/documentation'
-                                    className='text-sm text-muted-foreground hover:text-foreground'>
+                                    className='text-sm text-muted-foreground hover:underline'>
                                     Documentation
                                 </Link>
                             </li>
@@ -80,21 +80,21 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                             <li>
                                 <Link
                                     href='/training'
-                                    className='text-sm text-muted-foreground hover:text-foreground'>
+                                    className='text-sm text-muted-foreground hover:underline'>
                                     Github Repository
                                 </Link>
                             </li>
                             <li>
                                 <Link
                                     href='/training'
-                                    className='text-sm text-muted-foreground hover:text-foreground'>
+                                    className='text-sm text-muted-foreground hover:underline'>
                                     Submit an Issue
                                 </Link>
                             </li>
                             <li>
                                 <Link
                                     href='/emergency-contacts'
-                                    className='text-sm text-muted-foreground hover:text-foreground'>
+                                    className='text-sm text-muted-foreground hover:underline'>
                                     Emergency Contacts
                                 </Link>
                             </li>
@@ -137,17 +137,17 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                     <div className='flex items-center gap-4'>
                         <Link
                             href='/privacy-policy'
-                            className='text-xs text-muted-foreground hover:text-foreground'>
+                            className='text-xs text-muted-foreground hover:underline'>
                             Privacy Policy
                         </Link>
                         <Link
                             href='/terms-of-service'
-                            className='text-xs text-muted-foreground hover:text-foreground'>
+                            className='text-xs text-muted-foreground hover:underline'>
                             Terms of Service
                         </Link>
                         <Link
                             href='/accessibility'
-                            className='text-xs text-muted-foreground hover:text-foreground'>
+                            className='text-xs text-muted-foreground hover:underline'>
                             Accessibility
                         </Link>
                     </div>
