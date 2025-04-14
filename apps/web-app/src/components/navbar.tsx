@@ -63,14 +63,22 @@ export const Navbar = () => {
                         width={40}
                         alt='haribon logo'
                     />
-                    <p className='font-bold leading-tight text-blue-500'>
+                    <p className='hidden font-bold leading-tight text-blue-500 md:block'>
                         PROJECT <br />
                         HARIBON
                     </p>
                 </Link>
                 <div className='flex flex-row items-center gap-5 font-semibold'>
-                    <Link href={'/dashboard'}>Dashboard</Link>
-                    <Link href={'/contact-us'}>Contact</Link>
+                    <Link
+                        href={'/dashboard'}
+                        className='hidden md:block'>
+                        Dashboard
+                    </Link>
+                    <Link
+                        href={'/contact-us'}
+                        className='hidden  md:block'>
+                        Contact
+                    </Link>
                     <div>{btn}</div>
                 </div>
             </div>

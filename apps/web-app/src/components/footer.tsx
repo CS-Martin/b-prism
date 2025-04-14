@@ -4,8 +4,8 @@ import { MapPin, Mail, Phone, Github, AlertTriangle, Package, Map, Facebook, Lin
 
 export const HaribonFooter = ({ className }: { className: string }) => {
     return (
-        <footer className={` ${className}`}>
-            <div className='container max-w-6xl pb-10 mx-auto pt-14'>
+        <footer className={`${className}`}>
+            <div className='container max-w-6xl px-3 pb-10 mx-auto md:px-0 pt-14'>
                 <div className='grid grid-cols-1 gap-8 py-4 md:grid-cols-4'>
                     <div className='space-y-3'>
                         <div className='flex items-center space-x-2'>
