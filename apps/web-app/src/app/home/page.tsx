@@ -5,6 +5,7 @@ import BenefitsSection from './_components/benefits-section';
 import QuoteCarouselSection from './_components/quote-section';
 import FeaturesSection from './_components/features-section';
 import { useSession } from 'next-auth/react';
+import { HaribonFooter } from '../../components/footer';
 
 export default function Home() {
     const { data: session, status } = useSession();
@@ -15,6 +16,8 @@ export default function Home() {
             <QuoteCarouselSection />
             <BenefitsSection />
             <FeaturesSection />
+
+            <HaribonFooter className='text-white' />
 
             {/* Floating Scroll Button */}
             {/* <button

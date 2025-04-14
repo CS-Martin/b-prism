@@ -36,3 +36,4 @@ export * from './components/ui/select';
 export * from './components/ui/badge';
 export * from './components/ui/progress';
 export * from './components/ui/chart';
+export * from './components/ui/accordion';
