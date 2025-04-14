@@ -15,7 +15,7 @@ export const HaribonPolicy = () => {
     return (
         <>
             <div className='text-center'>
-                <h1 className='mb-4 text-3xl font-bold bg-clip-text'>Privacy Policy</h1>
+                <h1 className='mb-4 text-xl font-bold md:text-3xl bg-clip-text'>Privacy Policy</h1>
                 <p className='leading-7'>
                     This privacy policy describes how Project Haribon collects, uses, and protects your information when you use our platform and services. Please read this privacy
                     policy carefully. By using our services, you consent to the practices described in this policy.
@@ -23,7 +23,7 @@ export const HaribonPolicy = () => {
             </div>
 
             <div className='mt-5'>
-                <h3 className='p-5 text-xl font-bold text-white bg-blue-500 rounded-t-lg'>Privacy Policy for Project HARIBON</h3>
+                <h3 className='p-5 font-bold text-white bg-blue-500 rounded-t-lg md:text-xl'>Privacy Policy for Project HARIBON</h3>
                 <Accordion
                     type='multiple'
                     defaultValue={[
@@ -38,8 +38,8 @@ export const HaribonPolicy = () => {
                     className='flex flex-col w-full border'>
                     <AccordionItem
                         value='haribon-policy'
-                        className='px-5 bg-sidebar'>
-                        <AccordionTrigger className='text-xl font-semibold'>Introduction</AccordionTrigger>
+                        className='px-3 md:px-5 bg-sidebar'>
+                        <AccordionTrigger className='font-semibold text-md md:text-xl'>Introduction</AccordionTrigger>
                         <AccordionContent className='flex flex-col gap-y-5'>
                             <p className='mb-3 leading-relaxed '>
                                 Project HARIBON (Hazard Assessment and Rescue Integration for Bicol Operations Network) is committed to protecting your privacy and ensuring the
@@ -52,8 +52,8 @@ export const HaribonPolicy = () => {
 
                     <AccordionItem
                         value='informations-we-collect'
-                        className='px-5 bg-sidebar'>
-                        <AccordionTrigger className='text-xl font-semibold'>Information We Collect</AccordionTrigger>
+                        className='px-2 md:px-5 bg-sidebar'>
+                        <AccordionTrigger className='font-semibold text-md md:text-xl'>Information We Collect</AccordionTrigger>
 
                         <AccordionContent className='flex flex-col gap-y-5'>
                             <p className='leading-relaxed '>We may use the information we collect for the following purposes:</p>
@@ -63,9 +63,9 @@ export const HaribonPolicy = () => {
                                     <CardHeader className='relative flex flex-col pb-3'>
                                         <span className='flex flex-row items-center gap-3'>
                                             <div className='p-1.5 bg-blue-200  rounded w-fit'>
-                                                <User className='w-5 h-5 text-blue-500' />
+                                                <User className='w-4 h-4 text-blue-500 md:w-5 md:h-5' />
                                             </div>
-                                            <p className='text-lg font-bold'>Personal Information</p>
+                                            <p className='font-bold md:text-lg '>Personal Information</p>
                                         </span>
                                     </CardHeader>
                                     <CardContent>Name, contact information, location data, and other details necessary for rescue operations and disaster response.</CardContent>
@@ -75,9 +75,9 @@ export const HaribonPolicy = () => {
                                     <CardHeader className='relative flex flex-col pb-3'>
                                         <span className='flex flex-row items-center gap-3'>
                                             <div className='p-1.5 bg-blue-200  rounded w-fit'>
-                                                <Database className='w-5 h-5 text-blue-500' />
+                                                <Database className='w-4 h-4 text-blue-500 md:w-5 md:h-5' />
                                             </div>
-                                            <p className='text-lg font-bold'>Usage Data</p>
+                                            <p className='font-bold md:text-lg'>Usage Data</p>
                                         </span>
                                     </CardHeader>
                                     <CardContent>Information about how you interact with our system, including access times, pages viewed, and system features used.</CardContent>
@@ -87,9 +87,9 @@ export const HaribonPolicy = () => {
                                     <CardHeader className='relative flex flex-col pb-3'>
                                         <span className='flex flex-row items-center gap-3'>
                                             <div className='p-1.5 bg-blue-200  rounded w-fit'>
-                                                <MonitorSmartphone className='w-5 h-5 text-blue-500' />
+                                                <MonitorSmartphone className='w-4 h-4 text-blue-500 md:w-5 md:h-5' />
                                             </div>
-                                            <p className='text-lg font-bold'>Device Information</p>
+                                            <p className='font-bold md:text-lg'>Device Information</p>
                                         </span>
                                     </CardHeader>
                                     <CardContent>
@@ -101,9 +101,9 @@ export const HaribonPolicy = () => {
                                     <CardHeader className='relative flex flex-col pb-3'>
                                         <span className='flex flex-row items-center gap-3'>
                                             <div className='p-1.5 bg-blue-200  rounded w-fit'>
-                                                <MapPin className='w-5 h-5 text-blue-500' />
+                                                <MapPin className='w-4 h-4 text-blue-500 md:w-5 md:h-5' />
                                             </div>
-                                            <p className='text-lg font-bold'>Location Data</p>
+                                            <p className='font-bold md:text-lg'>Location Data</p>
                                         </span>
                                     </CardHeader>
                                     <CardContent>
@@ -117,7 +117,7 @@ export const HaribonPolicy = () => {
                     <AccordionItem
                         value='how-we-use-your-information'
                         className='px-5 bg-sidebar'>
-                        <AccordionTrigger className='text-xl font-semibold'>How we use your information</AccordionTrigger>
+                        <AccordionTrigger className='font-semibold md:text-xl'>How we use your information</AccordionTrigger>
                         <AccordionContent className='flex flex-col gap-y-5'>
                             <div>
                                 <p className='mb-3 leading-relaxed text-gray-700'>We use the collected information for the following purposes:</p>
@@ -148,7 +148,7 @@ export const HaribonPolicy = () => {
                     <AccordionItem
                         value='data-security'
                         className='px-5 bg-sidebar'>
-                        <AccordionTrigger className='text-xl font-semibold'>Data Security</AccordionTrigger>
+                        <AccordionTrigger className='font-semibold md:text-xl'>Data Security</AccordionTrigger>
                         <AccordionContent className='flex flex-col gap-y-5'>
                             <p className='mb-3 leading-relaxed '>
                                 We implement appropriate technical and organizational measures to protect your personal information from unauthorized access, disclosure,
@@ -161,7 +161,7 @@ export const HaribonPolicy = () => {
                     <AccordionItem
                         value='data-retention'
                         className='px-5 bg-sidebar'>
-                        <AccordionTrigger className='text-xl font-semibold'>Data Retention</AccordionTrigger>
+                        <AccordionTrigger className='font-semibold md:text-xl'>Data Retention</AccordionTrigger>
                         <AccordionContent className='flex flex-col gap-y-5'>
                             <p className='mb-3 leading-relaxed '>
                                 {' '}
@@ -174,7 +174,7 @@ export const HaribonPolicy = () => {
                     <AccordionItem
                         value='your-rights'
                         className='px-5 bg-sidebar'>
-                        <AccordionTrigger className='text-xl font-semibold'>Your Rights</AccordionTrigger>
+                        <AccordionTrigger className='font-semibold md:text-xl'>Your Rights</AccordionTrigger>
                         <AccordionContent className='flex flex-col gap-y-5'>
                             <p className='leading-relaxed '>
                                 {' '}
@@ -224,7 +224,7 @@ export const HaribonPolicy = () => {
                     <AccordionItem
                         value='changes-to-this-privacy-policy'
                         className='px-5 bg-sidebar'>
-                        <AccordionTrigger className='text-xl font-semibold'>Changes to this Privacy Policy</AccordionTrigger>
+                        <AccordionTrigger className='font-semibold md:text-xl'>Changes to this Privacy Policy</AccordionTrigger>
                         <AccordionContent className='flex flex-col gap-y-5'>
                             <p className='mb-3 leading-relaxed '>
                                 We may update this Privacy Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. We
