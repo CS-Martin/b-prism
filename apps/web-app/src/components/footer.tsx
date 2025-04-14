@@ -13,12 +13,12 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                                 href={'/home'}
                                 className='flex items-center gap-3 font-bold'>
                                 <Image
-                                    src={'/logo/haribon-logo.svg'}
+                                    src={'/logo/haribon-logo-blue.svg'}
                                     height={40}
                                     width={40}
                                     alt='haribon logo'
                                 />
-                                <p className='font-bold leading-tight text-sidebar'>
+                                <p className='font-bold leading-tight'>
                                     PROJECT <br />
                                     HARIBON
                                 </p>
