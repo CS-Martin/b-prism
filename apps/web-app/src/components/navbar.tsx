@@ -69,6 +69,7 @@ export const Navbar = () => {
                     </p>
                 </Link>
                 <div className='flex flex-row items-center gap-5 font-semibold'>
+                    <Link href={'/dashboard'}>Dashboard</Link>
                     <Link href={'/contact-us'}>Contact</Link>
                     <div>{btn}</div>
                 </div>

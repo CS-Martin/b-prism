@@ -6,6 +6,7 @@ import { Card, CardDescription, CardHeader, Label } from '@b-prism/shadcn-ui/ind
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { Navbar } from '../../components/navbar';
 import { useSession } from 'next-auth/react';
+import { HaribonFooter } from '../../components/footer';
 
 export const metadata: Metadata = {
     title: 'Privacy Policy | Project HARIBON',
@@ -60,6 +61,8 @@ export default function PrivacyPolicyPage() {
                     </CardHeader>
                 </Card>
             </div>
+
+            <HaribonFooter className={'bg-sidebar'} />
         </main>
     );
 }
