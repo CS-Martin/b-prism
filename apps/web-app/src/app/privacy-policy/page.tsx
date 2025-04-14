@@ -62,7 +62,7 @@ export default function PrivacyPolicyPage() {
                 </Card>
             </div>
 
-            <HaribonFooter className={'bg-sidebar'} />
+            <HaribonFooter className={'bg-sidebar border-t'} />
         </main>
     );
 }
