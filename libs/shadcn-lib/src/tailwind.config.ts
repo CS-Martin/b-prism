@@ -57,11 +57,6 @@ export function buildConfig(appDir: string): Config {
                         ring: 'hsl(var(--sidebar-ring))',
                     },
                 },
-                // borderRadius: {
-                //     lg: '`var(--radius)`',
-                //     md: '`calc(var(--radius) - 2px)`',
-                //     sm: 'calc(var(--radius) - 4px)',
-                // },
                 keyframes: {
                     'accordion-down': {
                         from: {
@@ -80,12 +75,20 @@ export function buildConfig(appDir: string): Config {
                         },
                     },
                     'fade-in': {
-                        '0%': { opacity: '0' },
-                        '100%': { opacity: '1' },
+                        '0%': {
+                            opacity: '0',
+                        },
+                        '100%': {
+                            opacity: '1',
+                        },
                     },
                     'caret-blink': {
-                        '0%,70%,100%': { opacity: '1' },
-                        '20%,50%': { opacity: '0' },
+                        '0%,70%,100%': {
+                            opacity: '1',
+                        },
+                        '20%,50%': {
+                            opacity: '0',
+                        },
                     },
                 },
                 animation: {
