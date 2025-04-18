@@ -18,21 +18,7 @@ export const haribonFeatures = [
         title: 'Typhoon Simulation',
         subtitle: 'Disaster Preparedness',
         description: 'Simulates typhoon scenarios to predict potential vulnerabilities in the network and ensures readiness for real-world disaster events.',
-        image: '/img/map-img.png',
-        href: '/map',
-    },
-    {
-        title: 'Road Damage Network Simulation',
-        subtitle: 'Infrastructure Resilience',
-        description: 'Simulates road damage caused by natural disasters to analyze network disruptions and design efficient alternative routes for rescue and logistics.',
-        image: '/img/map-img.png',
-        href: '/map',
-    },
-    {
-        title: 'Multi-Objective Optimization',
-        subtitle: 'Balanced Decision-Making',
-        description: 'Minimize delivery time, economic costs, and environmental impact while maximizing lives saved through a comprehensive optimization algorithm.',
-        image: '/img/map-img.png',
+        image: '/img/typhoon-simulation1.png',
         href: '/map',
     },
 ];

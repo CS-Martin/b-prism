@@ -6,3 +6,22 @@
     height: 100%;
     background-color: #111111;
 }
+
+.glow {
+    position: absolute;
+    left: 20%;
+    top: 300px;
+    width: 60%;
+    padding: 30% 0;
+    transform: translate(0, -70%) rotate(-45deg);
+    background: radial-gradient(circle at left bottom, #e6b7fe00 10%, #5049c2 20%, rgba(87, 78, 255, 0) 60%);
+    filter: blur(30px);
+    z-index: 0;
+}
+
+.particles {
+    position: absolute;
+    left: 30%;
+    width: 40%;
+    transform: translate(0, -40%);
+}
