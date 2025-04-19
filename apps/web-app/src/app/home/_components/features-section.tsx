@@ -54,7 +54,7 @@ const FeaturesSection = () => {
                     data-aos='fade-up'>
                     <div className='md:p-3 md:bg-white/20 md:rounded-3xl'>
                         <div className='md:rounded-3xl'>
-                            <div className='inset-0 hidden md:absolute bg-gradient-to-b from-transparent via-transparent to-black rounded-2xl'></div>
+                            <div className='absolute inset-0 hidden md:flex bg-gradient-to-b from-transparent via-transparent to-black rounded-2xl'></div>
                             <video
                                 ref={videoRef}
                                 className='object-center w-full h-full md:rounded-3xl'

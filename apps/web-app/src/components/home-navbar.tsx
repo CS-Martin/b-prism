@@ -25,10 +25,10 @@ const HomeNavbar = () => {
 
     return (
         <header
-            className={`z-50 fixed top-0 w-full flex justify-between items-center transition-all duration-500 ${
+            className={`z-50 fixed top-0 w-full flex flex-row justify-between items-center transition-all duration-500 ${
                 isScrolled
                     ? 'h-[80px] px-3 lg:px-[110px] 2xl:px-[350px] bg-black border-b border-b-zinc-800 shadow-md'
-                    : 'h-[130px] border-none px-3 md:px-16 lg:px-20 translate-all duration-500'
+                    : 'h-[120px] border-none px-3 md:px-16 lg:px-20 translate-all duration-500'
             }`}>
             {/* Mobile Menu */}
             <Sheet>
@@ -44,69 +44,21 @@ const HomeNavbar = () => {
                 <SheetContent side='left'>
                     <div className='py-6'>
                         <NavigationMenu>
-                            <NavigationMenuList className='flex flex-col items-start gap-5'>
-                                <NavigationMenuItem>
-                                    <NavigationMenuTrigger className='px-1 font-semibold text-white'>Getting Started</NavigationMenuTrigger>
-                                    <NavigationMenuContent className='w-[90vw] md:w-[400px] lg:w-[500px]'>
-                                        <ul className='grid gap-3 p-6 lg:grid-cols-[.75fr_1fr]'>
-                                            <li className='row-span-3'>
-                                                <NavigationMenuLink asChild>
-                                                    <Link
-                                                        className='flex flex-col justify-end w-full h-full p-6 no-underline rounded-md outline-none select-none bg-gradient-to-b from-muted/50 to-muted focus:shadow-md'
-                                                        href='/'>
-                                                        {/* <Icons.logo className='w-6 h-6' /> */}
-                                                        <div className='mt-4 mb-2 text-lg font-medium'>shadcn/ui</div>
-                                                        <p className='text-sm leading-tight text-muted-foreground'>
-                                                            Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.
-                                                        </p>
-                                                    </Link>
-                                                </NavigationMenuLink>
-                                            </li>
-                                            <ListItem
-                                                href='/docs'
-                                                title='Introduction'>
-                                                Re-usable components built using Radix UI and Tailwind CSS.
-                                            </ListItem>
-                                            <ListItem
-                                                href='/docs/installation'
-                                                title='Installation'>
-                                                How to install dependencies and structure your app.
-                                            </ListItem>
-                                            <ListItem
-                                                href='/docs/primitives/typography'
-                                                title='Typography'>
-                                                Styles for headings, paragraphs, lists...etc
-                                            </ListItem>
-                                        </ul>
-                                    </NavigationMenuContent>
-                                </NavigationMenuItem>
-                                <NavigationMenuItem>
-                                    <NavigationMenuTrigger className='px-0 font-semibold bg-transparent'>Components</NavigationMenuTrigger>
-                                    <NavigationMenuContent className='w-[90vw] md:w-[100px] lg:w-[800px] overflow-y-auto'>
-                                        <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] '>
-                                            {haribonFeatures.map((component) => (
-                                                <ListItem
-                                                    key={component.title}
-                                                    href={component.href}
-                                                    title={component.title}>
-                                                    {component.description}
-                                                </ListItem>
-                                            ))}
-                                        </ul>
-                                    </NavigationMenuContent>
-                                </NavigationMenuItem>
+                            <NavigationMenuList className='flex flex-col items-start gap-5 m-0'>
                                 <NavigationMenuItem asChild>
                                     <Link
-                                        href='/docs'
+                                        href='/dashboard'
                                         className='font-semibold'>
-                                        Documentation
+                                        Live Dashboard
                                     </Link>
                                 </NavigationMenuItem>
-                                <NavigationMenuItem asChild>
+                                <NavigationMenuItem
+                                    className='ml-0'
+                                    asChild>
                                     <Link
                                         href='/map'
-                                        className='font-semibold'>
-                                        Map
+                                        className='ml-0 font-semibold'>
+                                        Haribon Field Map
                                     </Link>
                                 </NavigationMenuItem>
                             </NavigationMenuList>
@@ -114,6 +66,15 @@ const HomeNavbar = () => {
                     </div>
                 </SheetContent>
             </Sheet>
+
+            <div className='absolute transform -translate-x-1/2 md:hidden left-1/2'>
+                <Image
+                    height={36}
+                    width={36}
+                    src={'/logo/haribon-logo.svg'}
+                    alt='haribon logo'
+                />
+            </div>
 
             {/* Desktop Logo and Navigation */}
             <div className={`hidden lg:flex items-center justify-between w-full`}>
@@ -170,7 +131,7 @@ const HomeNavbar = () => {
                             </NavigationMenuItem>
                             <NavigationMenuItem>
                                 <NavigationMenuTrigger className='font-semibold text-white bg-transparent data-[state=open]:bg-white data-[state=open]:text-black hover:bg-black'>
-                                    Components
+                                    Solutions
                                 </NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className='grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] '>
@@ -185,18 +146,25 @@ const HomeNavbar = () => {
                                     </ul>
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
-                            <NavigationMenuItem asChild>
+                            {/* <NavigationMenuItem asChild>
                                 <Link
                                     href='/docs'
                                     className='px-3 font-semibold text-white bg-transparent hover:bg-black'>
                                     Documentation
+                                </Link>
+                            </NavigationMenuItem> */}
+                            <NavigationMenuItem asChild>
+                                <Link
+                                    href='/dashboard'
+                                    className='px-2 font-semibold text-white bg-transparent hover:bg-black'>
+                                    Live Dashboard
                                 </Link>
                             </NavigationMenuItem>
                             <NavigationMenuItem asChild>
                                 <Link
                                     href='/map'
                                     className='px-2 font-semibold text-white bg-transparent hover:bg-black'>
-                                    Map
+                                    Field Map
                                 </Link>
                             </NavigationMenuItem>
                         </NavigationMenuList>
@@ -247,7 +215,8 @@ const HomeNavbar = () => {
                 ) : (
                     <Button
                         asChild
-                        className='px-8 text-white bg-blue-500 rounded-full hover:bg-blue-400'>
+                        size={'sm'}
+                        className='px-5 text-white bg-blue-500 rounded-full hover:bg-blue-400'>
                         <Link href='/auth/login'>Sign in</Link>
                     </Button>
                 )}
