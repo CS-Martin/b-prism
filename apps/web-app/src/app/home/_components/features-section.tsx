@@ -28,9 +28,11 @@ const FeaturesSection = () => {
 
             {/* Video container with glowing border */}
             <div className='relative'>
-                <div className='flex flex-col w-full gap-3 mx-auto mt-10 mb-5 md:max-w-4xl'>
-                    <h2 className='text-2xl font-bold text-center'>Simulate Infrastructure Disruptions</h2>
-                    <h4 className='text-lg leading-relaxed text-center text-white/80'>
+                <div
+                    data-aos='fade-up'
+                    className='flex flex-col w-full gap-3 px-3 mx-auto mt-10 mb-5 md:text-center md:px-0 md:max-w-4xl'>
+                    <h2 className='text-lg font-bold md:text-2xl'>Simulate Infrastructure Disruptions</h2>
+                    <h4 className='leading-relaxed md:text-lg text-white/80'>
                         Visualize how road networks respond to disasters in real-time. With intelligent damage simulation, you can analyze vulnerabilities, optimize routes, and
                         improve disaster response strategies.
                     </h4>
@@ -47,15 +49,17 @@ const FeaturesSection = () => {
                     loading='lazy'
                 />
 
-                <div className='relative w-full max-w-6xl p-10 mx-auto overflow-hidden border-t border-l border-r border-lg rounded-t-xl border-zinc-800 '>
-                    <div className='p-3 bg-white/20 rounded-3xl'>
-                        <div className='rounded-3xl'>
-                            <div className='absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black rounded-2xl'></div>
+                <div
+                    className='relative w-full max-w-6xl mx-auto overflow-hidden md:p-10 md:border-t md:border-l md:border-r md:border-lg md:rounded-t-xl border-zinc-800 '
+                    data-aos='fade-up'>
+                    <div className='md:p-3 md:bg-white/20 md:rounded-3xl'>
+                        <div className='md:rounded-3xl'>
+                            <div className='absolute inset-0 hidden md:flex bg-gradient-to-b from-transparent via-transparent to-black rounded-2xl'></div>
                             <video
                                 ref={videoRef}
-                                className='object-center w-full h-full rounded-3xl'
-                                autoPlay
+                                className='object-center w-full h-full md:rounded-3xl'
                                 loop
+                                autoPlay
                                 muted
                                 playsInline
                                 preload='auto'>
@@ -69,7 +73,7 @@ const FeaturesSection = () => {
                             {/* Play/Pause button */}
                             <button
                                 onClick={togglePlay}
-                                className='absolute z-20 p-2 transition-colors rounded-full bottom-6 right-6 bg-white/30'>
+                                className='absolute z-20 p-2 transition-colors rounded-full bottom-3 right-3 md:bottom-6 md:right-6 bg-black/50 md:bg-white/30'>
                                 {isPlaying ? (
                                     <Pause
                                         size={20}
@@ -95,7 +99,7 @@ const FeaturesSection = () => {
                         return (
                             <div
                                 key={index}
-                                className={`flex md:px-[1rem] lg:px-[5rem] border-b border-b-zinc-800 xl:px-[150px] 2xl:px-[350px] flex-col min-h-[350px] items-start  overflow-hidden ${
+                                className={`flex md:px-[1rem] lg:px-[5rem] border-b border-b-zinc-800 xl:px-[150px] 2xl:px-[350px] flex-col min-h-[350px] items-start overflow-hidden ${
                                     index % 2 === 0 ? 'md:flex-row-reverse' : 'md:flex-row'
                                 } pt-10 gap-8 feature-cell`}>
                                 {/* Image */}
@@ -108,7 +112,7 @@ const FeaturesSection = () => {
                                             alt={'missing'}
                                             width={1920}
                                             height={1080}
-                                            className='object-center object-cover md:h-[500px] max-h-[500px] w-[700px] rounded-xl border-2 border-gray-900'
+                                            className='object-center object-cover md:h-[500px] max-h-[500px] w-[700px] md:rounded-xl border-2 border-gray-900'
                                         />
 
                                         {/* Vignette like fadeing effect for image */}
@@ -119,13 +123,13 @@ const FeaturesSection = () => {
                                 {/* Text Content */}
                                 <div
                                     data-aos={index % 2 === 0 ? 'fade-right' : 'fade-left'}
-                                    className={`w-full md:w-1/2  ${index % 2 === 0 ? 'lg:pr-7' : 'lg:pl-7'} mb-5 md:mb-0`}>
-                                    <p className='mb-10 font-medium text-blue-400 uppercase'>{feature.subtitle}</p>
-                                    <h3 className='mb-4 text-xl font-bold'>{feature.title}</h3>
+                                    className={`w-full md:w-1/2 px-3 md:px-0 ${index % 2 === 0 ? 'lg:pr-7' : 'lg:pl-7'} mb-5 md:mb-0`}>
+                                    <p className='mb-3 text-[12px] text-blue-400 uppercase md:font-medium md:mb-10'>{feature.subtitle}</p>
+                                    <h3 className='mb-4 text-lg font-bold md:text-xl'>{feature.title}</h3>
                                     <p className='leading-relaxed text-gray-300'>{feature.description}</p>
                                     <Button
                                         variant='ghost'
-                                        className='mt-3 p-6 text-[12px] border rounded-md border-zinc-800'>
+                                        className='mt-3 text-blue-400 hover:text-blue-500 p-0 text-[12px] hover:bg-transparent border-zinc-800'>
                                         TRY IT NOW!
                                         <ArrowRight
                                             size={24}

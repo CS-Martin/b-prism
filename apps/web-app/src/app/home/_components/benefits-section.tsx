@@ -28,22 +28,23 @@ const BenefitsSection = () => {
     ];
 
     return (
-        <div className='max-w-6xl py-12 mx-auto text-white'>
+        <div className='max-w-6xl px-3 py-12 mx-auto text-white md:px-0'>
             <div className='grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8'>
                 {benefits.map((benefit, index) => (
                     <Card
                         key={index}
                         className={`bg-transparent cursor-pointer border border-zinc-800 group transition duration-300`}
                         data-aos='fade-up'>
-                        <CardContent className='flex flex-col items-start p-6 text-left'>
+                        <CardContent className='flex flex-col items-start p-4 text-left md:p-6'>
                             {/* Icon with dynamic hover color */}
-                            <div className={`mb-4 ${benefit.hoverClass}`}>
+                            <div className={`md:mb-4 flex flex-row gap-2 items-center mb-2 ${benefit.hoverClass}`}>
                                 {React.cloneElement(benefit.icon, {
                                     className: `text-white ${benefit.icon.props.className} ${benefit.hoverClass}`,
                                 })}
+                                <h3 className={`md:text-xl font-semibold transition duration-300 md:hidden block text-white ${benefit.hoverClass}`}>{benefit.title}</h3>
                             </div>
                             {/* Title with dynamic hover color */}
-                            <h3 className={`text-xl font-semibold mb-2 transition duration-300 text-white ${benefit.hoverClass}`}>{benefit.title}</h3>
+                            <h3 className={`md:text-xl font-semibold mb-2 transition hidden md:block duration-300 text-white ${benefit.hoverClass}`}>{benefit.title}</h3>
                             <p className='text-gray-400'>{benefit.description}</p>
                         </CardContent>
                     </Card>
