@@ -5,6 +5,7 @@ import { SupportersParallax } from './parallax-text';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef } from 'react';
 import { Button } from '@b-prism/shadcn-ui/index';
+import Link from 'next/link';
 
 export const SplineSection = () => {
     const staticRef = useRef(null);
@@ -42,11 +43,15 @@ export const SplineSection = () => {
                             Unite for Resilience, <br />
                             Act with Precision
                         </p>
-                        <p className='mt-3 text-gray-400 md:text-lg'>
+                        <p className='px-3 mt-3 text-gray-400 md:px-0 md:text-lg'>
                             Coordinate rescue efforts, strengthen disaster response, and <br className='hidden md:block' /> safeguard communities with our all-in-one platform.
                         </p>
 
-                        <Button className='px-6 mt-4 text-white bg-blue-500 rounded-full hover:bg-blue-400'>Start Contributing Now!</Button>
+                        <Button
+                            className='px-6 mt-4 text-white bg-blue-500 rounded-full hover:bg-blue-400'
+                            asChild>
+                            <Link href={'/auth/login'}>Start Contributing Now!</Link>
+                        </Button>
                     </motion.div>
                 </motion.div>
 
