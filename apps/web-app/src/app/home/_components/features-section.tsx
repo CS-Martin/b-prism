@@ -5,6 +5,7 @@ import { Button } from '@b-prism/shadcn-ui/index';
 import { ArrowRight, Pause, Play } from 'lucide-react';
 import { haribonFeatures } from 'apps/web-app/src/utils/constants';
 import { useRef, useState } from 'react';
+import Link from 'next/link';
 
 const FeaturesSection = () => {
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -129,12 +130,15 @@ const FeaturesSection = () => {
                                     <p className='leading-relaxed text-gray-300'>{feature.description}</p>
                                     <Button
                                         variant='ghost'
-                                        className='mt-3 text-blue-400 hover:text-blue-500 p-0 text-[12px] hover:bg-transparent border-zinc-800'>
-                                        TRY IT NOW!
-                                        <ArrowRight
-                                            size={24}
-                                            className='animate'
-                                        />
+                                        className='mt-3 text-blue-400 hover:text-blue-500 p-0 text-[12px] hover:bg-transparent border-zinc-800'
+                                        asChild>
+                                        <Link href={feature.href}>
+                                            TRY IT NOW!
+                                            <ArrowRight
+                                                size={24}
+                                                className='animate'
+                                            />
+                                        </Link>
                                     </Button>
                                 </div>
                             </div>
