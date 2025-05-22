@@ -33,7 +33,7 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                         <ul className='space-y-5'>
                             <li>
                                 <Link
-                                    href='/hazard-assessment'
+                                    href='/map'
                                     className='flex items-center gap-2 text-sm text-muted-foreground hover:underline'>
                                     <Map className='w-4 h-4' />
                                     <span>Hazard Assessment</span>
@@ -41,7 +41,7 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                             </li>
                             <li>
                                 <Link
-                                    href='/rescue-requests'
+                                    href='/map'
                                     className='flex items-center gap-2 text-sm text-muted-foreground hover:underline'>
                                     <AlertTriangle className='w-4 h-4' />
                                     <span>Rescue Requests</span>
@@ -49,7 +49,7 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                             </li>
                             <li>
                                 <Link
-                                    href='/route-optimization'
+                                    href='/map'
                                     className='flex items-center gap-2 text-sm text-muted-foreground hover:underline'>
                                     <Map className='w-4 h-4' />
                                     <span>Route Optimization</span>
@@ -57,7 +57,7 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                             </li>
                             <li>
                                 <Link
-                                    href='/warehouse-management'
+                                    href='/map'
                                     className='flex items-center gap-2 text-sm text-muted-foreground hover:underline'>
                                     <Package className='w-4 h-4' />
                                     <span>Warehouse Management</span>
@@ -71,7 +71,7 @@ export const HaribonFooter = ({ className }: { className: string }) => {
                         <ul className='space-y-5'>
                             <li>
                                 <Link
-                                    href='/documentation'
+                                    href='#'
                                     className='text-sm text-muted-foreground hover:underline'>
                                     Documentation
                                 </Link>
@@ -79,21 +79,21 @@ export const HaribonFooter = ({ className }: { className: string }) => {
 
                             <li>
                                 <Link
-                                    href='/training'
+                                    href='/https://github.com/CS-Martin/b-prism'
                                     className='text-sm text-muted-foreground hover:underline'>
                                     Github Repository
                                 </Link>
                             </li>
                             <li>
                                 <Link
-                                    href='/training'
+                                    href='/https://github.com/CS-Martin/b-prism/issues'
                                     className='text-sm text-muted-foreground hover:underline'>
                                     Submit an Issue
                                 </Link>
                             </li>
                             <li>
                                 <Link
-                                    href='/emergency-contacts'
+                                    href='/https://www2.naga.gov.ph/emergency-hotline/'
                                     className='text-sm text-muted-foreground hover:underline'>
                                     Emergency Contacts
                                 </Link>

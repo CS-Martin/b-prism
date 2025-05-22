@@ -104,9 +104,9 @@ const HomeNavbar = () => {
                                                     className='flex flex-col justify-end w-full h-full p-6 no-underline rounded-md outline-none select-none bg-gradient-to-b from-muted/50 to-muted focus:shadow-md'
                                                     href='/'>
                                                     {/* <Icons.logo className='w-6 h-6' /> */}
-                                                    <div className='mt-4 mb-2 text-lg font-medium'>shadcn/ui</div>
+                                                    <div className='mt-4 mb-2 text-lg font-medium'>Project Haribon</div>
                                                     <p className='text-sm leading-tight text-muted-foreground'>
-                                                        Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.
+                                                        Hazard Assessment and Rescue Integration for Bicol Operations Network.
                                                     </p>
                                                 </Link>
                                             </NavigationMenuLink>
@@ -121,11 +121,11 @@ const HomeNavbar = () => {
                                             title='Installation'>
                                             How to install dependencies and structure your app.
                                         </ListItem>
-                                        <ListItem
+                                        {/* <ListItem
                                             href='/docs/primitives/typography'
                                             title='Typography'>
                                             Styles for headings, paragraphs, lists...etc
-                                        </ListItem>
+                                        </ListItem> */}
                                     </ul>
                                 </NavigationMenuContent>
                             </NavigationMenuItem>

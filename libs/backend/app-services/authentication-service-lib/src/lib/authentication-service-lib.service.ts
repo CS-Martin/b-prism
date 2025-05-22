@@ -264,7 +264,7 @@ export class AuthenticationServiceLibService implements AuthenticationServiceAbs
         if (resetPasswordDto.password !== resetPasswordDto.confirmPassword) {
             this.logger.error(`Password doesn't match for ${email} attempt to reset their password`);
 
-            throw new BadRequestException(`Password doesn&apos;t match. Please try again. `);
+            throw new BadRequestException(`Password doesn't match. Please try again. `);
         }
 
         const existingUser: UserDto | null = (await this.userServiceLibService.findByEmail(email)).body;
