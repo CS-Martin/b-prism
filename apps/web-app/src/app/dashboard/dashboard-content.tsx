@@ -27,12 +27,10 @@ export default function DashboardPage() {
             <div className='flex flex-col'>
                 <main className='flex-1 p-4 space-y-4 md:p-6'>
                     <Suspense fallback={<StatisticCardsSkeleton />}>
-                        <div id='step1'>
-                            <StatisticCards
-                                rescuePosts={rescuePosts}
-                                isLoading={isLoading}
-                            />
-                        </div>
+                        <StatisticCards
+                            rescuePosts={rescuePosts}
+                            isLoading={isLoading}
+                        />
                     </Suspense>
 
                     <Tabs
