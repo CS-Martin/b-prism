@@ -1,6 +1,5 @@
 import { ThemeProvider, Toaster } from '@b-prism/shadcn-ui/index';
 import SessionComponentProvider from '../context/session-provider';
-import { NextStepProvider } from 'nextstepjs';
 import './global.css';
 
 export const metadata = {
@@ -23,16 +22,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body className={`${montserrat.variable} font-sans`}>
                 <SessionComponentProvider>
                     <LoadingProgressProvider>
-                        <NextStepProvider>
-                            <ThemeProvider
-                                attribute='class'
-                                defaultTheme='dark'
-                                enableSystem
-                                disableTransitionOnChange>
-                                {children}
-                                <Toaster />
-                            </ThemeProvider>
-                        </NextStepProvider>
+                        <ThemeProvider
+                            attribute='class'
+                            defaultTheme='dark'
+                            enableSystem
+                            disableTransitionOnChange>
+                            {children}
+                            <Toaster />
+                        </ThemeProvider>
                     </LoadingProgressProvider>
                 </SessionComponentProvider>
             </body>
