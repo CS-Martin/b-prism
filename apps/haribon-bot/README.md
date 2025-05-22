@@ -4,8 +4,8 @@ A FastAPI-based webhook service that integrates with **Facebook Messenger** to r
 
 ## 🛠 Requirements
 
-* Python 3.10+
-* [uv](https://github.com/astral-sh/uv)
+-   Python 3.10+
+-   [uv](https://github.com/astral-sh/uv)
 
 ## Getting Started
 
@@ -43,7 +43,7 @@ cp .env.example .env
 uv run uvicorn app.main:app --host localhost --port 3000 --log-config logconf.yaml
 ```
 
-### 5. Use ngrok for SSL 
+### 5. Use ngrok for SSL
 
 Facebook requires a public HTTPS endpoint for webhook validation.
 
@@ -68,7 +68,7 @@ docker build -t haribon-chatbot .
 ```bash
 docker run -p 3000:3000 \
   -v $(pwd)/logs:/app/logs \
-  haribon-chatbot 
+  haribon-chatbot
 ```
 
 ### 3. Use ngrok for SSL
