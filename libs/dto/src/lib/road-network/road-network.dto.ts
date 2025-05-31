@@ -4,7 +4,7 @@ import { RoadNetworkGeometryDto } from './road-network-geometry.dto';
 
 export class RoadNetworkDto {
     @ApiProperty()
-    id!: string | number;
+    id!: string;
 
     @ApiProperty()
     type!: string;
