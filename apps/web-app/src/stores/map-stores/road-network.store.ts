@@ -7,8 +7,8 @@ import { debounce, DebouncedFunc } from 'lodash';
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 type RoadNetworkState = {
-    damagedRoads: RoadNetworkDto[];
-    fixedRoads: RoadNetworkDto[];
+    damagedRoads: any[];
+    fixedRoads: any[];
 
     prevBounds: string | null;
 
