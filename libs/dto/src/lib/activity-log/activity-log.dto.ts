@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ActivityLogDto {
     @ApiProperty()
-    id!: string;
+    id!: string | number;
 
     @ApiProperty()
     action!: string;
