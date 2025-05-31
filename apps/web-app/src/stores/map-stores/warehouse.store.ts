@@ -1,8 +1,8 @@
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import { ResponseDto, WarehouseDto } from '@dto';
-import { features } from 'process';
 import { create } from 'zustand';
 import { warehouseService } from '../../services/warehouse.service';
+import { parseErrorMessage } from 'libs/utils/src/lib/error-handler';
 
 type WarehouseState = {
     warehouseGeoJson: { type: string; features: any[] };
@@ -45,14 +45,8 @@ export const useWarehouseStore = create<WarehouseState>((set) => ({
             };
 
             set({ warehouseGeoJson });
-        } catch (error: any) {
-            console.error('Error fetching warehouses:', error);
-
-            toast({
-                title: 'Error!',
-                description: error.message || 'Failed to fetch warehouses. Please try again.',
-                variant: 'destructive',
-            });
+        } catch (error: unknown) {
+            parseErrorMessage(error);
         } finally {
             set({ isLoading: false });
         }

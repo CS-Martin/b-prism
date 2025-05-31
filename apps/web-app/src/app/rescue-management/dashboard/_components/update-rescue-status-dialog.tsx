@@ -1,4 +1,3 @@
-import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -24,7 +23,7 @@ interface UpdateRescueStatusDialogProps {
 
 export const UpdateRescueStatusDialog = ({ rescuePost, isDialogOpen, onClose, status, session }: UpdateRescueStatusDialogProps) => {
     // --- Handlers ---
-    const { isLoading, error, updateRescePostStatus } = useRescuePostStore();
+    const { isLoading, updateRescePostStatus } = useRescuePostStore();
 
     const handleRescueStatusUpdate = async (rescuePost: RescuePostDto | null) => {
         if (rescuePost && session) {

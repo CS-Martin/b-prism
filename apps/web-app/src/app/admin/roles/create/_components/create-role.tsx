@@ -1,6 +1,6 @@
 'use client';
 
-import { NextStepperButton, PreviousStepperButton, Stepper, StepperContent, StepperHeader, useStepper } from 'apps/web-app/src/components/stepper';
+import { NextStepperButton, PreviousStepperButton, Stepper, StepperContent, StepperHeader } from 'apps/web-app/src/components/stepper';
 import { RoleBasicInfoForm } from './basic-info-form';
 import { RolePermissionsForm } from './permissions-form';
 import { RoleReviewDetails } from './review-details';
@@ -53,7 +53,6 @@ export const CreateRoleContent = ({ session }: CreateRoleContentProps) => {
         register,
         handleSubmit,
         formState: { isValid, errors },
-        control,
     } = methods;
 
     const onSubmit = async (data: { name: string; description: string; adminPermissions: Record<string, boolean>; mapPermissions: Record<string, any> }) => {

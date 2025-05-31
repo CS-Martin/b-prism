@@ -11,13 +11,11 @@ import {
     AlertDialogTitle,
 } from '@b-prism/shadcn-ui/components/ui/alert-dialog';
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { useProgress } from '@bprogress/next';
 import { useDeleteDispensingPoint } from 'apps/web-app/src/hooks/dispensing-point.hook';
 import { useDeleteWarehouse } from 'apps/web-app/src/hooks/map.hook';
 import { useDispensingPointsStore } from 'apps/web-app/src/stores/map-stores/dispensing-point.store';
 import { useWarehouseStore } from 'apps/web-app/src/stores/map-stores/warehouse.store';
 import { Session } from 'next-auth';
-import { useEffect } from 'react';
 
 interface DeleteItemProps {
     item: { type: string; id: string };

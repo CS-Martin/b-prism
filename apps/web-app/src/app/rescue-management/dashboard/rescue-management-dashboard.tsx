@@ -1,16 +1,7 @@
 'use client';
 
-import { lazy, Suspense, useEffect, useState } from 'react';
-import { AlertTriangle, CheckCircle2, ChevronDown, Download, Filter, LifeBuoy, MapPin, Phone, Search, SlidersHorizontal, Users } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@b-prism/shadcn-ui/index';
-import { Button } from '@b-prism/shadcn-ui/index';
-import { Badge } from '@b-prism/shadcn-ui/index';
-import { Input } from '@b-prism/shadcn-ui/index';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@b-prism/shadcn-ui/index';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@b-prism/shadcn-ui/index';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@b-prism/shadcn-ui/index';
-import { Switch } from '@b-prism/shadcn-ui/index';
-import { Label } from '@b-prism/shadcn-ui/index';
+import { lazy, Suspense, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@b-prism/shadcn-ui/index';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@b-prism/shadcn-ui/index';
 import { RescueRequestHeatmap } from '../../dashboard/_components/overview';
 import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';

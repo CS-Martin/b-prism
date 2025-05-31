@@ -1,11 +1,9 @@
 import { Metadata } from 'next';
 import { HaribonPolicy } from './_components/haribon-policy';
-import { useTheme } from 'next-themes';
 import { MessengerBotPolicy } from './_components/messenger-bot-policy';
-import { Card, CardDescription, CardHeader, Label } from '@b-prism/shadcn-ui/index';
+import { Card, CardDescription, CardHeader } from '@b-prism/shadcn-ui/index';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { Navbar } from '../../components/navbar';
-import { useSession } from 'next-auth/react';
 import { HaribonFooter } from '../../components/footer';
 
 export const metadata: Metadata = {

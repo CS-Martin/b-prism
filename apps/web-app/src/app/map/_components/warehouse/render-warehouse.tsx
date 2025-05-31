@@ -1,9 +1,10 @@
-import { Layer, Source, useMap } from 'react-map-gl';
+import { Layer, Source, useMap, MapMouseEvent } from 'react-map-gl';
 import UpdateWarehouseDialog from './update.warehouse-dialog';
 import { useEffect, useState } from 'react';
 import { Session } from 'next-auth';
 import { useWarehouseStore } from 'apps/web-app/src/stores/map-stores/warehouse.store';
 import { useProgress } from '@bprogress/next';
+import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 
 interface RenderWarehouseProps {
     visibility: { warehouses: boolean };
@@ -54,12 +55,18 @@ const RenderWarehouse = ({ visibility, selectedAction, session }: RenderWarehous
                 }
             } catch (error) {
                 console.error('Error loading warehouse icon');
+
+                toast({
+                    title: 'An error occured',
+                    description: error instanceof Error ? error.message : 'Unknown error',
+                    variant: 'destructive',
+                });
             }
         };
 
         loadImage();
 
-        const handleLayerClick = (event: any) => {
+        const handleLayerClick = (event: MapMouseEvent) => {
             const warehouse = event.features;
 
             if (!warehouse || warehouse.length === 0) return;

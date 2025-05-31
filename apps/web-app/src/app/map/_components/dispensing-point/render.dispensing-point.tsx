@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Source, Layer, useMap } from 'react-map-gl';
+import { Source, Layer, useMap, MapMouseEvent } from 'react-map-gl';
 import UpdateDispensingPointDialog from './update.dispensing-point-dialog';
 import { Session } from 'next-auth';
 import { useDispensingPointsStore } from 'apps/web-app/src/stores/map-stores/dispensing-point.store';
@@ -24,7 +24,7 @@ interface RenderDispensingPointProps {
 const RenderDispensingPoint = ({ visibility, selectedAction, session }: RenderDispensingPointProps) => {
     const { current: map } = useMap();
 
-    const { dispensingPointsGeoJson, fetchAllDispensingPoints, isLoading: isFetchingDispensingPoints } = useDispensingPointsStore();
+    const { dispensingPointsGeoJson, fetchAllDispensingPoints } = useDispensingPointsStore();
 
     useEffect(() => {
         if (dispensingPointsGeoJson.features.length === 0) {
@@ -38,7 +38,7 @@ const RenderDispensingPoint = ({ visibility, selectedAction, session }: RenderDi
     useEffect(() => {
         if (!map) return;
 
-        const handleLayerClick = (event: any) => {
+        const handleLayerClick = (event: MapMouseEvent) => {
             const dp = event.features;
 
             if (!dp || dp.length === 0) return;

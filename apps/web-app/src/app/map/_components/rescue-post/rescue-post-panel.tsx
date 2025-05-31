@@ -1,4 +1,4 @@
-import { Button, Label, ScrollArea, Separator } from '@b-prism/shadcn-ui/index';
+import { Label, Separator } from '@b-prism/shadcn-ui/index';
 import { MessageSquareMore, PanelRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Draggable from 'react-draggable';
@@ -11,9 +11,9 @@ import { RescuePostDto } from '@dto';
 
 const RescuePostPanel = ({ mapRef }: { mapRef: React.RefObject<MapRef> | null }) => {
     const { toast } = useToast();
-    const [currentMarker, setCurrentMarker] = useState<any>(null);
+    const [currentMarker, setCurrentMarker] = useState<mapboxgl.Marker | null>(null);
     const [isExpanded, setIsExpanded] = useState(true);
-    const { rescuePosts, isLoading, error, fetchAllRescuePosts } = useRescuePostStore();
+    const { rescuePosts, fetchAllRescuePosts } = useRescuePostStore();
 
     useEffect(() => {
         if (!rescuePosts || rescuePosts.length === 0) {

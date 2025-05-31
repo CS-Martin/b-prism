@@ -1,6 +1,7 @@
 import { RescuePostDto } from '@dto';
 import { create } from 'zustand';
 import { rescuePostService } from '../../services/rescue-post.service';
+import { parseErrorMessage } from 'libs/utils/src/lib/error-handler';
 
 interface RescuePostStore {
     rescuePosts: RescuePostDto[];
@@ -23,8 +24,8 @@ export const useRescuePostStore = create<RescuePostStore>((set, get) => ({
             const rescuePosts: RescuePostDto[] = await rescuePostService.findAll();
 
             set({ rescuePosts: rescuePosts });
-        } catch (error: any) {
-            set({ error: error.message });
+        } catch (error: unknown) {
+            parseErrorMessage(error);
         } finally {
             set({ isLoading: false });
         }
@@ -43,8 +44,8 @@ export const useRescuePostStore = create<RescuePostStore>((set, get) => ({
                 isLoading: false,
                 error: null,
             }));
-        } catch (error: any) {
-            set({ error: error.message });
+        } catch (error: unknown) {
+            parseErrorMessage(error);
         } finally {
             set({ isLoading: false });
         }

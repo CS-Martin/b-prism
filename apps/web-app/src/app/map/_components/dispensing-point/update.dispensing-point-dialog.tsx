@@ -1,4 +1,3 @@
-// UpdateDispensingPointDialog component
 'use client';
 
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
@@ -64,7 +63,7 @@ const UpdateDispensingPointDialog: React.FC<DialogProps> = ({ dispensingPointId,
             const { id, ...dispensingPointWithoutId } = dispensingPoint;
             reset(dispensingPointWithoutId);
         }
-    }, [dispensingPoint, reset]);
+    }, [dispensingPoint, reset, isOpen]);
 
     const onSubmit = async (data: UpdateDispensingPointDto) => {
         try {

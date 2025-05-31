@@ -1,7 +1,7 @@
 'use client';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Card, CardContent, CardHeader } from '@b-prism/shadcn-ui/index';
-import { Database, Eye, MapPin, MonitorSmartphone, Shield, User } from 'lucide-react';
+import { Database, MapPin, MonitorSmartphone, User } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
 

@@ -1,20 +1,6 @@
 'use client';
 
-import {
-    Label,
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@b-prism/shadcn-ui/index';
+import { Label, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@b-prism/shadcn-ui/index';
 import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import { CreateRoleDatatableColumns } from './role-management-columns';

@@ -19,7 +19,6 @@ import { useProgress } from '@bprogress/next';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 import { GeoJSONFeature } from 'mapbox-gl';
 import { Session } from 'next-auth';
-import Image from 'next/image';
 import React from 'react';
 
 interface FixRoadModalProps {

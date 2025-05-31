@@ -30,15 +30,9 @@ interface DestroyRoadModalProps {
 
 export const DestroyRoadModal = ({ road, setIsDialogOpen, session }: DestroyRoadModalProps) => {
     const { start: startLoading, stop: stopLoading } = useProgress();
-    const { isLoading, destroyRoad } = useRoadNetworkStore();
+    const { destroyRoad } = useRoadNetworkStore();
 
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        watch,
-        formState: { errors },
-    } = useForm({
+    const { register, handleSubmit, setValue, watch } = useForm({
         defaultValues: {
             roadSeverity: road?.properties?.severity ?? 0,
             description: '',

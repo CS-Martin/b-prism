@@ -1,5 +1,3 @@
-import { RoadNetworkDto } from '@dto';
-
 class MapboxApiService {
     public async reverse_geocoding(longitude: number, latitude: number) {
         try {

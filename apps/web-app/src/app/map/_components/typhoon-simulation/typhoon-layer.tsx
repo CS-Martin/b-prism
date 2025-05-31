@@ -81,13 +81,14 @@ export const TyphoonLayer = () => {
                 // Inner Circle as Cyclone Icon
 
                 // Outer Expanding Circles
+
                 typhoonCircles.features.forEach((feature, index) => {
-                    if (feature.properties!.type === 'outer') {
+                    if (feature.properties && feature.properties.type === 'outer') {
                         map.addLayer({
                             id: `typhoon-circle-${index}`,
                             type: 'circle',
                             source: 'typhoon-circles',
-                            filter: ['==', ['get', 'size'], feature.properties!.size],
+                            filter: ['==', ['get', 'size'], feature.properties.size],
                             paint: {
                                 'circle-radius': ['/', ['get', 'size'], 2000],
                                 'circle-pitch-alignment': 'map',
@@ -98,6 +99,7 @@ export const TyphoonLayer = () => {
                         });
                     }
                 });
+
                 map.addLayer({
                     id: 'typhoon-path',
                     type: 'line',
@@ -108,6 +110,7 @@ export const TyphoonLayer = () => {
                         'line-dasharray': [2, 2], // Optional: Dashed effect
                     },
                 });
+
                 map.addLayer({
                     id: 'typhoon-icon-layer',
                     type: 'symbol',

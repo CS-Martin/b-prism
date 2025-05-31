@@ -1,7 +1,5 @@
-import { SidebarMenuButton, SidebarMenuItem, Switch } from '@b-prism/shadcn-ui/index';
-import { UserDto } from '@dto';
+import { SidebarMenuItem, Switch } from '@b-prism/shadcn-ui/index';
 import { LucideIcon } from 'lucide-react';
-import { useSession } from 'next-auth/react';
 import { useMapActionStore } from '../../stores/sidebar-map-action.store';
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
 

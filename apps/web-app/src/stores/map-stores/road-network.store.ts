@@ -5,12 +5,10 @@ import React from 'react';
 import { MapRef } from 'react-map-gl';
 import { debounce, DebouncedFunc } from 'lodash';
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { useProgress } from '@bprogress/next';
-import { SERVER_DIRECTORY } from 'next/dist/shared/lib/constants';
 
 type RoadNetworkState = {
-    damagedRoads: any;
-    fixedRoads: any;
+    damagedRoads: RoadNetworkDto[];
+    fixedRoads: RoadNetworkDto[];
 
     prevBounds: string | null;
 
@@ -92,6 +90,10 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
             const damagedRoadsGeoformat =
                 damagedRoads?.map((road: RoadNetworkDto, index: number) => ({
                     id: index + Date.now(),
+                    type: road.type,
+                    is_damaged: road.is_damaged,
+                    severity: road.severity,
+                    description: road.description,
                     properties: {
                         id: road.id,
                         is_damaged: road.is_damaged,
@@ -137,15 +139,19 @@ export const useRoadNetworkStore = create<RoadNetworkState>((set) => ({
 
             const geoJsonFixedRoads =
                 fixedRoadsResponse.map((road: RoadNetworkDto, index: number) => ({
-                    type: 'Feature',
                     id: index + Date.now(),
-                    geometry: road.geometry,
+                    type: road.type,
+                    is_damaged: road.is_damaged,
+                    severity: road.severity,
+                    description: road.description,
                     properties: {
                         id: road.id,
                         is_damaged: road.is_damaged,
                         description: road.description,
                         severity: road.severity,
+                        ...road.properties,
                     },
+                    geometry: road.geometry,
                 })) ?? [];
 
             // Merging new roads with existing ones without duplicates

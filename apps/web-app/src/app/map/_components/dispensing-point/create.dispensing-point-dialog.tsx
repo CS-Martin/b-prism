@@ -10,7 +10,6 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    Input,
     Label,
     Separator,
     Tabs,
@@ -47,7 +46,6 @@ const CreateDispensingPointDialog: React.FC<DialogProps> = ({ isOpen, setIsOpen,
 
     const {
         handleSubmit,
-        control,
         reset,
         register,
         formState: { errors },

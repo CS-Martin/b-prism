@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Topbar from 'apps/web-app/src/components/topbar';
 import { format } from 'date-fns';
 import ActionIcon from './action-icon';
 import ActivityCard from './activity-card';

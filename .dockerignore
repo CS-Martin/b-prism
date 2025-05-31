@@ -1,7 +1,33 @@
-notebooks
-.git
-.vscode
-dataset
-dist
+# Node and build folders
 node_modules
+**/node_modules
+dist
+**/dist
+
+# Nx/monorepo build system folders
+.nx
 .husky
+.vercel
+
+# Editor/IDE files
+.vscode
+*.code-workspace
+**/.vscode
+
+# Datasets and notebooks
+notebooks
+dataset
+**/notebooks
+**/dataset
+
+# Git and version control
+.git
+.gitignore
+
+# Logs and environment files
+*.log
+.env
+.env.*
+
+# Explicitly exclude large frontend app
+apps/web-app/

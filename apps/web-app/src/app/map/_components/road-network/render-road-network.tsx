@@ -5,7 +5,7 @@ import { DestroyRoadModal } from './destroy-road-modal';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 import { useMapStore } from 'apps/web-app/src/stores/map-stores/mapbox.store';
 import { Session } from 'next-auth';
-import { GeoJSONFeature } from 'mapbox-gl';
+import { GeoJSONFeature, MapMouseEvent } from 'mapbox-gl';
 
 interface RenderRoadNetworkProps {
     visibility: { roadNetwork: boolean };
@@ -40,7 +40,7 @@ export const RenderRoadNetwork = ({ visibility, session }: RenderRoadNetworkProp
     useEffect(() => {
         if (!map) return;
 
-        const handleLayerClick = (e: any) => {
+        const handleLayerClick = (e: MapMouseEvent) => {
             const road = map.queryRenderedFeatures(e.point, { layers: ['road_layer'] });
 
             if (!road || road.length === 0) return;
@@ -52,7 +52,7 @@ export const RenderRoadNetwork = ({ visibility, session }: RenderRoadNetworkProp
             setIsDialogOpen(true);
         };
 
-        const handleMouseMove = (e: any) => {
+        const handleMouseMove = (e: MapMouseEvent) => {
             const features = map.queryRenderedFeatures(e.point, { layers: ['road_layer'] });
 
             if (features.length > 0) {

@@ -1,7 +1,6 @@
 import { LoginProvider } from '@b-prism/types';
 import { CreateUserDto, PublicUserDto, ResetPasswordDto, ResponseDto, UpdateUserDto, UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
-import { create } from 'zustand';
 
 class AuthenticationService {
     private API_BASE_URL: string;
