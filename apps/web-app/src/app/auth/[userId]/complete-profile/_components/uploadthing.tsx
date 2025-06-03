@@ -88,7 +88,17 @@ export default function UploadThing() {
                                 setIsUploadComplete(false);
                                 setIsUploadZoneDisabled(true);
 
-                                const user_id: string = res[0].serverData.uploadedBy!;
+                                const uploadedBy = res[0].serverData.uploadedBy;
+
+                                if (!uploadedBy) {
+                                    toast({
+                                        title: 'Error!',
+                                        description: 'User ID not found in upload response.',
+                                        variant: 'destructive',
+                                    });
+                                    return;
+                                }
+                                const user_id: string = uploadedBy;
                                 const key: string = res[0].key;
 
                                 onSubmit(user_id, key);

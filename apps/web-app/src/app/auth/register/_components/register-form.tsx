@@ -13,7 +13,6 @@ import { ErrorMessage } from 'apps/web-app/src/components/forms/error-message';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react'; // Import eye icons
 import { CreateUserDto } from '@dto';
 import { useTheme } from 'next-themes';
-import Link from 'next/link';
 
 const registerSchema = z.object({
     given_name: z.string().min(1, 'Given name is required'),

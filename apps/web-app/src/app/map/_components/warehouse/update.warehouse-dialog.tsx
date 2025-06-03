@@ -23,7 +23,7 @@ import { useEffect } from 'react';
 import { useFindOneWarehouse, useUpdateWarehouse } from 'apps/web-app/src/hooks/map.hook';
 import InputField from 'apps/web-app/src/components/forms/input-field';
 import { useToast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import { Session } from 'next-auth';
 import { useProgress } from '@bprogress/next';
 

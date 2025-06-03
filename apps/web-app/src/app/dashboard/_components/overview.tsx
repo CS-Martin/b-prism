@@ -39,7 +39,7 @@ const chartConfig = {
 
 export const Overview = () => {
     const { start: startLoading, stop: stopLoading } = useProgress();
-    const { rescuePosts, isLoading, error, fetchAllRescuePosts } = useRescuePostStore();
+    const { rescuePosts, isLoading, fetchAllRescuePosts } = useRescuePostStore();
 
     useEffect(() => {
         if (!rescuePosts) {

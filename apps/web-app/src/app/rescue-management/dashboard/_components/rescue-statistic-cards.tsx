@@ -1,10 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@b-prism/shadcn-ui/index';
-import { useProgress } from '@bprogress/next';
 import { RescuePostDto } from '@dto';
 import { AnimatedCounter } from 'apps/web-app/src/components/animated-counter';
-import { useRescuePostStore } from 'apps/web-app/src/stores/rescue-post-stores/rescue-post.store';
-import { AlertTriangle, CheckCircle2, ShieldAlert, ShieldCheck, Users } from 'lucide-react';
-import { useEffect } from 'react';
+import { AlertTriangle, ShieldAlert, ShieldCheck, Users } from 'lucide-react';
 
 interface RescueStatisticCardsProps {
     rescuePosts: RescuePostDto[];

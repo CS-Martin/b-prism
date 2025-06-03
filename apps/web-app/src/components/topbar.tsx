@@ -1,9 +1,8 @@
 'use client';
 
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator, SidebarTrigger } from '@b-prism/shadcn-ui/index';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Separator, SidebarTrigger } from '@b-prism/shadcn-ui/index';
 import { Breadcrumbs } from './breadcrumbs';
 import { ThemeToggler } from './theme-toggler';
-import { Filter } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useAnalyticalDashboardStore } from '../stores/dashboard-stores/analytical-dashboard.store';
 

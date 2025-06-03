@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { CreateRoleDto, ResponseDto, RoleDto, UpdateRoleDto } from '@dto';
 import { roleService } from '../../services/role.service';
 import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
-import { useProgress } from '@bprogress/next';
+import { parseErrorMessage } from 'libs/utils/src/lib/error-handler';
 
 interface RoleStore {
     roles: RoleDto[];
@@ -31,8 +31,8 @@ export const useRoleStore = create<RoleStore>((set, get) => ({
         try {
             const response: ResponseDto<RoleDto[]> = await roleService.fetchAllRoles(token);
             set({ roles: response.body });
-        } catch (error: any) {
-            set({ error: error.message });
+        } catch (error: unknown) {
+            parseErrorMessage(error);
         } finally {
             set({ isLoading: false });
         }
@@ -44,8 +44,8 @@ export const useRoleStore = create<RoleStore>((set, get) => ({
         try {
             const response: RoleDto = await roleService.fetchRoleById(roleId, token);
             set({ role: response });
-        } catch (error: any) {
-            set({ error: error.message });
+        } catch (error: unknown) {
+            parseErrorMessage(error);
         } finally {
             set({ isLoading: false });
         }
@@ -69,14 +69,8 @@ export const useRoleStore = create<RoleStore>((set, get) => ({
                 description: `You have successfully created role ${createRoleDto.name}.`,
                 variant: 'success',
             });
-        } catch (error: any) {
-            set({ error: error.message });
-
-            toast({
-                title: 'Error',
-                description: `Encountered an error: ${error}`,
-                variant: 'destructive',
-            });
+        } catch (error: unknown) {
+            parseErrorMessage(error);
         } finally {
             set({ isLoading: false });
         }
@@ -99,14 +93,8 @@ export const useRoleStore = create<RoleStore>((set, get) => ({
                 description: `You have successfully updated role ${updateRoleDto.name}.`,
                 variant: 'success',
             });
-        } catch (error: any) {
-            set({ error: error.message });
-
-            toast({
-                title: 'Error',
-                description: `Encountered an error: ${error}`,
-                variant: 'destructive',
-            });
+        } catch (error: unknown) {
+            parseErrorMessage(error);
         } finally {
             set({ isLoading: false });
         }
@@ -127,14 +115,8 @@ export const useRoleStore = create<RoleStore>((set, get) => ({
             set((state) => ({
                 roles: state.roles.filter((r) => r.id !== role.id),
             }));
-        } catch (error: any) {
-            set({ error: error.message });
-
-            toast({
-                title: 'Error',
-                description: `Encountered an error: ${error}`,
-                variant: 'destructive',
-            });
+        } catch (error: unknown) {
+            parseErrorMessage(error);
         } finally {
             set({ isLoading: false });
         }

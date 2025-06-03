@@ -9,7 +9,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@b-prism/shadcn-ui/index';
-import { ChartNoAxesCombined, ChevronDown, Earth, Home, Map } from 'lucide-react';
+import { ChartNoAxesCombined, ChevronDown, Earth, Home } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SidebarLinkItem } from './sidebar-link-item';
 

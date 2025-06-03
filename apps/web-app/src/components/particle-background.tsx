@@ -22,7 +22,7 @@ export const ParticleBackground = memo(({ style, className }: ParticleBackground
     }, []);
 
     const particlesLoaded = useCallback(async (container?: Container): Promise<void> => {
-        ('');
+        console.log('');
     }, []); // Callback is stable and will not change on re-renders
 
     // Using useMemo to prevent re-creating options object

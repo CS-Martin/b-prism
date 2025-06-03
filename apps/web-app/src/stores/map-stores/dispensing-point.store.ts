@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { dispensingPointService } from '../../services/dispensing-point.service';
 import { DispensingPointDto, ResponseDto } from '@dto';
-import { toast } from '@b-prism/shadcn-ui/hooks/use-toast';
+import { parseErrorMessage } from 'libs/utils/src/lib/error-handler';
 
 interface DispensingPointsState {
     dispensingPointsGeoJson: { type: string; features: any[] };
@@ -45,14 +45,8 @@ export const useDispensingPointsStore = create<DispensingPointsState>((set) => (
             };
 
             set({ dispensingPointsGeoJson });
-        } catch (error: any) {
-            console.error('Error fetching dispensing points:', error);
-
-            toast({
-                title: 'Error!',
-                description: error.message || 'Failed to fetch dispensing points. Please try again.',
-                variant: 'destructive',
-            });
+        } catch (error: unknown) {
+            parseErrorMessage(error);
         } finally {
             set({ isLoading: false });
         }

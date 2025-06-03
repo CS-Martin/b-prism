@@ -8,8 +8,6 @@ import { useSession } from 'next-auth/react';
 import { HaribonFooter } from '../../components/footer';
 
 export default function Home() {
-    const { data: session, status } = useSession();
-
     return (
         <div className='pt-20 bg-black'>
             <SplineSection />

@@ -1,7 +1,7 @@
-import { Badge, Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Label, Switch } from '@b-prism/shadcn-ui/index';
+import { Badge, Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Label } from '@b-prism/shadcn-ui/index';
 import { ContactPersonDto, RescuePostDto } from '@dto';
 import { customDateFormatter } from 'apps/web-app/src/utils/date-formatter';
-import { formatDistanceToNow, formatDistanceToNowStrict } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { MapPin, Phone } from 'lucide-react';
 import { Session } from 'next-auth';
 

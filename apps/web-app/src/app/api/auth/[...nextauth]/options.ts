@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { authService } from '../../../../services/authentication.service';
 import { jwtDecode } from 'jwt-decode';
@@ -89,7 +90,7 @@ export const options: NextAuthOptions = {
                 token.id_image_url = user.id_image_url;
                 token.access_token = (profile as any).access_token || '';
 
-                const decodedToken = jwtDecode<{ exp?: number }>(token.access_token!);
+                const decodedToken = token.access_token ? jwtDecode<{ exp?: number }>(token.access_token) : undefined;
                 token.accessTokenExpires = decodedToken?.exp ? decodedToken.exp * 1000 : Date.now() + 1000 * 60 * 15;
             } else if (user) {
                 token.id = user.id;
@@ -101,7 +102,7 @@ export const options: NextAuthOptions = {
                 token.refresh_token = user.refresh_token;
                 token.id_image_url = user.id_image_url;
 
-                const decodedToken = jwtDecode<{ exp?: number }>(token.access_token!);
+                const decodedToken = token.access_token ? jwtDecode<{ exp?: number }>(token.access_token) : undefined;
                 token.accessTokenExpires = decodedToken?.exp ? decodedToken.exp * 1000 : Date.now() + 1000 * 60 * 15;
             }
 

@@ -1,0 +1,100 @@
+services:
+    authentication-service:
+        build:
+            context: .
+            dockerfile: apps/authentication-service/Dockerfile.prod
+        container_name: haribon-authentication-service
+        ports:
+            - '3001:3001'
+        env_file:
+            - .env
+        environment:
+            - NODE_ENV=production
+    user-service:
+        build:
+            context: .
+            dockerfile: apps/user-service/Dockerfile.prod
+        container_name: haribon-user-service
+        ports:
+            - '3003:3003'
+        env_file:
+            - .env
+        environment:
+            - NODE_ENV=production
+    warehouse-service:
+        build:
+            context: .
+            dockerfile: apps/map-service/warehouse-service/Dockerfile.prod
+        container_name: haribon-warehouse-service
+        ports:
+            - '3004:3004'
+        env_file:
+            - .env
+        environment:
+            - NODE_ENV=production
+    dispensing-point-service:
+        build:
+            context: .
+            dockerfile: apps/map-service/dispensing-point-service/Dockerfile.prod
+        container_name: haribon-dispensing-point-service
+        ports:
+            - '3005:3005'
+        env_file:
+            - .env
+        environment:
+            - NODE_ENV=production
+    rescue-post-services:
+        build:
+            context: .
+            dockerfile: apps/rescue-post-service/Dockerfile.prod
+        container_name: haribon-rescue-post-service
+        ports:
+            - '3006:3006'
+        env_file:
+            - .env
+        environment:
+            - NODE_ENV=production
+    activity-log-service:
+        build:
+            context: .
+            dockerfile: apps/activity-log-service/Dockerfile.prod
+        container_name: haribon-activity-log-service
+        ports:
+            - '3007:3007'
+        env_file:
+            - .env
+        environment:
+            - NODE_ENV=production
+    mailer-serivce:
+        build:
+            context: .
+            dockerfile: apps/mailer-service/Dockerfile.prod
+        container_name: haribon-mailer-service
+        ports:
+            - '3008:3008'
+        env_file:
+            - .env
+        environment:
+            - NODE_ENV=production
+    road-network-service:
+        build:
+            context: .
+            dockerfile: apps/map-service/road-network-service/Dockerfile.prod
+        container_name: haribon-road-network-service
+        ports:
+            - '3009:3009'
+        env_file:
+            - .env
+        environment:
+            - NODE_ENV=production
+    role-service:
+        build:
+            context: .
+            dockerfile: apps/role-service/Dockerfile.prod
+        container_name: haribon-role-service
+        ports:
+            - '3010:3010'
+        env_file:
+            - .env
+        environment:
+            - NODE_ENV=production

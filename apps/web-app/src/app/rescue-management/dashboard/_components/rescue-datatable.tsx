@@ -1,7 +1,5 @@
 import {
     Button,
-    Card,
-    CardContent,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -10,12 +8,6 @@ import {
     DropdownMenuTrigger,
     Input,
     Label,
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
     Table,
     TableBody,
     TableCell,
@@ -30,7 +22,7 @@ import { motion } from 'framer-motion';
 import { RescuePostDto } from '@dto';
 import { Session } from 'next-auth';
 import { UpdateRescueStatusDialog } from './update-rescue-status-dialog';
-import { ChevronDown, Filter, Search, SlidersHorizontal } from 'lucide-react';
+import { ChevronDown, Filter, Search } from 'lucide-react';
 import { ViewRescueDetailsDialog } from './view-details-dialog';
 import { PaginationComponent } from 'apps/web-app/src/components/pagination';
 

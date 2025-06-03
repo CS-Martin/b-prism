@@ -3,7 +3,7 @@
 import Map, { MapMouseEvent } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useMapActionStore } from 'apps/web-app/src/stores/sidebar-map-action.store';
 import CreateWarehouseDialog from './warehouse/create-warehouse-dialog';
 import RenderWarehouse from './warehouse/render-warehouse';

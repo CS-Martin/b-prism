@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Input, Label } from '@b-prism/shadcn-ui/index';
 import { UseFormRegister } from 'react-hook-form';
 
@@ -16,7 +17,7 @@ interface InputFieldProps {
 const InputField: React.FC<InputFieldProps> = ({ className, name, register, label, type, placeholder, errors, rules, isDisabled }) => (
     <div className={`${className}`}>
         <Label
-            className=' font-normal'
+            className='font-normal '
             htmlFor={name}>
             {label}
         </Label>

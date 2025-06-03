@@ -9,7 +9,7 @@ import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-net
 
 export const GenerateDirections = () => {
     const { current: map } = useMap();
-    const { directions, getDirections, isLoading } = useGetDirections();
+    const { directions, getDirections } = useGetDirections();
     const { damagedRoads } = useRoadNetworkStore();
 
     const [start, setStart] = useState<[number, number] | null>(null);

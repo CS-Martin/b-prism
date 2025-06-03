@@ -1,7 +1,6 @@
 import {
     Avatar,
     AvatarFallback,
-    AvatarImage,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,

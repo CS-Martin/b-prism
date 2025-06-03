@@ -1,12 +1,12 @@
 import { Label, Textarea } from '@b-prism/shadcn-ui/index';
-import { Controller } from 'react-hook-form';
+import { Controller, Control, RegisterOptions, FieldValues } from 'react-hook-form';
 
-interface TextAreaFieldProps {
+interface TextAreaFieldProps<T extends FieldValues = FieldValues> {
     name: string;
-    control: any;
+    control: Control<T>;
     label: string;
     placeholder?: string;
-    rules?: any;
+    rules?: RegisterOptions;
 }
 
 const TextAreaField: React.FC<TextAreaFieldProps> = ({ name, control, label, placeholder, rules }) => (
@@ -20,7 +20,7 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({ name, control, label, pla
                 <Textarea
                     {...field}
                     id={name}
-                    className='rounded-sm mt-1'
+                    className='mt-1 rounded-sm'
                     placeholder={placeholder}
                 />
             )}

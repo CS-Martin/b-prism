@@ -1,6 +1,7 @@
-import { UserDto, UpdateUserDto } from '@dto';
+import { UserDto } from '@dto';
 import { create } from 'zustand';
 import { userService } from '../../services/user.service';
+import { parseErrorMessage } from '../../../../../libs/utils/src/lib/error-handler';
 
 interface UserStore {
     users: UserDto[];
@@ -22,8 +23,8 @@ export const useUserStore = create<UserStore>((set, get) => ({
         try {
             const users: UserDto[] = await userService.fetchAllUsers(token);
             set({ users: users });
-        } catch (error: any) {
-            set({ error: error.message });
+        } catch (error: unknown) {
+            parseErrorMessage(error);
         } finally {
             set({ isLoading: false });
         }
@@ -39,8 +40,8 @@ export const useUserStore = create<UserStore>((set, get) => ({
             set((state) => ({
                 users: state.users.map((u: UserDto) => (u.id === user.id ? { ...u, role: newRole } : u)),
             }));
-        } catch (error: any) {
-            set({ error: error.message });
+        } catch (error: unknown) {
+            parseErrorMessage(error);
         } finally {
             set({ isLoading: false });
         }

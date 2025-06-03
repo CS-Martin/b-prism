@@ -2,7 +2,7 @@ import { useSidebar } from '@b-prism/shadcn-ui/index';
 import { useDispensingPointsStore } from 'apps/web-app/src/stores/map-stores/dispensing-point.store';
 import { useRoadNetworkStore } from 'apps/web-app/src/stores/map-stores/road-network.store';
 import { useWarehouseStore } from 'apps/web-app/src/stores/map-stores/warehouse.store';
-import { Clock, House, Loader2, MapPin, Pin, Terminal } from 'lucide-react';
+import { Clock, House, Loader2, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 

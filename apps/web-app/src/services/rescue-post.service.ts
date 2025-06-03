@@ -1,5 +1,5 @@
-import { CreateRescuePostDto, RescuePostDto, ResponseDto } from '@dto';
-import { BadRequestException, Body } from '@nestjs/common';
+import { RescuePostDto } from '@dto';
+import { BadRequestException } from '@nestjs/common';
 
 class RescuePostService {
     private API_BASE_URL: string;

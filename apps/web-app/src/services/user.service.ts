@@ -1,4 +1,4 @@
-import { UpdateUserDto, UserDto } from '@dto';
+import { UserDto } from '@dto';
 import { BadRequestException } from '@nestjs/common';
 
 class UserService {
