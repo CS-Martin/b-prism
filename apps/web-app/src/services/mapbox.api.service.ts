@@ -121,15 +121,22 @@ class MapboxApiService {
 
             console.log(`Total routes from Mapbox: ${data.routes.length}, Safe routes: ${safeRoutes.length}`);
 
-            // If no safe routes, return all routes (fallback)
-            if (safeRoutes.length === 0) {
-                console.warn('No safe routes found, returning all routes');
-                console.log('Returning routes:', data.routes);
-                return data.routes;
-            }
+            // Convert Mapbox routes to GeoJSON Feature format
+            const routesToReturn = safeRoutes.length === 0 ? data.routes : safeRoutes;
+            
+            const geoJsonFeatures = routesToReturn.map((route: any) => ({
+                type: 'Feature' as const,
+                geometry: route.geometry,
+                properties: {
+                    distance: route.distance,
+                    duration: route.duration,
+                    weight: route.weight,
+                    weight_name: route.weight_name,
+                },
+            }));
 
-            console.log('Returning safe routes:', safeRoutes);
-            return safeRoutes;
+            console.log('Returning GeoJSON features:', geoJsonFeatures);
+            return geoJsonFeatures;
         } catch (error) {
             console.error('Mapbox Directions API Error: ', error);
 
