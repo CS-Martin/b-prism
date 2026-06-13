@@ -1,4 +1,18 @@
 class MapboxApiService {
+    private sampleCoordinates(coordinates: any[], sampleSize: number): any[] {
+        if (coordinates.length <= sampleSize) return coordinates;
+
+        const step = Math.floor(coordinates.length / sampleSize);
+        const sampled: any[] = [];
+
+        for (let i = 0; i < sampleSize; i++) {
+            const index = Math.min(i * step, coordinates.length - 1);
+            sampled.push(coordinates[index]);
+        }
+
+        return sampled;
+    }
+
     public async reverse_geocoding(longitude: number, latitude: number) {
         try {
             const response = await fetch(
@@ -34,19 +48,43 @@ class MapboxApiService {
 
     public async getDirections(start: [number, number], destination: [number, number], damagedRoads: any, profile?: 'driving' | 'walking' | 'cycling') {
         try {
-            // Extract coordinates from damaged roads and format them for the Mapbox API
-            const coordinates = damagedRoads
+            // Filter damaged roads to only those within a reasonable distance of the route
+            // Calculate bounding box around start and destination with buffer
+            const bufferKm = 10; // 10km buffer around the route
+            const bufferDegrees = bufferKm / 111; // Approximate conversion from km to degrees
+
+            const minLng = Math.min(start[0], destination[0]) - bufferDegrees;
+            const maxLng = Math.max(start[0], destination[0]) + bufferDegrees;
+            const minLat = Math.min(start[1], destination[1]) - bufferDegrees;
+            const maxLat = Math.max(start[1], destination[1]) + bufferDegrees;
+
+            // Filter damaged roads that intersect with the bounding box
+            const relevantDamagedRoads = damagedRoads.filter((road: any) => {
+                const geometry = typeof road.geometry === 'string' ? JSON.parse(road.geometry) : road.geometry;
+                const coordinates = geometry.coordinates;
+
+                // Check if any coordinate of this road is within the bounding box
+                return coordinates.some(([lon, lat]: [number, number]) =>
+                    lon >= minLng && lon <= maxLng && lat >= minLat && lat <= maxLat
+                );
+            });
+
+            // Extract coordinates from relevant damaged roads
+            const coordinates = relevantDamagedRoads
                 .map((road: any) => {
-                    // Parse the geometry if it's a string, otherwise use it directly
                     const geometry = typeof road.geometry === 'string' ? JSON.parse(road.geometry) : road.geometry;
-                    // Return the coordinates from the geometry
                     return geometry.coordinates;
                 })
-                // Flatten the array of coordinates
                 .reduce((acc: any, val: any) => acc.concat(val), []);
 
+            // Sample coordinates to avoid URL length limits (max ~50 points to stay safe)
+            const MAX_EXCLUDED_POINTS = 50;
+            const sampledCoordinates = coordinates.length > MAX_EXCLUDED_POINTS
+                ? this.sampleCoordinates(coordinates, MAX_EXCLUDED_POINTS)
+                : coordinates;
+
             // Format coordinates for Mapbox API by converting them to 'point(lon lat)' format
-            const excludedPoints = coordinates.map(([lon, lat]: [number, number]) => `point(${lon} ${lat})`).join(',');
+            const excludedPoints = sampledCoordinates.map(([lon, lat]: [number, number]) => `point(${lon}%20${lat})`).join(',');
 
             // Create the exclude parameter for the Mapbox API request
             const excludeParam = excludedPoints ? `&exclude=${excludedPoints}` : '';
