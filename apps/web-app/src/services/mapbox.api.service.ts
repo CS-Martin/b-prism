@@ -124,9 +124,11 @@ class MapboxApiService {
             // If no safe routes, return all routes (fallback)
             if (safeRoutes.length === 0) {
                 console.warn('No safe routes found, returning all routes');
+                console.log('Returning routes:', data.routes);
                 return data.routes;
             }
 
+            console.log('Returning safe routes:', safeRoutes);
             return safeRoutes;
         } catch (error) {
             console.error('Mapbox Directions API Error: ', error);
