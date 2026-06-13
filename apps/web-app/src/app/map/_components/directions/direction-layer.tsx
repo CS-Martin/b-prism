@@ -26,7 +26,9 @@ export const DirectionLayer = ({ directions }: { directions: Directions[] }) => 
 
         map.getStyle()?.layers?.forEach((layer) => {
             if (layer.id.startsWith('route-')) {
-                map.removeLayer(layer.id);
+                if (map.getLayer(layer.id)) {
+                    map.removeLayer(layer.id);
+                }
             }
         });
 
@@ -64,8 +66,12 @@ export const DirectionLayer = ({ directions }: { directions: Directions[] }) => 
 
             // Check if the source already exists before adding a new one
             if (map.getSource(routeId)) {
-                map.removeLayer(`${routeId}-background`);
-                map.removeLayer(`${routeId}-animated`);
+                if (map.getLayer(`${routeId}-background`)) {
+                    map.removeLayer(`${routeId}-background`);
+                }
+                if (map.getLayer(`${routeId}-animated`)) {
+                    map.removeLayer(`${routeId}-animated`);
+                }
                 map.removeSource(routeId);
             }
 
@@ -93,7 +99,7 @@ export const DirectionLayer = ({ directions }: { directions: Directions[] }) => 
                 source: routeId,
                 layout: { 'line-join': 'round', 'line-cap': 'round' },
                 paint: {
-                    'line-color': index === 0 ? '#FFD700' : '',
+                    'line-color': index === 0 ? '#FFD700' : '#3b82f6',
                     'line-width': index === 0 ? 6 : 4,
                     'line-dasharray': index === 0 ? [0, 4, 3] : [2, 2],
                 },
