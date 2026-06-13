@@ -69,6 +69,9 @@ class MapboxApiService {
                 );
             });
 
+            console.log('Total damaged roads:', damagedRoads.length);
+            console.log('Relevant damaged roads (within bounding box):', relevantDamagedRoads.length);
+
             // Extract coordinates from relevant damaged roads
             const coordinates = relevantDamagedRoads
                 .map((road: any) => {
@@ -83,11 +86,18 @@ class MapboxApiService {
                 ? this.sampleCoordinates(coordinates, MAX_EXCLUDED_POINTS)
                 : coordinates;
 
+            console.log('Total coordinates from damaged roads:', coordinates.length);
+            console.log('Sampled coordinates:', sampledCoordinates.length);
+
             // Format coordinates for Mapbox API by converting them to 'point(lon lat)' format
             const excludedPoints = sampledCoordinates.map(([lon, lat]: [number, number]) => `point(${lon}%20${lat})`).join(',');
 
+            console.log('Excluded points string:', excludedPoints.substring(0, 200) + (excludedPoints.length > 200 ? '...' : ''));
+
             // Create the exclude parameter for the Mapbox API request
             const excludeParam = excludedPoints ? `&exclude=${excludedPoints}` : '';
+
+            console.log('Exclude parameter:', excludeParam.substring(0, 200) + (excludeParam.length > 200 ? '...' : ''));
 
             const response = await fetch(
                 `https://api.mapbox.com/directions/v5/mapbox/${profile}/${start[0]},${start[1]};${destination[0]},${destination[1]}?alternatives=true&geometries=geojson${excludeParam}&language=en&access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
