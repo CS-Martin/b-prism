@@ -115,8 +115,41 @@ class MapboxApiService {
 
             console.log(`Total routes from Mapbox: ${data.routes.length}`);
 
+            // Post-process to filter routes that still pass through damaged roads
+            const safeRoutes = data.routes.filter((route: any) => {
+                const routeCoordinates = route.geometry.coordinates;
+                let nearDamagedRoad = false;
+                
+                // Check if any point on the route is near a damaged road
+                for (const damagedRoad of relevantDamagedRoads) {
+                    const geometry = typeof damagedRoad.geometry === 'string' ? JSON.parse(damagedRoad.geometry) : damagedRoad.geometry;
+                    const damagedCoords = geometry.coordinates;
+
+                    // Check if route intersects with this damaged road
+                    for (const routeCoord of routeCoordinates) {
+                        for (const damagedCoord of damagedCoords) {
+                            const distance = this.calculateDistance(routeCoord[0], routeCoord[1], damagedCoord[0], damagedCoord[1]);
+                            // If within 50 meters of a damaged road, consider this route unsafe
+                            if (distance < 0.05) {
+                                nearDamagedRoad = true;
+                                console.log(`Route point near damaged road: distance=${distance.toFixed(4)}km`);
+                                break;
+                            }
+                        }
+                        if (nearDamagedRoad) break;
+                    }
+                    if (nearDamagedRoad) break;
+                }
+                
+                return !nearDamagedRoad;
+            });
+
+            console.log(`Safe routes after post-processing: ${safeRoutes.length}`);
+
             // Convert Mapbox routes to GeoJSON Feature format
-            const geoJsonFeatures = data.routes.map((route: any) => ({
+            const routesToReturn = safeRoutes.length > 0 ? safeRoutes : data.routes;
+            
+            const geoJsonFeatures = routesToReturn.map((route: any) => ({
                 type: 'Feature' as const,
                 geometry: route.geometry,
                 properties: {
@@ -134,6 +167,17 @@ class MapboxApiService {
 
             throw error;
         }
+    }
+
+    private calculateDistance(lon1: number, lat1: number, lon2: number, lat2: number): number {
+        const R = 6371; // Earth's radius in km
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
     }
 }
 
