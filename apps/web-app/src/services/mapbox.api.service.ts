@@ -93,6 +93,7 @@ class MapboxApiService {
             // Filter routes that pass through damaged roads
             const safeRoutes = data.routes.filter((route: any) => {
                 const routeCoordinates = route.geometry.coordinates;
+                let nearDamagedRoad = false;
                 
                 // Check if any point on the route is near a damaged road
                 for (const damagedRoad of relevantDamagedRoads) {
@@ -103,14 +104,19 @@ class MapboxApiService {
                     for (const routeCoord of routeCoordinates) {
                         for (const damagedCoord of damagedCoords) {
                             const distance = this.calculateDistance(routeCoord[0], routeCoord[1], damagedCoord[0], damagedCoord[1]);
-                            // If within 50 meters of a damaged road, consider this route unsafe
-                            if (distance < 0.05) {
-                                return false;
+                            // If within 100 meters of a damaged road, consider this route unsafe
+                            if (distance < 0.1) {
+                                nearDamagedRoad = true;
+                                console.log(`Route point near damaged road: distance=${distance.toFixed(4)}km`);
+                                break;
                             }
                         }
+                        if (nearDamagedRoad) break;
                     }
+                    if (nearDamagedRoad) break;
                 }
-                return true;
+                
+                return !nearDamagedRoad;
             });
 
             console.log(`Total routes from Mapbox: ${data.routes.length}, Safe routes: ${safeRoutes.length}`);
