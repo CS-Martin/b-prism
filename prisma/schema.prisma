@@ -106,11 +106,9 @@ model RescuePost {
   location                  RescuePostLocation
   number_of_people_affected Int
 
-  /**
-   * 0 = rescue not started
-   * 1 = rescue pending
-   * 2 = rescue completed
-   */
+  /// 0 = rescue not started
+  /// 1 = rescue pending
+  /// 2 = rescue completed
   status Int
 
   created_at DateTime @default(now())

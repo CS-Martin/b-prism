@@ -1,8 +1,6 @@
 services:
     authentication-service:
-        build:
-            context: .
-            dockerfile: apps/authentication-service/Dockerfile.prod
+        image: martin09123/project-haribon:authentication-service
         container_name: haribon-authentication-service
         ports:
             - '3001:3001'
@@ -11,9 +9,7 @@ services:
         environment:
             - NODE_ENV=production
     user-service:
-        build:
-            context: .
-            dockerfile: apps/user-service/Dockerfile.prod
+        image: martin09123/project-haribon:user-service
         container_name: haribon-user-service
         ports:
             - '3003:3003'
@@ -22,9 +18,7 @@ services:
         environment:
             - NODE_ENV=production
     warehouse-service:
-        build:
-            context: .
-            dockerfile: apps/map-service/warehouse-service/Dockerfile.prod
+        image: martin09123/project-haribon:warehouse-service
         container_name: haribon-warehouse-service
         ports:
             - '3004:3004'
@@ -33,9 +27,7 @@ services:
         environment:
             - NODE_ENV=production
     dispensing-point-service:
-        build:
-            context: .
-            dockerfile: apps/map-service/dispensing-point-service/Dockerfile.prod
+        image: martin09123/project-haribon:dispensing-point-service
         container_name: haribon-dispensing-point-service
         ports:
             - '3005:3005'
@@ -43,10 +35,8 @@ services:
             - .env
         environment:
             - NODE_ENV=production
-    rescue-post-services:
-        build:
-            context: .
-            dockerfile: apps/rescue-post-service/Dockerfile.prod
+    rescue-post-service:
+        image: martin09123/project-haribon:rescue-post-service
         container_name: haribon-rescue-post-service
         ports:
             - '3006:3006'
@@ -55,9 +45,7 @@ services:
         environment:
             - NODE_ENV=production
     activity-log-service:
-        build:
-            context: .
-            dockerfile: apps/activity-log-service/Dockerfile.prod
+        image: martin09123/project-haribon:activity-log-service
         container_name: haribon-activity-log-service
         ports:
             - '3007:3007'
@@ -65,10 +53,8 @@ services:
             - .env
         environment:
             - NODE_ENV=production
-    mailer-serivce:
-        build:
-            context: .
-            dockerfile: apps/mailer-service/Dockerfile.prod
+    mailer-service:
+        image: martin09123/project-haribon:mailer-service
         container_name: haribon-mailer-service
         ports:
             - '3008:3008'
@@ -77,9 +63,7 @@ services:
         environment:
             - NODE_ENV=production
     road-network-service:
-        build:
-            context: .
-            dockerfile: apps/map-service/road-network-service/Dockerfile.prod
+        image: martin09123/project-haribon:road-network-service
         container_name: haribon-road-network-service
         ports:
             - '3009:3009'
@@ -88,9 +72,7 @@ services:
         environment:
             - NODE_ENV=production
     role-service:
-        build:
-            context: .
-            dockerfile: apps/role-service/Dockerfile.prod
+        image: martin09123/project-haribon:role-service
         container_name: haribon-role-service
         ports:
             - '3010:3010'

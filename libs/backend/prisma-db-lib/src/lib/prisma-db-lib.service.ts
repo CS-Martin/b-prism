@@ -5,6 +5,12 @@ import { PrismaClient } from '@prisma/client';
 export class PrismaDbLibService extends PrismaClient implements OnModuleInit {
     private readonly logger = new Logger(PrismaDbLibService.name);
 
+    constructor() {
+        super({
+            log: ['error', 'warn'],
+        });
+    }
+
     async onModuleInit() {
         try {
             await this.$connect();
