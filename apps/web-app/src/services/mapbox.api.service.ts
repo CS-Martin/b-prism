@@ -48,9 +48,28 @@ class MapboxApiService {
 
     public async getDirections(start: [number, number], destination: [number, number], damagedRoads: any, profile?: 'driving' | 'walking' | 'cycling') {
         try {
+            // Get multiple route alternatives from Mapbox
+            const response = await fetch(
+                `https://api.mapbox.com/directions/v5/mapbox/${profile}/${start[0]},${start[1]};${destination[0]},${destination[1]}?alternatives=true&geometries=geojson&language=en&access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
+            );
+
+            if (!response.ok) {
+                console.error('Failed to fetch directions from Mapbox Direction API');
+
+                throw new Error('Failed to fetch directions from Mapbox API.');
+            }
+
+            const data = await response.json();
+
+            if (data.code !== 'Ok') {
+                console.error('Failed to fetch directions from Mapbox Direction API');
+
+                throw new Error('Failed to fetch directions from Mapbox Direction API.');
+            }
+
             // Filter damaged roads to only those within a reasonable distance of the route
             // Calculate bounding box around start and destination with buffer
-            const bufferKm = 10; // 10km buffer around the route
+            const bufferKm = 5; // 5km buffer around the route
             const bufferDegrees = bufferKm / 111; // Approximate conversion from km to degrees
 
             const minLng = Math.min(start[0], destination[0]) - bufferDegrees;
@@ -69,66 +88,56 @@ class MapboxApiService {
                 );
             });
 
-            console.log('Total damaged roads:', damagedRoads.length);
-            console.log('Relevant damaged roads (within bounding box):', relevantDamagedRoads.length);
+            console.log(`Total damaged roads: ${damagedRoads.length}, Relevant damaged roads: ${relevantDamagedRoads.length}`);
 
-            // Extract coordinates from relevant damaged roads
-            const coordinates = relevantDamagedRoads
-                .map((road: any) => {
-                    const geometry = typeof road.geometry === 'string' ? JSON.parse(road.geometry) : road.geometry;
-                    return geometry.coordinates;
-                })
-                .reduce((acc: any, val: any) => acc.concat(val), []);
+            // Filter routes that pass through damaged roads
+            const safeRoutes = data.routes.filter((route: any) => {
+                const routeCoordinates = route.geometry.coordinates;
+                
+                // Check if any point on the route is near a damaged road
+                for (const damagedRoad of relevantDamagedRoads) {
+                    const geometry = typeof damagedRoad.geometry === 'string' ? JSON.parse(damagedRoad.geometry) : damagedRoad.geometry;
+                    const damagedCoords = geometry.coordinates;
 
-            // Sample coordinates to avoid URL length limits (max ~50 points to stay safe)
-            const MAX_EXCLUDED_POINTS = 50;
-            const sampledCoordinates = coordinates.length > MAX_EXCLUDED_POINTS
-                ? this.sampleCoordinates(coordinates, MAX_EXCLUDED_POINTS)
-                : coordinates;
+                    // Check if route intersects with this damaged road
+                    for (const routeCoord of routeCoordinates) {
+                        for (const damagedCoord of damagedCoords) {
+                            const distance = this.calculateDistance(routeCoord[0], routeCoord[1], damagedCoord[0], damagedCoord[1]);
+                            // If within 50 meters of a damaged road, consider this route unsafe
+                            if (distance < 0.05) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+            });
 
-            console.log('Total coordinates from damaged roads:', coordinates.length);
-            console.log('Sampled coordinates:', sampledCoordinates.length);
+            console.log(`Total routes from Mapbox: ${data.routes.length}, Safe routes: ${safeRoutes.length}`);
 
-            // Format coordinates for Mapbox API by converting them to 'point(lon lat)' format
-            const excludedPoints = sampledCoordinates.map(([lon, lat]: [number, number]) => `point(${lon}%20${lat})`).join(',');
-
-            console.log('Excluded points string:', excludedPoints.substring(0, 200) + (excludedPoints.length > 200 ? '...' : ''));
-
-            // Create the exclude parameter for the Mapbox API request
-            const excludeParam = excludedPoints ? `&exclude=${excludedPoints}` : '';
-
-            console.log('Exclude parameter:', excludeParam.substring(0, 200) + (excludeParam.length > 200 ? '...' : ''));
-
-            const response = await fetch(
-                `https://api.mapbox.com/directions/v5/mapbox/${profile}/${start[0]},${start[1]};${destination[0]},${destination[1]}?alternatives=true&geometries=geojson${excludeParam}&language=en&access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
-            );
-
-            if (response.status === 422) {
-                console.error('All routes to the destination are damaged. Cannot proceed.');
-
-                throw new Error('All routes to the destination are damaged. Cannot proceed.');
+            // If no safe routes, return all routes (fallback)
+            if (safeRoutes.length === 0) {
+                console.warn('No safe routes found, returning all routes');
+                return data.routes;
             }
 
-            if (!response.ok) {
-                console.error('Failed to fetch directions from Mapbox Direction API  ');
-
-                throw new Error('Failed to fetch directions from Mapbox API.');
-            }
-
-            const data = await response.json();
-
-            if (data.code !== 'Ok') {
-                console.error('Failed to fetch directions from Mapbox Direction API  ');
-
-                throw new Error('Failed to fetch directions from Mapbox Direction API.');
-            }
-
-            return data.routes;
+            return safeRoutes;
         } catch (error) {
             console.error('Mapbox Directions API Error: ', error);
 
             throw error;
         }
+    }
+
+    private calculateDistance(lon1: number, lat1: number, lon2: number, lat2: number): number {
+        const R = 6371; // Earth's radius in km
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
     }
 }
 
