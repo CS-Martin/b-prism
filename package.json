@@ -18,7 +18,7 @@
         "start:verification": "node dist/apps/verification-service/main.js",
         "start:mailer": "node dist/apps/mailer-service/main.js",
         "start:role": "node dist/apps/role-service/main.js",
-        "vercel-build": "npx prisma db push && npx prisma generate && npx nx build web-app --prod"
+        "vercel-build": "npx prisma generate && npx nx build web-app --prod"
     },
     "private": true,
     "dependencies": {
