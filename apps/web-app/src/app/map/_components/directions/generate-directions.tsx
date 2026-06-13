@@ -46,7 +46,7 @@ export const GenerateDirections = () => {
     useEffect(() => {
         if (start && destination) {
             getDirections(start, destination, damagedRoads, 'driving')
-                .then(() => console.info('Directions:', directions))
+                .then((routes) => console.info('Directions:', routes))
                 .catch((err) => console.error('Error fetching directions:', err));
         }
     }, [start, destination, getDirections]);
