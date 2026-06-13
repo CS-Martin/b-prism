@@ -71,24 +71,56 @@ class MapboxApiService {
 
             console.log(`Total damaged roads: ${damagedRoads.length}, Relevant damaged roads: ${relevantDamagedRoads.length}`);
 
-            // Extract coordinates from relevant damaged roads to use as exclusion points
-            const exclusionCoordinates = relevantDamagedRoads
-                .map((road: any) => {
-                    const geometry = typeof road.geometry === 'string' ? JSON.parse(road.geometry) : road.geometry;
-                    return geometry.coordinates;
-                })
-                .reduce((acc: any, val: any) => acc.concat(val), []);
+            // Score damaged roads by proximity to the direct path between start and destination
+            const scoredDamagedRoads = relevantDamagedRoads.map((road: any) => {
+                const geometry = typeof road.geometry === 'string' ? JSON.parse(road.geometry) : road.geometry;
+                const coordinates = geometry.coordinates;
+                
+                let minDistanceToPath = Infinity;
+                
+                // Calculate distance from each damaged road point to the direct path
+                for (const coord of coordinates) {
+                    const distanceToPath = this.pointToLineDistance(
+                        coord[0], coord[1],
+                        start[0], start[1],
+                        destination[0], destination[1]
+                    );
+                    if (distanceToPath < minDistanceToPath) {
+                        minDistanceToPath = distanceToPath;
+                    }
+                }
+                
+                return {
+                    road,
+                    coordinates,
+                    minDistanceToPath,
+                };
+            });
 
-            // Sample exclusion coordinates to stay within the 50 point limit
+            // Sort by proximity to the direct path (closest first)
+            scoredDamagedRoads.sort((a: any, b: any) => a.minDistanceToPath - b.minDistanceToPath);
+
+            // Select the top damaged roads closest to the path
             const MAX_EXCLUSION_POINTS = 50;
-            const sampledExclusions = exclusionCoordinates.length > MAX_EXCLUSION_POINTS
-                ? this.sampleCoordinates(exclusionCoordinates, MAX_EXCLUSION_POINTS)
-                : exclusionCoordinates;
+            let selectedCoordinates: any[] = [];
+            let totalPoints = 0;
 
-            console.log(`Total exclusion coordinates: ${exclusionCoordinates.length}, Sampled: ${sampledExclusions.length}`);
+            for (const scoredRoad of scoredDamagedRoads) {
+                if (totalPoints + scoredRoad.coordinates.length > MAX_EXCLUSION_POINTS) {
+                    // Sample from this road to stay within limit
+                    const remainingPoints = MAX_EXCLUSION_POINTS - totalPoints;
+                    const sampled = this.sampleCoordinates(scoredRoad.coordinates, remainingPoints);
+                    selectedCoordinates = selectedCoordinates.concat(sampled);
+                    break;
+                }
+                selectedCoordinates = selectedCoordinates.concat(scoredRoad.coordinates);
+                totalPoints += scoredRoad.coordinates.length;
+            }
+
+            console.log(`Selected ${selectedCoordinates.length} exclusion points from ${scoredDamagedRoads.length} damaged roads closest to path`);
 
             // Format exclusion points for Mapbox API: point(lon lat),point(lon lat),...
-            const exclusionPoints = sampledExclusions.map(([lon, lat]: [number, number]) => `point(${lon}%20${lat})`).join(',');
+            const exclusionPoints = selectedCoordinates.map(([lon, lat]: [number, number]) => `point(${lon}%20${lat})`).join(',');
 
             // Build the API URL with exclusion points
             const excludeParam = exclusionPoints ? `&exclude=${exclusionPoints}` : '';
@@ -115,50 +147,61 @@ class MapboxApiService {
 
             console.log(`Total routes from Mapbox: ${data.routes.length}`);
 
-            // Post-process to filter routes that still pass through damaged roads
-            const safeRoutes = data.routes.filter((route: any) => {
+            // Score routes by how many damaged road segments they pass through
+            const scoredRoutes = data.routes.map((route: any) => {
                 const routeCoordinates = route.geometry.coordinates;
-                let nearDamagedRoad = false;
+                let damageScore = 0;
+                let minDistance = Infinity;
                 
-                // Check if any point on the route is near a damaged road
+                // Check how many points on the route are near damaged roads
                 for (const damagedRoad of relevantDamagedRoads) {
                     const geometry = typeof damagedRoad.geometry === 'string' ? JSON.parse(damagedRoad.geometry) : damagedRoad.geometry;
                     const damagedCoords = geometry.coordinates;
 
-                    // Check if route intersects with this damaged road
                     for (const routeCoord of routeCoordinates) {
                         for (const damagedCoord of damagedCoords) {
                             const distance = this.calculateDistance(routeCoord[0], routeCoord[1], damagedCoord[0], damagedCoord[1]);
-                            // If within 50 meters of a damaged road, consider this route unsafe
                             if (distance < 0.05) {
-                                nearDamagedRoad = true;
-                                console.log(`Route point near damaged road: distance=${distance.toFixed(4)}km`);
-                                break;
+                                damageScore++;
+                                if (distance < minDistance) {
+                                    minDistance = distance;
+                                }
                             }
                         }
-                        if (nearDamagedRoad) break;
                     }
-                    if (nearDamagedRoad) break;
                 }
                 
-                return !nearDamagedRoad;
+                return {
+                    route,
+                    damageScore,
+                    minDistance: minDistance === Infinity ? 0 : minDistance,
+                };
             });
 
-            console.log(`Safe routes after post-processing: ${safeRoutes.length}`);
+            // Sort by damage score (ascending), then by min distance (descending)
+            scoredRoutes.sort((a: any, b: any) => {
+                if (a.damageScore !== b.damageScore) {
+                    return a.damageScore - b.damageScore;
+                }
+                return b.minDistance - a.minDistance;
+            });
 
-            // Convert Mapbox routes to GeoJSON Feature format
-            const routesToReturn = safeRoutes.length > 0 ? safeRoutes : data.routes;
+            console.log(`Route damage scores:`, scoredRoutes.map((r: any, i: number) => `Route ${i}: ${r.damageScore} points, min distance: ${r.minDistance.toFixed(4)}km`));
+
+            // Return the route with the least damage
+            const bestRoute = scoredRoutes[0].route;
             
-            const geoJsonFeatures = routesToReturn.map((route: any) => ({
+            const geoJsonFeatures = [{
                 type: 'Feature' as const,
-                geometry: route.geometry,
+                geometry: bestRoute.geometry,
                 properties: {
-                    distance: route.distance,
-                    duration: route.duration,
-                    weight: route.weight,
-                    weight_name: route.weight_name,
+                    distance: bestRoute.distance,
+                    duration: bestRoute.duration,
+                    weight: bestRoute.weight,
+                    weight_name: bestRoute.weight_name,
+                    damageScore: scoredRoutes[0].damageScore,
                 },
-            }));
+            }];
 
             console.log('Returning GeoJSON features:', geoJsonFeatures);
             return geoJsonFeatures;
@@ -178,6 +221,42 @@ class MapboxApiService {
                   Math.sin(dLon / 2) * Math.sin(dLon / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
+    }
+
+    private pointToLineDistance(px: number, py: number, x1: number, y1: number, x2: number, y2: number): number {
+        // Calculate distance from point (px, py) to line segment (x1, y1) to (x2, y2)
+        const A = px - x1;
+        const B = py - y1;
+        const C = x2 - x1;
+        const D = y2 - y1;
+
+        const dot = A * C + B * D;
+        const lenSq = C * C + D * D;
+        let param = -1;
+
+        if (lenSq !== 0) {
+            param = dot / lenSq;
+        }
+
+        let xx, yy;
+
+        if (param < 0) {
+            xx = x1;
+            yy = y1;
+        } else if (param > 1) {
+            xx = x2;
+            yy = y2;
+        } else {
+            xx = x1 + param * C;
+            yy = y1 + param * D;
+        }
+
+        const dx = px - xx;
+        const dy = py - yy;
+
+        // Convert to approximate km (assuming coordinates are in degrees)
+        const distance = Math.sqrt(dx * dx + dy * dy) * 111; // Rough conversion to km
+        return distance;
     }
 }
 
