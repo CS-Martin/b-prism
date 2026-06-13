@@ -31,7 +31,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./apps/authentication-service/Dockerfile.prod
+          file: apps/authentication-service/Dockerfile.prod
           push: true
           tags: martin09123/project-haribon:authentication-service
           cache-from: type=gha
