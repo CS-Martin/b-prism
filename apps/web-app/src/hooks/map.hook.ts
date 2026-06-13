@@ -247,6 +247,7 @@ export const useGetDirections = () => {
             const routes = await mapboxService.getDirections(start, destination, damagedRoads, profile);
 
             setDirections(routes);
+            return routes;
         } catch (error) {
             console.error('Failed to fetch directions from Mapbox Direction API ');
 
