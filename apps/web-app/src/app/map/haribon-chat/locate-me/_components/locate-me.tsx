@@ -17,6 +17,7 @@ export const LocateMe = () => {
     const mapRef = useRef<mapboxgl.Map | null>(null);
 
     const geolocateControlRef = useRef<mapboxgl.GeolocateControl | null>(null);
+    const hasShownLocationToastRef = useRef<boolean>(false);
 
     const [isLocatingManually, setIsLocatingManually] = useState<boolean>(false);
     const [isLocating, setIsLocating] = useState<boolean>(false);
@@ -68,11 +69,14 @@ export const LocateMe = () => {
                     zoom: 16,
                     speed: 1.2,
                 });
-                toast({
-                    title: 'Location Found',
-                    description: 'Successfully located your position.',
-                    variant: 'success',
-                });
+                if (!hasShownLocationToastRef.current) {
+                    hasShownLocationToastRef.current = true;
+                    toast({
+                        title: 'Location Found',
+                        description: 'Successfully located your position.',
+                        variant: 'success',
+                    });
+                }
             }
         });
 
@@ -119,6 +123,7 @@ export const LocateMe = () => {
             return;
         }
 
+        hasShownLocationToastRef.current = false;
         setIsLocating(true);
         toast({
             title: 'Locating...',
@@ -142,11 +147,14 @@ export const LocateMe = () => {
                         zoom: 16,
                         speed: 1.2,
                     });
-                    toast({
-                        title: 'Location Found',
-                        description: 'Successfully located your position.',
-                        variant: 'success',
-                    });
+                    if (!hasShownLocationToastRef.current) {
+                        hasShownLocationToastRef.current = true;
+                        toast({
+                            title: 'Location Found',
+                            description: 'Successfully located your position.',
+                            variant: 'success',
+                        });
+                    }
                 }
             },
             (error) => {
