@@ -15,12 +15,13 @@ async function bootstrap() {
 
     const isProduction = process.env.APP_ENV === 'production';
 
-    app.enableCors({
-        origin: isProduction ? ['https://projectharibon.com', 'https://www.projectharibon.com', 'https://project-haribon.vercel.app'] : ['http://localhost:3000', 'http://localhost'], // Local development allowed origins
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With', 'X-Author'],
-        credentials: true,
-    });
+    // Disable CORS in the service - nginx handles CORS
+    // app.enableCors({
+    //     origin: isProduction ? ['https://projectharibon.com', 'https://www.projectharibon.com', 'https://project-haribon.vercel.app'] : ['http://localhost:3000', 'http://localhost'], // Local development allowed origins
+    //     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    //     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With', 'X-Author'],
+    //     credentials: true,
+    // });
 
     const config = new DocumentBuilder().setTitle('Rescue Post Service').setDescription('Rescue Post Service API').setVersion('1.0').build();
 
