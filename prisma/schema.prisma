@@ -83,7 +83,7 @@ model DispensingPoint {
 
 type RescuePostContactPerson {
   name    String
-  contact String
+  contact String?
 }
 
 type RescuePostDemographics {
