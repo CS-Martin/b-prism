@@ -1,0 +1,62 @@
+name: Build Rescue Post Service
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - production
+    paths:
+      - 'apps/rescue-post-service/**'
+      - 'libs/**'
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.11.0
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Set up Nx Cloud Token
+        run: echo "NX_CLOUD_ACCESS_TOKEN=${{ secrets.NX_CLOUD_ACCESS_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up environment variables
+        run: |
+          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+
+      - name: Build rescue-post-service
+        run: npx nx build rescue-post-service
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: apps/rescue-post-service/Dockerfile.prod
+          push: true
+          tags: martin09123/project-haribon:rescue-post-service
+          cache-from: type=registry,ref=martin09123/project-haribon:rescue-post-service-cache
+          cache-to: type=registry,ref=martin09123/project-haribon:rescue-post-service-cache,mode=max
