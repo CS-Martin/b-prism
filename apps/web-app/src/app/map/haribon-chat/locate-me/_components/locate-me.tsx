@@ -19,6 +19,7 @@ export const LocateMe = () => {
     const geolocateControlRef = useRef<mapboxgl.GeolocateControl | null>(null);
 
     const [isLocatingManually, setIsLocatingManually] = useState<boolean>(false);
+    const [isLocating, setIsLocating] = useState<boolean>(false);
 
     const [lng, setLng] = useState<number>(-24);
     const [lat, setLat] = useState<number>(42);
@@ -47,6 +48,8 @@ export const LocateMe = () => {
         const geolocateControl = new mapboxgl.GeolocateControl({
             positionOptions: {
                 enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0,
             },
             trackUserLocation: true,
             showUserHeading: true,
@@ -54,6 +57,34 @@ export const LocateMe = () => {
 
         // Store the instance in the ref
         geolocateControlRef.current = geolocateControl;
+
+        // Add event listeners for geolocate control
+        geolocateControl.on('geolocate', (e) => {
+            setIsLocating(false);
+            const { coords } = e;
+            if (coords && mapRef.current) {
+                mapRef.current.flyTo({
+                    center: [coords.longitude, coords.latitude],
+                    zoom: 16,
+                    speed: 1.2,
+                });
+                toast({
+                    title: 'Location Found',
+                    description: 'Successfully located your position.',
+                    variant: 'success',
+                });
+            }
+        });
+
+        geolocateControl.on('error', (e) => {
+            setIsLocating(false);
+            console.error('Geolocation error:', e);
+            toast({
+                title: 'Location Error',
+                description: 'Unable to get your location. Please enable location services.',
+                variant: 'destructive',
+            });
+        });
 
         const geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken,
@@ -79,9 +110,68 @@ export const LocateMe = () => {
     }, []);
 
     const handleLocateMe = () => {
+        if (!navigator.geolocation) {
+            toast({
+                title: 'Not Supported',
+                description: 'Geolocation is not supported by your browser.',
+                variant: 'destructive',
+            });
+            return;
+        }
+
+        setIsLocating(true);
+        toast({
+            title: 'Locating...',
+            description: 'Getting your current location. Please wait.',
+            variant: 'default',
+        });
+
+        // Try Mapbox geolocate control first
         if (geolocateControlRef.current) {
             geolocateControlRef.current.trigger();
         }
+
+        // Fallback to native geolocation with better options
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setIsLocating(false);
+                const { latitude, longitude } = position.coords;
+                if (mapRef.current) {
+                    mapRef.current.flyTo({
+                        center: [longitude, latitude],
+                        zoom: 16,
+                        speed: 1.2,
+                    });
+                    toast({
+                        title: 'Location Found',
+                        description: 'Successfully located your position.',
+                        variant: 'success',
+                    });
+                }
+            },
+            (error) => {
+                setIsLocating(false);
+                console.error('Native geolocation error:', error);
+                let errorMessage = 'Unable to get your location.';
+                if (error.code === 1) {
+                    errorMessage = 'Location permission denied. Please enable location services.';
+                } else if (error.code === 2) {
+                    errorMessage = 'Location unavailable. Please check your GPS settings.';
+                } else if (error.code === 3) {
+                    errorMessage = 'Location request timed out. Please try again.';
+                }
+                toast({
+                    title: 'Location Error',
+                    description: errorMessage,
+                    variant: 'destructive',
+                });
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0,
+            }
+        );
     };
 
     const handleLocateManually = () => {
@@ -171,12 +261,22 @@ export const LocateMe = () => {
                 <div className='relative p-2 overflow-hidden text-black bg-white rounded-lg shadow-xl'>
                     <Button
                         onClick={handleLocateMe}
-                        className='w-1/2 font-normal text-black bg-white hover:bg-blue-500 hover:text-white'>
-                        <Locate
-                            height={24}
-                            width={24}
-                        />
-                        Locate me
+                        disabled={isLocating}
+                        className='w-1/2 font-normal text-black bg-white hover:bg-blue-500 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed'>
+                        {isLocating ? (
+                            <div className='flex items-center gap-2'>
+                                <div className='w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin' />
+                                Locating...
+                            </div>
+                        ) : (
+                            <>
+                                <Locate
+                                    height={24}
+                                    width={24}
+                                />
+                                Locate me
+                            </>
+                        )}
                     </Button>
                     <Button
                         className={`${isLocatingManually ? 'bg-blue-500 text-white' : 'bg-white'} w-1/2 hover:bg-blue-500 text-black hover:text-white`}
